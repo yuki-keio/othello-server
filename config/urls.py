@@ -13,10 +13,13 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import path, include
+from django.contrib.staticfiles.views import serve
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('game.urls')),  # game アプリのURLを追加
+    path('', include('game.urls')), 
+    path("google3cf76dfeb0923fe8.html", serve, {"path": "game/google3cf76dfeb0923fe8.html"}), 
 ]
