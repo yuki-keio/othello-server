@@ -28,3 +28,12 @@ def game_view(request, mode=None):
 
     # mode パラメータがない場合は通常のページ表示
     return render(request, "game/index.html", {"mode": mode})
+
+
+def robots_txt(request):
+    content = """User-agent: *
+Disallow:
+
+Sitemap: https://othello-server-7gox.onrender.com/sitemap.xml
+"""
+    return HttpResponse(content, content_type="text/plain")
