@@ -12,7 +12,7 @@
     <meta name="description" content="">
     <meta name="description" content="
     {% if mode == 'online' %}
-        オンラインでオセロ対戦ができるWebサイト。離れた場所にいる相手とも、リアルタイムで通信対戦が可能です。ブラウザさえあれば、オセロ盤の用意やアプリのダウンロードが一切不要！スマホ・PC・iPadなど好きなデバイスから、無料で遊べます。
+        オンラインでオセロ対戦ができるWebサイト。離れた場所にいる相手とも、リアルタイムで通信対戦が可能です。ブラウザさえあれば、オセロ盤の用意やアプリのダウンロードが一切不要！スマホ・PC・iPadなど好きなデバイスから、オセロの友達対戦を無料で遊べるWebゲームサイトです。
     {% elif mode == 'ai' %}
         ブラウザ上でAIとオセロ対戦！スマホ・PC・iPadなどデバイス一台でオセロが無料で遊べるWebサイト。オセロ盤の用意やアプリのインストールも必要なし！
     {% else %}
@@ -43,7 +43,15 @@
 </head>
 <body>
     <div id="game-container">
-        <h1 id="title">スマートオセロ盤</h1>
+        <h1 id="title">
+            {% if mode == 'online' %}
+                オンライン対戦
+            {% elif mode == 'ai' %}
+                AI対戦
+            {% else %}
+                電子オセロ盤
+            {% endif %}
+        </h1>
         <i class="fa fa-cog" aria-hidden="true" id="setting"></i>
         <div id="player-info">
             <ul id="player-list"></ul>
