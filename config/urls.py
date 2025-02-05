@@ -16,10 +16,19 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-from django.contrib.staticfiles.views import serve
+from django.views.static import serve
+import os
+from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('game.urls')), 
-    path("google3cf76dfeb0923fe8.html", serve, {"path": "game/google3cf76dfeb0923fe8.html"}), 
+    path(
+        "google3cf76dfeb0923fe8.html",
+        serve,
+        {
+            "document_root": os.path.join(settings.BASE_DIR, "game/static/game"),
+            "path": "google3cf76dfeb0923fe8.html",
+        },
+    ),
 ]
