@@ -1,0 +1,508 @@
+body {
+    font-family: "BIZ UDPMincho", serif;    display: flex;
+justify-content: center;
+align-items: center;
+margin: 0;
+background-color: #f0f0f0;
+box-sizing: border-box; /* Ensures padding and border are included in element's total width and height */
+}
+h1{
+font-family:"BIZ UDGothic", sans-serif ;
+font-size: 1.4em; 
+}
+#level_ai{
+margin-bottom: 15px;
+}
+#timer-display {
+position: absolute;
+top: 10px; /* 上からの位置 */
+left: 0px; /* 左からの位置 */
+font-size: 18px;
+background-color: #e0e0e0;
+color: black;
+padding: 5px 10px;
+border-radius: 5px;
+font-weight: bold;
+display: none;
+}
+
+#timer-display.warning1{
+color: #db5f00;
+font-weight: bold;
+font-size: 1.25em;
+
+
+}
+#timer-display.warning2{
+color: #ff0000;
+font-weight: bold;
+font-size: 1.4em;
+
+
+}
+
+#setting{
+position: absolute;
+right: -5px;
+top: 12px;
+font-size: 1.8em;
+cursor: pointer;
+}
+#settings{
+padding-top:10px;
+}
+.credit{
+font-size: 0.7em;
+text-align: center;
+margin-bottom: 15px;
+position: absolute;
+bottom: 10px;
+/*center*/
+left: 50%;
+transform: translateX(-50%);
+width: 100%;
+}
+.caution{
+padding: 15px;
+font-size: 0.8em;
+}
+
+#prev-move-btn, #next-move-btn {
+margin: 5px;
+padding: 5px 10px;
+font-size: 14px;
+color: white;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+display: inline-block;
+position: absolute;
+top: 30px;
+
+}
+#prev-move-btn {
+right: 55px;
+background-color: #a34d4d;
+
+}
+#next-move-btn {
+right: 10px;
+background-color: #55b149;
+
+}
+#black_circle{
+width: 15px;
+height: 15px;
+transform:translate(0, 1px);
+border-radius: 50%;
+background-color: black;
+display: inline-block;
+}
+#white_circle{
+width: 15px;
+height: 15px;
+transform:translate(0, 1px);
+border-radius: 50%;
+background-color: white;
+display: inline-block;
+}
+#score_black{
+width: 100px;
+text-align: right;
+font-weight: lighter;
+}
+#score_white{
+width: 100px;
+text-align: left;
+font-weight: lighter;
+
+}
+#ad{
+margin-top:75px;
+margin-bottom: 150px;
+display: inline-block; 
+width: 100%; 
+}
+.marker {
+width: 10%;
+height: 10%;
+border-radius: 50%;
+background-color: black;
+position: relative;
+top: 52.3%;
+left: 51.9%;
+z-index: 10;
+
+}
+
+
+#game-container {
+text-align: center;
+width: 90%;
+height: 96%;
+max-width: 600px;
+box-sizing: border-box; 
+position: relative;
+
+
+}
+.container{
+text-align: left;
+margin: 10px 10px 40px 10px;  
+}
+
+#board {
+display: grid;
+grid-template-columns: repeat(8, 1fr); /* Flexible grid columns */
+grid-gap: 2px;
+background-color: #008000;
+padding: 2%;
+margin: 0px;
+border-radius: 5px;
+aspect-ratio: 1 / 1; /* Maintain a square aspect ratio */
+height: 96%;;
+width: 96%; /* Full width of the container */
+}
+
+.cell {
+width: 100%;
+aspect-ratio: 1 / 1; /* Maintain a square shape */
+background-color: #00a000;
+border-radius: 8%;
+display: flex;
+justify-content: center;
+align-items: center;
+cursor: pointer;
+position: relative;
+}
+.valid-move {
+background-color: #00c000; /* 少し明るい緑 */
+}
+.valid-move:hover {
+background-color: #00e000; /* より明るい緑 */
+}
+
+
+
+
+
+.disc {
+width: 80%;
+height: 80%;
+border-radius: 50%;
+position: absolute;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), inset 0 -2px 4px rgba(0, 0, 0, 0.2);
+}
+
+
+.last-move {
+box-shadow: 0 0 10px 2px rgba(255, 242, 0, 0.7); /* Yellow glow */
+border: 2px solid rgb(255, 64, 0);
+}
+.faint-disc {
+opacity: 0.5;
+width: 10%;
+height: 10%;
+border-radius: 50%;
+position: absolute; 
+}
+.black {
+background: radial-gradient(circle at 30% 30%, #333, #000);
+}
+
+.white {
+background: radial-gradient(circle at 30% 30%, #fff, #ccc);
+}
+
+.faint-black {
+background-color: #000;
+}
+.faint-white { 
+background-color: #fff;
+opacity: .7;
+}
+
+#status {
+margin-top: 20px;
+font-size: 18px;
+background-color: #e0e0e0;
+padding: 10px;
+border-radius: 5px;
+font-weight: bold;
+}
+
+.current-player {
+font-weight: bold;
+padding: 5px 10px;
+margin: -5px 5px;
+border-radius: 5px;
+color: white;
+}
+
+#c_black {
+background-color: black;
+float: left;
+color: white;
+}
+
+#c_white {
+background-color: #ffffff;
+color: white;
+float: right;
+color: black;
+}
+
+#move-history {
+margin-top: 20px;
+text-align: left;
+max-height: 200px;
+overflow-y: auto;
+background-color: #fff;
+padding: 10px;
+border-radius: 5px;
+border: 1px solid #ccc;
+box-sizing: border-box;
+position: relative;
+}
+
+#move-list {
+height: 45px;
+}
+
+/* ツールチップ（ポップアップ）のデザイン改善 */
+.tooltip {
+  position: fixed;
+  background-color: rgba(50, 50, 50, 0.9); /* より濃い背景色に */
+  color: white;
+  padding: 10px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(-12px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+  pointer-events: none;
+}
+
+/* ツールチップの矢印の調整 */
+.tooltip::after {
+  content: "";
+  position: absolute;
+  border-style: solid;
+  border-width: 30px 8px; 
+  border-color: rgba(50, 50, 50, 0.9) transparent transparent transparent;
+  bottom: -60px;
+  left: 50%;
+  transform: translateX(-40%);
+}
+
+/* ツールチップを表示する時のクラス */
+.tooltip.show {
+  opacity: 1;
+  transform: translateY(-10px);
+}
+
+
+#copy-url-btn{
+position: relative;
+top:6px;
+margin: 15px 5px 5px 0px;
+padding: 10px 20px;
+width: 45px;
+height: 45px;
+font-size: 16px;
+background-color: #bedeff;
+background-image: url("./images/copy.png");
+
+background-size:50%;
+background-position: center;
+background-repeat: no-repeat;
+color: white;
+border: none;
+
+border-radius: 5px;
+cursor: pointer;
+display: inline-block;
+}
+
+#surrender-btn{
+margin: 15px 5px 5px 5px;
+padding: 10px 20px;
+font-size: 16px;
+background-color: #d32f2f;
+color: white;
+border: none;
+border-radius: 8px;
+cursor: pointer;
+display: inline-block;
+transition: background-color 0.2s ease-in-out;
+}
+#surrender-btn:hover {
+  background-color: #b71c1c;
+}
+
+#restart-btn{
+margin: 15px 0px 5px 5px; 
+padding: 10px 20px;
+font-size: 16px;
+background-color: #388e3c;
+color: white;
+border: none;
+border-radius: 8px;
+cursor: pointer;
+display: inline-block;
+transition: background-color 0.2s ease-in-out;
+
+}
+#restart-btn:hover {
+  background-color: #2e7d32;
+}
+
+
+/* ポップアップの背景 (モーダル) */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+}
+
+/* ポップアップの中身 */
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* ボタンのデザイン */
+.btn {
+  padding: 10px 15px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
+
+.btn-primary {
+  padding: 12px 20px;
+  background-color: #28a745;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+.btn-primary:hover {
+  background-color: #1e7e34;
+}
+
+.modal-buttons {
+  margin-top: 20px;
+}
+
+
+
+/* モード選択バナー */
+#mode-selection-banner {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 20px auto;
+}
+
+/* 通常ボタン */
+.mode-btn {
+  display: inline-block;
+  min-width: 140px;
+  max-width: 180px;
+  padding: 14px 22px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  color: white;
+  background: linear-gradient(180deg, #489bff, #1d6ac1);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  margin: 6px;
+  position: relative;
+  box-shadow: 0px 5px 0px #1c4e85, 0px 10px 12px rgba(0, 0, 0, 0.3);
+  opacity: 0.9;
+  white-space: nowrap;
+}
+
+/* 非選択ボタンの立体感 */
+.mode-btn::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: #1c4e85;
+}
+
+/* ホバー時 */
+.mode-btn:hover {
+  filter: brightness(1.08);
+  transform: translateY(-2px);
+  box-shadow: 0px 7px 0px #153a64, 0px 12px 14px rgba(0, 0, 0, 0.4);
+  opacity: 1;
+}
+
+/* クリック時 */
+.mode-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0px 3px 0px #153a64, 0px 5px 7px rgba(0, 0, 0, 0.4);
+}
+
+/* 選択中のボタン（押されている状態） */
+.mode-btn.active {
+  background: linear-gradient(180deg, #0058cb, #001a40);
+  transform: translateY(1px); 
+  box-shadow: inset 0px 3px 4px rgba(255, 255, 255, 0.3),
+              0px 2px 0px #001a40;
+  opacity: 1;
+
+}
+
+/* 選択中のボタンの側面影 */
+.mode-btn.active::after {
+  background: #001a40;
+  height: 2px; 
+  bottom: -3px; 
+}
+
+/* スマホ対応（縦並び） */
+@media (max-width: 600px) {
+  #mode-selection-banner {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .mode-btn {
+    width: 85%;
+    max-width: none;
+    font-size: 15px;
+    padding: 12px 20px;
+  }
+}

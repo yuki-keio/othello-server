@@ -1,0 +1,186 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=BIZ+UDGothic&family=BIZ+UDPMincho&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/faf01160aa.js" crossorigin="anonymous"></script>
+
+    <meta name="description" content="">
+    <meta name="description" content="
+    {% if mode == 'online' %}
+        オンラインでオセロ対戦ができるWebサイト。離れた場所にいる相手とも、リアルタイムで通信対戦が可能です。ブラウザさえあれば、オセロ盤の用意やアプリのダウンロードが一切不要！スマホ・PC・iPadなど好きなデバイスから、無料で遊べます。
+    {% elif mode == 'ai' %}
+        ブラウザ上でAIとオセロ対戦！スマホ・PC・iPadなどデバイス一台でオセロが無料で遊べるWebサイト。オセロ盤の用意やアプリのインストールも必要なし！
+    {% else %}
+        スマホ・PC・iPadなどデバイス一台でオセロが遊べるWebサイト。オセロ盤の用意やアプリのインストールも必要なし！オセロの友達対戦をブラウザで遊べるスマートオセロ盤です。旅行でのレクリエーションにもオススメ
+    {% endif %}
+">
+
+    <title>
+        {% if mode == 'online' %}
+            オンライン対戦 | スマートオセロWeb
+        {% elif mode == 'ai' %}
+            AI対戦 | スマートオセロWeb
+        {% else %}
+            電子オセロ盤 | スマートオセロWeb
+        {% endif %}
+    </title>    <link rel="stylesheet" href="{% static 'game/style.css' %}">
+    <script src="{% static 'game/script.js' %}" defer></script>
+</head>
+<body>
+    <div id="game-container">
+        <h1 id="title">スマートオセロ盤</h1>
+        <i class="fa fa-cog" aria-hidden="true" id="setting"></i>
+        <div id="player-info">
+            <ul id="player-list"></ul>
+        </div>
+        <span id="timer-display"></span>
+       
+        <div id="board" role="grid" >
+        </div>
+        
+                <!-- オンライン対戦のポップアップ -->
+        <div id="online-match-popup" class="modal">
+            <div class="modal-content">
+                <h3>オンライン対戦設定</h3>
+                <label>⏱ 持ち時間:
+                    <select id="popup-time-limit">
+                        <option value="0">制限なし</option>
+                        <option value="10">10秒</option>
+                        <option value="30">30秒</option>
+                        <option value="60">1分</option>
+                        <option value="180">3分</option>
+                        <option value="300">5分</option>
+                    </select>
+                </label>
+                <br>
+                <label>
+                    <input type="checkbox" id="popup-highlight-moves" checked> 有効な手をハイライト表示
+                </label>
+
+                <div class="modal-buttons">
+                    <button id="popup-ok" class="btn-primary">対戦部屋を作成 & URLコピー！</button>
+                </div>
+                
+            </div>
+        </div>
+        <div id="status">
+            <span class="current-player" id="c_black">黒番</span>
+            <div id="black_circle"></div>
+            <span id="score_black"></span>：<span id="score_white"></span>
+            <div id="white_circle"></div>
+
+            <span class="current-player" id="c_white">白番</span>
+
+        </div>
+
+        <button id="copy-url-btn"></button>
+        <div id="copy-tooltip" class="tooltip">コピーして観戦者や<br>対戦相手を招待！</div>
+        <button id="surrender-btn">投了</button>
+        <button id="restart-btn">🚩 新規</button>
+        <div id="move-history">
+            <h3>棋譜</h3>
+            
+            <button id="prev-move-btn">＜</button>
+            <button id="next-move-btn">＞</button>
+            
+            <pre id="move-list">　棋譜はまだありません</pre>
+
+        </div>
+        <!-- モード選択バナー -->
+        <div id="mode-selection-banner">
+            <button class="mode-btn" data-mode="player">電子オセロ盤</button>
+            <button class="mode-btn" data-mode="ai">AI対戦</button>
+            <button class="mode-btn" data-mode="online">オンライン対戦</button>
+        </div>
+
+        <div id="settings">
+            <h3>設定</h3>
+            <div class="container">
+                🔈 効果音： <br>
+                <div style="margin-left: 20px; margin-top:5px;">
+                <label>
+                    <input type="checkbox" id="gameEndSoundCheckbox" checked> 勝利 / 敗北
+                </label> <br><br>
+                <label>
+                    <input type="checkbox" id="soundEffectsCheckbox" checked> 石を置く
+                </label> <br><br>
+                <div id="timeLimitBox_">
+                    <label>
+                        <input type="checkbox" id="timeLimitSoundCheckbox" checked> 残り時間あと少し
+                    </label> <br><br>
+                </div>
+                <div id="playerJoinSoundBox">
+                    <label>
+                        <input type="checkbox" id="playerJoinSoundCheckbox" checked> プレイヤー参加
+                    </label> <br><br>
+                </div>
+                
+
+                </div>
+
+               
+                
+                <div id="timeLimitContainer">
+                <label>
+                    ⏱ 一手あたりの持ち時間： 
+                    <select id="timeLimitSelect">
+                        <option value="0">制限なし</option>
+                        <option value="300">5分</option>
+                        <option value="180">3分</option>
+                        <option value="60">1分</option>
+                        <option value="30">30秒</option>
+                        <option value="10">10秒</option>
+                        
+                    </select>
+                </label>
+                </div>
+                <br>
+                <label id="level_ai">
+                    🤖 AIのレベル：
+                    <select id="aiLevelSelect">
+                        <option value="0">初級</option>
+                        <option value="2">中級</option>
+                        <option value="9">上級</option>
+                    </select>
+                </label>
+                <div id="validContainer">
+                    <label>
+                        👍
+                        <input type="checkbox" id="showValidMovesCheckbox" checked> 有効な手をハイライト
+                    </label>
+                </div>
+                <br>
+                
+               
+             
+                  
+
+                <div class="caution">
+                    ※ 変更後の持ち時間は、次の一手から適用されます。 <br>
+                    ※ 持ち時間がゼロになると<strong>直ちに負け</strong>となる設計のため、ご注意ください。そのままURLをリロードすると、持ち時間をリセットして再開できます。                    
+                    
+                </div>
+            </div>
+        </div>  
+    <a href="https://pc.moppy.jp/entry/invite.php?invite=y22tA17c&type=service"><img decoding="async" loading="lazy" src="https://img.moppy.jp/pub/pc/friend/640x480-13.jpg" alt="アプリインストール・ゲームアプリで無料で簡単にポイントが貯まる！楽しくポイ活するならモッピー" id="ad"></a>
+        <div class="credit">
+            <!--copyright-->
+            © 2024 / 
+            このオセロ盤では、多くの人にとって読みやすいユニバーサルデザインフォントを利用しています
+        </div>
+    </div>
+    <audio id="placeStoneSound" src="{% static 'game/sounds/place-stone.mp3' %}" preload="auto"></audio>
+    <audio id="victorySound" src="{% static 'game/sounds/victory.mp3' %}" preload="auto"></audio>
+    <audio id="defeatSound" src="{% static 'game/sounds/defeat.mp3' %}" preload="auto"></audio>
+    <audio id="warningSound" src="{% static 'game/sounds/warning.mp3' %}" preload="auto"></audio>
+    <audio id="playerJoin" src="{% static 'game/sounds/playerJoin.mp3' %}" preload="auto"></audio>
+</body>
+
+
+</body>
+</html>
