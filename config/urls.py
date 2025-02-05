@@ -19,6 +19,13 @@ from django.urls import path, include
 from django.views.static import serve
 import os
 from django.conf import settings
+from django.contrib.sitemaps.views import sitemap
+from game.sitemaps import StaticViewSitemap
+
+
+sitemaps = {  # ← ここで sitemaps を定義
+    'static': StaticViewSitemap,
+}
 
 urlpatterns = [
     path('admin/', admin.site.urls),
