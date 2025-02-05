@@ -28,8 +28,18 @@
         {% else %}
             電子オセロ盤 | スマートオセロWeb
         {% endif %}
-    </title>    <link rel="stylesheet" href="{% static 'game/style.css' %}">
+    </title>    
+    <link rel="stylesheet" href="{% static 'game/style.css' %}">
     <script src="{% static 'game/script.js' %}" defer></script>
+    <link rel="canonical" href="
+    {% if mode == 'online' %}
+        https://othello-server-7gox.onrender.com/online/
+    {% elif mode == 'ai' %}
+        https://othello-server-7gox.onrender.com/ai/
+    {% else %}
+        https://othello-server-7gox.onrender.com/
+    {% endif %}
+    ">
 </head>
 <body>
     <div id="game-container">

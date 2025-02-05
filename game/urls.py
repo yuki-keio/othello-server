@@ -2,5 +2,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.game_view, name='index'),  
+    path('', views.index, name='index'),
+    path('player/', views.game_view, {'mode': 'player'}, name='player-mode'),
+    path('ai/', views.game_view, {'mode': 'ai'}, name='ai-mode'),
+    path('online/', views.game_view, {'mode': 'online'}, name='online-mode')
 ]

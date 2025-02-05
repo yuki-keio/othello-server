@@ -644,10 +644,11 @@ function deserializeMoveHistory(serialized) {
 function updateURL() {
     const serializedMoves = serializeMoveHistory();
     const url = new URL(window.location);
+    const newPath = `/${gameMode}/`;
+    url.pathname = newPath;
     url.searchParams.set('moves', serializedMoves);
     url.searchParams.set('timeLimit', timeLimit);
     url.searchParams.set('showValidMoves', showValidMoves);
-    url.searchParams.set('mode', gameMode); 
     url.searchParams.set('aiLevel', aiLevel);
     history.pushState(null, '', url);
 }
@@ -657,7 +658,8 @@ function loadBoardFromURL() {
     const serializedMoves = urlParams.get('moves');
     const timeLimitFromURL = urlParams.get('timeLimit');
     const showValidMovesFromURL = urlParams.get('showValidMoves');
-    const modeFromURL = urlParams.get('mode');
+    const pathParts = window.location.pathname.split('/').filter(Boolean);
+    const modeFromPath = pathParts[0] || 'player';
     const won = urlParams.get('won');
     const aiLevelFromURL = urlParams.get('aiLevel');
 
@@ -681,8 +683,8 @@ function loadBoardFromURL() {
     };
 
 
-    if (modeFromURL) {
-        gameMode = modeFromURL;
+    if (modeFromPath) {
+        gameMode = modeFromPath;
         localStorage.setItem('gameMode', gameMode);
         changeTitle();
         if (gameMode ==="online"){
@@ -753,16 +755,18 @@ function restart() {
     // 新しい部屋を生成
      // 新しい部屋IDをランダムに生成（UUID の代わりに短いランダム文字列）
      const newRoomId = Math.random().toString(36).substring(2, 8);
-     const newUrl = `${window.location.origin}${window.location.pathname}?room=${newRoomId}&mode=online`;
+     const newUrl = `${window.location.origin}/online/?room=${newRoomId}`;
      
      window.location.href = newUrl; // 新しい部屋へ遷移
   
 
     }else{
-    const currentUrl = window.location.href;
-    const urlWithoutQuery = currentUrl.split('?')[0];
+    const newUrl = `${window.location.origin}/${gameMode}/`;
+
     localStorage.setItem('deleted_urls', JSON.stringify([]));
-    window.location.href = urlWithoutQuery;
+    window.location.href = newUrl;
+
+    
     }
 }
 
