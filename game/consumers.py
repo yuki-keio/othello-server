@@ -101,7 +101,8 @@ class OthelloConsumer(AsyncWebsocketConsumer):
                 self.group_name,
                 {
                     "type": "update_players",
-                    "players": list(players.keys())
+                    "players": list(players.keys()),
+                    "player_id": player_id
                 }
             )
         except Exception as e:
@@ -112,7 +113,8 @@ class OthelloConsumer(AsyncWebsocketConsumer):
     async def update_players(self, event):
         await self.send(text_data=json.dumps({
             "action": "update_players",
-            "players": event["players"]
+            "players": event["players"],
+            "player_id": event["player_id"]
         }))
  
     async def disconnect(self, close_code):

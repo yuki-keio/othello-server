@@ -57,16 +57,16 @@
             <ul id="player-list"></ul>
         </div>
         <span id="timer-display"></span>
-       
+    <div id="board-container">
         <div id="board" role="grid" >
         </div>
         
-                <!-- オンライン対戦のポップアップ -->
-        <div id="online-match-popup" class="modal">
-            <div class="modal-content">
-                <h3>オンライン対戦設定</h3>
+        {% if mode == 'online' %}
+        <div id="game-settings-overlay">
+            <div id="game-settings">
+                <h3>対戦設定</h3>
                 <label>⏱ 持ち時間:
-                    <select id="popup-time-limit">
+                    <select id="time-limit">
                         <option value="0">制限なし</option>
                         <option value="10">10秒</option>
                         <option value="30">30秒</option>
@@ -77,15 +77,14 @@
                 </label>
                 <br>
                 <label>
-                    <input type="checkbox" id="popup-highlight-moves" checked> 有効な手をハイライト表示
+                    <input type="checkbox" id="highlight-moves" checked> 有効な手をハイライト表示
                 </label>
-
-                <div class="modal-buttons">
-                    <button id="popup-ok" class="btn-primary">対戦部屋を作成 & URLコピー！</button>
-                </div>
-                
+                <br>
+                <button id="start-match" class="btn-primary">対戦開始 & URLコピー！</button>
             </div>
         </div>
+        {% endif %}
+    </div>
         <div id="status">
             <span class="current-player" id="c_black">黒番</span>
             <div id="black_circle"></div>

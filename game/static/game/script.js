@@ -8,10 +8,10 @@ const moveListElement = document.getElementById('move-list');
 const copyUrlBtn = document.getElementById("copy-url-btn");
 const copyTooltip = document.getElementById("copy-tooltip");
 
-const popup = document.getElementById('online-match-popup');
-const okButton = document.getElementById('popup-ok');
-const pTimeLimitSelect = document.getElementById('popup-time-limit');
-const highlightCheckbox = document.getElementById('popup-highlight-moves');
+
+
+const startMatchBtn = document.getElementById("start-match");
+const overlay = document.getElementById("game-settings-overlay");
 
 const surrenderBtn = document.getElementById('surrender-btn');
 
@@ -1215,8 +1215,10 @@ function showTooltip() {
 
 //音量調整
 victorySound.volume = 0.03;
-defeatSound.volume = 0.03;
-warningSound.volume = 0.07;
+defeatSound.volume = 0.02;
+warningSound.volume = 0.02;
+playerJoin.volume = 0.03;
+placeStoneSound.volume = 0.03;
 
 //時間制限の「音量設定」のためのボックスの表示可否
 if (timeLimit===0){
@@ -1253,7 +1255,7 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
 
     } else {
         document.getElementById("playerJoinSoundBox").style.display = "none";
-        popup.style.display = 'none'; 
+        overlay.style.display = "none";
 
         if (previousMode === 'online') {
             online = false; // オンラインモードのフラグを下げる
@@ -1285,6 +1287,25 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
 // ページ読み込み時に、保存されたモードに応じてバナーの active クラスを設定
 
 window.addEventListener('DOMContentLoaded', () => {
+
+    if (startMatchBtn && overlay) {
+        startMatchBtn.addEventListener("click", function() {
+            let overlayTimeLimit = document.getElementById("time-limit").value;
+            let overlayHighlightMoves = document.getElementById("highlight-moves").checked;
+
+            copyURLToClipboard(); 
+ 
+           timeLimit = overlayTimeLimit;
+           showValidMoves = overlayHighlightMoves;
+
+            // オーバーレイを非表示
+            overlay.style.display = "none";
+
+
+         
+        });
+    }
+    
     document.querySelectorAll('.mode-btn').forEach(btn => {
       if (btn.getAttribute('data-mode') === gameMode) {
         btn.classList.add('active');
@@ -1342,14 +1363,16 @@ function makeSocket() {
             role_online = data.role; // サーバーから受け取った役割
             console.log(`あなたの役割: ${role_online}, データ${data}, (ID: ${playerId}), 再接続${data.reconnect}, ロール${role_online}`);
             if (role_online === 'black' && data.reconnect===false)  {
-                popup.style.display = 'flex'; 
+                overlay.style.display = 'flex'; 
             }
 
         }else if (data.action === "update_players") {
             updatePlayerList(data.players);
             if (playerJoinSoundEnabled) {
-                playerJoin.currentTime = 0;
-                playerJoin.play();
+                if (data.player_id !== playerId) {
+                    playerJoin.currentTime = 0;
+                    playerJoin.play();
+                }
             }
         }else if (data.action === "pass") {
             processPassMessage(data);
@@ -1360,7 +1383,7 @@ function makeSocket() {
         }else if (data.action === "game_start") {
             console.log(`Game started. ${data.time_limit}.`);
 
-            popup.style.display = 'none'; // ポップアップを閉じる
+            overlay.style.display = 'none';
 
             onlineGameStarted = true;
 
@@ -1376,7 +1399,7 @@ function makeSocket() {
             document.getElementById('timeLimitSelect').value = timeLimit;
             tempUrl.searchParams.set('timeLimit', timeLimit);
             console.log(`ゲームが開始されました。${data.show_valid_moves}`);
-            showValidMoves = data.show_valid_moves;
+            showValidMoves = data.show_valid_moves.toLowerCase() === "true";
             localStorage.setItem('showValidMoves', showValidMoves);
             document.getElementById('showValidMovesCheckbox').checked = showValidMoves;
             tempUrl.searchParams.set('showValidMoves', showValidMoves);
@@ -1465,26 +1488,6 @@ document.getElementById('gameEndSoundCheckbox').addEventListener('change', () =>
             localStorage.setItem('gameEndSoundEnabled', gameEndSoundEnabled);
         });
 
-
-// 「OK」ボタンの処理
-okButton.addEventListener('click', function () {
-    const selectedTimeLimit = pTimeLimitSelect.value;
-    const highlightEnabled = highlightCheckbox.checked;
-
-    copyURLToClipboard(); 
- 
-    // URLパラメータに反映
-    const url = new URL(window.location);
-    url.searchParams.set('timeLimit', selectedTimeLimit);
-    url.searchParams.set('showValidMoves', highlightEnabled);
-    history.pushState(null, '', url);
-
-
-
-    // ポップアップを閉じる
-    popup.style.display = 'none';
-
-});
 
         // 初期チェック状態を設定
 document.getElementById('soundEffectsCheckbox').checked = soundEffects;
