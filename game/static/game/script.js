@@ -177,7 +177,7 @@ function applyServerMove(row, col, player,status) {
 
     // 手番を変更
     currentPlayer = (player === 'black') ? 'white' : 'black';
-//TODO:  「新規ゲーム」を「降参」に変更,終了判定とその後に部屋をリセット, 自動で相手側にも手を反映して更新
+//TODO:  終了判定とその後に部屋をリセット, 多言語対応
     if (!hasValidMove()) {
 
         if (online){
@@ -1455,7 +1455,7 @@ document.getElementById('timeLimitSelect').addEventListener('change', () => {
     if (timeLimit===0){
         document.getElementById("timeLimitBox_").style.display = "none";
     }else{
-        document.getElementById("timeLimitBox_").style.display = "block";//todo ** ?? */
+        document.getElementById("timeLimitBox_").style.display = "block";
     }
 
 });
