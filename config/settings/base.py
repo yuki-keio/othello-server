@@ -126,9 +126,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-STATICFILES_DIRS = [
-    BASE_DIR / "game" / "static"
-]
+STATICFILES_DIRS = [BASE_DIR / "game" / "static"] if DEBUG else []
     
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
