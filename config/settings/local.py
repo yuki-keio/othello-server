@@ -4,7 +4,7 @@ from .base import *
 load_dotenv()
 
 DEBUG = True
-ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+ALLOWED_HOSTS = ["https://othello-d5eeb31e1569.herokuapp.com","127.0.0.1", "localhost"]
 
 INSTALLED_APPS += [
     "debug_toolbar",
