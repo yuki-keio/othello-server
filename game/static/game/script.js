@@ -1255,7 +1255,12 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
 
     } else {
         document.getElementById("playerJoinSoundBox").style.display = "none";
-        overlay.style.display = "none";
+
+        //もしあれば overlay を非表示
+
+        if (overlay){
+            overlay.style.display = "none";
+        }
 
         if (previousMode === 'online') {
             online = false; // オンラインモードのフラグを下げる

@@ -86,9 +86,8 @@ DATABASES = {
     }
 }
 
-SECURE_BROWSER_XSS_FILTER = True
 X_FRAME_OPTIONS = 'DENY'
-SECURE_SSL_REDIRECT = True
+
 
 
 # Password validation
