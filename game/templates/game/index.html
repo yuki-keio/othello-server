@@ -12,21 +12,21 @@
     <meta name="description" content="">
     <meta name="description" content="
     {% if mode == 'online' %}
-        オンラインでオセロ対戦ができるWebサイト。離れた場所にいる相手とも、リアルタイムで通信対戦が可能です。ブラウザさえあれば、オセロ盤の用意やアプリのダウンロードが一切不要！スマホ・PC・iPadなど好きなデバイスから、オセロの友達対戦を無料で遊べるWebゲームサイトです。
+        オセロのオンライン対戦ができる無料Webゲームサイト。離れた場所にいる相手とも、リアルタイムで通信対戦が可能です。ブラウザさえあれば、オセロ盤の用意やアプリのダウンロードが一切不要！スマホ・PC・iPadなど好きなデバイスから、オセロゲームの友達対戦を無料で遊べるWebサイトです。
     {% elif mode == 'ai' %}
-        ブラウザ上でAIとオセロ対戦！スマホ・PC・iPadなどデバイス一台でオセロが無料で遊べるWebサイト。オセロ盤の用意やアプリのインストールも必要なし！
+        ブラウザ上でAIとオセロ対戦！一人で楽しめます。スマホ・PC・iPadなどデバイス一台でオセロが無料で遊べるWebサイト。オセロ盤の用意やアプリのインストールも必要ないので、気軽に楽しみたい人におすすめ！
     {% else %}
-        スマホ・PC・iPadなどデバイス一台でオセロが遊べるWebサイト。オセロ盤の用意やアプリのインストールも必要なし！オセロの友達対戦をブラウザで遊べるスマートオセロ盤です。旅行でのレクリエーションにもオススメ
+        スマホ・PC・iPadなどデバイス一台でリバーシ（オセロ）が遊べる無料Webゲームサイト。オセロ盤の用意やアプリのインストールも必要なし！オセロの友達対戦をブラウザで遊べるスマートオセロ盤です。スマホ一台があればどこでも遊べるので、旅行先でのレクリエーションにもオススメ
     {% endif %}
 ">
 
     <title>
         {% if mode == 'online' %}
-            オンライン対戦 | スマートオセロWeb
+            オンライン対戦 | リバーシWeb
         {% elif mode == 'ai' %}
-            AI対戦 | スマートオセロWeb
+            AI対戦 | リバーシWeb
         {% else %}
-            電子オセロ盤 | スマートオセロWeb
+            スマートオセロ盤 | リバーシWeb
         {% endif %}
     </title>    
     <link rel="stylesheet" href="{% static 'game/style.css' %}">
@@ -49,7 +49,7 @@
             {% elif mode == 'ai' %}
                 AI対戦
             {% else %}
-                電子オセロ盤
+                スマートオセロ盤
             {% endif %}
         </h1>
         <i class="fa fa-cog" aria-hidden="true" id="setting"></i>
@@ -110,7 +110,7 @@
         </div>
         <!-- モード選択バナー -->
         <div id="mode-selection-banner">
-            <button class="mode-btn" data-mode="player">電子オセロ盤</button>
+            <button class="mode-btn" data-mode="player">スマートオセロ盤</button>
             <button class="mode-btn" data-mode="ai">AI対戦</button>
             <button class="mode-btn" data-mode="online">オンライン対戦</button>
         </div>

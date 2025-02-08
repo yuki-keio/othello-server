@@ -1124,7 +1124,7 @@ function changeTitle(){
         document.getElementById('title').textContent = 'AI対戦';
         document.getElementById('level_ai').style.display = 'block';
     } else if (gameMode === 'player') {
-        document.getElementById('title').textContent = '電子オセロ盤';
+        document.getElementById('title').textContent = 'スマートオセロ盤';
         document.getElementById('level_ai').style.display = 'none';
     }else if (gameMode === 'online') {
         document.getElementById('title').textContent = 'オンライン対戦';
