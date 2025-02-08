@@ -91,7 +91,7 @@
     
 </head>
 <body>
-    <div id="game-container">
+<div id="game-container">
         <h1 id="title">
             {% if mode == 'online' %}
                 オンライン対戦
@@ -103,9 +103,7 @@
         </h1>
     
         <img src="{% static 'game/images/setting.svg' %}" alt="設定" id="setting">
-        <div id="player-info">
-            <ul id="player-list"></ul>
-        </div>
+        <div id="player-info"><ul id="player-list"></ul></div>
         <span id="timer-display"></span>
     <div id="board-container">
         <div id="board" role="grid" >
@@ -237,23 +235,23 @@
     <a href="https://pc.moppy.jp/entry/invite.php?invite=y22tA17c&type=service"><img decoding="async" loading="lazy" src="https://img.moppy.jp/pub/pc/friend/640x480-13.jpg" alt="アプリインストール・ゲームアプリで無料で簡単にポイントが貯まる！楽しくポイ活するならモッピー" id="ad"></a>
 
     <section id="rules">
-        <h2>リバーシ（オセロ）のルール</h2>
+        <h2>リバーシ（オセロゲーム）のルール</h2>
     
         <h3>基本ルール</h3>
-        <p>オセロは 8×8 の盤面で行うボードゲームです。以下のルールで進行します。</p>
+        <p>リバーシは 8×8 の盤面で行うボードゲームです。以下のルールで進行します。</p>
         <ul>
             <li>ゲーム開始時は中央に黒と白の石が 2 個ずつ配置されます。</li>
             <li>黒が先手、白が後手で交互に手を打ちます。</li>
             <li>挟んだ相手の石は自分の色に変わります。</li>
-            <li><strong>合法手</strong>：自分の石は、相手の石を直線（縦・横・斜め）で挟める場所にしか置けません。</li>
-            <li>置ける手がない場合はパスし、両者とも置けない場合はゲーム終了です。</li>
+            <li>自分の石は、相手の石を直線（縦・横・斜め）で挟む<strong>【合法手】</strong>に置くことができます。</li>
+            <li>自分の合法手がない場合は、自動的に相手の番へ<strong>【パス】</strong>されます。両者ともパスになった場合はゲーム終了です。</li>
         </ul>
     
         <h3>合法手について</h3>
-        <p>本ゲームでは、プレイヤーが打てる「合法手」を自動で判定し、視認しやすいようにハイライト表示する機能があります。この機能は設定からオフにできます</p>
+        <p>本ゲームでは、プレイヤーが打てる合法手を自動で判定し、視認しやすいようにハイライト表示する機能があります。この機能は設定からオフにできます</p>
     
         <h3>時間制限</h3>
-        <p>ゲームのスピード感を高めるために時間制限を設定できます。最短では <strong>10秒ルール</strong> の超高速対局も可能です！</p>
+        <p>ゲームのスピード感を高めるために制限時間を設定できます。最短では <strong>10秒ルール</strong> の超高速対局も可能です！</p>
     
         <h3>勝利条件</h3>
         <ul>
@@ -262,30 +260,14 @@
             <li>オンライン対戦では、「投了」ボタンが使えます。相手が投了した場合も、自分の勝利となります</li>
         </ul>
     </section>
-    
-    <section id="strategy">
-        <h2>戦略のポイント</h2>
-        <ul>
-            <li><strong>角を狙え！</strong> - 角の石はひっくり返されることがないため、ゲームを有利に進められます</li>
-            <li><strong>相手の手を制限しよう！</strong> - 相手が打ちたい場所に打てないように「合法手」を減らす戦略も強力です！</li>
-        </ul>
-    </section>
-    
-    <section id="features">
-        <h2>このサイトの特徴</h2>
-        <ul>
-            <li><strong>URLによる対局の共有</strong> - 現在の盤面をURLで簡単にシェア！簡単にオンライン対戦の相手を募ったり、他のプレイヤーと棋譜を共有したりできます。</li>
-            <li><strong>レベル別AI対戦</strong> - 初級から上級まで、強さの異なるAIと対戦できます。</li>
-            <li><strong>音声効果</strong> - 石を置く音や対局終了時の効果音、オンライン対戦で相手が入室した時の通知音をオン/オフできます。</li>
-            <li><strong>オンライン対戦</strong> - 友達とリアルタイムで対戦！観戦モードも搭載しています。</li>
-        </ul>
-    </section>
-        <div class="credit">
+
+    <div class="credit">
             <!--copyright-->
             © 2024~ / 
             このオセロ盤では、多くの人にとって読みやすいユニバーサルデザインフォントを利用しています
-        </div>
     </div>
+</div>
+
     <audio id="placeStoneSound" src="{% static 'game/sounds/place-stone.mp3' %}" preload="auto"></audio>
     <audio id="victorySound" src="{% static 'game/sounds/victory.mp3' %}" preload="auto"></audio>
     <audio id="defeatSound" src="{% static 'game/sounds/defeat.mp3' %}" preload="auto"></audio>

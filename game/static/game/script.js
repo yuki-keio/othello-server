@@ -1182,7 +1182,7 @@ function updatePlayerList(players) {
         }else{
             display_player_name = player;
         }
-        span.textContent = `${role}: ${display_player_name}　`;
+        span.textContent = (role!=="黒") ?"　":"" + `${role}: ${display_player_name}`;
         playerListElement.appendChild(span);
     });
 }
