@@ -35,6 +35,6 @@ def robots_txt(request):
     content = """User-agent: *
 Disallow:
 
-Sitemap: https://othello-server-7gox.onrender.com/sitemap.xml
+Sitemap: https://reversi.yuki-lab.com/sitemap.xml
 """
     return HttpResponse(content, content_type="text/plain")
