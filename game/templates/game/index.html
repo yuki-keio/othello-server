@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=BIZ+UDGothic&family=BIZ+UDPMincho&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/faf01160aa.js" crossorigin="anonymous"></script>
 
+
     <meta name="description" content="">
     <meta name="description" content="
     {% if mode == 'online' %}
@@ -31,6 +32,54 @@
     </title>    
     <link rel="stylesheet" href="{% static 'game/style.css' %}">
     <script src="{% static 'game/script.js' %}" defer></script>
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "VideoGame",
+          "name": "Web Othello - 無料で遊べるオセロゲーム",
+          "description": "一人で遊べるAI対戦も友達とのオンライン対戦も可能な無料のオセロゲーム。ブラウザで今すぐプレイ！",
+          "image": "https://reversi.yuki-lab.com/static/game/images/othello.png",
+          "url": "https://reversi.yuki-lab.com",
+          "operatingSystem": "Web",
+          "genre": "Board game",
+          "gamePlatform": "Web",
+          "gameMode": ["SinglePlayer", "AI", "Multiplayer"],
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "JPY"
+          },
+          "hasPart": [
+            {
+              "@type": "WebPage",
+              "name": "オセロボード",
+              "url": "https://reversi.yuki-lab.com/play"
+            },
+            {
+              "@type": "WebPage",
+              "name": "AI対戦",
+              "url": "https://reversi.yuki-lab.com/ai"
+            },
+            {
+              "@type": "WebPage",
+              "name": "オンライン対戦",
+              "url": "https://reversi.yuki-lab.com/online"
+            }
+          ]
+        }
+        </script>
+
+    <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="{% static 'game/images/favicon/favicon.ico' %}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'game/images/favicon/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'game/images/favicon/icon-16x16.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'game/images/favicon/icon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="48x48" href="{% static 'game/images/favicon/icon-48x48.png' %}">
+    <link rel="icon" type="image/png" sizes="96x96" href="{% static 'game/images/favicon/icon-96x96.png' %}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{% static 'game/images/icon/favicon-192x192.png' %}">
+    <link rel="manifest" href="{% static 'game/images/icon/manifest.json' %}">
+    
+    <meta name="theme-color" content="#0078d7">
+
     <link rel="canonical" href="
     {% if mode == 'online' %}
         https://reversi.yuki-lab.com/online/
@@ -244,6 +293,11 @@
     <audio id="playerJoin" src="{% static 'game/sounds/playerJoin.mp3' %}" preload="auto"></audio>
 </body>
 
-
-</body>
+<script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register("{% static 'sw.js' %}")
+        .then(registration => console.log("Service Worker registered:", registration))
+        .catch(error => console.log("Service Worker registration failed:", error));
+    }
+</script>
 </html>
