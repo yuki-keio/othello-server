@@ -45,7 +45,10 @@ font-size: 1.4em;
 position: absolute;
 right: -5px;
 top: 12px;
-font-size: 1.8em;
+
+width: 24px;  
+height: 24px; 
+
 cursor: pointer;
 }
 #settings{
