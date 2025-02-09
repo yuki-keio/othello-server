@@ -55,7 +55,7 @@ cover/
 
 # Django stuff:
 *.log
-local_settings.py
+config/settings/local.py
 db.sqlite3
 db.sqlite3-journal
 staticfiles/
@@ -120,5 +120,3 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
-
-

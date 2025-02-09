@@ -59,6 +59,4 @@ web_othello/
 │   ├── error.log
 │
 └── docs/                        # ドキュメント（API仕様・設計書）
-    ├── README.md
-    ├── API_SPEC.md
     ├── ARCHITECTURE.md
