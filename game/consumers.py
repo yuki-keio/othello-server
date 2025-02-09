@@ -59,6 +59,7 @@ class OthelloConsumer(AsyncWebsocketConsumer):
 
             await self.channel_layer.group_add(self.group_name, self.channel_name)
             await self.accept()
+            self.ping_task = asyncio.create_task(self.send_ping()) 
 
             game_state = self.channel_layer.game_rooms[self.group_name]
             players = game_state["players"]
@@ -121,6 +122,8 @@ class OthelloConsumer(AsyncWebsocketConsumer):
  
     async def disconnect(self, close_code):
         try:
+            if hasattr(self, "ping_task"):
+                self.ping_task.cancel() 
             logger.info(f"[DISCONNECT] {self.player_id} left {self.group_name}")
             # WebSocket のグループから削除
             try:
@@ -330,6 +333,8 @@ class OthelloConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps(event["message"]))
 
     async def game_over_message(self, event):
+        if hasattr(self, "ping_task"):
+            self.ping_task.cancel()
         await self.send(text_data=json.dumps({
             "action": "game_over",
             "winner": event["winner"],
@@ -429,3 +434,12 @@ class OthelloConsumer(AsyncWebsocketConsumer):
                     "history": game_state["history"]
                 }
             )
+            
+    async def send_ping(self):
+        last_action_time = asyncio.get_event_loop().time()  # 最後の操作時間
+
+        while True:
+            await asyncio.sleep(30)
+            if asyncio.get_event_loop().time() - last_action_time > 600:  # 10分以上操作なし
+                break  # Ping停止
+            await self.send_json({"type": "ping"})
