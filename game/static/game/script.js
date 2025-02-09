@@ -208,7 +208,7 @@ function applyServerMove(row, col, player, status, final = false) {
 
         // 手番を変更
         currentPlayer = (player === 'black') ? 'white' : 'black';
-        //TODO:  終了判定とその後に部屋をリセット, 多言語対応
+       
         if (!hasValidMove(currentPlayer)) {
 
             if (online) {

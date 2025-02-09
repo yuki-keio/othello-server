@@ -3,6 +3,9 @@ web_othello/
 │── manage.py                  # Djangoのエントリーポイント
 │── .env                        # 環境変数（SECRET_KEYなど）
 │── .gitignore                  # Gitで管理しないファイルの指定
+│── LICENSE                    # ライセンス
+│── README.md                    # READMEファイル
+│── .python-version                    # Pythonのバージョン指定
 │── requirements.txt            # 必要なPythonライブラリ一覧
 │── db.sqlite3                  # SQLiteのDBファイル（または他のDBを使用）
 │
@@ -38,6 +41,7 @@ web_othello/
 │   ├── static/                   # 静的ファイル（CSS, JS, 画像）
 │   │   ├── game/
 │   │   │   ├── style.css
+│   │   │   ├── sw.js
 │   │   │   ├── script.js
 │   │   │   ├── sounds/
 │   │   │   │   ├── place-stone.mp3
@@ -45,6 +49,9 @@ web_othello/
 │   │   │   │   ├── defeat.mp3
 │   │   │   ├── images/
 │   │   │   │   ├── copy.png
+│   │   │   │   ├── share-image.png
+│   │   │   │   ├── setting.svg
+│   │   │   │   ├── favicon/
 │
 ├── staticfiles/                 # `collectstatic` で集めた静的ファイル（本番環境用）
 ├── logs/                        # ログファイルの保存ディレクトリ

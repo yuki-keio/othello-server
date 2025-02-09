@@ -8,6 +8,8 @@ import traceback
 
 logger = logging.getLogger(__name__)
 
+#todo 多言語対応
+
 class OthelloConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         try:
