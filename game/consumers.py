@@ -442,4 +442,4 @@ class OthelloConsumer(AsyncWebsocketConsumer):
             await asyncio.sleep(30)
             if asyncio.get_event_loop().time() - last_action_time > 600:  # 10分以上操作なし
                 break  # Ping停止
-            await self.send_json({"type": "ping"})
+            await self.send(text_data=json.dumps({"type": "ping"}))

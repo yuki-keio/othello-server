@@ -186,7 +186,9 @@ function applyServerMove(row, col, player, status, final = false) {
 
     if (soundEffects) {
         placeStoneSound.currentTime = 0;
-        placeStoneSound.play();
+        placeStoneSound.play().catch(error => {
+            console.warn("audio was blocked:", error);
+        });;
     }
 
     // 現在の手にハイライトを追加
@@ -472,7 +474,9 @@ function startTimer() {
         timerDisplay.textContent = formatTime(remainingTime);
 
         if (remainingTime < 4 && timeLimitSoundEnabled) {
-            warningSound.play();
+            warningSound.play().catch(error => {
+                console.warn("audio was blocked:", error);
+            });;
         }
         if (remainingTime <= 5) {
             timerDisplay.classList.remove('warning1');
@@ -555,11 +559,15 @@ function endGame(online_data, winner = null) {
             if (gameEndSoundEnabled) {
                 if (online_data.winner === role_online) {
                     victorySound.currentTime = 0;
-                    victorySound.play();
+                    victorySound.play().catch(error => {
+                        console.warn("audio was blocked:", error);
+                    });;
                 } else {
                     defeatSound.currentTime = 0;
 
-                    defeatSound.play();
+                    defeatSound.play().catch(error => {
+                        console.warn("audio was blocked:", error);
+                    });;
                 }
             }
         } else if (online_data.reason === "timeout") {
@@ -568,10 +576,14 @@ function endGame(online_data, winner = null) {
             if (gameEndSoundEnabled) {
                 if (online_data.winner === role_online) {
                     victorySound.currentTime = 0;
-                    victorySound.play();
+                    victorySound.play().catch(error => {
+                        console.warn("audio was blocked:", error);
+                    });;
                 } else {
                     defeatSound.currentTime = 0;
-                    defeatSound.play();
+                    defeatSound.play().catch(error => {
+                        console.warn("audio was blocked:", error);
+                    });;
                 }
             }
         } else if (online_data.reason === "natural") {
@@ -581,10 +593,14 @@ function endGame(online_data, winner = null) {
             if (gameEndSoundEnabled) {
                 if (online_data.winner === role_online) {
                     victorySound.currentTime = 0;
-                    victorySound.play();
+                    victorySound.play().catch(error => {
+                        console.warn("audio was blocked:", error);
+                    });;
                 } else {
                     defeatSound.currentTime = 0;
-                    defeatSound.play();
+                    defeatSound.play().catch(error => {
+                        console.warn("audio was blocked:", error);
+                    });;
                 }
             }
         }
@@ -602,7 +618,9 @@ function endGame(online_data, winner = null) {
             if (gameEndSoundEnabled) {
                 victorySound.currentTime = 0;
 
-                victorySound.play();
+                victorySound.play().catch(error => {
+                    console.warn("audio was blocked:", error);
+                });;
             }
         }
 
@@ -613,25 +631,35 @@ function endGame(online_data, winner = null) {
             result = '黒の勝ち!';
             if (gameEndSoundEnabled) {
                 victorySound.currentTime = 0;
-                victorySound.play();
+                victorySound.play().catch(error => {
+                    console.warn("audio was blocked:", error);
+                });;
             }
         } else if (whiteCount > blackCount) {
             result = '白の勝ち!';
             if (gameMode === "ai" && gameEndSoundEnabled) {
                 defeatSound.currentTime = 0;
-                defeatSound.play();
+                defeatSound.play().catch(error => {
+                    console.warn("audio was blocked:", error);
+                });;
             } else if (gameEndSoundEnabled) {
                 victorySound.currentTime = 0;
-                victorySound.play();
+                victorySound.play().catch(error => {
+                    console.warn("audio was blocked:", error);
+                });;
             }
         } else {
             result = '引き分け!';
             if (gameMode === "ai" && gameEndSoundEnabled) {
                 defeatSound.currentTime = 0;
-                defeatSound.play();
+                defeatSound.play().catch(error => {
+                    console.warn("audio was blocked:", error);
+                });;
             } else if (gameEndSoundEnabled) {
                 victorySound.currentTime = 0;
-                victorySound.play();
+                victorySound.play().catch(error => {
+                    console.warn("audio was blocked:", error);
+                });;
             }
         }
 
@@ -695,24 +723,11 @@ function loadBoardFromURL() {
     const won = urlParams.get('won');
     const aiLevelFromURL = urlParams.get('aiLevel');
 
-    if (timeLimitFromURL) {
-        timeLimit = parseInt(timeLimitFromURL);
-        if (timeLimit === 0) {
-            document.getElementById("timeLimitBox_").style.display = "none";
-        } else {
-            document.getElementById("timeLimitBox_").style.display = "block";
-        }
-    };
-    if (aiLevelFromURL) {
-        aiLevel = parseInt(aiLevelFromURL);
-    };
+
     if (won === "won") {
         timeLimit = 0;
         stopTimer();
     }
-    if (showValidMovesFromURL) {
-        showValidMoves = showValidMovesFromURL === 'true';
-    };
 
 
     if (modeFromPath) {
@@ -727,6 +742,20 @@ function loadBoardFromURL() {
             showTooltip();
             document.getElementById("playerJoinSoundBox").style.display = "block";
         } else {
+            if (timeLimitFromURL) {
+                timeLimit = parseInt(timeLimitFromURL);
+                if (timeLimit === 0) {
+                    document.getElementById("timeLimitBox_").style.display = "none";
+                } else {
+                    document.getElementById("timeLimitBox_").style.display = "block";
+                }
+            };
+            if (aiLevelFromURL) {
+                aiLevel = parseInt(aiLevelFromURL);
+            };
+            if (showValidMovesFromURL) {
+                showValidMoves = showValidMovesFromURL === 'true';
+            };
             const url = new URL(window.location);
             url.searchParams.delete("room");
             history.replaceState(null, "", url);
@@ -746,12 +775,14 @@ function loadBoardFromURL() {
     updateStatus();
 
     if (serializedMoves) {
-        deserializeMoveHistory(serializedMoves);
+        if (gameMode !== "online") {
+            deserializeMoveHistory(serializedMoves);
 
-        replayMovesUpToIndex(moveHistory.length - 1);
-        if (won) {
-            endGame("offline", won);
-            timeLimit = 0;
+            replayMovesUpToIndex(moveHistory.length - 1);
+            if (won) {
+                endGame("offline", won);
+                timeLimit = 0;
+            }
         }
         return true;
     } else {
@@ -1267,8 +1298,8 @@ function showTooltip() {
 victorySound.volume = 0.01;
 defeatSound.volume = 0.007;
 warningSound.volume = 0.02;
-playerJoin.volume = 0.03;
-placeStoneSound.volume = 0.03;
+playerJoin.volume = 0.04;
+placeStoneSound.volume = 0.05;
 
 //時間制限の「音量設定」のためのボックスの表示可否
 if (timeLimit === 0) {
@@ -1447,7 +1478,9 @@ function makeSocket() {
             if (playerJoinSoundEnabled) {
                 if (data.player_id !== playerId) {
                     playerJoin.currentTime = 0;
-                    playerJoin.play();
+                    playerJoin.play().catch(error => {
+                        console.warn("audio was blocked:", error);
+                    });;
                 }
             }
         } else if (data.action === "pass") {
