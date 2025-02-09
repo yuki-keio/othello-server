@@ -312,7 +312,7 @@ height: 45px;
 
 #copy-url-btn{
 position: relative;
-top:-4px;
+top:5px;
 margin: 15px 5px 5px 0px;
 padding: 10px 20px;
 width: 45px;
@@ -392,6 +392,13 @@ transition: background-color 0.2s ease-in-out;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
   width: 80%;
   max-width: 250px;
+}
+#contents-overlay-setting{
+  text-align: left;
+  padding: 10px;
+}
+#time_overlay-label{
+  padding-left: 7px;
 }
 
 /* スタートボタンのデザイン */

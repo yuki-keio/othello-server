@@ -70,6 +70,29 @@ let aimove=false;
 let online=false;
 let role_online = "unknown";
 
+function refreshBoard() {
+    board.innerHTML = '';
+    for (let i = 0; i < 8; i++) {
+        gameBoard[i] = [];
+        for (let j = 0; j < 8; j++) {
+            gameBoard[i][j] = '';
+            const cell = document.createElement('div');
+            cell.className = 'cell';
+            cell.dataset.row = i;
+            cell.dataset.col = j;
+            cell.addEventListener('click', () => {
+                makeMove(i, j);
+            });
+            board.appendChild(cell);
+            cell.setAttribute('aria-label', "abcdefgh"[j] + `${i + 1}：空`);
+            cell.setAttribute('role', 'gridcell');
+
+        }
+    }
+    add4x4Markers();
+
+
+}
 
 function initializeBoard() {
     for (let i = 0; i < 8; i++) {
@@ -124,6 +147,7 @@ function add4x4Markers() {
 }
 
 function setDisc(row, col, color) {
+
     gameBoard[row][col] = color;
     const cell = board.children[row * 8 + col];
     if (cell.classList.contains('44')) {
@@ -143,18 +167,22 @@ function isBoardFull() {
     return gameBoard.flat().every(cell => cell !== '');
 }
 //サーバーからの手とは限らないので注意
-function applyServerMove(row, col, player,status) {
-    // statusが0の場合は、サーバーからの手か友達対戦です
-    // statusが1の場合は、リプレイ時の手なので、サーバーからの手ではない
+function applyServerMove(row, col, player,status,final=false) {
+    // statusが0の場合は、サーバーからの手?か友達対戦です
+    // statusが1の場合は、リプレイ時の手
     // statusが2の場合は、これはAIendMoveによる手であり、serverからの手ではないです。
     //console.log(`[applyServerMove] row: ${row}, col: ${col}, player: ${player}, status: ${status}, currentPlayer: ${currentPlayer}`);
-    if (gameBoard[row][col] !== '' || !isValidMove(row, col)) return;
+    if (gameBoard[row][col] !== '' || !isValidMove(row, col,player)) {
+        console.error(`[applyServerMove] Invalid move: (${row},${col})`);
+        return;
+    }
     // 以前のハイライトを削除
     if (lastMoveCell) {
         lastMoveCell.classList.remove('last-move');
     }
 
     setDisc(row, col, player);
+  
 
     if (soundEffects) {
         placeStoneSound.currentTime = 0;
@@ -166,8 +194,9 @@ function applyServerMove(row, col, player,status) {
     currentCell.firstChild.classList.add('last-move');
     lastMoveCell = currentCell.firstChild;
 
+    console.log("board::",gameBoard);
     // 石をひっくり返す
-    flipDiscs(row, col);
+    flipDiscs(row, col,player);
 
     recordMove(row, col,status);
 
@@ -178,10 +207,16 @@ function applyServerMove(row, col, player,status) {
     // 手番を変更
     currentPlayer = (player === 'black') ? 'white' : 'black';
 //TODO:  終了判定とその後に部屋をリセット, 多言語対応
-    if (!hasValidMove()) {
+    if (!hasValidMove(currentPlayer)) {
 
         if (online){
-            socket.send(JSON.stringify({ action: "pass" }));
+            console.log(`"status":${status}`);
+            if (role_online === currentPlayer &&final)
+                {
+                    socket.send(JSON.stringify({ action: "pass" }));
+
+            }
+            
         }else{
             if (status===0){
                 notifyNoValidMoves(currentPlayer); //友達対戦の場合のパス
@@ -196,8 +231,9 @@ function applyServerMove(row, col, player,status) {
 
         currentPlayer = currentPlayer === 'black' ? 'white' : 'black';
 
+        console.log(`[applyServerMove] No valid moves. SO currentP became: ${currentPlayer}`);
 
-        if (!hasValidMove()) {
+        if (!hasValidMove(currentPlayer)) {
             if (!online){
                 endGame("offline");
             }
@@ -271,7 +307,7 @@ function makeMove(row, col,status=0) {
 
 function isValidMove(row, col, playerColor=currentPlayer) {
     if (gameBoard[row][col] !== '') {
-        //console.log(`[isValidMove] (${row},${col}) is occupied.`);
+        console.log(`[isValidMove] (${row},${col}) is occupied.`);
         return false;
     }
     //console.log(`gameboard: ${gameBoard}`);
@@ -293,28 +329,23 @@ function wouldFlip(row, col, dx, dy,playerColor=currentPlayer) {
     return isValidPosition(x, y) && gameBoard[x][y] === playerColor;
 }
 
-function flipDiscs(row, col) {
+function flipDiscs(row, col,playerColor=currentPlayer) {
     const directions = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
 
 
+    console.log(`[flipDiscs] row: ${row}, col: ${col}, playerColor: ${playerColor}`);
 
 
     for (const [dx, dy] of directions) {
-        if (wouldFlip(row, col, dx, dy)) {
+        console.log(`[flipDiscs] Checking direction (${dx},${dy}),wf: ${wouldFlip(row, col, dx, dy,playerColor)}`);
+        if (wouldFlip(row, col, dx, dy,playerColor)) {
             let x = row + dx;
             let y = col + dy;
             let flip_count=1;
-            while (gameBoard[x][y] === getOpponentColor()) {
+            while (gameBoard[x][y] === getOpponentColor(playerColor)) {
+                console.log(`[flipDiscs] Flipping disc at (${x},${y})`);
                 flip_count++;
-                setDisc(x, y, currentPlayer); 
-                
-                
-          
-
-
-
-           
-             
+                setDisc(x, y, playerColor); 
                 x += dx;
                 y += dy;
             }
@@ -625,6 +656,9 @@ function serializeMoveHistory() {
 
 function deserializeMoveHistory(serialized) {
     const moves_ = serialized.split(',');
+    if (moves_[moves_.length-1]===""){
+        moves_.pop();
+    }
     moveHistory = [];
     moveHistory= moves_.map(a_move => {
     
@@ -667,9 +701,9 @@ function loadBoardFromURL() {
         timeLimit = parseInt(timeLimitFromURL);
         if (timeLimit===0){
         document.getElementById("timeLimitBox_").style.display = "none";
-    }else{
-        document.getElementById("timeLimitBox_").style.display = "block";
-    }
+        }else{
+            document.getElementById("timeLimitBox_").style.display = "block";
+        }
     };
     if (aiLevelFromURL) {
         aiLevel = parseInt(aiLevelFromURL);
@@ -688,6 +722,7 @@ function loadBoardFromURL() {
         localStorage.setItem('gameMode', gameMode);
         changeTitle();
         if (gameMode ==="online"){
+            console.log(`timelimit: ${timeLimit}`);
             makeSocket()
             online=true;
             onlineUI();
@@ -714,8 +749,7 @@ function loadBoardFromURL() {
 
     if (serializedMoves) {
         deserializeMoveHistory(serializedMoves);
-     
-        
+
         replayMovesUpToIndex(moveHistory.length - 1);
         if (won){
             endGame("offline",won);
@@ -752,6 +786,13 @@ function copyURLToClipboard() {
 
 function restart() {
     if (online){
+
+        timeLimit=0;
+        localStorage.setItem('timeLimit', timeLimit);
+
+
+        
+        
     // 新しい部屋を生成
      // 新しい部屋IDをランダムに生成（UUID の代わりに短いランダム文字列）
      const newRoomId = Math.random().toString(36).substring(2, 8);
@@ -815,13 +856,16 @@ function goToNextMove() {
 
 }
 
-function replayMovesUpToIndex(index) {
+function replayMovesUpToIndex(index,fromServer=false) {
     gameBoard = gameBoard.map(row => row.map(() => '')); // Clear the board
     setInitialStones();
-  
-    moveHistory.slice(0, index + 1).forEach(({ row, col, player }) => {
-        makeMove(row, col,1);
+    console.log("replayMovesUpToIndex",moveHistory);
+    moveHistory.slice(0, index).forEach(({ row, col, player }) => {
+        console.log("Before move:", JSON.stringify(gameBoard));
+        applyServerMove(row, col, player,1);
+        console.log("After move:", JSON.stringify(gameBoard));
     });
+    applyServerMove(moveHistory[index].row, moveHistory[index].col, moveHistory[index].player,1,fromServer);
     if (index >= 0) {
         const move = moveHistory[index];
         lastMoveCell = board.children[move.row * 8 + move.col].firstChild;
@@ -1121,10 +1165,10 @@ function evaluateBoard(board) {
 
 function changeTitle(){
     if (gameMode === 'ai') {
-        document.getElementById('title').textContent = 'AI対戦';
+        document.getElementById('title').textContent = 'AIと対戦';
         document.getElementById('level_ai').style.display = 'block';
     } else if (gameMode === 'player') {
-        document.getElementById('title').textContent = 'スマートオセロ盤';
+        document.getElementById('title').textContent = 'オセロ盤モード';
         document.getElementById('level_ai').style.display = 'none';
     }else if (gameMode === 'online') {
         document.getElementById('title').textContent = 'オンライン対戦';
@@ -1134,6 +1178,7 @@ function changeTitle(){
 
 // サーバーから受信したパスメッセージに基づいて、ターン更新と表示を行う
 function processPassMessage(data) {
+    console.log(`[processPassMessage] Received pass message: ${JSON.stringify(data)}, old currentPlayer: ${currentPlayer}`);
     // data.new_turn がサーバーから送信された新しい手番
     currentPlayer = data.new_turn;
     
@@ -1163,6 +1208,12 @@ function onlineUI(){
     // オンライン対戦モードの場合のUI調整
 if (gameMode === 'online') {
         surrenderBtn.style.display = 'inline-block'; // 降伏ボタンを表示
+
+        //設定から時間やハイライトを変更できないように消す
+        document.getElementById('timeLimitContainer').style.display = 'none';
+        document.getElementById('validContainer').style.display = 'none';
+
+        
     
 }else{
     console.log("エラー：offline");
@@ -1214,8 +1265,8 @@ function showTooltip() {
 
 
 //音量調整
-victorySound.volume = 0.03;
-defeatSound.volume = 0.02;
+victorySound.volume = 0.01;
+defeatSound.volume = 0.007;
 warningSound.volume = 0.02;
 playerJoin.volume = 0.03;
 placeStoneSound.volume = 0.03;
@@ -1240,14 +1291,8 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
       updateURL();    // URLパラメータの更新など必要なら行う
 
       if (selectedMode === 'online') {
-        timeLimit=0;
-        localStorage.setItem('timeLimit', timeLimit);
 
-
-        onlineUI();      // オンラインの場合は、UIの調整（例：新規ゲームボタンの非表示、降伏ボタンの表示）
-        stopTimer();
-        document.getElementById("timeLimitBox_").style.display = "none";
-        document.getElementById("playerJoinSoundBox").style.display = "block";
+ 
         online = true;  // オンラインモードのフラグを立てる
         
 
@@ -1300,12 +1345,22 @@ window.addEventListener('DOMContentLoaded', () => {
 
             copyURLToClipboard(); 
  
-           timeLimit = overlayTimeLimit;
-           showValidMoves = overlayHighlightMoves;
+            timeLimit = overlayTimeLimit;
+            showValidMoves = overlayHighlightMoves;
+
+            localStorage.setItem('timeLimit', timeLimit);
+            localStorage.setItem('showValidMoves', showValidMoves);
+
+
 
             // オーバーレイを非表示
             overlay.style.display = "none";
 
+            //設定から時間やハイライトを変更できないように消す
+            document.getElementById('timeLimitContainer').style.display = 'none';
+            document.getElementById('validContainer').style.display = 'none';
+
+            socket.send(JSON.stringify({ action: "game_setting", time_limit: timeLimit, show_valid_moves: showValidMoves }));
 
          
         });
@@ -1363,13 +1418,30 @@ function makeSocket() {
         }
 
         if(data.action === "place_stone") {
-            applyServerMove(data.row, data.col, data.player,0);
+
+            refreshBoard()
+            deserializeMoveHistory(data.history);
+            console.log("moveHistory",moveHistory);
+            replayMovesUpToIndex(moveHistory.length-1,true);
+            
         }else if (data.action === "assign_role") {
             role_online = data.role; // サーバーから受け取った役割
             console.log(`あなたの役割: ${role_online}, データ${data}, (ID: ${playerId}), 再接続${data.reconnect}, ロール${role_online}`);
             if (role_online === 'black' && data.reconnect===false)  {
                 overlay.style.display = 'flex'; 
             }
+            if (data.reconnect===true){
+                refreshBoard()
+                deserializeMoveHistory(data.history);
+                console.log("moveHistory",moveHistory);
+                replayMovesUpToIndex(moveHistory.length-1);
+            }
+
+            //タイマーを止める
+            timeLimit=0;
+            localStorage.setItem('timeLimit', timeLimit);
+            stopTimer();
+            document.getElementById("timeLimitBox_").style.display = "none";
 
         }else if (data.action === "update_players") {
             updatePlayerList(data.players);
@@ -1386,15 +1458,13 @@ function makeSocket() {
             endGame(data,data.winner);
             return;
         }else if (data.action === "game_start") {
-            console.log(`Game started. ${data.time_limit}.`);
+            console.log(`Game started. ${data.time_limit},${data.show_valid_moves}.`);
 
             overlay.style.display = 'none';
 
             onlineGameStarted = true;
 
-            //設定から時間やハイライトを変更できないように消す
-            document.getElementById('timeLimitContainer').style.display = 'none';
-            document.getElementById('validContainer').style.display = 'none';
+            
 
             const tempUrl = new URL(window.location);
 
@@ -1404,7 +1474,7 @@ function makeSocket() {
             document.getElementById('timeLimitSelect').value = timeLimit;
             tempUrl.searchParams.set('timeLimit', timeLimit);
             console.log(`ゲームが開始されました。${data.show_valid_moves}`);
-            showValidMoves = data.show_valid_moves.toLowerCase() === "true";
+            showValidMoves = data.show_valid_moves
             localStorage.setItem('showValidMoves', showValidMoves);
             document.getElementById('showValidMovesCheckbox').checked = showValidMoves;
             tempUrl.searchParams.set('showValidMoves', showValidMoves);

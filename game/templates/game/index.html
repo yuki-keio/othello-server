@@ -24,12 +24,12 @@
         {% if mode == 'online' %}
             オンライン対戦 | リバーシWeb - 無料で遊べるオセロゲーム
         {% elif mode == 'ai' %}
-            AI対戦 | リバーシWeb - 無料で遊べるオセロゲーム
+            AIと対戦 | リバーシWeb - 無料で遊べるオセロゲーム
         {% else %}
-            スマートオセロ盤 | リバーシWeb - 無料で遊べるオセロゲーム
+            オセロ盤モード | リバーシWeb - 無料で遊べるオセロゲーム
         {% endif %}
     </title>    
-    <link rel="stylesheet" href="{% static 'game/style.css' %}">
+    <link rel="stylesheet" href="{% static 'game/style.css?v=2' %}">
     <script src="{% static 'game/script.js' %}" defer></script>
     <script type="application/ld+json">
         {
@@ -51,12 +51,12 @@
           "hasPart": [
             {
               "@type": "WebPage",
-              "name": "オセロボード",
+              "name": "オセロ盤",
               "url": "https://reversi.yuki-lab.com/play"
             },
             {
               "@type": "WebPage",
-              "name": "AI対戦",
+              "name": "AIと対戦",
               "url": "https://reversi.yuki-lab.com/ai"
             },
             {
@@ -98,7 +98,7 @@
             {% elif mode == 'ai' %}
                 AI対戦
             {% else %}
-                スマートオセロ盤
+                オセロ盤モード
             {% endif %}
         </h1>
     
@@ -113,20 +113,23 @@
         <div id="game-settings-overlay">
             <div id="game-settings">
                 <h3>対戦設定</h3>
-                <label>⏱ 持ち時間:
-                    <select id="time-limit">
-                        <option value="0">制限なし</option>
-                        <option value="10">10秒</option>
-                        <option value="30">30秒</option>
-                        <option value="60">1分</option>
-                        <option value="180">3分</option>
-                        <option value="300">5分</option>
-                    </select>
-                </label>
-                <br>
-                <label>
-                    <input type="checkbox" id="highlight-moves" checked> 有効な手をハイライト表示
-                </label>
+
+                <div id="contents-overlay-setting">
+                    <label id="time_overlay-label">⏱ 持ち時間：
+                        <select id="time-limit">
+                            <option value="0">制限なし</option>
+                            <option value="10">10秒</option>
+                            <option value="30">30秒</option>
+                            <option value="60">1分</option>
+                            <option value="180">3分</option>
+                            <option value="300">5分</option>
+                        </select>
+                    </label>
+                    <br>
+                    <label>
+                        <input type="checkbox" id="highlight-moves" checked> 有効な手をハイライト表示
+                    </label>
+                </div>
                 <br>
                 <button id="start-match" class="btn-primary">対戦開始 & URLコピー！</button>
             </div>
@@ -158,8 +161,8 @@
         </div>
         <!-- モード選択バナー -->
         <div id="mode-selection-banner">
-            <button class="mode-btn" data-mode="player">スマートオセロ盤</button>
-            <button class="mode-btn" data-mode="ai">AI対戦</button>
+            <button class="mode-btn" data-mode="player">オセロ盤モード</button>
+            <button class="mode-btn" data-mode="ai">AIと対戦</button>
             <button class="mode-btn" data-mode="online">オンライン対戦</button>
         </div>
 

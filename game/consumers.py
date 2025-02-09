@@ -4,6 +4,7 @@ import logging
 from channels.generic.websocket import AsyncWebsocketConsumer
 from urllib.parse import parse_qs
 import time
+import traceback
 
 logger = logging.getLogger(__name__)
 
@@ -32,10 +33,9 @@ class OthelloConsumer(AsyncWebsocketConsumer):
 
             if self.group_name not in self.channel_layer.game_rooms:
                 
+                #デフォルト。settingで更新可能
                 time_limit = int(query_params.get("timeLimit", [0])[0])
-                logger.info(f"time_limit: {time_limit}")
-                show_valid_moves = query_params.get("showValidMoves", [False])[0]
-                logger.info(f"show_valid_moves: {show_valid_moves}")
+                show_valid_moves = query_params.get("showValidMoves", [False])[0] 
                 
                 logger.info(f"[NEW ROOM] {self.group_name} を作成")
                 self.channel_layer.game_rooms[self.group_name] = {
@@ -48,9 +48,8 @@ class OthelloConsumer(AsyncWebsocketConsumer):
                     "turn_start_time": asyncio.get_event_loop().time(),
                     "game_started": False,
                     "last_active": time.time(),
-                    "show_valid_moves": show_valid_moves
-
-
+                    "show_valid_moves": show_valid_moves,
+                    "history": ""
                 }
                 board = self.channel_layer.game_rooms[self.group_name]["board"]
                 board[3][3] = "white"
@@ -89,7 +88,8 @@ class OthelloConsumer(AsyncWebsocketConsumer):
             await self.send(text_data=json.dumps({
                 "action": "assign_role",
                 "role": role,
-                "reconnect": is_reconnect
+                "reconnect": is_reconnect,
+                "history": game_state["history"]
             }))
 
             # プレイヤーの場合、ターンタイマーをセット
@@ -107,7 +107,9 @@ class OthelloConsumer(AsyncWebsocketConsumer):
             )
         except Exception as e:
             logger.error(f"[ERROR in connect] {str(e)}")
-            logger.error(traceback.format_exc())  # 詳細なエラートレースをログに記録
+            
+            logger.error(traceback.format_exc())
+            
             await self.close()
 
     async def update_players(self, event):
@@ -159,15 +161,29 @@ class OthelloConsumer(AsyncWebsocketConsumer):
             game_state["last_active"] = time.time()
 
 
+            
+            logger.info(f"[GAME STATE] {self.group_name} の状態：{game_state},{ data.get("action") == "game_setting"}")
+            if data.get("action") == "game_setting":
+                time_limit = int(data.get("time_limit", 0))
+                show_valid_moves = data.get("show_valid_moves", False)
+                game_state["time_limit"] = time_limit
+                game_state["show_valid_moves"] = show_valid_moves
+                
+                #ログ
+                logger.info(f"[GAME SETTING] {self.group_name} の設定が更新されました：{game_state}")
+                return
+            
             # オンライン対戦の場合、部屋内に2人未満なら手を受け付けない
             if len(game_state["players"]) < 2 and self.role in ["black", "white"]:
+                
                 await self.send(text_data=json.dumps({
-                    "error": "対戦相手がまだ接続していません。もう少々お待ちください。"
+                    "error": "対戦相手がまだ接続していません"
                 }))
                 return
+            
             if not game_state.get("game_started", False):
                 game_state["game_started"] = True
-                logger.info(f"[GAME STARTED] {self.group_name} の対戦が開始されました")
+                logger.info(f"[GAME STARTED] {self.group_name} の対戦が開始されました：{game_state}")
                 # ゲーム開始時を通知
                 
                 await self.channel_layer.group_send(
@@ -201,7 +217,8 @@ class OthelloConsumer(AsyncWebsocketConsumer):
                     {
                         "type": "game_over_message",
                         "winner": opponent,
-                        "reason": "surrender"
+                        "reason": "surrender",
+                        "history": game_state["history"]
                     }
                 )
                 return
@@ -265,21 +282,26 @@ class OthelloConsumer(AsyncWebsocketConsumer):
 
             # 有効な手があった場合は連続パスをリセット
             game_state["pass_count"] = 0
+            
+           
 
             # ターン交代
             game_state["turn"] = "white" if player == "black" else "black"
             game_state["turn_start_time"] = asyncio.get_event_loop().time()
-            move_data = {
-                "action": "place_stone",
-                "row": row,
-                "col": col,
-                "player": player,
-                "flipped": discs_to_flip,
-                "new_turn": game_state["turn"]
-            }
+            
+            game_state["history"]+=f"{player[0]}{row}{col},"
             await self.channel_layer.group_send(
                 self.group_name,
-                {"type": "game_message", "message": move_data}
+                {
+                    "type": "game_message",
+                    "message": 
+                        
+                        {
+                            "action": "place_stone",
+                            "history": game_state["history"]
+                        }
+                        
+                }
             )
 
             # 自然終了判定：盤面が満杯、または双方に有効手がない場合
@@ -311,7 +333,8 @@ class OthelloConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             "action": "game_over",
             "winner": event["winner"],
-            "reason": event["reason"]
+            "reason": event["reason"],
+            "history": event.get("history", "")
         }))
 
     # 盤面上の位置が有効かどうか
@@ -376,7 +399,8 @@ class OthelloConsumer(AsyncWebsocketConsumer):
             {
                 "type": "game_over_message",
                 "winner": winner,
-                "reason": "natural"
+                "reason": "natural",
+                "history": game_state["history"]
             }
         )
 
@@ -401,6 +425,7 @@ class OthelloConsumer(AsyncWebsocketConsumer):
                 {
                     "type": "game_over_message",
                     "winner": opponent,
-                    "reason": "timeout"
+                    "reason": "timeout",
+                    "history": game_state["history"]
                 }
             )
