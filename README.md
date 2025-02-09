@@ -1,5 +1,7 @@
 # リバーシ （インクルーシブデザイン）
 
+![ゲーム画面](https://reversi.yuki-lab.com/static/game/images/share-image.png )
+
 ## 公開サーバー
 ● **こちらから遊べます:** [https://reversi.yuki-lab.com](https://reversi.yuki-lab.com)
 
@@ -15,4 +17,3 @@
 本ソフトウェアを使用する際は、この著作権表示をそのまま保持してください。
 
 
-![ゲーム画面](https://reversi.yuki-lab.com/static/game/images/share-image.png )
