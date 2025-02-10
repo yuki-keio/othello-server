@@ -107,6 +107,12 @@
 </head>
 <body>
 <div id="game-container">
+        <!-- モード選択バナー -->
+        <div id="mode-selection-banner">
+            <button class="mode-btn" data-mode="player">オセロ盤</button>
+            <button class="mode-btn" data-mode="ai">AI対戦</button>
+            <button class="mode-btn" data-mode="online">通信対戦</button>
+        </div>
         <h1 id="title">
             {% if mode == 'online' %}
                 オンライン対戦
@@ -122,37 +128,37 @@
         <img src="{% static 'game/images/setting.svg' %}" alt="設定" id="setting">
         <div id="player-info"><ul id="player-list"></ul></div>
         <span id="timer-display"></span>
-    <div id="board-container">
-        <div id="board" role="grid" >
-        </div>
-        
-        {% if mode == 'online' %}
-        <div id="game-settings-overlay">
-            <div id="game-settings">
-                <h3>対戦設定</h3>
-
-                <div id="contents-overlay-setting">
-                    <label id="time_overlay-label">⏱ 持ち時間：
-                        <select id="time-limit">
-                            <option value="0">制限なし</option>
-                            <option value="10">10秒</option>
-                            <option value="30">30秒</option>
-                            <option value="60">1分</option>
-                            <option value="180">3分</option>
-                            <option value="300">5分</option>
-                        </select>
-                    </label>
-                    <br>
-                    <label>
-                        <input type="checkbox" id="highlight-moves" checked> 有効な手をハイライト表示
-                    </label>
-                </div>
-                <br>
-                <button id="start-match" class="btn-primary">対戦開始 & URLコピー！</button>
+        <div id="board-container">
+            <div id="board" role="grid" >
             </div>
+            
+            {% if mode == 'online' %}
+            <div id="game-settings-overlay">
+                <div id="game-settings">
+                    <h3>対戦設定</h3>
+
+                    <div id="contents-overlay-setting">
+                        <label id="time_overlay-label">⏱ 持ち時間：
+                            <select id="time-limit">
+                                <option value="0">制限なし</option>
+                                <option value="10">10秒</option>
+                                <option value="30">30秒</option>
+                                <option value="60">1分</option>
+                                <option value="180">3分</option>
+                                <option value="300">5分</option>
+                            </select>
+                        </label>
+                        <br>
+                        <label>
+                            <input type="checkbox" id="highlight-moves" checked> 有効な手をハイライト表示
+                        </label>
+                    </div>
+                    <br>
+                    <button id="start-match" class="btn-primary">対戦開始 & URLコピー！</button>
+                </div>
+            </div>
+            {% endif %}
         </div>
-        {% endif %}
-    </div>
         <div id="status">
             <span class="current-player" id="c_black">黒番</span>
             <div id="black_circle"></div>
@@ -176,12 +182,7 @@
             <pre id="move-list">　棋譜はまだありません</pre>
 
         </div>
-        <!-- モード選択バナー -->
-        <div id="mode-selection-banner">
-            <button class="mode-btn" data-mode="player">オセロ盤モード</button>
-            <button class="mode-btn" data-mode="ai">AIと対戦</button>
-            <button class="mode-btn" data-mode="online">オンライン対戦</button>
-        </div>
+        
 
         <div id="settings">
             <h3>設定</h3>
