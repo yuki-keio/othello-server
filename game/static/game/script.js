@@ -213,7 +213,7 @@ function applyServerMove(row, col, player, status, final = false) {
 
             if (online) {
                 console.log(`"status":${status}`);
-                if (role_online === currentPlayer && final===1) {
+                if (role_online === currentPlayer && final === 1) {
                     socket.send(JSON.stringify({ action: "pass" }));
 
                 }
@@ -267,16 +267,15 @@ function applyServerMove(row, col, player, status, final = false) {
 
     } else {
         if (final !== false) {
-        updateURL();
+            updateURL();
         }
     }
     if (aimove === true) {
         aimove = false;
     }
 
-    if (final !== false) 
-        {
-    updateStatus();
+    if (final !== false) {
+        updateStatus();
     }
 }
 function makeMove(row, col, status = 0) {
@@ -1199,13 +1198,13 @@ function evaluateBoard(board) {
 
 function changeTitle() {
     if (gameMode === 'ai') {
-        document.getElementById('title').textContent = 'AIと対戦';
+        document.getElementById('title').textContent = 'オセロAI対戦';
         document.getElementById('level_ai').style.display = 'block';
     } else if (gameMode === 'player') {
         document.getElementById('title').textContent = 'オセロ盤モード';
         document.getElementById('level_ai').style.display = 'none';
     } else if (gameMode === 'online') {
-        document.getElementById('title').textContent = 'オンライン対戦';
+        document.getElementById('title').textContent = 'オセロ通信対戦';
         document.getElementById('level_ai').style.display = 'none';
     }
 }
@@ -1239,7 +1238,7 @@ function sendMove(row, col) {
 }
 
 function onlineUI() {
-    // オンライン対戦モードの場合のUI調整
+    // 通信対戦モードの場合のUI調整
     if (gameMode === 'online') {
         surrenderBtn.style.display = 'inline-block'; // 降伏ボタンを表示
 
@@ -1272,7 +1271,7 @@ function updatePlayerList(players) {
     });
 }
 
-// オンライン対戦の部屋が作成されたらポップアップ（ツールチップ）を表示
+// 通信対戦の部屋が作成されたらポップアップ（ツールチップ）を表示
 function showTooltip() {
     // `copy-url-btn` の位置を取得
 
@@ -1309,7 +1308,7 @@ function changeHead() {
         metaDescription = 'スマホ・PC・iPadなどデバイス一台でオセロが遊べる無料Webゲームサイト。オセロ盤の用意やアプリのインストールも必要なし！オセロの友達対戦をブラウザで遊べるスマートオセロ盤です。スマホ一台があればどこでも遊べるので、旅行先でのレクリエーションにもオススメ。ブラウザゲーの定番です（旧サービス名：スマートオセロ）';
         canonicalUrl = 'https://reversi.yuki-lab.com/player/';
     } else if (gameMode === 'online') {
-        titleText = 'オンライン対戦 | リバーシWeb - 無料で遊べるオセロゲーム（旧サービス名：スマートオセロ）';
+        titleText = '通信対戦 | リバーシWeb - 無料で遊べるオセロゲーム（旧サービス名：スマートオセロ）';
         metaDescription = 'オセロのオンライン対戦ができる無料Webゲームサイト。離れた場所にいる相手とも、リアルタイムで通信対戦が可能です。ブラウザさえあれば、オセロ盤の用意やアプリのダウンロードが一切不要！スマホ・PC・iPadなど好きなデバイスから、オセロゲームの友達対戦を無料で遊べるWebサイトです。（旧サービス名：スマートオセロ）';
         canonicalUrl = 'https://reversi.yuki-lab.com/online/';
     } else {
@@ -1416,6 +1415,9 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
 
 window.addEventListener('DOMContentLoaded', () => {
 
+    document.getElementById("title").addEventListener("click", function () {
+        location.reload(); // ページをリロード
+    });
     if (startMatchBtn && overlay) {
         startMatchBtn.addEventListener("click", function () {
             let overlayTimeLimit = document.getElementById("time-limit").value;
@@ -1512,7 +1514,7 @@ function makeSocket() {
                 refreshBoard()
                 deserializeMoveHistory(data.history);
                 console.log("moveHistory", moveHistory);
-                replayMovesUpToIndex(moveHistory.length - 1,2);
+                replayMovesUpToIndex(moveHistory.length - 1, 2);
             }
 
             //タイマーを止める

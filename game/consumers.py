@@ -178,7 +178,7 @@ class OthelloConsumer(AsyncWebsocketConsumer):
                 logger.info(f"[GAME SETTING] {self.group_name} の設定が更新されました：{game_state}")
                 return
             
-            # オンライン対戦の場合、部屋内に2人未満なら手を受け付けない
+            # 通信対戦の場合、部屋内に2人未満なら手を受け付けない
             if len(game_state["players"]) < 2 and self.role in ["black", "white"]:
                 
                 await self.send(text_data=json.dumps({

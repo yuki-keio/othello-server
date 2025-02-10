@@ -424,28 +424,27 @@ transition: background-color 0.2s ease-in-out;
   top: 10px; 
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.7);
-  padding: 10px;
+  background: rgba(25, 25, 25, 0.7);
+  padding: 7px;
   margin-bottom: 30px;
-  border-radius: 10px;
+  border-radius: 5px;
   display: flex;
   justify-content: center; 
   align-items: center;
   z-index: 1000;
-  width: 100%; 
-  max-width: 575px; 
+  width: 98%; 
   
 }
 
 .mode-btn {
-  background: white;
+  background: rgb(250, 250, 250);
   color: black;
   padding: 10px 15px;
-  font-size: 14px;
+  font-size: 16px;
   cursor: pointer;
   transition: background 0.3s ease-in-out;
   flex: 1;
-  border: #000000 solid 2px;
+  border: #000000 solid 1.3px;
   text-align: center;
   width:96%;
 }
