@@ -266,7 +266,7 @@ function applyServerMove(row, col, player, status, final = false) {
         }, 10);
 
     } else {
-        if (final !== false) {
+        if (final !== false ||gameMode!==online) {
             updateURL();
         }
     }
@@ -274,7 +274,7 @@ function applyServerMove(row, col, player, status, final = false) {
         aimove = false;
     }
 
-    if (final !== false) {
+    if ((final !== false ||gameMode!==online)) {
         updateStatus();
     }
 }
