@@ -208,12 +208,12 @@ function applyServerMove(row, col, player, status, final = false) {
 
         // 手番を変更
         currentPlayer = (player === 'black') ? 'white' : 'black';
-       
+
         if (!hasValidMove(currentPlayer)) {
 
             if (online) {
                 console.log(`"status":${status}`);
-                if (role_online === currentPlayer && final) {
+                if (role_online === currentPlayer && final===1) {
                     socket.send(JSON.stringify({ action: "pass" }));
 
                 }
@@ -266,14 +266,18 @@ function applyServerMove(row, col, player, status, final = false) {
         }, 10);
 
     } else {
+        if (final !== false) {
         updateURL();
+        }
     }
     if (aimove === true) {
         aimove = false;
     }
 
-
+    if (final !== false) 
+        {
     updateStatus();
+    }
 }
 function makeMove(row, col, status = 0) {
     //console.log(`[makeMove] Called with row: ${row}, col: ${col}, status: ${status}, currentPlayer: ${currentPlayer}, gameEnded: ${gameEnded}, isvalid?: ${isValidMove(row, col)}`);
@@ -894,8 +898,8 @@ function replayMovesUpToIndex(index, fromServer = false) {
         applyServerMove(row, col, player, 1);
         console.log("After move:", JSON.stringify(gameBoard));
     });
-    applyServerMove(moveHistory[index].row, moveHistory[index].col, moveHistory[index].player, 1, fromServer);
     if (index >= 0) {
+        applyServerMove(moveHistory[index].row, moveHistory[index].col, moveHistory[index].player, 1, fromServer);
         const move = moveHistory[index];
         lastMoveCell = board.children[move.row * 8 + move.col].firstChild;
         lastMoveCell.classList.add('last-move');
@@ -1496,7 +1500,7 @@ function makeSocket() {
             refreshBoard()
             deserializeMoveHistory(data.history);
             console.log("moveHistory", moveHistory);
-            replayMovesUpToIndex(moveHistory.length - 1, true);
+            replayMovesUpToIndex(moveHistory.length - 1, 1);
 
         } else if (data.action === "assign_role") {
             role_online = data.role; // サーバーから受け取った役割
@@ -1508,7 +1512,7 @@ function makeSocket() {
                 refreshBoard()
                 deserializeMoveHistory(data.history);
                 console.log("moveHistory", moveHistory);
-                replayMovesUpToIndex(moveHistory.length - 1);
+                replayMovesUpToIndex(moveHistory.length - 1,2);
             }
 
             //タイマーを止める
