@@ -3,7 +3,7 @@ from urllib.parse import urlencode
 from django.http import HttpResponse
 
 def index(request):
-    return redirect('player-mode')
+    return redirect('ai-mode')
 
 def game_view(request, mode=None):
     query_mode = request.GET.get('mode')

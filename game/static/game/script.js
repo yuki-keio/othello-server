@@ -758,7 +758,7 @@ function loadBoardFromURL() {
             };
             const url = new URL(window.location);
             url.searchParams.delete("room");
-            history.replaceState(null, "", url);
+            history.pushState(null, "", url);
             online = false;
             if (socket) {
                 socket.close();
@@ -1293,6 +1293,49 @@ function showTooltip() {
     }, 3000);
 }
 
+function changeHead() {
+    let titleText, metaDescription, canonicalUrl;
+
+    if (gameMode === 'ai') {
+        titleText = 'AIと対戦 | リバーシWeb - 無料で遊べるオセロゲーム（旧サービス名：スマートオセロ）';
+        metaDescription = 'AIとオセロ対戦！一人で楽しめます。スマホ・PC・iPadなどデバイス一台でオセロが無料で遊べるWebサイト。オセロ盤の用意やアプリのインストールも必要ないので、気軽に楽しみたい人におすすめ！（旧サービス名：スマートオセロ）';
+        canonicalUrl = 'https://reversi.yuki-lab.com/ai/';
+    } else if (gameMode === 'player') {
+        titleText = 'オセロ盤モード | リバーシWeb - 無料で遊べるオセロゲーム（旧サービス名：スマートオセロ）';
+        metaDescription = 'スマホ・PC・iPadなどデバイス一台でオセロが遊べる無料Webゲームサイト。オセロ盤の用意やアプリのインストールも必要なし！オセロの友達対戦をブラウザで遊べるスマートオセロ盤です。スマホ一台があればどこでも遊べるので、旅行先でのレクリエーションにもオススメ。ブラウザゲーの定番です（旧サービス名：スマートオセロ）';
+        canonicalUrl = 'https://reversi.yuki-lab.com/player/';
+    } else if (gameMode === 'online') {
+        titleText = 'オンライン対戦 | リバーシWeb - 無料で遊べるオセロゲーム（旧サービス名：スマートオセロ）';
+        metaDescription = 'オセロのオンライン対戦ができる無料Webゲームサイト。離れた場所にいる相手とも、リアルタイムで通信対戦が可能です。ブラウザさえあれば、オセロ盤の用意やアプリのダウンロードが一切不要！スマホ・PC・iPadなど好きなデバイスから、オセロゲームの友達対戦を無料で遊べるWebサイトです。（旧サービス名：スマートオセロ）';
+        canonicalUrl = 'https://reversi.yuki-lab.com/online/';
+    } else {
+        titleText = 'リバーシWeb - 無料で遊べるオセロゲーム（旧サービス名：スマートオセロ）';
+        metaDescription = 'オセロの無料Webゲームサイト。オンライン対戦やAIとの対戦が可能です。スマホ・PC・iPadなどデバイス一台でオセロが遊べるWebサイト。オセロ盤の用意やアプリのインストールも必要ないので、気軽に楽しみたい人におすすめ！（旧サービス名：スマートオセロ）';
+        canonicalUrl = 'https://reversi.yuki-lab.com/';
+    }
+
+    // ページのタイトルを変更
+    document.title = titleText;
+
+    // meta description を変更
+    let metaTag = document.querySelector('meta[name="description"]');
+    if (!metaTag) {
+        metaTag = document.createElement('meta');
+        metaTag.setAttribute('name', 'description');
+        document.head.appendChild(metaTag);
+    }
+    metaTag.setAttribute('content', metaDescription);
+
+    // canonical を変更
+    let canonicalTag = document.querySelector("link[rel='canonical']");
+    if (!canonicalTag) {
+        canonicalTag = document.createElement("link");
+        canonicalTag.setAttribute("rel", "canonical");
+        document.head.appendChild(canonicalTag);
+    }
+    canonicalTag.setAttribute("href", canonicalUrl);
+}
+
 
 //音量調整
 victorySound.volume = 0.01;
@@ -1319,6 +1362,7 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
         this.classList.add('active');
         changeTitle();  // タイトルなどの更新
         updateURL();    // URLパラメータの更新など必要なら行う
+        changeHead();
 
         if (selectedMode === 'online') {
 
@@ -1341,7 +1385,7 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
                 online = false; // オンラインモードのフラグを下げる
                 const url = new URL(window.location);
                 url.searchParams.delete("room");
-                history.replaceState(null, "", url);
+                history.pushState(null, "", url);
 
 
 
