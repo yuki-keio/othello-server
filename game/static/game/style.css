@@ -1,14 +1,15 @@
 body {
-    font-family: "BIZ UDPMincho", serif;    display: flex;
-justify-content: center;
-align-items: center;
-margin: 0;
-background-color: #f0f0f0;
-box-sizing: border-box; /* Ensures padding and border are included in element's total width and height */
+    font-family: "BIZ UDPMincho", serif;    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    background-color: #f0f0f0;
+    box-sizing: border-box; /* Ensures padding and border are included in element's total width and height */
 }
 h1{
-font-family:"BIZ UDGothic", sans-serif ;
-font-size: 1.4em; 
+    font-family:"BIZ UDGothic", sans-serif ;
+    font-size: 1.4em; 
 }
 #level_ai{
 margin-bottom: 15px;
