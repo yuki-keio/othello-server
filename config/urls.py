@@ -21,6 +21,8 @@ import os
 from django.conf import settings
 from django.contrib.sitemaps.views import sitemap
 from game.sitemaps import StaticViewSitemap
+from django.views.generic.base import RedirectView
+
 
 
 sitemaps = {  # ← ここで sitemaps を定義
