@@ -8,7 +8,7 @@ class StaticViewSitemap(Sitemap):
 
     def items(self):
         # ここでURLの名前（urls.py で定義した name）をリストで返す
-        return ['index', 'player-mode', 'ai-mode', 'online-mode']
+        return ['player-mode', 'ai-mode', 'online-mode']
 
     def location(self, item):
         return reverse(item)

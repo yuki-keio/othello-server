@@ -18,34 +18,33 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDGothic&family=BIZ+UDPMincho&display=swap" media="print" onload="this.onload=null;this.removeAttribute('media');">
 
 
-    <meta name="description" content="">
     <meta name="description" content="
     {% if mode == 'online' %}
-        オセロのオンライン対戦ができる無料Webゲームサイト。離れた場所にいる相手とも、リアルタイムで通信対戦が可能です。ブラウザさえあれば、オセロ盤の用意やアプリのダウンロードが一切不要！スマホ・PC・iPadなど好きなデバイスから、オセロゲームの友達対戦を無料で遊べるWebサイトです。（旧サービス名：スマートオセロ）
+        リバーシ（オセロ）のオンライン対戦ができる無料Webゲームサイト。離れた場所にいる相手とも、リアルタイムで通信対戦が可能です。ブラウザさえあれば、オセロ盤の用意やアプリのダウンロードが一切不要！スマホ・PC・iPadなど好きなデバイスから、オセロゲームの友達対戦が無料でできるWebサイトです。（旧サービス名：スマートオセロ）
     {% elif mode == 'ai' %}
-        AIとオセロ対戦！一人で楽しめます。スマホ・PC・iPadなどデバイス一台でオセロが無料で遊べるWebサイト。オセロ盤の用意やアプリのインストールも必要ないので、気軽に楽しみたい人におすすめ！（旧サービス名：スマートオセロ）
+        AIとリバーシ（オセロ）対戦！一人で楽しめます。スマホ・PC・iPadなどデバイス一台でリバーシが無料で遊べるWebサイト。オセロ盤の用意やアプリのインストールも必要ないので、気軽に楽しみたい人におすすめ！（旧サービス名：スマートオセロ）
     {% elif mode == 'player' %}
-        スマホ・PC・iPadなどデバイス一台でオセロが遊べる無料のスマートオセロ盤！。オセロ盤の用意やアプリのインストールは必要なし！オセロの友達対戦をブラウザで遊べるスマートオセロ盤です。スマホ一台があればどこでも遊べるので、旅行先でのレクリエーションにもオススメ。ブラウザゲーの定番です（旧サービス名：スマートオセロ）
+        スマホ・PC・iPadなどデバイス一台でリバーシが遊べる無料のスマートオセロ盤！。オセロ盤の用意やアプリのインストールは必要なし！リバーシの友達対戦をブラウザで遊べるスマートオセロ盤です。スマホ一台があればどこでも遊べるので、旅行先でのレクリエーションにもオススメ。ブラウザゲーの定番です（旧サービス名：スマートオセロ）
     {% else %}
-        オセロのWebゲームサイト（無料）。オンライン対戦やAIとの対戦が可能です。スマホ・PC・iPadなどデバイス一台でオセロ（リバーシ）が遊べます。オセロ盤の用意やアプリのインストールも必要ないので、気軽に楽しみたい人におすすめ！（旧サービス名：スマートオセロ）
+        オセロのWebゲームサイト（無料）。オンライン対戦やAIとの対戦が可能です。スマホ・PC・iPadなどデバイス一台でリバーシ（オセロ）が遊べます。オセロ盤の用意やアプリのインストールも必要ないので、気軽に楽しみたい人におすすめ！（旧サービス名：スマートオセロ）
     {% endif %}
 ">
 
     <title>
         {% if mode == 'online' %}
-            オセロ（オンライン対戦モード） | リバーシWeb - 無料で遊べるオセロゲーム（旧サービス名：スマートオセロ）
+            リバーシ（オセロ）オンライン対戦 | リバーシWeb - ブラウザで遊べる無料ゲーム
         {% elif mode == 'ai' %}
-            オセロ（AI対戦モード） | リバーシWeb - 無料で遊べるオセロゲーム（旧サービス名：スマートオセロ）
+            リバーシ（オセロ）AI対戦 | リバーシWeb - ブラウザで遊べる無料ゲーム
         {% elif mode == 'player' %}
-            オセロ | リバーシWeb - 無料で遊べるオセロゲーム（旧サービス名：スマートオセロ）
+            リバーシ（オセロ） | リバーシWeb - ブラウザで遊べる無料ゲーム
         {% else %}
-            リバーシWeb - 無料で遊べるオセロゲーム（旧サービス名：スマートオセロ）
+            リバーシWeb - ブラウザで遊べる無料ゲーム
         {% endif %}
     </title>    
     <link rel="stylesheet" href="{% static 'game/style.css?v=3' %}">
     <script src="{% static 'game/script.js' %}" defer></script>
-    <meta property="og:title" content="オセロゲーム">
-    <meta property="og:description" content="オンラインで楽しめるオセロゲーム！">
+    <meta property="og:title" content="リバーシWeb">
+    <meta property="og:description" content="オンラインで楽しめるリバーシゲーム！（オセロ）">
     <meta property="og:image" content="https://reversi.yuki-lab.com/static/game/images/share-image.png">
     <meta property="og:url" content="https://reversi.yuki-lab.com">
     <meta property="og:type" content="website">
@@ -57,8 +56,9 @@
         {
           "@context": "https://schema.org",
           "@type": "VideoGame",
-          "name": "リバーシWeb - 無料で遊べるオセロゲーム",
-          "description": "一人で遊べるAI対戦も友達とのオンライン対戦も可能な無料のオセロゲーム。ブラウザで今すぐプレイ！",
+          "name": "リバーシWeb - ブラウザで遊べる無料ゲーム",
+          "alternateName": "無料オセロゲームのスマートオセロ",
+          "description": "一人で遊べるAI対戦も友達とのオンライン対戦も可能な無料のリバーシ（オセロゲーム）。ブラウザで今すぐプレイ！",
           "image": "https://reversi.yuki-lab.com/static/game/images/share-image.png",
           "url": "https://reversi.yuki-lab.com",
           "operatingSystem": "Web",
@@ -266,13 +266,14 @@
 
     <section class="notes">
         <h2>本サイト・リバーシWebの機能</h2>
-        <p>オセロゲーム（リバーシ）が無料ですぐ遊べるWebサイトです。CPU対戦やオンライン対戦など、様々な機能に対応しています。独自のURLシェア機能によって、友達とのオセロ対戦や観戦、棋譜の共有などが簡単に行える点も特徴です</p>
+        <p>リバーシ（オセロゲーム）が無料ですぐ遊べるWebサイトです。CPU対戦やオンライン対戦など、様々な機能に対応しています。独自のURLシェア機能によって、友達との対戦や観戦、棋譜の共有などが簡単に行える点も特徴です</p>
         <h3>機能のオン・オフ</h3>
         <p>効果音・ハイライト表示・制限時間などの機能は、<a href="#settings">「設定」</a>からオン・オフを切り替えられます。次回以降に同じブラウザで遊ぶ場合もその設定を引き継げます。</p>
         <div class="small">※ ただし通信対戦モードが選択された場合は、通信対戦における設定に合わせてハイライト表示設定が変更されます。</div>
         <h3>アプリ版で遊ぶ</h3>
         <p>本サイトはブラウザゲームですが、Webアプリ（PWA）としてホーム画面に追加することもできます。Webアプリの特徴として、スマホの容量はほぼ消費せず、さらに起動も高速になります。アプリ版では主な機能をオフラインでも利用できます。アプリ設置の所要時間は数秒です。ぜひお試しください</p>
-        <button id="install-btn" style="display: none;">Webアプリ版をインストール</button>
+        <br>
+        <button id="install-btn" style="display: none;">Webアプリを追加</button>
 
 
     </section>
@@ -325,7 +326,7 @@
     <div class="credit">
             <!--copyright-->
             © 2024~ / 
-            このオセロ盤では、多くの人にとって読みやすいユニバーサルデザインフォントを利用しています
+            このゲームでは、多くの人にとって読みやすいユニバーサルデザインフォントを利用しています
     </div>
 </div>
 
