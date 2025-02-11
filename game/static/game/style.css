@@ -515,7 +515,7 @@ transition: background-color 0.2s ease-in-out;
 .install-guide {
   display: none;
   position: fixed;
-  bottom: 10%;
+  bottom: 4%;
   left: 50%;
   transform: translateX(-50%);
   width: 90%;
@@ -523,8 +523,8 @@ transition: background-color 0.2s ease-in-out;
   background: rgba(255, 255, 255, 0.95);
   padding: 15px;
   border-radius: 15px;
-  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
   text-align: center;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
   z-index: 9999;
   font-family: 'Arial', sans-serif;
 }
@@ -533,6 +533,7 @@ transition: background-color 0.2s ease-in-out;
 .install-guide-content {
   font-size: 14px;
   color: #333;
+  text-align: left;
 }
 
 /* アイコンと矢印 */
@@ -541,12 +542,19 @@ transition: background-color 0.2s ease-in-out;
   justify-content: center;
   align-items: center;
   margin-top: 10px;
+  gap: 20px;
 }
 
 .icon {
   width: 40px;
   height: 40px;
-  margin: 0 5px;
+  margin: 10px;
+}
+
+#install-guide-img {
+  width: 170px;
+  height: auto;
+  margin: 10px;
 }
 
 /* 閉じるボタン */
