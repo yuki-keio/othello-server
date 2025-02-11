@@ -270,8 +270,8 @@
         <h3>機能のオン・オフ</h3>
         <p>効果音・ハイライト表示・制限時間などの機能は、<a href="#settings">「設定」</a>からオン・オフを切り替えられます。次回以降に同じブラウザで遊ぶ場合もその設定を引き継げます。</p>
         <div class="small">※ ただし通信対戦モードが選択された場合は、通信対戦における設定に合わせてハイライト表示設定が変更されます。</div>
-        <h3>アプリ版のインストール</h3>
-        <p>本サイトはブラウザゲームですが、Webアプリ（PWA）としてホーム画面に設置することもできます。Webアプリの特徴として、スマホの容量はほぼ消費せず、さらにアプリの起動も高速になります。所要時間も数秒です。ぜひお試しください</p>
+        <h3>アプリ版で遊ぶ</h3>
+        <p>本サイトはブラウザゲームですが、Webアプリ（PWA）としてホーム画面に設置することもできます。Webアプリの特徴として、スマホの容量はほぼ消費せず、さらに起動も高速になります。アプリ版では主な機能をオフラインでも利用できます。アプリ設置の所要時間は数秒です。ぜひお試しください</p>
         <button id="install-btn" style="display: none;">Webアプリ版をインストール</button>
 
 
@@ -303,6 +303,18 @@
             <li>通信対戦では、<strong>投了</strong>ボタンが使えます。相手が<strong>投了</strong>した場合も、自分の勝利となります</li>
         </ul>
     </section>
+    <!-- iOS専用のインストールガイド -->
+    <div id="ios-install-guide" class="install-guide">
+        <div class="install-guide-content">
+            <p>「ホーム画面に追加」すると、もっと快適に遊べます!</p>
+            <div class="guide-icons">
+                <img src="/static/game/images/share-icon.jpg" alt="共有ボタン" class="icon">
+                <span class="arrow">➡️</span>
+                <img src="/static/game/images/install-guide.png" alt="ホーム画面に追加" class="icon">
+            </div>
+            <button id="close-install-guide">✖️ 閉じる</button>
+        </div>
+    </div>
 
     <div class="credit">
             <!--copyright-->

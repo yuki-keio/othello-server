@@ -525,6 +525,10 @@ function formatTime(seconds) {
     return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
 }
 
+function isIOS() {
+    return /iPhone|iPad|iPod/.test(navigator.userAgent);
+}
+
 
 function recordMove(row, col, status) {
 
@@ -684,8 +688,13 @@ function endGame(online_data, winner = null) {
     localStorage.setItem('gameFinishedCount', gameFinishedCount);
     if (gameFinishedCount === 1 && deferredPrompt) {
         showInstallPrompt();
+
     }else if (gameFinishedCount === 3 && deferredPrompt) {
         showInstallPrompt();
+    }else if (isIOS() && gameFinishedCount === 1) {
+            iOSinstallGuide();
+        } else if (isIOS() && gameFinishedCount === 3) {
+            iOSinstallGuide();
         }
 }
 
@@ -1220,6 +1229,11 @@ function changeTitle() {
     }
 }
 
+// インストールガイドを表示
+function iOSinstallGuide() {
+    document.getElementById("ios-install-guide").style.display = "block";
+}
+
 function showInstallPrompt() {
     deferredPrompt.prompt();
     deferredPrompt.userChoice.then((choiceResult) => {
@@ -1642,6 +1656,9 @@ document.getElementById('showValidMovesCheckbox').addEventListener('change', () 
 });
 document.getElementById("setting").addEventListener('click', () => {
     document.getElementById('settings').scrollIntoView({ behavior: "smooth" });
+});
+document.getElementById("close-install-guide").addEventListener("click", () => {
+    document.getElementById("ios-install-guide").style.display = "none";
 });
 document.getElementById('showValidMovesCheckbox').checked = showValidMoves;
 
