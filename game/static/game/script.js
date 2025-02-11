@@ -21,8 +21,10 @@ const victorySound = document.getElementById('victorySound');
 const defeatSound = document.getElementById('defeatSound');
 const playerJoin = document.getElementById('playerJoin');
 
+
 let onlineGameStarted = false;
 
+let deferredPrompt;
 
 
 
@@ -56,6 +58,9 @@ let lastMoveCell = null;
 let showValidMoves = !(localStorage.getItem('showValidMoves') === "false");
 let timeLimit = parseInt(localStorage.getItem('timeLimit') || 0);
 let aiLevel = parseInt(localStorage.getItem('aiLevel') || 0);
+
+let gameFinishedCount =  parseInt(localStorage.getItem('gameFinishedCount') || 0);
+
 let minimax_depth = aiLevel;
 
 let currentPlayerTimer;
@@ -675,7 +680,13 @@ function endGame(online_data, winner = null) {
     statusB.textContent = `ゲーム終了 - ${result} 黒: ${blackCount} 白: ${whiteCount}`;
 
     stopTimer();
-
+    gameFinishedCount++;
+    localStorage.setItem('gameFinishedCount', gameFinishedCount);
+    if (gameFinishedCount === 1 && deferredPrompt) {
+        showInstallPrompt();
+    }else if (gameFinishedCount === 3 && deferredPrompt) {
+        showInstallPrompt();
+        }
 }
 
 function serializeMoveHistory() {
@@ -1209,6 +1220,19 @@ function changeTitle() {
     }
 }
 
+function showInstallPrompt() {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === "accepted") {
+            console.log("PWA installed");
+        } else {
+            console.log("PWA installation dismissed");
+        }
+        deferredPrompt = null;
+    });
+    
+}
+
 // サーバーから受信したパスメッセージに基づいて、ターン更新と表示を行う
 function processPassMessage(data) {
     console.log(`[processPassMessage] Received pass message: ${JSON.stringify(data)}, old currentPlayer: ${currentPlayer}`);
@@ -1582,6 +1606,22 @@ copyUrlBtn.addEventListener('click', copyURLToClipboard);
 document.getElementById('restart-btn').addEventListener('click', restart);
 document.getElementById('prev-move-btn').addEventListener('click', goToPreviousMove);
 document.getElementById('next-move-btn').addEventListener('click', goToNextMove);
+
+
+window.addEventListener("beforeinstallprompt", (event) => {
+    event.preventDefault();
+    deferredPrompt = event; // イベントを保存
+
+    // インストールを促すボタンを表示
+    const installButton = document.getElementById("install-btn");
+    installButton.style.display = "block";
+
+    installButton.addEventListener("click", showInstallPrompt);
+});
+window.addEventListener("appinstalled", () => {
+    alert("🎮️ インストールありがとうございます！（開発者より）");
+});
+
 
 // 降伏ボタンをクリックしたとき、確認後にサーバーへ降伏メッセージを送信
 surrenderBtn.addEventListener('click', () => {
