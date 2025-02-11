@@ -24,7 +24,7 @@ from game.sitemaps import StaticViewSitemap
 
 
 sitemaps = {  # ← ここで sitemaps を定義
-    'static': StaticViewSitemap,
+    'static': StaticViewSitemap(),
 }
 
 urlpatterns = [
