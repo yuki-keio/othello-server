@@ -8,7 +8,7 @@ import traceback
 
 logger = logging.getLogger(__name__)
 
-#todo 多言語対応
+#todo 多言語対応, 表示名の設定, マルチプレイヤーモードの実装
 
 class OthelloConsumer(AsyncWebsocketConsumer):
     async def connect(self):
