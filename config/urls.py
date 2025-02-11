@@ -39,4 +39,7 @@ urlpatterns = [
             "path": "google3cf76dfeb0923fe8.html",
         },
     ),
+    re_path(r'^favicon\.ico$', RedirectView.as_view(url=settings.STATIC_URL + 'game/images/favicon/favicon.ico', permanent=True)),
+    
+
 ]
