@@ -16,7 +16,7 @@ margin-bottom: 15px;
 }
 #timer-display {
 position: absolute;
-top: 10px; /* 上からの位置 */
+top: 87px; /* 上からの位置 */
 left: 0px; /* 左からの位置 */
 font-size: 18px;
 background-color: #e0e0e0;
@@ -49,10 +49,10 @@ font-size: 1.4em;
 #setting{
 position: absolute;
 right: -3px;
-top: 92px;
+top: 85px;
 
-width: 24px;  
-height: 24px; 
+width: 29px;  
+height: 29px; 
 
 cursor: pointer;
 }
@@ -404,14 +404,19 @@ transition: background-color 0.2s ease-in-out;
 
 /* スタートボタンのデザイン */
 #start-match {
-  margin-top: 10px;
-  padding: 10px;
-  font-size: 14px;
-  background: #007BFF;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007BFF;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: 40px;
+  white-space: nowrap;
 }
 
 #start-match:hover {
@@ -571,6 +576,55 @@ transition: background-color 0.2s ease-in-out;
 
 #close-install-guide:hover {
   background: #005ecb;
+}
+
+.qr-popup {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%px;
+  min-width: 260px;
+  background: white;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+.qr-popup-content {
+  position: relative;
+}
+.close {
+  position: absolute;
+  top: 0px;
+  right: 10px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+#qr {
+  margin-left: 5px;
+  width: 30px;
+  height: 30px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+}
+
+.invite-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#qrcode{
+  display: flex;
+  justify-content: center;
+  padding-bottom: 15px;
 }
 
 

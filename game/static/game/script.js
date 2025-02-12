@@ -816,7 +816,7 @@ function loadBoardFromURL() {
 }
 
 
-function copyURLToClipboard() {
+function copyURLToClipboard(matchRoom=false) {
     const url = new URL(window.location);
     let alertText = '🔗 現在の石の配置を共有するURLをコピーしました！';
     if (online) {
@@ -827,7 +827,9 @@ function copyURLToClipboard() {
         }
     } else {
     }
-    url.searchParams.set('won', share_winner);
+    if (!matchRoom) {
+        url.searchParams.set('won', share_winner);
+    }
     navigator.clipboard.writeText(url.toString()).then(() => {
         alert(alertText);
     }).catch(err => {
@@ -1453,32 +1455,41 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
 
 window.addEventListener('DOMContentLoaded', () => {
 
+    const inviteBtn = document.getElementById("qr");
+    const qrPopup = document.getElementById("qr-popup");
+    const closeQr = document.getElementById("close-qr");
+    const qrcodeContainer = document.getElementById("qrcode");
+
+    if (inviteBtn && qrPopup && closeQr && qrcodeContainer) {
+
+        inviteBtn.addEventListener("click", function () {
+            const inviteUrl = window.location.href;  // 現在のURLを取得
+            qrcodeContainer.innerHTML = "";  // QRコードをクリア
+            new QRCode(qrcodeContainer, {
+                text: inviteUrl,
+                width: 200,
+                height: 200
+            });
+    
+            qrPopup.style.display = "block";  // ポップアップを表示
+        });
+    
+        closeQr.addEventListener("click", function () {
+            qrPopup.style.display = "none";  // ポップアップを閉じる
+        });
+
+    }
+   
+
     document.getElementById("title").addEventListener("click", function () {
         location.reload(); // ページをリロード
     });
     if (startMatchBtn && overlay) {
         startMatchBtn.addEventListener("click", function () {
-            let overlayTimeLimit = document.getElementById("time-limit").value;
-            let overlayHighlightMoves = document.getElementById("highlight-moves").checked;
-
-            copyURLToClipboard();
-
-            timeLimit = overlayTimeLimit;
-            showValidMoves = overlayHighlightMoves;
-
-            localStorage.setItem('timeLimit', timeLimit);
-            localStorage.setItem('showValidMoves', showValidMoves);
 
 
+            copyURLToClipboard(true);
 
-            // オーバーレイを非表示
-            overlay.style.display = "none";
-
-            //設定から時間やハイライトを変更できないように消す
-            document.getElementById('timeLimitContainer').style.display = 'none';
-            document.getElementById('validContainer').style.display = 'none';
-
-            socket.send(JSON.stringify({ action: "game_setting", time_limit: timeLimit, show_valid_moves: showValidMoves }));
 
 
         });
@@ -1563,12 +1574,15 @@ function makeSocket() {
 
         } else if (data.action === "update_players") {
             updatePlayerList(data.players);
+            if (data.players.length === 2) {
+                overlay.style.display = 'none';
+            }
             if (playerJoinSoundEnabled) {
                 if (data.player_id !== playerId) {
                     playerJoin.currentTime = 0;
                     playerJoin.play().catch(error => {
                         console.warn("audio was blocked:", error);
-                    });;
+                    });
                 }
             }
         } else if (data.action === "pass") {
@@ -1654,6 +1668,46 @@ document.getElementById('showValidMovesCheckbox').addEventListener('change', () 
     updateStatus(); // 設定変更を反映
     updateURL(); // URL を更新
 });
+
+
+//time-limit要素が存在するかチェックし、存在する場合のみchangeイベントを確認
+if (document.getElementById('time-limit')){
+    document.getElementById('time-limit').addEventListener('change', () => {
+        let overlayTimeLimit = document.getElementById("time-limit").value;
+        let overlayHighlightMoves = document.getElementById("highlight-moves").checked;
+        timeLimit = overlayTimeLimit;
+        showValidMoves = overlayHighlightMoves;
+    
+        localStorage.setItem('timeLimit', timeLimit);
+        localStorage.setItem('showValidMoves', showValidMoves);
+    
+    
+        
+    
+        socket.send(JSON.stringify({ action: "game_setting", time_limit: timeLimit, show_valid_moves: showValidMoves }));
+    
+    });
+}
+
+
+if (document.getElementById('highlight-moves')){
+    document.getElementById('highlight-moves').addEventListener('change', () => {
+        let overlayTimeLimit = document.getElementById("time-limit").value;
+        let overlayHighlightMoves = document.getElementById("highlight-moves").checked;
+        timeLimit = overlayTimeLimit;
+        showValidMoves = overlayHighlightMoves;
+    
+        localStorage.setItem('timeLimit', timeLimit);
+        localStorage.setItem('showValidMoves', showValidMoves);
+    
+    
+        
+    
+        socket.send(JSON.stringify({ action: "game_setting", time_limit: timeLimit, show_valid_moves: showValidMoves }));
+    
+    });
+}
+
 document.getElementById("setting").addEventListener('click', () => {
     document.getElementById('settings').scrollIntoView({ behavior: "smooth" });
 });

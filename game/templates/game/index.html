@@ -26,6 +26,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDGothic&family=BIZ+UDPMincho&display=swap" media="print" onload="this.onload=null;this.removeAttribute('media');">
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
 
     <meta name="description" content="
     {% if mode == 'online' %}
@@ -171,10 +173,24 @@
                             <input type="checkbox" id="highlight-moves" checked> 有効な手をハイライト表示
                         </label>
                     </div>
-                    <br>
-                    <button id="start-match" class="btn-primary">対戦開始 & URLコピー！</button>
+                    <div class="invite-container">
+
+                    <button id="start-match" class="btn-primary">招待URLをコピー</button>
+                    <button id="qr">
+                        <img src="{% static 'game/images/qr.svg' %}" alt="">
+                    </button>
+                    </div>
                 </div>
             </div>
+            <!-- QRコード用のポップアップ -->
+            <div id="qr-popup" class="qr-popup">
+                <div class="qr-popup-content">
+                    <span id="close-qr" class="close">&times;</span>
+                    <h3>招待URLのQRコード</h3>
+                    <div id="qrcode"></div>
+                </div>
+            </div>
+
             {% endif %}
         </div>
         <div id="status">
