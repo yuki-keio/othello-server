@@ -353,7 +353,7 @@ transition: background-color 0.2s ease-in-out;
 margin: 15px 0px 5px 5px; 
 padding: 10px 20px;
 font-size: 16px;
-background-color: #388e3c;
+background-color: #007508;
 color: white;
 border: none;
 border-radius: 8px;
@@ -406,7 +406,7 @@ transition: background-color 0.2s ease-in-out;
 #start-match {
   padding: 10px 20px;
   font-size: 16px;
-  background-color: #007BFF;
+  background-color: #00940a;
   color: white;
   border: none;
   border-radius: 5px;
@@ -580,7 +580,7 @@ transition: background-color 0.2s ease-in-out;
 
 .qr-popup {
   display: none;
-  position: fixed;
+  position: absolute;
   z-index: 1000;
   left: 50%;
   top: 50%;
@@ -598,10 +598,11 @@ transition: background-color 0.2s ease-in-out;
 }
 .close {
   position: absolute;
-  top: 0px;
-  right: 10px;
-  font-size: 20px;
+  top: -8px;
+  right: 5px;
+  font-size: 27px;
   cursor: pointer;
+  font-weight: bold;
 }
 
 #qr {
@@ -616,6 +617,7 @@ transition: background-color 0.2s ease-in-out;
 }
 
 .invite-container {
+  margin-top: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
