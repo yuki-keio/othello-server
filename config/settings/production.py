@@ -27,6 +27,7 @@ CSP_CONNECT_SRC = (
     "https://pagead2.googlesyndication.com",
     "https://googleads.g.doubleclick.net",
     "https://ep1.adtrafficquality.google",
+    "https://ep2.adtrafficquality.google",
 )
 
 CSP_SCRIPT_SRC = (
@@ -54,11 +55,12 @@ CSP_FRAME_SRC = (
     "https://www.google.com",
     "https://googleads.g.doubleclick.net",
     "https://www.youtube.com",
-    "https://securepubads.g.doubleclick.net",  
+    "https://securepubads.g.doubleclick.net", 
+    "https://ep2.adtrafficquality.google",  
+ 
 )
 CSP_STYLE_SRC = (
     "'self'",
-    "'nonce-{request.csp_nonce}'", 
     "https://fonts.googleapis.com",
     "https://pagead2.googlesyndication.com",
     "https://yuki-lab.com/static/",  
@@ -66,8 +68,6 @@ CSP_STYLE_SRC = (
 )
 CSP_FONT_SRC = ("'self'", "https://fonts.gstatic.com")
 
-# Middlewareに追加
-MIDDLEWARE += ["csp.middleware.CSPMiddleware"]
 
 # Heroku用の設定を適用
 django_heroku.settings(locals())
