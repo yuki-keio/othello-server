@@ -33,7 +33,6 @@ CSP_CONNECT_SRC = (
 
 CSP_SCRIPT_SRC = (
     "'self'",
-    'nonce-{request.csp_nonce}',
     "https://www.google.com",
     "https://www.gstatic.com",
     "https://ep2.adtrafficquality.google",
@@ -64,7 +63,6 @@ CSP_FRAME_SRC = (
 )
 CSP_STYLE_SRC = (
     "'self'",
-    'nonce-{request.csp_nonce}',
     "https://fonts.googleapis.com",
     "https://pagead2.googlesyndication.com",
     "https://yuki-lab.com/static/",  
