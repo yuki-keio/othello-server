@@ -406,7 +406,7 @@ transition: background-color 0.2s ease-in-out;
 #start-match {
   padding: 10px 20px;
   font-size: 16px;
-  background-color: #00940a;
+  background-color: #007408;
   color: white;
   border: none;
   border-radius: 5px;
@@ -420,7 +420,7 @@ transition: background-color 0.2s ease-in-out;
 }
 
 #start-match:hover {
-  background: #0056b3;
+  background: #00ab0b;
 }
 
 
