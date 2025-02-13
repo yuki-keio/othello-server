@@ -19,6 +19,16 @@ CSRF_COOKIE_SECURE = True
 
 # CSPの設定
 CSP_DEFAULT_SRC = ("'self'",)
+CSP_CONNECT_SRC = (
+    "'self'",
+    "https://www.google.com",
+    "https://www.gstatic.com",
+    "https://www.googletagmanager.com",
+    "https://pagead2.googlesyndication.com",
+    "https://googleads.g.doubleclick.net",
+    "https://ep1.adtrafficquality.google",
+)
+
 CSP_SCRIPT_SRC = (
     "'self'",
     "'nonce-randomvalue'",
@@ -28,6 +38,7 @@ CSP_SCRIPT_SRC = (
     "https://pagead2.googlesyndication.com",
     "https://googleads.g.doubleclick.net",
     "https://cdnjs.cloudflare.com",
+    "https://cdn.jsdelivr.net",  
 )
 CSP_IMG_SRC = (
     "'self'",
