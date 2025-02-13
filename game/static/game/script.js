@@ -1576,6 +1576,7 @@ function makeSocket() {
             updatePlayerList(data.players);
             if (data.players.length === 2) {
                 overlay.style.display = 'none';
+                const qrPopup = document.getElementById("qr-popup");
                 qrPopup.style.display = "none";
             }
             if (playerJoinSoundEnabled) {
