@@ -31,9 +31,16 @@ let deferredPrompt;
 // プレイヤーの一意なIDを取得・保存（なければ新規作成）
 let playerId = localStorage.getItem("playerId");
 if (!playerId) {
-    playerId = Math.random().toString(36).substring(2, 10); // 短いランダムなIDを生成
+    playerId = crypto.randomUUID();
     localStorage.setItem("playerId", playerId);
 }
+// プレイヤー名を取得・保存（なければ新規作成）
+let playerName = localStorage.getItem("playerName");
+if (!playerName) {
+    playerName = "player" + Math.floor(Math.random() * 1000); // デフォルトの名前を設定
+    localStorage.setItem("playerName", playerName);
+}
+
 
 const gUrlParams = new URLSearchParams(window.location.search);
 let gameRoom = gUrlParams.get('room');
@@ -1294,17 +1301,18 @@ function onlineUI() {
 }
 
 function updatePlayerList(players) {
+    console.log(`[updatePlayerList] Updating player list: ${JSON.stringify(players)}`);
     const playerListElement = document.getElementById('player-list');
     playerListElement.innerHTML = ''; // クリア
 
-    players.forEach((player, index) => {
-        const role = (index === 0) ? "黒" : (index === 1) ? "白" : "観戦者";
+    Object.entries(players).forEach(([id, [ws_role, name]]) => {
+        const role = (ws_role === "black") ? "黒" : (ws_role === "white") ? "白" : "観戦者";
         const span = document.createElement('span');
-        if (player === playerId) {
+        if (id === playerId) {
             span.style.fontWeight = 'bold';
-            display_player_name = `あなた（${playerId}）`;
+            display_player_name = `あなた（${name}）`;
         } else {
-            display_player_name = player;
+            display_player_name = name;
         }
         span.textContent = ((role !== "黒") ? "　" : "") + `${role}: ${display_player_name}`;
         playerListElement.appendChild(span);
@@ -1344,7 +1352,7 @@ function changeHead() {
         metaDescription = 'AIとオセロ対戦！一人で楽しめます。スマホ・PC・iPadなどデバイス一台でオセロが無料で遊べるWebサイト。オセロ盤の用意やアプリのインストールも必要ないので、気軽に楽しみたい人におすすめ！（旧サービス名：スマートオセロ）';
         canonicalUrl = 'https://reversi.yuki-lab.com/ai/';
     } else if (gameMode === 'player') {
-        titleText = 'オセロ盤モード | リバーシWeb - 無料で遊べるオセロゲーム（旧サービス名：スマートオセロ）';
+        titleText = '電子オセロ盤 | リバーシWeb - 無料で遊べるオセロゲーム（旧サービス名：スマートオセロ）';
         metaDescription = 'スマホ・PC・iPadなどデバイス一台でオセロが遊べる無料Webゲームサイト。オセロ盤の用意やアプリのインストールも必要なし！オセロの友達対戦をブラウザで遊べるスマートオセロ盤です。スマホ一台があればどこでも遊べるので、旅行先でのレクリエーションにもオススメ。ブラウザゲーの定番です（旧サービス名：スマートオセロ）';
         canonicalUrl = 'https://reversi.yuki-lab.com/player/';
     } else if (gameMode === 'online') {
@@ -1527,9 +1535,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
 function makeSocket() {
 
-    socket = new WebSocket(`${ws_scheme}://${window.location.host}/ws/othello/${gameRoom}/?playerId=${playerId}&timeLimit=${timeLimit}&showValidMoves=${showValidMoves}`);
+    socket = new WebSocket(`${ws_scheme}://${window.location.host}/ws/othello/${gameRoom}/?playerId=${playerId}&timeLimit=${timeLimit}&showValidMoves=${showValidMoves}&playerName=${encodeURIComponent(playerName)}`);
 
-    console.log(`Connecting to WebSocket server...${ws_scheme}://${window.location.host}/ws/othello/${gameRoom}/?playerId=${playerId}&timeLimit=${timeLimit}&showValidMoves=${showValidMoves}`);
+    console.log(`Connecting to WebSocket server...${ws_scheme}://${window.location.host}/ws/othello/${gameRoom}/?playerId=${playerId}&timeLimit=${timeLimit}&showValidMoves=${showValidMoves}&playerName=${encodeURIComponent(playerName)}`);
 
 
     // 接続成功時
@@ -1574,7 +1582,7 @@ function makeSocket() {
 
         } else if (data.action === "update_players") {
             updatePlayerList(data.players);
-            if (data.players.length === 2) {
+            if (Object.keys(data.players).length === 2) {
                 overlay.style.display = 'none';
                 const qrPopup = document.getElementById("qr-popup");
                 qrPopup.style.display = "none";

@@ -6,7 +6,7 @@
      crossorigin="anonymous"></script>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-4JKZC3VNE7"></script>
-    <script>
+    <script nonce="{{ request.csp_nonce }}">
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
@@ -35,7 +35,7 @@
     {% elif mode == 'ai' %}
         AIとリバーシ（オセロ）対戦！一人で楽しめます。スマホ・PC・iPadなどデバイス一台でリバーシが無料で遊べるWebサイト。オセロ盤の用意やアプリのインストールも必要ないので、気軽に楽しみたい人におすすめ！（旧サービス名：スマートオセロ）
     {% elif mode == 'player' %}
-        スマホ・PC・iPadなどデバイス一台でリバーシが遊べる無料のスマートオセロ盤！。オセロ盤の用意やアプリのインストールは必要なし！リバーシの友達対戦をブラウザで遊べるスマートオセロ盤です。スマホ一台があればどこでも遊べるので、旅行先でのレクリエーションにもオススメ。ブラウザゲーの定番です（旧サービス名：スマートオセロ）
+        スマホ・PC・iPadなどデバイス一台でリバーシが遊べる無料の電子オセロ盤！。オセロ盤の用意やアプリのインストールは必要なし！リバーシの友達対戦をブラウザで遊べるスマートなオセロ盤です。スマホ一台があればどこでも遊べるので、旅行先でのレクリエーションにもオススメ。ブラウザゲーの定番です（旧サービス名：スマートオセロ）
     {% else %}
         リバーシ（オセロゲーム）が無料で遊べるWebサイト。オンライン対戦やAIとの対戦が可能です。スマホ・PC・iPadなどデバイス一台でリバーシ（オセロ）が遊べます。オセロ盤の用意やアプリのインストールも必要ないので、気軽に楽しみたい人におすすめ！（旧サービス名：スマートオセロ）
     {% endif %}
@@ -47,12 +47,12 @@
         {% elif mode == 'ai' %}
             リバーシ（オセロ）AI対戦 | リバーシWeb - ブラウザで遊べる無料ゲーム
         {% elif mode == 'player' %}
-            リバーシ（オセロ） | リバーシWeb - ブラウザで遊べる無料ゲーム
+            リバーシ（電子オセロ盤） | リバーシWeb - ブラウザで遊べる無料ゲーム
         {% else %}
             リバーシWeb - ブラウザで遊べる無料ゲーム
         {% endif %}
     </title>    
-    <link rel="stylesheet" href="{% static 'game/style.css?v=3' %}">
+    <link rel="stylesheet" href="{% static 'game/style.css' %}?v=1.3">
     <script src="{% static 'game/script.js' %}" defer></script>
     <meta property="og:title" content="リバーシWeb">
     <meta property="og:description" content="オンラインで楽しめるリバーシゲーム！（オセロ）">
@@ -84,7 +84,7 @@
           "hasPart": [
             {
               "@type": "WebPage",
-              "name": "オセロ盤",
+              "name": "電子オセロ盤",
               "url": "https://reversi.yuki-lab.com/player"
             },
             {
@@ -206,7 +206,7 @@
         <button id="copy-url-btn"></button>
         <div id="copy-tooltip" class="tooltip">コピーして観戦者や<br>対戦相手を招待！</div>
         <button id="surrender-btn">投了</button>
-        <button id="restart-btn">🚩 新規</button>
+        <button id="restart-btn">🚩 新規対局</button>
         <div id="move-history">
             <h3>棋譜</h3>
             
@@ -361,7 +361,7 @@
     <audio id="playerJoin" src="{% static 'game/sounds/playerJoin.mp3' %}" preload="auto"></audio>
 </body>
 
-<script>
+<script nonce="{{ request.csp_nonce }}" >
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register("{% static 'game/sw.js' %}")
         .then(registration => console.log("Service Worker registered:", registration))

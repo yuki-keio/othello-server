@@ -19,4 +19,4 @@ psycopg2==2.9.10
 django-heroku==0.3.1
 
 django-debug-toolbar 
-python-dotenv 
+python-dotenv django-csp==3.8

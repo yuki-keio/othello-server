@@ -15,6 +15,8 @@ class OthelloConsumer(AsyncWebsocketConsumer):
         try:
             self.room_name = self.scope['url_route']['kwargs']['room_name']
             self.group_name = f"othello_{self.room_name}"
+ 
+
 
             # ゲーム状態を保持する辞書を channel_layer に用意
             if not hasattr(self.channel_layer, "game_rooms"):
@@ -23,6 +25,7 @@ class OthelloConsumer(AsyncWebsocketConsumer):
             # クエリパラメータから player_id を取得
             query_params = parse_qs(self.scope.get("query_string", b"").decode())
             player_id = query_params.get("playerId", [None])[0]
+            player_name = query_params.get("playerName", [None])[0]
            
 
             if not player_id:
@@ -30,6 +33,10 @@ class OthelloConsumer(AsyncWebsocketConsumer):
                 await self.close()
                 return
             
+            if not player_name:
+                await self.send(text_data=json.dumps({"error": "プレイヤー名が提供されていません"}))
+                await self.close()
+                return
             
             
 
@@ -69,7 +76,8 @@ class OthelloConsumer(AsyncWebsocketConsumer):
 
             # 既存のプレイヤーか確認し、役割を維持
             if player_id in players:
-                role = players[player_id]
+                role = players[player_id][0]
+                player_name = players[player_id][1]
                 is_reconnect = True
                 logger.info(f"[RECONNECT] {player_id} が {self.group_name} に再接続")
             else:
@@ -82,10 +90,11 @@ class OthelloConsumer(AsyncWebsocketConsumer):
                     role = "white"
                 else:
                     role = "spectator"
-                players[player_id] = role  # プレイヤーを登録
+                players[player_id] = [role,player_name]
 
             self.role = role
             self.player_id = player_id
+            self.player_name = player_name
             logger.info(f"[ASSIGN ROLE] {player_id} -> {role}")
 
             await self.send(text_data=json.dumps({
@@ -104,7 +113,8 @@ class OthelloConsumer(AsyncWebsocketConsumer):
                 self.group_name,
                 {
                     "type": "update_players",
-                    "players": list(players.keys()),
+                    "players": players,
+                   
                     "player_id": player_id
                 }
             )
