@@ -588,6 +588,15 @@ transition: background-color 0.2s ease-in-out;
   background: #005ecb;
 }
 
+#install-btn{
+  display: none;
+}
+
+#soundSettingContainer{
+  margin-left: 20px; 
+  margin-top:5px;
+}
+
 #player-name-container {
   margin-bottom: 15px;
 }

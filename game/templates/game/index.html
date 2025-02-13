@@ -26,7 +26,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDGothic&family=BIZ+UDPMincho&display=swap" media="print" onload="this.onload=null;this.removeAttribute('media');">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDGothic&family=BIZ+UDPMincho&display=swap" media="print">
+    <script nonce="{{ request.csp_nonce }}">
+        document.getElementById("googleFonts").addEventListener("load", function() {
+          this.removeAttribute("media");
+        });
+    </script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
@@ -230,7 +235,7 @@
             <h3>設定</h3>
             <div class="container">
                 🔈 効果音： <br>
-                <div style="margin-left: 20px; margin-top:5px;">
+                <div id="soundSettingContainer">
                 <label>
                     <input type="checkbox" id="gameEndSoundCheckbox" checked> 勝利 / 敗北
                 </label> <br><br>
@@ -305,7 +310,7 @@
         <div class="small">※ ただし通信対戦モードが選択された場合は、通信対戦における設定に合わせてハイライト表示設定が変更されます。</div>
         <h3>アプリ版で遊ぶ</h3>
         <p>本サイトはブラウザゲームですが、Webアプリ（PWA）としてホーム画面に追加することもできます。Webアプリの特徴として、デバイスの容量はほぼ消費せず、さらに起動も高速になります。アプリ版では主な機能をオフラインでも利用できます。アプリ設置の所要時間は数秒です。ぜひお試しください</p>
-        <button id="install-btn" style="display: none;">Webアプリとしてホーム画面に追加</button>
+        <button id="install-btn">Webアプリとしてホーム画面に追加</button>
 
 
     </section>
