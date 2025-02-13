@@ -392,14 +392,25 @@ transition: background-color 0.2s ease-in-out;
   text-align: center;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
   width: 80%;
-  max-width: 250px;
+  max-width: 270px;
 }
 #contents-overlay-setting{
   text-align: left;
-  padding: 10px;
+  padding: 13px;
 }
 #time_overlay-label{
   padding-left: 7px;
+  font-size: 14px;
+  display: block;
+}
+#time-limit {
+  padding: 6px;
+  font-size: 14px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+#highlight-moves {
+  margin-right: 5px;
 }
 
 /* スタートボタンのデザイン */
@@ -576,6 +587,34 @@ transition: background-color 0.2s ease-in-out;
 
 #close-install-guide:hover {
   background: #005ecb;
+}
+
+#player-name-container {
+  margin-bottom: 15px;
+}
+
+#player-name {
+  width: auto;
+  min-width: 120px;
+  width: 70%;
+  max-width: 160px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+
+#label4name{
+  font-size: 14px;
+  width: 77px;
+ 
+} 
+#warning{
+  font-size: 12px;
+  margin-top: 5px;
+  margin-left: 5px;
+  color: red;
 }
 
 .qr-popup {

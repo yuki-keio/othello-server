@@ -181,8 +181,21 @@ class OthelloConsumer(AsyncWebsocketConsumer):
             if data.get("action") == "game_setting":
                 time_limit = int(data.get("time_limit", 0))
                 show_valid_moves = data.get("show_valid_moves", False)
+                player_name = data.get("player_name", "unknown")
                 game_state["time_limit"] = time_limit
                 game_state["show_valid_moves"] = show_valid_moves
+                game_state["players"][self.player_id][1] = player_name
+                
+                # 全員にプレイヤーリストを送信（観戦者も含む）
+                await self.channel_layer.group_send(
+                    self.group_name,
+                    {
+                        "type": "update_players",
+                        "players": game_state["players"],
+                    
+                        "player_id": self.player_id
+                    }
+                )
                 
                 #ログ
                 logger.info(f"[GAME SETTING] {self.group_name} の設定が更新されました：{game_state}")

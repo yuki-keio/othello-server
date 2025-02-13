@@ -22,6 +22,7 @@ const defeatSound = document.getElementById('defeatSound');
 const playerJoin = document.getElementById('playerJoin');
 
 
+
 let onlineGameStarted = false;
 
 let deferredPrompt;
@@ -1532,6 +1533,21 @@ window.addEventListener('DOMContentLoaded', () => {
 
 });
 
+function sendSettings() {
+    let overlayTimeLimit = timelimit_el.value;
+    let overlayHighlightMoves = highlightMoves_el.checked;
+    timeLimit = overlayTimeLimit;
+    showValidMoves = overlayHighlightMoves;
+
+    localStorage.setItem('timeLimit', timeLimit);
+    localStorage.setItem('showValidMoves', showValidMoves);
+
+
+    
+
+    socket.send(JSON.stringify({ action: "game_setting", time_limit: timeLimit, show_valid_moves: showValidMoves, player_name: playerName }));
+
+}
 
 function makeSocket() {
 
@@ -1680,44 +1696,55 @@ document.getElementById('showValidMovesCheckbox').addEventListener('change', () 
 });
 
 
+const timelimit_el = document.getElementById('time-limit');
+const highlightMoves_el = document.getElementById('highlight-moves');
+
 //time-limit要素が存在するかチェックし、存在する場合のみchangeイベントを確認
-if (document.getElementById('time-limit')){
-    document.getElementById('time-limit').addEventListener('change', () => {
-        let overlayTimeLimit = document.getElementById("time-limit").value;
-        let overlayHighlightMoves = document.getElementById("highlight-moves").checked;
-        timeLimit = overlayTimeLimit;
-        showValidMoves = overlayHighlightMoves;
+if (timelimit_el){
+    timelimit_el.addEventListener('change', () => {
     
-        localStorage.setItem('timeLimit', timeLimit);
-        localStorage.setItem('showValidMoves', showValidMoves);
-    
-    
-        
-    
-        socket.send(JSON.stringify({ action: "game_setting", time_limit: timeLimit, show_valid_moves: showValidMoves }));
+        sendSettings();
     
     });
 }
 
-
-if (document.getElementById('highlight-moves')){
-    document.getElementById('highlight-moves').addEventListener('change', () => {
-        let overlayTimeLimit = document.getElementById("time-limit").value;
-        let overlayHighlightMoves = document.getElementById("highlight-moves").checked;
-        timeLimit = overlayTimeLimit;
-        showValidMoves = overlayHighlightMoves;
-    
-        localStorage.setItem('timeLimit', timeLimit);
-        localStorage.setItem('showValidMoves', showValidMoves);
-    
-    
-        
-    
-        socket.send(JSON.stringify({ action: "game_setting", time_limit: timeLimit, show_valid_moves: showValidMoves }));
-    
+if (highlightMoves_el){
+    highlightMoves_el.addEventListener('change', () => {
+        sendSettings();
     });
 }
 
+const playerName_el = document.getElementById('player-name');
+if (playerName_el){
+    const warning = document.getElementById("warning");
+    // プレイヤー名の保存ボタンの処理
+    playerName_el.addEventListener("change", () => {
+    
+    const nameInput = playerName_el.value.trim();
+    if (nameInput.length > 0) {
+        if (/^[a-zA-Z0-9]+$/.test(nameInput)) {
+
+                playerName = profanityCleaner.clean(nameInput);
+                playerName_el.value = playerName;
+                localStorage.setItem("playerName", playerName);
+                sendSettings();
+                warning.textContent = "";
+
+            
+        }else{
+            warning.textContent = "⚠️ 英数字のみ入力可能です";
+        }
+        
+    }else{
+
+        warning.textContent = "⚠️ 1文字以上ご入力ください";
+  
+    }
+    
+
+    
+});
+}
 document.getElementById("setting").addEventListener('click', () => {
     document.getElementById('settings').scrollIntoView({ behavior: "smooth" });
 });
