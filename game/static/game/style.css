@@ -399,7 +399,6 @@ transition: background-color 0.2s ease-in-out;
   padding: 13px;
 }
 #time_overlay-label{
-  padding-left: 7px;
   font-size: 14px;
   display: block;
 }
