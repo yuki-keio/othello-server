@@ -21,7 +21,7 @@ CSRF_COOKIE_SECURE = True
 CSP_DEFAULT_SRC = ("'self'",)
 CSP_SCRIPT_SRC = (
     "'self'",
-    "unsafe-inline",
+    "'nonce-randomvalue'",
     "https://www.google.com",
     "https://www.gstatic.com",
     "https://www.googletagmanager.com",
@@ -46,7 +46,7 @@ CSP_FRAME_SRC = (
 )
 CSP_STYLE_SRC = (
     "'self'",
-    "unsafe-inline",
+    "'nonce-randomvalue'",
     "https://fonts.googleapis.com",
     "https://pagead2.googlesyndication.com",
     "https://yuki-lab.com/static/",  
