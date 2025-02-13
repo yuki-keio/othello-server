@@ -70,6 +70,8 @@ CSP_STYLE_SRC = (
 )
 CSP_FONT_SRC = ("'self'", "https://fonts.gstatic.com")
 
+CSP_INCLUDE_NONCE_IN = ("script-src","style-src")
+
 
 # Heroku用の設定を適用
 django_heroku.settings(locals())
