@@ -33,7 +33,6 @@ CSP_CONNECT_SRC = (
 
 CSP_SCRIPT_SRC = (
     "'self'",
-    "'strict-dynamic'",
 
     "https://www.google.com",
     "https://www.gstatic.com",  
@@ -46,7 +45,6 @@ CSP_SCRIPT_SRC = (
     )
 CSP_IMG_SRC = (
     "'self'",
-    "'strict-dynamic'",
 
     "https://img.moppy.jp",
     "https://www.google.com",
@@ -57,7 +55,6 @@ CSP_IMG_SRC = (
         )
 CSP_FRAME_SRC = (
     "'self'",
-    "'strict-dynamic'",
 
     "https://www.google.com",
     "https://googleads.g.doubleclick.net",
@@ -69,7 +66,7 @@ CSP_FRAME_SRC = (
 )
 CSP_STYLE_SRC = (
     "'self'",
-    "'strict-dynamic'",
+    "'unsafe-inline'", 
     "https://fonts.googleapis.com",
     "https://pagead2.googlesyndication.com",
     "https://reversi.yuki-lab.com/static/",  
