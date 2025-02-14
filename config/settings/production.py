@@ -25,7 +25,7 @@ CSP_CONNECT_SRC = (
     "https://www.google.com",
     "https://www.gstatic.com",
     "https://www.googletagmanager.com",
-    "https://www.google-analytics.com/",
+    "https://www.google-analytics.com",
     "https://pagead2.googlesyndication.com",
     "https://googleads.g.doubleclick.net",
     "https://ep1.adtrafficquality.google",
@@ -68,7 +68,7 @@ CSP_STYLE_SRC = (
     "'self'",
     "https://fonts.googleapis.com",
     "https://pagead2.googlesyndication.com",
-    "https://yuki-lab.com/static/",  
+    "https://reversi.yuki-lab.com/static/",  
     "http://127.0.0.1:8000/static/",  
 )
 CSP_FONT_SRC = ("'self'", "https://fonts.gstatic.com")
