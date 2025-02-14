@@ -189,11 +189,18 @@ background-color: #00c000; /* 少し明るい緑 */
 .valid-move:hover {
 background-color: #00e000; /* より明るい緑 */
 }
-.valid-move.opponent-turn{
+.opponent-turn .valid-move{
 background-color: #00c000c0; 
 }
-.valid-move.opponent-turn:hover {
+.opponent-turn .valid-move:hover {
 background-color: #00c000c0; 
+}
+.opponent-turn .cell {
+  cursor: default;
+}
+
+.thinking .cell{
+  cursor: progress;
 }
 
 
@@ -337,6 +344,8 @@ border: none;
 border-radius: 5px;
 cursor: pointer;
 display: inline-block;
+
+cursor:copy;
 }
 
 #surrender-btn{
@@ -426,7 +435,7 @@ transition: background-color 0.2s ease-in-out;
   color: white;
   border: none;
   border-radius: 5px;
-  cursor: pointer;
+  cursor: copy;
   display: flex;
   align-items: center;
   justify-content: center;

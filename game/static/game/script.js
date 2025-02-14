@@ -269,6 +269,7 @@ console.log(`whitch-${currentPlayer},gameEnded:${gameEnded},status:${status},fin
 
         timerDisplay_.style.display = 'inline-block'; // 表示
         timerDisplay_.textContent = '🤖 考え中';
+        board.classList.add('thinking');
 
 
         setTimeout(() => {
@@ -410,15 +411,15 @@ function highlightValidMoves() {
             cell.classList.add('valid-move');
             if (gameMode === 'ai' && currentPlayer === 'white') {
 
-                cell.classList.add('opponent-turn');
+                board.classList.add('opponent-turn');
                 
             }else if (online && (role_online !== currentPlayer)) {
                 if (gameBoard.flat().filter(cell => cell !== '').length!==4){
-                    cell.classList.add('opponent-turn');
+                    board.classList.add('opponent-turn');
 
                 }else{
                     if (role_online === "white") {
-                        cell.classList.add('opponent-turn');
+                        board.classList.add('opponent-turn');
                     }
                 }
             }
@@ -442,7 +443,7 @@ function removeHighlight() {
             faintDisc.remove();
         }
         cell.classList.remove('valid-move');
-        cell.classList.remove('opponent-turn');
+        board.classList.remove('opponent-turn');
     });
 
 }
@@ -463,7 +464,7 @@ function updateStatus() {
 
 
 
-    if (showValidMoves === true) {
+    if (showValidMoves || showValidMoves === "true") {
         highlightValidMoves();
 
     } else {
@@ -475,6 +476,7 @@ function updateStatus() {
         //console.log("time");
         // 制限時間表示を更新またはクリア
         const timerDisplay = document.getElementById('timer-display');
+        board.classList.remove('thinking');
 
 
         if (timeLimit > 0) {
@@ -493,6 +495,7 @@ function startTimer() {
     let remainingTime = timeLimit;
     const timerDisplay = document.getElementById('timer-display');
     timerDisplay.textContent = formatTime(remainingTime);
+    board.classList.remove('thinking');
 
     // 既存のタイマーを停止
     stopTimer();
@@ -814,7 +817,7 @@ function loadBoardFromURL() {
 
     document.getElementById('timeLimitSelect').value = timeLimit;
     document.getElementById('aiLevelSelect').value = aiLevel;
-    document.getElementById('showValidMovesCheckbox').checked = showValidMoves;
+    document.getElementById('showValidMovesCheckbox').checked = showValidMoves ? true : false;
 
     updateStatus();
 
@@ -1070,6 +1073,7 @@ function endMove(bestMove, timeLimit, gameEnded, fromAI) {
         }
     } else {
         document.getElementById('timer-display').style.display = 'none'; // 制限時間がなければ非表示
+        board.classList.remove('thinking');
 
     }
     aimove = false;
