@@ -17,33 +17,31 @@ SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
-# CSPの設定
+# CSPの設定_なおheroku側が優先される
 CSP_DEFAULT_SRC = ("'self'",)
 CSP_CONNECT_SRC = (
     "'self'",
-    
     "https://www.google.com",
     "https://www.gstatic.com",
     "https://www.googletagmanager.com",
     "https://www.google-analytics.com",
     "https://pagead2.googlesyndication.com",
     "https://googleads.g.doubleclick.net",
-    "https://ep1.adtrafficquality.google",
+   "https://ep1.adtrafficquality.google",
     "https://ep2.adtrafficquality.google",
 )
 
 CSP_SCRIPT_SRC = (
     "'self'",
     "https://www.google.com",
-    "https://www.gstatic.com",
+    "https://www.gstatic.com",  
     "https://ep2.adtrafficquality.google",
-
-    "https://www.googletagmanager.com",
+    "https://www.googletagmanager.com", 
     "https://pagead2.googlesyndication.com",
     "https://googleads.g.doubleclick.net",
     "https://cdnjs.cloudflare.com",
     "https://cdn.jsdelivr.net",  
-)
+    )
 CSP_IMG_SRC = (
     "'self'",
     "https://img.moppy.jp",
@@ -52,11 +50,9 @@ CSP_IMG_SRC = (
     "https://pagead2.googlesyndication.com",
     "https://tpc.googlesyndication.com",
     "https://ep1.adtrafficquality.google",
-
-)
+        )
 CSP_FRAME_SRC = (
     "'self'",
-    
     "https://www.google.com",
     "https://googleads.g.doubleclick.net",
     "https://www.youtube.com",
