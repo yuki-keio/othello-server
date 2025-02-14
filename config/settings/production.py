@@ -33,6 +33,8 @@ CSP_CONNECT_SRC = (
 
 CSP_SCRIPT_SRC = (
     "'self'",
+    "'strict-dynamic'",
+
     "https://www.google.com",
     "https://www.gstatic.com",  
     "https://ep2.adtrafficquality.google",
@@ -44,6 +46,8 @@ CSP_SCRIPT_SRC = (
     )
 CSP_IMG_SRC = (
     "'self'",
+    "'strict-dynamic'",
+
     "https://img.moppy.jp",
     "https://www.google.com",
     "https://www.gstatic.com",
@@ -53,6 +57,8 @@ CSP_IMG_SRC = (
         )
 CSP_FRAME_SRC = (
     "'self'",
+    "'strict-dynamic'",
+
     "https://www.google.com",
     "https://googleads.g.doubleclick.net",
     "https://www.youtube.com",
