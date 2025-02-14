@@ -63,10 +63,12 @@ CSP_FRAME_SRC = (
 )
 CSP_STYLE_SRC = (
     "'self'",
+    "'strict-dynamic'",
     "https://fonts.googleapis.com",
     "https://pagead2.googlesyndication.com",
     "https://reversi.yuki-lab.com/static/",  
     "http://127.0.0.1:8000/static/",  
+    
     
 )
 CSP_FONT_SRC = ("'self'", "https://fonts.gstatic.com")
