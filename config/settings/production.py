@@ -33,7 +33,6 @@ CSP_CONNECT_SRC = (
 
 CSP_SCRIPT_SRC = (
     "'self'",
-    "'unsafe-inline'", 
     "https://www.google.com",
     "https://www.gstatic.com",  
     "https://ep2.adtrafficquality.google",
@@ -45,7 +44,6 @@ CSP_SCRIPT_SRC = (
     )
 CSP_IMG_SRC = (
     "'self'",
-
     "https://img.moppy.jp",
     "https://www.google.com",
     "https://www.gstatic.com",
@@ -55,7 +53,6 @@ CSP_IMG_SRC = (
         )
 CSP_FRAME_SRC = (
     "'self'",
-
     "https://www.google.com",
     "https://googleads.g.doubleclick.net",
     "https://www.youtube.com",
@@ -66,7 +63,6 @@ CSP_FRAME_SRC = (
 )
 CSP_STYLE_SRC = (
     "'self'",
-    "'unsafe-inline'", 
     "https://fonts.googleapis.com",
     "https://pagead2.googlesyndication.com",
     "https://reversi.yuki-lab.com/static/",  
@@ -74,6 +70,7 @@ CSP_STYLE_SRC = (
     
     
 )
+CSP_STYLE_SRC_ATTR = ("'unsafe-inline'",) 
 CSP_FONT_SRC = ("'self'", "https://fonts.gstatic.com")
 
 CSP_INCLUDE_NONCE_IN = ("script-src","style-src")
