@@ -62,6 +62,7 @@ CSP_FRAME_SRC = (
     "https://www.youtube.com",
     "https://securepubads.g.doubleclick.net", 
     "https://ep2.adtrafficquality.google",  
+    "https://pagead2.googlesyndication.com",
  
 )
 CSP_STYLE_SRC = (
@@ -70,6 +71,7 @@ CSP_STYLE_SRC = (
     "https://pagead2.googlesyndication.com",
     "https://reversi.yuki-lab.com/static/",  
     "http://127.0.0.1:8000/static/",  
+    
 )
 CSP_FONT_SRC = ("'self'", "https://fonts.gstatic.com")
 
