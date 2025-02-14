@@ -25,6 +25,7 @@ CSP_CONNECT_SRC = (
     "https://www.google.com",
     "https://www.gstatic.com",
     "https://www.googletagmanager.com",
+    "https://www.google-analytics.com/",
     "https://pagead2.googlesyndication.com",
     "https://googleads.g.doubleclick.net",
     "https://ep1.adtrafficquality.google",
@@ -50,6 +51,8 @@ CSP_IMG_SRC = (
     "https://www.gstatic.com",
     "https://pagead2.googlesyndication.com",
     "https://tpc.googlesyndication.com",
+    "https://ep1.adtrafficquality.google",
+
 )
 CSP_FRAME_SRC = (
     "'self'",
