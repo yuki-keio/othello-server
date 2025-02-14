@@ -1654,6 +1654,17 @@ function makeSocket() {
     };
 }
 
+
+if (window.location.hostname !== "localhost") {
+    console.log("Skipping source maps in production.");
+    window.addEventListener("error", (e) => {
+        if (e.filename.includes(".js.map")) {
+            e.preventDefault();
+        }
+    });
+}
+
+
 // イベントリスナーを追加
 
 copyUrlBtn.addEventListener('click', copyURLToClipboard);
