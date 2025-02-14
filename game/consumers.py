@@ -129,7 +129,8 @@ class OthelloConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             "action": "update_players",
             "players": event["players"],
-            "player_id": event["player_id"]
+            "player_id": event["player_id"],
+            "setting": event.get("setting", False)
         }))
  
     async def disconnect(self, close_code):
@@ -193,7 +194,8 @@ class OthelloConsumer(AsyncWebsocketConsumer):
                         "type": "update_players",
                         "players": game_state["players"],
                     
-                        "player_id": self.player_id
+                        "player_id": self.player_id,
+                        "setting": True
                     }
                 )
                 

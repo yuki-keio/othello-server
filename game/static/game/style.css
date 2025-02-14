@@ -189,6 +189,12 @@ background-color: #00c000; /* 少し明るい緑 */
 .valid-move:hover {
 background-color: #00e000; /* より明るい緑 */
 }
+.valid-move.opponent-turn{
+background-color: #00c000c0; 
+}
+.valid-move.opponent-turn:hover {
+background-color: #00c000c0; 
+}
 
 
 

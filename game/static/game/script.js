@@ -258,7 +258,7 @@ function applyServerMove(row, col, player, status, final = false) {
             }
         }//↑終了：有効手がなかった場合
     }
-
+console.log(`whitch-${currentPlayer},gameEnded:${gameEnded},status:${status},final:${final},aimove:${aimove}`);
     if (gameMode === 'ai' && currentPlayer === 'white' && !gameEnded && status !== 1 && aimove === false) {
         aimove = true;
         stopTimer();
@@ -283,9 +283,7 @@ function applyServerMove(row, col, player, status, final = false) {
             updateURL();
         }
     }
-    if (aimove === true) {
-        aimove = false;
-    }
+
 
     if ((final !== false ||gameMode!==online)) {
         updateStatus();
@@ -410,6 +408,20 @@ function highlightValidMoves() {
         validMoves.forEach(([row, col]) => {
             const cell = board.children[row * 8 + col];
             cell.classList.add('valid-move');
+            if (gameMode === 'ai' && currentPlayer === 'white') {
+
+                cell.classList.add('opponent-turn');
+                
+            }else if (online && (role_online !== currentPlayer)) {
+                if (gameBoard.flat().filter(cell => cell !== '').length!==4){
+                    cell.classList.add('opponent-turn');
+
+                }else{
+                    if (role_online === "white") {
+                        cell.classList.add('opponent-turn');
+                    }
+                }
+            }
 
             // 薄いディスクを追加
             const faintDisc = document.createElement('div');
@@ -430,6 +442,7 @@ function removeHighlight() {
             faintDisc.remove();
         }
         cell.classList.remove('valid-move');
+        cell.classList.remove('opponent-turn');
     });
 
 }
@@ -1038,8 +1051,9 @@ function aiMakeMove() {
 
 }
 
-function endMove(bestMove, timeLimit, gameEnded, aimove) {
+function endMove(bestMove, timeLimit, gameEnded, fromAI) {
     //console.log(`[endMove] Called with bestMove: ${bestMove ? JSON.stringify(bestMove) : "null"}, gameEnded: ${gameEnded}, aimove: ${aimove}`);
+
 
     if (bestMove) {
 
@@ -1537,7 +1551,7 @@ function sendSettings() {
     let overlayTimeLimit = timelimit_el.value;
     let overlayHighlightMoves = highlightMoves_el.checked;
     timeLimit = overlayTimeLimit;
-    showValidMoves = overlayHighlightMoves;
+    showValidMoves = overlayHighlightMoves ? "true" : "false";
 
     localStorage.setItem('timeLimit', timeLimit);
     localStorage.setItem('showValidMoves', showValidMoves);
@@ -1598,10 +1612,14 @@ function makeSocket() {
 
         } else if (data.action === "update_players") {
             updatePlayerList(data.players);
-            if (Object.keys(data.players).length === 2) {
+            if (Object.keys(data.players).length === 2 && !data.setting) {
+                if (role_online === 'black') {
+                    sendSettings();
+                }
                 overlay.style.display = 'none';
                 const qrPopup = document.getElementById("qr-popup");
                 qrPopup.style.display = "none";
+                highlightValidMoves();
             }
             if (playerJoinSoundEnabled) {
                 if (data.player_id !== playerId) {
@@ -1634,7 +1652,7 @@ function makeSocket() {
             document.getElementById('timeLimitSelect').value = timeLimit;
             tempUrl.searchParams.set('timeLimit', timeLimit);
             console.log(`ゲームが開始されました。${data.show_valid_moves}`);
-            showValidMoves = data.show_valid_moves
+            showValidMoves = data.show_valid_moves==="true";
             localStorage.setItem('showValidMoves', showValidMoves);
             document.getElementById('showValidMovesCheckbox').checked = showValidMoves;
             tempUrl.searchParams.set('showValidMoves', showValidMoves);
@@ -1714,19 +1732,20 @@ const highlightMoves_el = document.getElementById('highlight-moves');
 if (timelimit_el){
     timelimit_el.addEventListener('change', () => {
     
-        sendSettings();
+        //sendSettings();
     
     });
 }
 
 if (highlightMoves_el){
     highlightMoves_el.addEventListener('change', () => {
-        sendSettings();
+        //sendSettings();
     });
 }
 
 const playerName_el = document.getElementById('player-name');
 if (playerName_el){
+    playerName_el.value = playerName;
     const warning = document.getElementById("warning");
     // プレイヤー名の保存ボタンの処理
     playerName_el.addEventListener("change", () => {
@@ -1738,7 +1757,7 @@ if (playerName_el){
                 playerName = profanityCleaner.clean(nameInput);
                 playerName_el.value = playerName;
                 localStorage.setItem("playerName", playerName);
-                sendSettings();
+                //sendSettings();
                 warning.textContent = "";
 
             
