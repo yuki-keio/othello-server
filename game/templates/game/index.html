@@ -17,7 +17,7 @@
       });
     </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/profanity-cleaner@latest?source=false" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/profanity-cleaner@latest?source=false" defer  nonce="{{ request.csp_nonce }}" ></script>
 
 
 
@@ -33,7 +33,7 @@
         });
     </script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"  nonce="{{ request.csp_nonce }}" ></script>
 
 
     <meta name="description" content="
@@ -59,8 +59,8 @@
             リバーシWeb - ブラウザで遊べる無料ゲーム
         {% endif %}
     </title>    
-    <link rel="stylesheet" href="{% static 'game/style.css' %}?v=1.3">
-    <script src="{% static 'game/script.js' %}" defer></script>
+    <link rel="stylesheet" href="{% static 'game/style.css' %}?v=1.3"  nonce="{{ request.csp_nonce }}" >
+    <script src="{% static 'game/script.js' %}" defer  nonce="{{ request.csp_nonce }}" ></script>
     <meta property="og:title" content="リバーシWeb">
     <meta property="og:description" content="オンラインで楽しめるリバーシゲーム！（オセロ）">
     <meta property="og:image" content="https://reversi.yuki-lab.com/static/game/images/share-image.png">
