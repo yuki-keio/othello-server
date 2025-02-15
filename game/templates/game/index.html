@@ -9,6 +9,10 @@
     <link rel="stylesheet" href="{% static 'game/style.css' %}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDGothic:wght@400;700&family=BIZ+UDPMincho:wght@400;700&display=swap"
     media="print" id="dynamic-fonts" >
+    <script nonce="{{ request.csp_nonce }}">
+        const PLACE_STONE_SOUND = "{% static 'game/sounds/place-stone.mp3' %}";
+     
+    </script>
     
 
     <script defer src="{% static 'game/script.js' %}"></script>
@@ -386,7 +390,6 @@
     </div>
 </div>
 
-    <audio id="placeStoneSound" src="{% static 'game/sounds/place-stone.mp3' %}" preload="auto"></audio>
     <audio id="victorySound" src="{% static 'game/sounds/victory.mp3' %}" preload="auto"></audio>
     <audio id="defeatSound" src="{% static 'game/sounds/defeat.mp3' %}" preload="auto"></audio>
     <audio id="warningSound" src="{% static 'game/sounds/warning.mp3' %}" preload="auto"></audio>

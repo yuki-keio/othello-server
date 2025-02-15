@@ -15,12 +15,17 @@ const overlay = document.getElementById("game-settings-overlay");
 
 const surrenderBtn = document.getElementById('surrender-btn');
 
-const placeStoneSound = document.getElementById('placeStoneSound');
 const warningSound = document.getElementById('warningSound');
 const victorySound = document.getElementById('victorySound');
 const defeatSound = document.getElementById('defeatSound');
 const playerJoin = document.getElementById('playerJoin');
 
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+let placeStoneBuffer = null;
+let lastPlayTime = 0;
+let gainNode = audioContext.createGain(); // 音量調整用ノード
+gainNode.connect(audioContext.destination); // 出力先に接続
+gainNode.gain.value = 0.09;
 
 
 let onlineGameStarted = false;
@@ -180,7 +185,7 @@ function isBoardFull() {
     return gameBoard.flat().every(cell => cell !== '');
 }
 //サーバーからの手とは限らないので注意
-function applyServerMove(row, col, player, status, final = false) {
+async function applyServerMove(row, col, player, status, final = false) {
     // statusが0の場合は、サーバーからの手?か友達対戦です
     // statusが1の場合は、リプレイ時の手
     // statusが2の場合は、これはAIendMoveによる手であり、serverからの手ではないです。
@@ -198,10 +203,10 @@ function applyServerMove(row, col, player, status, final = false) {
 
 
     if (soundEffects) {
-        placeStoneSound.currentTime = 0;
-        placeStoneSound.play().catch(error => {
-            console.warn("audio was blocked:", error);
-        });;
+        console.log("sound_start");
+        await playStoneSound();
+        console.log("sound_end");
+        
     }
 
     // 現在の手にハイライトを追加
@@ -1425,7 +1430,6 @@ victorySound.volume = 0.01;
 defeatSound.volume = 0.007;
 warningSound.volume = 0.02;
 playerJoin.volume = 0.04;
-placeStoneSound.volume = 0.05;
 
 //時間制限の「音量設定」のためのボックスの表示可否
 if (timeLimit === 0) {
@@ -1500,7 +1504,6 @@ if (document.readyState !== "loading") {
 window.addEventListener('DOMContentLoaded',_DOMContenLoaded);}
 
 function _DOMContenLoaded() {
-
     const inviteBtn = document.getElementById("qr");
     const qrPopup = document.getElementById("qr-popup");
     const closeQr = document.getElementById("close-qr");
@@ -1710,6 +1713,53 @@ function toHalfWidth(str) {
         return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
     });
 }
+
+// 音声をロード（すでにロード済みなら再利用）
+async function getAudioBuffer(url) {
+    if (placeStoneBuffer) return placeStoneBuffer;
+
+    const response = await fetch(url);
+    const arrayBuffer = await response.arrayBuffer();
+    placeStoneBuffer = await audioContext.decodeAudioData(arrayBuffer);
+    return placeStoneBuffer;
+}
+
+
+
+// 音声を再生（品質向上版）
+async function playStoneSound() {
+    
+    const buffer = await getAudioBuffer(PLACE_STONE_SOUND);
+    if (!buffer) return;
+
+    const now = audioContext.currentTime;
+    if (now - lastPlayTime < 0.1) return; // 0.1秒以内の多重再生を防ぐ
+    lastPlayTime = now;
+
+    const source = audioContext.createBufferSource();
+    source.buffer = buffer;
+    source.connect(gainNode); 
+    source.start(0);
+
+   
+}
+
+
+
+// ページ離脱時に AudioContext を解放
+window.addEventListener("beforeunload", async () => {
+    if (audioContext.state !== "closed") {
+        await audioContext.close();
+    }
+});
+
+board.addEventListener("click", () => {
+    if (audioContext.state === "suspended") {
+        audioContext.resume().then(() => {
+            console.log("AudioContext resumed!");
+        }).catch(err => console.error("AudioContext resume failed:", err));
+    }
+}, { once: true });
 
 
 if (window.location.hostname !== "127.0.0.1") {
