@@ -382,7 +382,8 @@ transition: background-color 0.2s ease-in-out;
 }
 
 #board-container {
-  position: relative; /* これが重要 */
+  position: relative; 
+  min-width: 96%;
 }
 
 /* オーバーレイをオセロ盤の中に配置 */
