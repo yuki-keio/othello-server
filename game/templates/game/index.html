@@ -5,8 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preload" href="{% static 'game/style.css' %}" as="style">
+    <link rel="preload" href="{% static 'game/script.js' %}" as="script">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=BIZ+UDGothic&family=BIZ+UDPMincho&display=swap" as="style">
     <link rel="stylesheet" href="{% static 'game/style.css' %}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDGothic&family=BIZ+UDPMincho&display=swap" id="googleFonts">
     <script defer src="{% static 'game/script.js' %}"></script>
@@ -125,13 +127,16 @@
                 gtag('js', new Date());
                 gtag('config', 'G-4JKZC3VNE7', { 'cookie_domain': 'auto' });
             };
+            if ('requestIdleCallback' in window) {
+                requestIdleCallback(loadAdSense);
+            } else {
+                setTimeout(loadAdSense, 1000);
+            }
         }
 
-        document.addEventListener("DOMContentLoaded", loadGoogleAnalytics);
-    </script>
+        
 
-    <!-- AdSense の遅延読み込み -->
-    <script nonce="{{ request.csp_nonce }}">
+
         function loadAdSense() {
             if (!window.adsLoaded) {
                 window.adsLoaded = true;
@@ -142,18 +147,7 @@
                 document.head.appendChild(script);
             }
         }
-
-        // ユーザー操作後に広告をロード
-        window.addEventListener("scroll", loadAdSense, { once: true });
-        window.addEventListener("mousemove", loadAdSense, { once: true });
-        window.addEventListener("touchstart", loadAdSense, { once: true });
-
-        // ページの最後までスクロールしたら強制ロード
-        window.addEventListener("scroll", function () {
-            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-                loadAdSense();
-            }
-        }, { passive: true });
+        document.addEventListener("DOMContentLoaded", loadGoogleAnalytics);
     </script>
     
 </head>
