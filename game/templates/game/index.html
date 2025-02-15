@@ -4,19 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preload" href="{% static 'game/style.css' %}" as="style">
-    <link rel="preload" href="{% static 'game/script.js' %}" as="script">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=BIZ+UDGothic:wght@400;700&family=BIZ+UDPMincho:wght@400;700&display=swap" as="style">
     <link rel="stylesheet" href="{% static 'game/style.css' %}">
     <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=BIZ+UDGothic:wght@400;700&family=BIZ+UDPMincho:wght@400;700&display=swap"
-    media="print" onload="this.onload=null;this.removeAttribute('media');">
-<noscript>
-  <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=BIZ+UDGothic:wght@400;700&family=BIZ+UDPMincho:wght@400;700&display=swap">
-</noscript>
+    media="print" onload="this.onload=null;this.removeAttribute('media');" nonce="{{ request.csp_nonce }}">
+    
+
     <script defer src="{% static 'game/script.js' %}"></script>
 
     <meta name="description" content="
@@ -74,7 +69,7 @@
               "price": "0",
               "priceCurrency": "JPY"
             },
-            "hasPart": [
+            "hasPart": 
               {
                 "@type": "WebPage",
                 "name": "電子オセロ盤",
@@ -90,7 +85,7 @@
                 "name": "通信対戦",
                 "url": "https://reversi.yuki-lab.com/online"
               }
-            ]
+
           }
         </script>
 
@@ -241,10 +236,10 @@
 
         </div>
 
-        <button id="copy-url-btn"></button>
+        <button id="copy-url-btn" aria-label="オセロの盤面を共有するURLをコピー"></button>
         <div id="copy-tooltip" class="tooltip">コピーして観戦者や<br>対戦相手を招待！</div>
-        <button id="surrender-btn">投了</button>
-        <button id="restart-btn">🚩 新規対局</button>
+        <button id="surrender-btn" aria-label="投了">投了</button>
+        <button id="restart-btn" aria-label="新しい対局を開始">🚩 新規対局</button>
         <div id="move-history">
             <h3>棋譜</h3>
             
@@ -343,7 +338,7 @@
     <section class ="notes" id="rules">
         <h2>リバーシ（オセロ）のルール</h2>
     
-        <h3>リバーシ（オセロ）の基本ルール</h3>
+        <h3>基本ルール</h3>
         <p>リバーシは 8×8 の盤面で行うボードゲームです。「オセロ」という名前でも親しまれています。本ゲームの対戦は、以下のルールで進行します。</p>
         <ul>
             <li>ゲーム開始時は中央に黒と白の石が 2 個ずつ配置されます。</li>
