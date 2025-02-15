@@ -1480,18 +1480,25 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
 
 // ページ読み込み時に、保存されたモードに応じてバナーの active クラスを設定
 
-window.addEventListener('DOMContentLoaded', () => {
+if (document.readyState !== "loading") {
+    document.removeEventListener("DOMContentLoaded", _DOMContenLoaded);
+    _DOMContenLoaded();
+}else{
+window.addEventListener('DOMContentLoaded',_DOMContenLoaded);}
+
+function _DOMContenLoaded() {
 
     const inviteBtn = document.getElementById("qr");
     const qrPopup = document.getElementById("qr-popup");
     const closeQr = document.getElementById("close-qr");
     const qrcodeContainer = document.getElementById("qrcode");
-
+    console.log("qrbtns", inviteBtn, qrPopup, closeQr, qrcodeContainer);
     if (inviteBtn && qrPopup && closeQr && qrcodeContainer) {
 
         inviteBtn.addEventListener("click", function () {
             const inviteUrl = window.location.href;  // 現在のURLを取得
             qrcodeContainer.innerHTML = "";  // QRコードをクリア
+            console.log("qr")
             new QRCode(qrcodeContainer, {
                 text: inviteUrl,
                 width: 200,
@@ -1549,7 +1556,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     changeTitle();
 
-});
+}
 
 function sendSettings() {
     let overlayTimeLimit = timelimit_el.value;
@@ -1675,10 +1682,15 @@ function makeSocket() {
         }
     };
 }
+function toHalfWidth(str) {
+    return str.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) {
+        return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
+    });
+}
 
 
-if (window.location.hostname !== "localhost") {
-    console.log("Skipping source maps in production.");
+if (window.location.hostname !== "127.0.0.1") {
+    console.log("Skipping source maps in production." + window.location.hostname);
     window.addEventListener("error", (e) => {
         if (e.filename.includes(".js.map")) {
             e.preventDefault();
@@ -1754,8 +1766,10 @@ if (playerName_el){
     // プレイヤー名の保存ボタンの処理
     playerName_el.addEventListener("change", () => {
     
-    const nameInput = playerName_el.value.trim();
+    const nameInput = toHalfWidth(playerName_el.value.trim());
     if (nameInput.length > 0) {
+        playerName_el.value = nameInput;
+       
         if (/^[a-zA-Z0-9]+$/.test(nameInput)) {
 
                 playerName = profanityCleaner.clean(nameInput);
