@@ -8,8 +8,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDGothic&family=BIZ+UDPMincho&display=swap" id="googleFonts">
-    <link rel="stylesheet" href="{% static 'game/style.css' %}" >
-    <script async src="{% static 'game/script.js' %}"></script>
+    <noscript>
+    <link rel="stylesheet" href="{% static 'game/style.css' %}"></noscript>
+    <link rel="stylesheet" href="{% static 'game/style.css' %}">
+    <script defer src="{% static 'game/script.js' %}"></script>
 
     <meta name="description" content="
     {% if mode == 'online' %}
@@ -109,20 +111,40 @@
     {% endif %}
     ">
 
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1918692579240633"
-    crossorigin="anonymous" ></script>
-   <!-- Google tag (gtag.js) -->
-   <script async src="https://www.googletagmanager.com/gtag/js?id=G-4JKZC3VNE7"></script>
-   <script nonce="{{ request.csp_nonce }}">
-   window.dataLayer = window.dataLayer || [];
-   function gtag(){dataLayer.push(arguments);}
-   gtag('js', new Date());
-
-   gtag('config', 'G-XXXXXXX', {
-       'cookie_domain': 'auto'  // クッキーを統一
-     });
-   </script>
+ 
+    <script nonce="{{ request.csp_nonce }}">
+        function loadScript(src) {
+            return new Promise((resolve) => {
+              var script = document.createElement('script');
+              script.src = src;
+              script.async = true;
+              script.onload = resolve;
+              document.head.appendChild(script);
+            });
+        }
+        
+        // gtag.js を先にロード
+        window.addEventListener("load", function () {
+            loadScript("https://www.googletagmanager.com/gtag/js?id=G-4JKZC3VNE7")
+            .then(() => {
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-XXXXXXX', { 'cookie_domain': 'auto' });
     
+              // Google Ads のスクリプトを load イベント後に遅延読み込み
+              if ('requestIdleCallback' in window) {
+                requestIdleCallback(() => {
+                  loadScript("https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1918692579240633");
+                });
+              } else {
+                setTimeout(() => {
+                  loadScript("https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1918692579240633");
+                }, 3000);
+              }
+            });
+        });
+    </script>
 </head>
 <body>
 <div id="game-container">
