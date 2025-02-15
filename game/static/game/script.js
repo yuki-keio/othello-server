@@ -780,8 +780,17 @@ function loadBoardFromURL() {
     if (modeFromPath) {
         gameMode = modeFromPath;
         localStorage.setItem('gameMode', gameMode);
+        document.querySelectorAll('.mode-btn').forEach(el => {
+            el.classList.remove('active');
+            if (el.dataset.mode === gameMode) {
+                el.classList.add('active');
+            }
+        });
+
+        
         if (gameMode === "ai") {
             document.getElementById('level_ai').style.display = 'block';
+            
         }else{
             document.getElementById('level_ai').style.display = 'none';
         }
