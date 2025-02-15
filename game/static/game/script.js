@@ -780,7 +780,11 @@ function loadBoardFromURL() {
     if (modeFromPath) {
         gameMode = modeFromPath;
         localStorage.setItem('gameMode', gameMode);
-        changeTitle();
+        if (gameMode === "ai") {
+            document.getElementById('level_ai').style.display = 'block';
+        }else{
+            document.getElementById('level_ai').style.display = 'none';
+        }
         if (gameMode === "online") {
             console.log(`timelimit: ${timeLimit}`);
             makeSocket()
@@ -1553,8 +1557,13 @@ function _DOMContenLoaded() {
             socket = null;
         }
         document.getElementById("playerJoinSoundBox").style.display = "none";
+        if (gameMode === 'ai') {
+            document.getElementById('level_ai').style.display = 'block';
+        }else{
+            document.getElementById('level_ai').style.display = 'none';
+        }
     }
-    changeTitle();
+    
 
 }
 
