@@ -27,6 +27,8 @@ let gainNode = audioContext.createGain(); // 音量調整用ノード
 gainNode.connect(audioContext.destination); // 出力先に接続
 gainNode.gain.value = 0.09;
 
+let resumed = null;
+
 
 let onlineGameStarted = false;
 
@@ -198,22 +200,21 @@ async function applyServerMove(row, col, player, status, final = false) {
     if (lastMoveCell) {
         lastMoveCell.classList.remove('last-move');
     }
+      
+   
 
     setDisc(row, col, player);
 
 
-    if (soundEffects) {
-        console.log("sound_start");
-        await playStoneSound();
-        console.log("sound_end");
-        
+    if (soundEffects && status!==1) {
+        await playStoneSound();        
     }
+     // 現在の手にハイライトを追加
+     const currentCell = board.children[row * 8 + col];
+     currentCell.firstChild.classList.add('last-move');
+     lastMoveCell = currentCell.firstChild;
 
-    // 現在の手にハイライトを追加
-    const currentCell = board.children[row * 8 + col];
-    currentCell.firstChild.classList.add('last-move');
-    lastMoveCell = currentCell.firstChild;
-
+ 
     console.log("board::", gameBoard);
     // 石をひっくり返す
     flipDiscs(row, col, player);
@@ -963,9 +964,7 @@ function replayMovesUpToIndex(index, fromServer = false) {
     });
     if (index >= 0) {
         applyServerMove(moveHistory[index].row, moveHistory[index].col, moveHistory[index].player, 1, fromServer);
-        const move = moveHistory[index];
-        lastMoveCell = board.children[move.row * 8 + move.col].firstChild;
-        lastMoveCell.classList.add('last-move');
+        
     }
     updateStatus();
 }
@@ -1728,12 +1727,26 @@ async function getAudioBuffer(url) {
 
 // 音声を再生（品質向上版）
 async function playStoneSound() {
-    
+    if (audioContext.state === "suspended") {
+        await audioContext.resume().then(() => {
+            console.log("AudioContext resumed.");
+            resumed = true
+        }).catch((error) => {
+            console.warn("Failed to resume AudioContext:", error);
+        });
+    }
+    console.log("playStoneSound"+PLACE_STONE_SOUND);
     const buffer = await getAudioBuffer(PLACE_STONE_SOUND);
+    console.log("buffer"+buffer);
     if (!buffer) return;
-
+    console.log("now"+audioContext.currentTime);
+    console.log("last"+lastPlayTime);
     const now = audioContext.currentTime;
-    if (now - lastPlayTime < 0.1) return; // 0.1秒以内の多重再生を防ぐ
+    if (resumed) {
+        resumed = false;
+    }else{
+        if (now - lastPlayTime < 0.1) return; // 0.1秒以内の多重再生を防ぐ}
+    }
     lastPlayTime = now;
 
     const source = audioContext.createBufferSource();
@@ -1753,13 +1766,7 @@ window.addEventListener("beforeunload", async () => {
     }
 });
 
-board.addEventListener("click", () => {
-    if (audioContext.state === "suspended") {
-        audioContext.resume().then(() => {
-            console.log("AudioContext resumed!");
-        }).catch(err => console.error("AudioContext resume failed:", err));
-    }
-}, { once: true });
+
 
 
 if (window.location.hostname !== "127.0.0.1") {
