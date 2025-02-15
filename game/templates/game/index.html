@@ -4,9 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'game/style.css' %}">
+    <link rel="preload" href="{% static 'game/style.css' %}" as="style">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="{% static 'game/style.css' %}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDGothic&family=BIZ+UDPMincho&display=swap" id="googleFonts">
     <script defer src="{% static 'game/script.js' %}"></script>
 
@@ -108,40 +109,51 @@
     {% endif %}
     ">
 
-    <script nonce="{{ request.csp_nonce }}">
-        function loadScript(src) {
-            return new Promise((resolve) => {
-                var script = document.createElement('script');
-                script.src = src;
-                script.defer = true; // async ではなく defer にする
-                script.onload = resolve;
-                script.nonce = "{{ request.csp_nonce }}"; // CSP対応
-                document.head.appendChild(script);
-            });
-        }
     
-        // gtag.js を先にロード
-        document.addEventListener("DOMContentLoaded", function () {
-            loadScript("https://www.googletagmanager.com/gtag/js?id=G-4JKZC3VNE7")
-            .then(() => {
+    <!-- Google Analytics 最適化 -->
+    <script nonce="{{ request.csp_nonce }}">
+        function loadGoogleAnalytics() {
+            var script = document.createElement('script');
+            script.src = "https://www.googletagmanager.com/gtag/js?id=G-4JKZC3VNE7";
+            script.async = true;
+            script.nonce = "{{ request.csp_nonce }}"; // CSP対応
+            document.head.appendChild(script);
+
+            script.onload = function () {
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
                 gtag('js', new Date());
-                gtag('config', 'G-XXXXXXX', { 'cookie_domain': 'auto' });
-    
-                // Google Ads のスクリプトを遅延読み込み
-                if ('requestIdleCallback' in window) {
-                    requestIdleCallback(() => {
-                        loadScript("https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1918692579240633");
-                    });
-                } else {
-                    console.log("requestIdleCallback not supported, using setTimeout");
-                    setTimeout(() => {
-                        loadScript("https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1918692579240633");
-                    }, 1000); // 遅延時間を1秒に短縮
-                }
-            });
-        });
+                gtag('config', 'G-4JKZC3VNE7', { 'cookie_domain': 'auto' });
+            };
+        }
+
+        document.addEventListener("DOMContentLoaded", loadGoogleAnalytics);
+    </script>
+
+    <!-- AdSense の遅延読み込み -->
+    <script nonce="{{ request.csp_nonce }}">
+        function loadAdSense() {
+            if (!window.adsLoaded) {
+                window.adsLoaded = true;
+                var script = document.createElement('script');
+                script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1918692579240633";
+                script.defer = true;
+                script.nonce = "{{ request.csp_nonce }}"; // CSP対応
+                document.head.appendChild(script);
+            }
+        }
+
+        // ユーザー操作後に広告をロード
+        window.addEventListener("scroll", loadAdSense, { once: true });
+        window.addEventListener("mousemove", loadAdSense, { once: true });
+        window.addEventListener("touchstart", loadAdSense, { once: true });
+
+        // ページの最後までスクロールしたら強制ロード
+        window.addEventListener("scroll", function () {
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+                loadAdSense();
+            }
+        }, { passive: true });
     </script>
     
 </head>
