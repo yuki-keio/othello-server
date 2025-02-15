@@ -69,40 +69,42 @@
     <meta name="twitter:image" content="https://reversi.yuki-lab.com/static/game/images/share-image.png">
     <script type="application/ld+json">
         {
-          "@context": "https://schema.org",
-          "@type": "VideoGame",
-          "name": "リバーシWeb - ブラウザで遊べる無料ゲーム",
-          "alternateName": "無料オセロゲームのスマートオセロ",
-          "description": "一人で遊べるAI対戦も友達とのオンライン対戦も可能な無料のリバーシ（オセロゲーム）。ブラウザで今すぐプレイ！",
-          "image": "https://reversi.yuki-lab.com/static/game/images/share-image.png",
-          "url": "https://reversi.yuki-lab.com",
-          "operatingSystem": "Web",
-          "genre": "Board game",
-          "gamePlatform": "Web",
-          "gameMode": ["SinglePlayer", "AI", "Multiplayer"],
-          "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "JPY"
-          },
-          "hasPart": [
-            {
-              "@type": "WebPage",
-              "name": "電子オセロ盤",
-              "url": "https://reversi.yuki-lab.com/player"
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            "name": "リバーシWeb - ブラウザで遊べる無料ゲーム",
+            "additionalType": ["https://schema.org/VideoGame", "https://schema.org/WebApplication"],
+            "applicationCategory": "Game",
+            "alternateName": "無料オセロゲームのスマートオセロ",
+            "description": "一人で遊べるAI対戦も友達とのオンライン対戦も可能な無料のリバーシ（オセロゲーム）。ブラウザで今すぐプレイ！",
+            "image": "https://reversi.yuki-lab.com/static/game/images/share-image.png",
+            "url": "https://reversi.yuki-lab.com",
+            "operatingSystem": "Web",
+            "genre": "Board game",
+            "gamePlatform": "Web",
+            "gameMode": ["SinglePlayer", "AI", "Multiplayer"],
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "JPY"
             },
-            {
-              "@type": "WebPage",
-              "name": "オセロAIと対戦",
-              "url": "https://reversi.yuki-lab.com/ai"
-            },
-            {
-              "@type": "WebPage",
-              "name": "通信対戦",
-              "url": "https://reversi.yuki-lab.com/online"
-            }
-          ]
-        }
+            "hasPart": [
+              {
+                "@type": "WebPage",
+                "name": "電子オセロ盤",
+                "url": "https://reversi.yuki-lab.com/player"
+              },
+              {
+                "@type": "WebPage",
+                "name": "オセロAIと対戦",
+                "url": "https://reversi.yuki-lab.com/ai"
+              },
+              {
+                "@type": "WebPage",
+                "name": "通信対戦",
+                "url": "https://reversi.yuki-lab.com/online"
+              }
+            ]
+          }
         </script>
 
     <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="{% static 'game/images/favicon/favicon.ico' %}">
