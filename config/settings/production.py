@@ -25,10 +25,12 @@ CSP_CONNECT_SRC = (
     "https://www.gstatic.com",
     "https://www.googletagmanager.com",
     "https://www.google-analytics.com",
+    "https://fundingchoicesmessages.google.com",
     "https://pagead2.googlesyndication.com",
     "https://googleads.g.doubleclick.net",
-   "https://ep1.adtrafficquality.google",
+    "https://ep1.adtrafficquality.google",
     "https://ep2.adtrafficquality.google",
+    
 )
 
 CSP_SCRIPT_SRC = (

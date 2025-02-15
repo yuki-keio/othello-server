@@ -1796,6 +1796,8 @@ if (playerName_el){
         if (/^[a-zA-Z0-9]+$/.test(nameInput)) {
 
                 playerName = profanityCleaner.clean(nameInput);
+                document.getElementById("player-list").children[0].textContent = `黒: あなた(${playerName})`;
+
                 playerName_el.value = playerName;
                 localStorage.setItem("playerName", playerName);
                 //sendSettings();

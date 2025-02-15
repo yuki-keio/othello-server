@@ -536,7 +536,7 @@ transition: background-color 0.2s ease-in-out;
 }
 
 .notes strong {
-  color: #e74c3c;
+  color: #d1200d;
 }
 
 .notes p {
@@ -672,8 +672,8 @@ transition: background-color 0.2s ease-in-out;
 
 #qr {
   margin-left: 5px;
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
   background: transparent;
   border: none;
   cursor: pointer;
