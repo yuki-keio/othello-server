@@ -482,7 +482,6 @@ function updateStatus() {
         //console.log("time");
         // 制限時間表示を更新またはクリア
         const timerDisplay = document.getElementById('timer-display');
-        board.classList.remove('thinking');
 
 
         if (timeLimit > 0) {
@@ -501,7 +500,6 @@ function startTimer() {
     let remainingTime = timeLimit;
     const timerDisplay = document.getElementById('timer-display');
     timerDisplay.textContent = formatTime(remainingTime);
-    board.classList.remove('thinking');
 
     // 既存のタイマーを停止
     stopTimer();
@@ -1090,6 +1088,9 @@ function endMove(bestMove, timeLimit, gameEnded, fromAI) {
         }
     } else {
         document.getElementById('timer-display').style.display = 'none'; // 制限時間がなければ非表示
+
+    }
+    if (fromAI) {
         board.classList.remove('thinking');
 
     }
@@ -1753,6 +1754,8 @@ async function playStoneSound() {
     source.buffer = buffer;
     source.connect(gainNode); 
     source.start(0);
+
+
 
    
 }
