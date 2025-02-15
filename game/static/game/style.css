@@ -681,6 +681,11 @@ transition: background-color 0.2s ease-in-out;
   display: flex;
 }
 
+#qr-icon{
+  width: 100%;
+  height: 100%;
+}
+
 .invite-container {
   margin-top: 10px;
   display: flex;

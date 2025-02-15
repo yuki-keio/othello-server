@@ -7,9 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="{% static 'game/style.css' %}">
-    <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=BIZ+UDGothic:wght@400;700&family=BIZ+UDPMincho:wght@400;700&display=swap"
-    media="print" onload="this.onload=null;this.removeAttribute('media');" nonce="{{ request.csp_nonce }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDGothic:wght@400;700&family=BIZ+UDPMincho:wght@400;700&display=swap"
+    media="print" id="dynamic-fonts" >
     
 
     <script defer src="{% static 'game/script.js' %}"></script>
@@ -210,7 +209,7 @@
 
                     <button id="start-match" class="btn-primary">招待URLをコピー</button>
                     <button id="qr">
-                        <img src="{% static 'game/images/qr.svg' %}" alt="オセロ対戦への招待用QRコード">
+                        <img src="{% static 'game/images/qr.svg' %}" alt="オセロ対戦への招待用QRコード" id="qr-icon">
                     </button>
                     </div>
                 </div>

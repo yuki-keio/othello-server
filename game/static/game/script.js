@@ -1505,7 +1505,12 @@ function _DOMContenLoaded() {
     const qrPopup = document.getElementById("qr-popup");
     const closeQr = document.getElementById("close-qr");
     const qrcodeContainer = document.getElementById("qrcode");
+    var link = document.getElementById("dynamic-fonts");
+    if (link) {
+      link.media = "all";
+    }
     console.log("qrbtns", inviteBtn, qrPopup, closeQr, qrcodeContainer);
+
     if (inviteBtn && qrPopup && closeQr && qrcodeContainer) {
 
         inviteBtn.addEventListener("click", function () {
