@@ -1,5 +1,5 @@
 body {
-    font-family: "BIZ UDPMincho", serif;    
+    font-family: "BIZ UDPMincho", serif; 
     display: flex;
     justify-content: center;
     align-items: center;
@@ -8,7 +8,7 @@ body {
     box-sizing: border-box; /* Ensures padding and border are included in element's total width and height */
 }
 h1{
-    font-family:"BIZ UDGothic", sans-serif ;
+    font-family:"BIZ UDGothic", "Arial", sans-serif ;
     font-size: 1.4em; 
 }
 #level_ai{
