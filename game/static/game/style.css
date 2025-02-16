@@ -1,504 +1,61 @@
-body {
-    font-family: "BIZ UDPMincho", serif; 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0;
-    background-color: #f0f0f0;
-    box-sizing: border-box; /* Ensures padding and border are included in element's total width and height */
-}
-h1{
-    font-family:"BIZ UDGothic", "Arial", sans-serif ;
-    font-size: 1.4em; 
-}
-#level_ai{
-margin-bottom: 15px;
-}
-#timer-display {
-position: absolute;
-top: 87px; /* 上からの位置 */
-left: 0px; /* 左からの位置 */
-font-size: 18px;
-background-color: #e0e0e0;
-color: black;
-padding: 5px 10px;
-border-radius: 5px;
-font-weight: bold;
-display: none;
-}
-
-#timer-display.warning1{
-color: #db5f00;
-font-weight: bold;
-font-size: 1.25em;
-
-
-}
-#timer-display.warning2{
-color: #ff0000;
-font-weight: bold;
-font-size: 1.4em;
-
-
-}
-
-#player-list{
-  padding-inline-start: 0px;
-}
-
-#setting{
-position: absolute;
-right: -3px;
-top: 85px;
-
-width: 29px;  
-height: 29px; 
-
-cursor: pointer;
-}
 #settings{
-padding-top:10px;
-}
-.credit{
-font-size: 0.7em;
-text-align: center;
-margin-top: 20px;
-margin-bottom: 20px;
-position: absolute;
-/*center*/
-left: 50%;
-transform: translateX(-50%);
-width: 100%;
-}
-.caution{
-padding: 15px;
-font-size: 0.8em;
-}
-
-#prev-move-btn, #next-move-btn {
-margin: 5px;
-padding: 5px 10px;
-font-size: 14px;
-color: white;
-border: none;
-border-radius: 5px;
-cursor: pointer;
-display: inline-block;
-position: absolute;
-top: 30px;
-
-}
-#prev-move-btn {
-right: 55px;
-background-color: #a34d4d;
-
-}
-#next-move-btn {
-right: 10px;
-background-color: #55b149;
-
-}
-#black_circle{
-width: 15px;
-height: 15px;
-transform:translate(0, 1px);
-border-radius: 50%;
-background-color: black;
-display: inline-block;
-}
-#white_circle{
-width: 15px;
-height: 15px;
-transform:translate(0, 1px);
-border-radius: 50%;
-background-color: white;
-display: inline-block;
-}
-#score_black{
-width: 100px;
-text-align: right;
-font-weight: lighter;
-}
-#score_white{
-width: 100px;
-text-align: left;
-font-weight: lighter;
-
-}
-#ad{
-margin-top:40px;
-margin-bottom: 40px;
-display: inline-block; 
-width: 100%; 
-height: auto;
-}
-.marker {
-width: 10%;
-height: 10%;
-border-radius: 50%;
-background-color: black;
-position: relative;
-top: 52.3%;
-left: 51.9%;
-z-index: 10;
-
-}
-
-
-#game-container {
-text-align: center;
-width: 90%;
-height: 100%;
-max-width: 600px;
-box-sizing: border-box; 
-position: relative;
-margin-bottom: 50px;
-
-}
-.container{
-text-align: left;
-margin: 10px 10px 40px 10px;  
-}
-
-#board {
-display: grid;
-grid-template-columns: repeat(8, 1fr); /* Flexible grid columns */
-grid-gap: 2px;
-background-color: #008000;
-padding: 2%;
-margin: 0px;
-border-radius: 5px;
-aspect-ratio: 1 / 1; /* Maintain a square aspect ratio */
-height: 96%;;
-width: 96%; /* Full width of the container */
-}
-.row {
-  display: contents; 
-
-}
-
-.cell {
-width: 100%;
-aspect-ratio: 1 / 1; /* Maintain a square shape */
-background-color: #00a000;
-border-radius: 8%;
-display: flex;
-justify-content: center;
-align-items: center;
-cursor: pointer;
-position: relative;
-}
-.valid-move {
-background-color: #00c000; /* 少し明るい緑 */
-}
-.valid-move:hover {
-background-color: #00e000; /* より明るい緑 */
-}
-.opponent-turn .valid-move{
-background-color: #00c000c0; 
-}
-.opponent-turn .valid-move:hover {
-background-color: #00c000c0; 
-}
-.opponent-turn .cell {
-  cursor: default;
-}
-
-.thinking .cell{
-  cursor: progress;
-}
-
-
-
-
-
-.disc {
-width: 80%;
-height: 80%;
-border-radius: 50%;
-position: absolute;
-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), inset 0 -2px 4px rgba(0, 0, 0, 0.2);
-}
-
-
-.last-move {
-box-shadow: 0 0 10px 2px rgba(255, 242, 0, 0.7); /* Yellow glow */
-border: 2px solid rgb(255, 64, 0);
-}
-.faint-disc {
-opacity: 0.5;
-width: 10%;
-height: 10%;
-border-radius: 50%;
-position: absolute; 
-}
-.black {
-background: radial-gradient(circle at 30% 30%, #333, #000);
-}
-
-.white {
-background: radial-gradient(circle at 30% 30%, #fff, #ccc);
-}
-
-.faint-black {
-background-color: #000;
-}
-.faint-white { 
-background-color: #fff;
-opacity: .7;
-}
-
-#status {
-margin-top: 20px;
-font-size: 18px;
-background-color: #e0e0e0;
-padding: 10px;
-border-radius: 5px;
-font-weight: bold;
-}
-
-.current-player {
-font-weight: bold;
-padding: 5px 10px;
-margin: -5px 5px;
-border-radius: 5px;
-color: white;
-}
-
-#c_black {
-background-color: black;
-float: left;
-color: white;
-}
-
-#c_white {
-background-color: #ffffff;
-color: white;
-float: right;
-color: black;
-}
-
-#move-history {
-margin-top: 20px;
-text-align: left;
-max-height: 200px;
-overflow-y: auto;
-background-color: #fff;
-padding: 10px;
-border-radius: 5px;
-border: 1px solid #ccc;
-box-sizing: border-box;
-position: relative;
-}
-
-#move-list {
-height: 45px;
-}
-
-/* ツールチップ（ポップアップ）のデザイン改善 */
-.tooltip {
-  position: fixed;
-  background-color: rgba(50, 50, 50, 0.9); /* より濃い背景色に */
-  color: white;
-  padding: 10px 10px;
-  border-radius: 6px;
-  font-size: 13px;
-  white-space: nowrap;
-  opacity: 0;
-  transform: translateY(-12px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
-  pointer-events: none;
-}
-
-/* ツールチップの矢印の調整 */
-.tooltip::after {
-  content: "";
-  position: absolute;
-  border-style: solid;
-  border-width: 30px 8px; 
-  border-color: rgba(50, 50, 50, 0.9) transparent transparent transparent;
-  bottom: -60px;
-  left: 50%;
-  transform: translateX(-40%);
-}
-
-/* ツールチップを表示する時のクラス */
-.tooltip.show {
-  opacity: 1;
-  transform: translateY(-10px);
-}
-
-.buttons_container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 13px;
-  margin-top: 19px;
-}
-
-#copy-url-btn{
-position: relative;
-padding: 10px 20px;
-width: 44px;
-height: 44px;
-font-size: 16px;
-background-color: #bedeff;
-background-image: url("./images/copy.png");
-background-size:50%;
-background-position: center;
-background-repeat: no-repeat;
-color: white;
-border: none;
-border-radius: 5px;
-display: inline-block;
-
-cursor:copy;
-}
-
-#surrender-btn{
-padding: 10px 20px;
-font-size: 16px;
-background-color: #d32f2f;
-color: white;
-border: none;
-border-radius: 8px;
-cursor: pointer;
-display: inline-block;
-transition: background-color 0.2s ease-in-out;
-}
-#surrender-btn:hover {
-  background-color: #b71c1c;
-}
-
-#restart-btn{
-padding: 10px 20px;
-font-size: 16px;
-background-color: #007508;
-color: white;
-border: none;
-border-radius: 8px;
-cursor: pointer;
-display: inline-block;
-transition: background-color 0.2s ease-in-out;
-
-}
-#restart-btn:hover {
-  background-color: #2e7d32;
-}
-
-#board-container {
-  position: relative; 
-  min-width: 96%;
-}
-
-/* オーバーレイをオセロ盤の中に配置 */
-#game-settings-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5); /* 半透明の黒 */
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 10;
-}
-
-/* 設定パネルのデザイン */
-#game-settings {
-  background: white;
-  padding: 15px;
-  border-radius: 8px;
+  padding-top:10px;
+  }
+  .credit{
+  font-size: 0.7em;
   text-align: center;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-  width: 80%;
-  max-width: 270px;
-}
-#contents-overlay-setting{
-  text-align: left;
-  padding: 13px;
-}
-#time_overlay-label{
-  font-size: 14px;
-  display: block;
-}
-#time-limit {
-  padding: 6px;
-  font-size: 14px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-#highlight-moves {
-  margin-right: 5px;
-}
-
-/* スタートボタンのデザイン */
-#start-match {
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #007408;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: copy;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: auto;
-  height: 40px;
-  white-space: nowrap;
-}
-
-#start-match:hover {
-  background: #00ab0b;
-}
-
-
-#mode-selection-banner {
-  position: relative;
-  top: 10px; 
+  margin-top: 20px;
+  margin-bottom: 20px;
+  position: absolute;
+  /*center*/
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(25, 25, 25, 0.7);
-  padding: 7px;
-  margin-bottom: 30px;
-  border-radius: 5px;
-  display: flex;
-  justify-content: center; 
-  align-items: center;
-  z-index: 1000;
-  width: 98%; 
-  
-}
+  width: 100%;
+  }
+  .caution{
+  padding: 15px;
+  font-size: 0.8em;
+  }
 
-.mode-btn {
-  background: rgb(250, 250, 250);
-  color: black;
-  padding: 10px 15px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background 0.3s ease-in-out;
-  flex: 1;
-  border: #000000 solid 1.3px;
+/* ポップアップの基本デザイン */
+.install-guide {
+  display: none;
+  position: fixed;
+  bottom: 4%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 320px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 15px;
+  border-radius: 15px;
   text-align: center;
-  width:96%;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  font-family: 'Arial', sans-serif;
 }
 
-.mode-btn:hover {
-  background: #009e00;
-  color: white;
-  transform: scale(1.05); 
+/* コンテンツ部分 */
+.install-guide-content {
+  font-size: 14px;
+  color: #333;
+  text-align: left;
 }
 
-/* 現在選択されているモードのボタン */
-.mode-btn.active {
-  background: #007508;
-  color: white;
-  font-weight: bold;
-  box-shadow: 0 0 10px rgba(0, 117, 8, 0.5); 
+/* アイコンと矢印 */
+.guide-icons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  gap: 20px;
 }
 
+.icon {
+  width: 40px;
+  height: 40px;
+  margin: 10px;
+}
 
 
 .notes {
@@ -548,45 +105,80 @@ transition: background-color 0.2s ease-in-out;
   margin-bottom: 20px;
 }
 
-/* ポップアップの基本デザイン */
-.install-guide {
-  display: none;
+
+
+/* ツールチップ（ポップアップ）のデザイン改善 */
+.tooltip {
   position: fixed;
-  bottom: 4%;
+  background-color: rgba(50, 50, 50, 0.9); /* より濃い背景色に */
+  color: white;
+  padding: 10px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(-12px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+  pointer-events: none;
+}
+
+/* ツールチップの矢印の調整 */
+.tooltip::after {
+  content: "";
+  position: absolute;
+  border-style: solid;
+  border-width: 30px 8px; 
+  border-color: rgba(50, 50, 50, 0.9) transparent transparent transparent;
+  bottom: -60px;
   left: 50%;
-  transform: translateX(-50%);
-  width: 90%;
-  max-width: 320px;
-  background: rgba(255, 255, 255, 0.95);
-  padding: 15px;
-  border-radius: 15px;
-  text-align: center;
-  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
-  z-index: 9999;
-  font-family: 'Arial', sans-serif;
+  transform: translateX(-40%);
 }
 
-/* コンテンツ部分 */
-.install-guide-content {
-  font-size: 14px;
-  color: #333;
-  text-align: left;
+/* ツールチップを表示する時のクラス */
+.tooltip.show {
+  opacity: 1;
+  transform: translateY(-10px);
 }
 
-/* アイコンと矢印 */
-.guide-icons {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 10px;
-  gap: 20px;
+.thinking .cell{
+  cursor: progress;
 }
 
-.icon {
-  width: 40px;
-  height: 40px;
-  margin: 10px;
-}
+
+#level_ai{
+  margin-bottom: 15px;
+  }
+  #timer-display {
+  position: absolute;
+  top: 87px; /* 上からの位置 */
+  left: 0px; /* 左からの位置 */
+  font-size: 18px;
+  background-color: #e0e0e0;
+  color: black;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-weight: bold;
+  display: none;
+  }
+  
+  #timer-display.warning1{
+  color: #db5f00;
+  font-weight: bold;
+  font-size: 1.25em;
+  
+  
+  }
+  #timer-display.warning2{
+  color: #ff0000;
+  font-weight: bold;
+  font-size: 1.4em;
+  
+  
+  }
+  
+  #player-list{
+    padding-inline-start: 0px;
+  }
 
 #install-guide-img {
   width: 170px;
@@ -647,6 +239,72 @@ transition: background-color 0.2s ease-in-out;
   color: red;
 }
 
+
+
+/* オーバーレイをオセロ盤の中に配置 */
+#game-settings-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* 半透明の黒 */
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+/* 設定パネルのデザイン */
+#game-settings {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  width: 80%;
+  max-width: 270px;
+}
+#contents-overlay-setting{
+  text-align: left;
+  padding: 13px;
+}
+#time_overlay-label{
+  font-size: 14px;
+  display: block;
+}
+#time-limit {
+  padding: 6px;
+  font-size: 14px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+#highlight-moves {
+  margin-right: 5px;
+}
+
+
+#start-match {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007408;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: copy;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: 40px;
+  white-space: nowrap;
+}
+
+#start-match:hover {
+  background: #00ab0b;
+}
+
+
 .qr-popup {
   display: none;
   position: absolute;
@@ -703,14 +361,22 @@ transition: background-color 0.2s ease-in-out;
   padding-bottom: 15px;
 }
 
+/* 
+#ad{
+  margin-top:40px;
+  margin-bottom: 40px;
+  display: inline-block; 
+  width: 100%; 
+  height: auto;
+}
+
+
+*/
+
 
 /* スマホ対応（縦並び） */
 @media (max-width: 600px) {
-  #mode-selection-banner {
 
-    align-items: center;
-    width: auto;
-}
 
 .mode-btn {
     text-align: center;

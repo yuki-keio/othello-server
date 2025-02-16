@@ -1509,10 +1509,13 @@ function _DOMContenLoaded() {
     const closeQr = document.getElementById("close-qr");
     const qrcodeContainer = document.getElementById("qrcode");
     var link = document.getElementById("dynamic-fonts");
+    var dcss = document.getElementById("dynamic-css");
     if (link) {
       link.media = "all";
     }
-    console.log("qrbtns", inviteBtn, qrPopup, closeQr, qrcodeContainer);
+    if (dcss) {
+        dcss.media = "all";
+    }
 
     if (inviteBtn && qrPopup && closeQr && qrcodeContainer) {
 
