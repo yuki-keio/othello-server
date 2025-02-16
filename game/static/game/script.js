@@ -190,7 +190,7 @@ function isBoardFull() {
 async function applyServerMove(row, col, player, status, final = false) {
     // statusが0の場合は、サーバーからの手?か友達対戦です
     // statusが1の場合は、リプレイ時の手
-    // statusが2の場合は、これはAIendMoveによる手であり、serverからの手ではないです。
+    // statusが2の場合は、これはAIendMoveによる手であり、serverからの手ではないです
     //console.log(`[applyServerMove] row: ${row}, col: ${col}, player: ${player}, status: ${status}, currentPlayer: ${currentPlayer}`);
     if (gameBoard[row][col] !== '' || !isValidMove(row, col, player)) {
         console.error(`[applyServerMove] Invalid move: (${row},${col})`);

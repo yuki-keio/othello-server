@@ -324,33 +324,34 @@ height: 45px;
   transform: translateY(-10px);
 }
 
+.buttons_container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 13px;
+  margin-top: 19px;
+}
 
 #copy-url-btn{
 position: relative;
-top:7px;
-margin: 15px 5px 5px 0px;
 padding: 10px 20px;
-width: 45px;
-height: 45px;
+width: 44px;
+height: 44px;
 font-size: 16px;
 background-color: #bedeff;
 background-image: url("./images/copy.png");
-
 background-size:50%;
 background-position: center;
 background-repeat: no-repeat;
 color: white;
 border: none;
-
 border-radius: 5px;
-cursor: pointer;
 display: inline-block;
 
 cursor:copy;
 }
 
 #surrender-btn{
-margin: 15px 5px 5px 5px;
 padding: 10px 20px;
 font-size: 16px;
 background-color: #d32f2f;
@@ -366,7 +367,6 @@ transition: background-color 0.2s ease-in-out;
 }
 
 #restart-btn{
-margin: 15px 0px 5px 5px; 
 padding: 10px 20px;
 font-size: 16px;
 background-color: #007508;
