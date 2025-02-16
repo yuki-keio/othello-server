@@ -1,0 +1,110 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="リバーシ（オセロ）中級者・上級者向け攻略法。戦略的なプレイで勝率を上げる方法を解説。">
+    <meta name="keywords" content="リバーシ, ゲーム, 攻略, 無料, Web, ボードゲーム">
+    <meta name="author" content="Yuki Lab">
+    <title>リバーシ（オセロ）攻略法 | リバーシWeb</title>
+    <link rel="stylesheet" href="{% static 'game/strategy.css' %}">
+    <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="{% static 'game/images/favicon/favicon.ico' %}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'game/images/favicon/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'game/images/favicon/favicon-16x16.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'game/images/favicon/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="48x48" href="{% static 'game/images/favicon/favicon-48x48.png' %}">
+    <link rel="icon" type="image/png" sizes="96x96" href="{% static 'game/images/favicon/favicon-96x96.png' %}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{% static 'game/images/favicon/favicon-192x192.png' %}">
+    <meta name="theme-color" content="#007508">
+    
+    
+    <meta property="og:title" content="リバーシ攻略 | リバーシWeb">
+    <meta property="og:description" content="中・上級者向けのリバーシ（オセロ）攻略">
+    <meta property="og:image" content="https://reversi.yuki-lab.com/static/game/images/share-image.png">
+    <meta property="og:url" content="https://reversi.yuki-lab.com">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="リバーシ攻略 | リバーシWeb">
+    <meta name="twitter:description" content="中・上級者向けのリバーシ（オセロ）攻略">
+    <meta name="twitter:image" content="https://reversi.yuki-lab.com/static/game/images/share-image.png">
+     
+    <!-- Google Analytics 最適化 -->
+    <script nonce="{{ request.csp_nonce }}">
+        function loadGoogleAnalytics() {
+            var script = document.createElement('script');
+            script.src = "https://www.googletagmanager.com/gtag/js?id=G-4JKZC3VNE7";
+            script.async = true;
+            script.nonce = "{{ request.csp_nonce }}"; // CSP対応
+            document.head.appendChild(script);
+
+            script.onload = function () {
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', 'G-4JKZC3VNE7', { 'cookie_domain': 'auto' });
+            };
+            if ('requestIdleCallback' in window) {
+               // requestIdleCallback(loadAdSense);
+            } else {
+               // setTimeout(loadAdSense, 1000);
+            }
+        }
+
+        
+
+
+        function loadAdSense() {
+            if (!window.adsLoaded) {
+                window.adsLoaded = true;
+                var script = document.createElement('script');
+                script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1918692579240633";
+                script.defer = true;
+                script.nonce = "{{ request.csp_nonce }}"; // CSP対応
+                document.head.appendChild(script);
+            }
+        }
+        document.addEventListener("DOMContentLoaded", loadGoogleAnalytics);
+    </script>
+
+</head>
+<body>
+    <header>
+        <h1>リバーシ（オセロ）中級者・上級者向け攻略法</h1>
+        <p>戦略を磨き、勝率を上げるためのリバーシ攻略ガイド</p>
+    </header>
+    <main>
+       
+            <section>
+                <h2>序盤の立ち回り</h2>
+                <p>序盤は、自分の石を増やすことよりも、相手に有利な手を打たせないことが重要です。角の確保を見据えて、盤面のコントロールを行いましょう。相手が辺や角に石を起きづらいように、相手の動きを戦略的に制限していきます</p>
+            </section>
+            <section>
+                <h2>中盤の立ち回り</h2>
+                <p>中盤では、相手に隙を与えない打ち方を意識しましょう。相手の石を増やしすぎず、終盤に有利な形を作ることがカギです。特に、「X打ち」や「C打ち」には注意してください</p>
+                <p><strong>X打ちとは？</strong><br>
+                   X打ちは、角の隣（斜め）に打つ手で、相手に角を取られる危険があるため、慎重に使う必要があります。</p>
+                <p><strong>C打ちとは？</strong><br>
+                   C打ちは、角の隣（辺の側）に打つ手で、適切に利用すれば相手の動きを制限し、角を確保する戦略に繋げることができます。</p>
+                <p><strong>C打ちの留意点</strong><br>
+                   - **周囲の辺の安定性**: C打ちをする際、周囲の辺が相手の石で埋め尽くされていると、すぐに角を取られる可能性があるため、状況を見極めることが重要です。<br>
+                   - **打ち手の制限**: C打ちをすると、相手に角を取られるリスクは高まってしまいます。相手の次の手を考慮しながら行う必要があります。<br>
+                   - **終盤の使い方**: 終盤で確定石を増やすための布石としてC打ちを利用できる場合もあるが、不用意に打つと形勢が逆転するリスクもあります。</p>
+            </section>
+            <section>
+                <h2>終盤の必勝テクニック</h2>
+                <p>終盤では「確定石」の確保が重要です。相手にとって打てる場所を減らし、最適な手を選ぶことで勝率が向上します。</p>
+                <p><strong>確定石とは？</strong><br>
+                   確定石とは、ゲーム終了まで絶対にひっくり返らない石のことを指します。確定石を増やすことで、盤面を安定させ、勝利へと近づけます
+                </p>
+            </section>
+            <section>
+                <h2>無料でリバーシ（オセロ）をプレイ</h2>
+                <p>Web上で無料プレイできるリバーシゲームはこちら！<a href="https://reversi.yuki-lab.com">リバーシで遊ぶ</a></p>
+            </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 Yuki Lab. All rights reserved.</p>
+    </footer>
+</body>
+</html>
