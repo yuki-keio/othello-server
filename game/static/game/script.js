@@ -206,8 +206,14 @@ async function applyServerMove(row, col, player, status, final = false) {
     setDisc(row, col, player);
 
 
-    if (soundEffects && status!==1) {
-        await playStoneSound();        
+    if (soundEffects) {
+        if (status !== 1){
+            await playStoneSound();
+        }else if (final){
+            console.log("final"+final);
+            playStoneSound();
+        }
+                
     }
      // 現在の手にハイライトを追加
      const currentCell = board.children[row * 8 + col];
