@@ -172,6 +172,10 @@ aspect-ratio: 1 / 1; /* Maintain a square aspect ratio */
 height: 96%;;
 width: 96%; /* Full width of the container */
 }
+.row {
+  display: contents; 
+
+}
 
 .cell {
 width: 100%;

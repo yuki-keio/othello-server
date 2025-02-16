@@ -64,7 +64,7 @@ let gameEndSoundEnabled = !(localStorage.getItem('gameEndSoundEnabled') === "fal
 let playerJoinSoundEnabled = !(localStorage.getItem('playerJoinSoundEnabled') === "false");
 
 let currentPlayer = 'black';
-let gameBoard = [];
+let gameBoard = Array.from({ length: 8 }, () => Array(8).fill(''));
 let moveHistory = [];
 let currentMoveIndex = -1; // Track the current move index
 let lastMoveCell = null;
@@ -91,47 +91,41 @@ let online = false;
 let role_online = "unknown";
 
 function refreshBoard() {
-    board.innerHTML = '';
+    const fragment = document.createDocumentFragment();
+
     for (let i = 0; i < 8; i++) {
-        gameBoard[i] = [];
+        const rowElement = document.createElement('div');
+        rowElement.className = 'row';
+        rowElement.setAttribute('role', 'row'); // ARIA対応
+
         for (let j = 0; j < 8; j++) {
             gameBoard[i][j] = '';
             const cell = document.createElement('div');
             cell.className = 'cell';
             cell.dataset.row = i;
             cell.dataset.col = j;
-            cell.addEventListener('click', () => {
-                makeMove(i, j);
-            });
-            board.appendChild(cell);
-            cell.setAttribute('aria-label', "abcdefgh"[j] + `${i + 1}：空`);
+            cell.setAttribute('aria-label', `abcdefgh`[j] + `${i + 1}：空`);
             cell.setAttribute('role', 'gridcell');
 
+            rowElement.appendChild(cell);
         }
+        fragment.appendChild(rowElement);
     }
-    add4x4Markers();
-
-
+    board.appendChild(fragment);
 }
 
-function initializeBoard() {
-    for (let i = 0; i < 8; i++) {
-        gameBoard[i] = [];
-        for (let j = 0; j < 8; j++) {
-            gameBoard[i][j] = '';
-            const cell = document.createElement('div');
-            cell.className = 'cell';
-            cell.dataset.row = i;
-            cell.dataset.col = j;
-            cell.addEventListener('click', () => {
-                makeMove(i, j);
-            });
-            board.appendChild(cell);
-            cell.setAttribute('aria-label', "abcdefgh"[j] + `${i + 1}：空`);
-            cell.setAttribute('role', 'gridcell');
+// `Event Delegation` を使って、`board` にイベントを一括設定
+board.addEventListener('click', (event) => {
+    const cell = event.target.closest('.cell');
+    if (!cell) return;
 
-        }
-    }
+    const row = parseInt(cell.dataset.row, 10);
+    const col = parseInt(cell.dataset.col, 10);
+    makeMove(row, col);
+});
+
+function initializeBoard() {
+    refreshBoard();
 
     if (!loadBoardFromURL()) {
         setInitialStones();
@@ -158,7 +152,7 @@ function add4x4Markers() {
     ];
 
     markers.forEach(({ row, col }) => {
-        const cell = board.children[row * 8 + col];
+        const cell = board.children[row].children[col];
         const marker = document.createElement('div');
         marker.className = 'marker';
         cell.classList.add('44');
@@ -169,7 +163,7 @@ function add4x4Markers() {
 function setDisc(row, col, color) {
 
     gameBoard[row][col] = color;
-    const cell = board.children[row * 8 + col];
+    const cell = board.children[row].children[col];
     if (cell.classList.contains('44')) {
         cell.innerHTML = `<div class="disc 44 ${color}"></div><div class="marker"></div>`;
     } else {
@@ -216,7 +210,7 @@ async function applyServerMove(row, col, player, status, final = false) {
                 
     }
      // 現在の手にハイライトを追加
-     const currentCell = board.children[row * 8 + col];
+     const currentCell = board.children[row].children[col];
      currentCell.firstChild.classList.add('last-move');
      lastMoveCell = currentCell.firstChild;
 
@@ -419,7 +413,7 @@ function highlightValidMoves() {
     const validMoves = hasValidMove();
     if (validMoves) {
         validMoves.forEach(([row, col]) => {
-            const cell = board.children[row * 8 + col];
+            const cell = board.children[row].children[col];
             cell.classList.add('valid-move');
             if (gameMode === 'ai' && currentPlayer === 'white') {
 
@@ -1628,8 +1622,10 @@ function makeSocket() {
         }
 
         if (data.action === "place_stone") {
-
+            board.innerHTML = '';
             refreshBoard()
+            add4x4Markers();
+
             deserializeMoveHistory(data.history);
             console.log("moveHistory", moveHistory);
             replayMovesUpToIndex(moveHistory.length - 1, 1);
@@ -1641,7 +1637,10 @@ function makeSocket() {
                 overlay.style.display = 'flex';
             }
             if (data.reconnect === true) {
+
+                board.innerHTML = '';
                 refreshBoard()
+                add4x4Markers();
                 deserializeMoveHistory(data.history);
                 console.log("moveHistory", moveHistory);
                 replayMovesUpToIndex(moveHistory.length - 1, 2);
