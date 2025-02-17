@@ -33,4 +33,4 @@ class StaticViewSitemap(Sitemap):
         """文字列のURLをそのまま返す"""
         return item
     def lastmod(self, item):
-        return get_git_lastmod()
+        return get_git_lastmod().isoformat()
