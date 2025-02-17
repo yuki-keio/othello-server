@@ -755,7 +755,11 @@ function deserializeMoveHistory(serialized) {
 function updateURL() {
     const serializedMoves = serializeMoveHistory();
     const url = new URL(window.location);
-    const newPath = `/${gameMode}/`;
+    let newPath = `/${gameMode}/`;
+
+    if (gameMode === "player") {
+        newPath = `/`;
+    }
     url.pathname = newPath;
     url.searchParams.set('moves', serializedMoves);
     url.searchParams.set('timeLimit', timeLimit);
@@ -770,6 +774,7 @@ function loadBoardFromURL() {
     const timeLimitFromURL = urlParams.get('timeLimit');
     const showValidMovesFromURL = urlParams.get('showValidMoves');
     const pathParts = window.location.pathname.split('/').filter(Boolean);
+    
     const modeFromPath = pathParts[0] || 'player';
     const won = urlParams.get('won');
     const aiLevelFromURL = urlParams.get('aiLevel');
@@ -1385,19 +1390,19 @@ function changeHead() {
     let titleText, metaDescription, canonicalUrl;
 
     if (gameMode === 'ai') {
-        titleText = 'AIと対戦 | リバーシWeb - 無料で遊べるオセロゲーム（旧サービス名：スマートオセロ）';
-        metaDescription = 'Web上で遊べる無料オセロゲーム。オセロAIと対戦できます！一人で楽しめる無料Webオセロゲームです。スマホ・PC・iPadなどデバイス一台で、リバーシを無料で遊べます。ブラウザさえあれば、オセロ盤の用意やアプリのインストールが必要ないので、Web上で気軽にオセロを楽しみたい人におすすめ！（旧サービス名：スマートオセロ）';
+        titleText = 'オセロAIと対戦 | リバーシWeb - 無料で遊べるオセロゲーム（旧サービス名：スマートオセロ）';
+        metaDescription = 'オセロAIと対戦！Web上で一人で遊べる無料オセロゲームです。スマホ・PC・iPadなどデバイス一台で、リバーシを無料で遊べます。ブラウザさえあれば、オセロ盤の用意やアプリのインストールが必要ないので、Web上で気軽にオセロを楽しみたい人におすすめ！（旧サービス名：スマートオセロ）';
         canonicalUrl = 'https://reversi.yuki-lab.com/ai/';
     } else if (gameMode === 'player') {
         titleText = '電子オセロ盤 | リバーシWeb - 無料で遊べるオセロゲーム（旧サービス名：スマートオセロ）';
-        metaDescription = 'Web上で遊べる無料オセロゲーム【電子オセロ盤モード】（旧サービス名：スマートオセロ）。アプリのインストールは必要なし！リバーシの友達対戦をブラウザで遊べるスマートなWebオセロ盤です。スマホ・PC・iPadなどWebが使えるデバイス一台あればどこでも遊べるので、旅行先でのレクリエーションにもオススメ。ブラウザゲーの定番です';
-        canonicalUrl = 'https://reversi.yuki-lab.com/player/';
+        metaDescription = '【電子オセロ盤モード】無料のWebオセロ盤（旧サービス名：スマートオセロ）。アプリのインストールは必要なし！リバーシの友達対戦をブラウザで遊べるスマートなオセロゲームです。スマホ・PC・iPadなどWebが使えるデバイス一台あればどこでも遊べるので、旅行先でのレクリエーションにもオススメ。ブラウザゲーの定番です';
+        canonicalUrl = 'https://reversi.yuki-lab.com/';
     } else if (gameMode === 'online') {
         titleText = '通信対戦 | リバーシWeb - 無料で遊べるオセロゲーム（旧サービス名：スマートオセロ）';
-        metaDescription = 'Web上で遊べる無料オセロゲーム。離れた場所にいる相手とも、リアルタイムでのオンライン対戦が可能です。ブラウザさえあれば、オセロ盤の用意やアプリのダウンロードが一切不要！スマホ・PC・iPadなど好きなデバイスから、オセロゲームの友達対戦が無料でできるWebサイトです。（旧サービス名：スマートオセロ）';
+        metaDescription = '【オンライン対戦モード】Web上で遊べる無料オセロゲーム。離れた場所にいる相手とも、リアルタイムでのオンライン対戦が可能です。ブラウザさえあれば、オセロ盤の用意やアプリのダウンロードが一切不要！スマホ・PC・iPadなど好きなデバイスから、オセロゲームの友達対戦が無料でできるWebサイトです。（旧サービス名：スマートオセロ）';
         canonicalUrl = 'https://reversi.yuki-lab.com/online/';
     } else {
-        titleText = 'リバーシWeb - 無料で遊べるオセロゲーム（旧サービス名：スマートオセロ）';
+        titleText = 'リバーシ（オセロ） | リバーシWeb - 無料で遊べるオセロゲーム（旧サービス名：スマートオセロ）';
         metaDescription = 'オセロの無料Webゲーム。オンライン対戦・AI対戦・オフライン対戦が可能！アプリ不要でブラウザからすぐ遊べます（旧サービス名：スマートオセロ）';
         canonicalUrl = 'https://reversi.yuki-lab.com/';
     }

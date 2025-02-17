@@ -3,11 +3,15 @@ from urllib.parse import urlencode
 from django.http import HttpResponse
 
 def index(request):
-    return redirect('ai-mode')
+    return render(request, "game/index.html", {"mode": 'player'})
 
 def game_view(request, mode=None):
     query_mode = request.GET.get('mode')
 
+    # `/player/` へのアクセスを `/` へリダイレクト
+    if request.path == "/player/":
+        return redirect("/", permanent=True)
+    
     # query_mode が指定されている場合のみリダイレクト
     if query_mode in ["online", "ai", "player"]:
         query_params = request.GET.dict()  # QueryDict → 辞書に変換
@@ -18,8 +22,8 @@ def game_view(request, mode=None):
             new_url = "/online/"
         elif query_mode == "ai":
             new_url = "/ai/"
-        else:
-            new_url = "/player/"
+        elif query_mode == "player":
+            new_url = "/"
 
         # 他のクエリパラメータがある場合、それを新しいURLに付加
         if query_params:
@@ -27,7 +31,6 @@ def game_view(request, mode=None):
 
         return redirect(new_url, permanent=True)
 
-    # mode パラメータがない場合は通常のページ表示
     return render(request, "game/index.html", {"mode": mode})
 
 def othello_view(request):
