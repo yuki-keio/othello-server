@@ -11,11 +11,11 @@ class StaticViewSitemap(Sitemap):
         return ["player-mode","ai-mode","online-mode","blog-strategy"]
 
     def location(self, item):
-        return item
+        return reverse(item)
 
     def lastmod(self, item):
         """Gitの最新コミット日を `datetime.date` 型で返す"""
-        return self.get_git_lastmod().date()  # 🔹 `.date()` を追加
+        return self.get_git_lastmod().date()  
 
     @staticmethod
     def get_git_lastmod():
