@@ -1,14 +1,29 @@
-# game/sitemaps.py
+import subprocess
 from django.contrib.sitemaps import Sitemap
 from django.urls import reverse
+from datetime import datetime
+
+def get_git_lastmod():
+    """最新のGitコミット日を取得する"""
+    try:
+        last_commit_date = subprocess.check_output(
+            ["git", "log", "-1", "--format=%cd", "--date=iso-strict"]
+        ).decode("utf-8").strip()
+        return datetime.fromisoformat(last_commit_date)
+    except Exception as e:
+        print(f"Error getting last commit date: {e}")
+        return datetime.utcnow()  # 取得できない場合は現在時刻を返す
 
 class StaticViewSitemap(Sitemap):
-    changefreq = "monthly"  # 更新頻度の目安
-    priority = 0.5          # ページの重要度（0～1）
+    priority = 0.5        
 
     def items(self):
-        # ここでURLの名前（urls.py で定義した name）をリストで返す
         return ['player-mode', 'ai-mode', 'online-mode', 'blog-strategy']
 
     def location(self, item):
+        if item == 'blog-strategy':
+            return '/strategy-reversi-othello.html'
         return reverse(item)
+
+    def lastmod(self, item):
+        return get_git_lastmod()
