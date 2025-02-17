@@ -17,20 +17,19 @@ def get_git_lastmod():
         return datetime.utcnow()  # ファイルがない場合は現在時刻を返す
 
 class StaticViewSitemap(Sitemap):
-    changefreq = "daily"
     priority = 0.5        
 
     def items(self):
         """各URLを直接リストとして返す"""
         return [
-            reverse("player-mode"),
-            reverse("ai-mode"),
-            reverse("online-mode"),
-            "/strategy-reversi-othello.html",  # 静的ページ
+            {"url": reverse("player-mode")},
+            {"url": reverse("ai-mode")},
+            {"url": reverse("online-mode")},
+            {"url": "/strategy-reversi-othello.html"},  # 静的ページ
         ]
 
     def location(self, item):
         """文字列のURLをそのまま返す"""
-        return item
+        return item["url"]
     def lastmod(self, item):
         return get_git_lastmod().isoformat()
