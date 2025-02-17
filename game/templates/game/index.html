@@ -491,7 +491,7 @@
         </div>
         <h1 id="title">
             {% if mode == 'online' %}
-                オンライン対戦
+                オセロ通信対戦
             {% elif mode == 'ai' %}
                 オセロAI対戦
             {% elif mode == 'player' %}
@@ -656,7 +656,7 @@
     <section class="notes">
         <h2>本サイト・リバーシWebの機能</h2>
         <p>リバーシ（オセロゲーム）が無料ですぐ遊べるWebサイトです。<a href="https://reversi.yuki-lab.com/ai/">AI対戦</a>、<a href="https://reversi.yuki-lab.com/online/">オンライン対戦</a>、<a href="https://reversi.yuki-lab.com/">電子オセロ盤</a>など、様々な機能に対応しています。 <strong>独自のURLシェア機能</strong> によって、友達との対戦や観戦、棋譜の共有などが簡単に行える点も特徴です</p>
-        <h3>現在選択されているモード：{% if mode == 'online' %}オンライン対戦{% elif mode == 'ai' %}AI対戦{% elif mode == 'player' %}電子オセロ盤{% else %}なし{% endif %}</h3>
+        <h3>現在選択されているモード：{% if mode == 'online' %}通信対戦{% elif mode == 'ai' %}AI対戦{% elif mode == 'player' %}電子オセロ盤{% else %}なし{% endif %}</h3>
         <p>
     {% if mode == 'online' %}
         オンライン対戦モード（通信対戦モード）では、別々のデバイスからゲームに参加できます。遠く離れた場所にいる人ともオセロを遊ぶことができます。招待URLを共有するか、QRコードをスキャンすることで、対局への参加や観戦が可能です。
