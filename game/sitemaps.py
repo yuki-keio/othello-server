@@ -21,8 +21,8 @@ class StaticViewSitemap(Sitemap):
         return item["url"]
 
     def lastmod(self, item):
-        """ISO 8601形式でGitの最新コミット日を返す"""
-        return self.get_git_lastmod().isoformat()
+        """Gitの最新コミット日を `datetime.date` 型で返す"""
+        return self.get_git_lastmod().date()  # 🔹 `.date()` を追加
 
     @staticmethod
     def get_git_lastmod():
@@ -32,6 +32,6 @@ class StaticViewSitemap(Sitemap):
 
         try:
             with open(deploy_timestamp_path, "r") as f:
-                return datetime.fromisoformat(f.read().strip())
+                return datetime.fromisoformat(f.read().strip())  # `datetime.datetime` 型で返す
         except (FileNotFoundError, ValueError):
             return datetime.utcnow()
