@@ -83,7 +83,8 @@ let currentPlayerTimer;
 let gameEnded = false;
 let share_winner = "";
 
-let gameMode = localStorage.getItem('gameMode') || 'player';
+let gameMode = window.location.pathname.split('/').filter(Boolean) || 'player';
+gameMode = gameMode.length ? gameMode : 'player';
 
 let aimove = false;
 
