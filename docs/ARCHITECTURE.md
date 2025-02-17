@@ -48,8 +48,8 @@ web_othello/
 │   │   │   │   ├── victory.mp3
 │   │   │   │   ├── defeat.mp3
 │   │   │   ├── images/
-│   │   │   │   ├── copy.png
-│   │   │   │   ├── share-image.png
+│   │   │   │   ├── copy.webp
+│   │   │   │   ├── share-image.webp
 │   │   │   │   ├── setting.svg
 │   │   │   │   ├── favicon/
 │

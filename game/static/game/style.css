@@ -106,40 +106,6 @@
 }
 
 
-
-/* ツールチップ（ポップアップ）のデザイン改善 */
-.tooltip {
-  position: fixed;
-  background-color: rgba(50, 50, 50, 0.9); /* より濃い背景色に */
-  color: white;
-  padding: 10px 10px;
-  border-radius: 6px;
-  font-size: 13px;
-  white-space: nowrap;
-  opacity: 0;
-  transform: translateY(-12px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
-  pointer-events: none;
-}
-
-/* ツールチップの矢印の調整 */
-.tooltip::after {
-  content: "";
-  position: absolute;
-  border-style: solid;
-  border-width: 30px 8px; 
-  border-color: rgba(50, 50, 50, 0.9) transparent transparent transparent;
-  bottom: -60px;
-  left: 50%;
-  transform: translateX(-40%);
-}
-
-/* ツールチップを表示する時のクラス */
-.tooltip.show {
-  opacity: 1;
-  transform: translateY(-10px);
-}
-
 .thinking .cell{
   cursor: progress;
 }

@@ -6,7 +6,6 @@ const currentPlayerBlack = document.getElementById('c_black');
 const currentPlayerWhite = document.getElementById('c_white');
 const moveListElement = document.getElementById('move-list');
 const copyUrlBtn = document.getElementById("copy-url-btn");
-const copyTooltip = document.getElementById("copy-tooltip");
 
 
 
@@ -809,7 +808,6 @@ function loadBoardFromURL() {
             makeSocket()
             online = true;
             onlineUI();
-            showTooltip();
             document.getElementById("playerJoinSoundBox").style.display = "block";
         } else {
             if (timeLimitFromURL) {
@@ -1362,30 +1360,6 @@ function updatePlayerList(players) {
     });
 }
 
-// 通信対戦の部屋が作成されたらポップアップ（ツールチップ）を表示
-function showTooltip() {
-    // `copy-url-btn` の位置を取得
-
-    const rect = copyUrlBtn.getBoundingClientRect();
-    const tooltipWidth = copyTooltip.offsetWidth;
-    const tooltipHeight = copyTooltip.offsetHeight;
-    const buttonWidth = copyUrlBtn.offsetWidth;
-
-    // ボタンの真ん中にツールチップを配置
-    const tooltipLeft = rect.left + (buttonWidth / 2) - (tooltipWidth / 2);
-    const tooltipTop = rect.top - tooltipHeight - 20;
-
-    copyTooltip.style.left = `${tooltipLeft}px`;
-    copyTooltip.style.top = `${tooltipTop}px`;
-
-    // ツールチップを表示
-    copyTooltip.classList.add("show");
-
-    // 3秒後に消す
-    setTimeout(() => {
-        copyTooltip.classList.remove("show");
-    }, 3000);
-}
 
 function changeHead() {
     let titleText, metaDescription, canonicalUrl;

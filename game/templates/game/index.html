@@ -254,7 +254,7 @@
         height: 44px;
         font-size: 16px;
         background-color: #bedeff;
-        background-image: url("{% static 'game/images/copy.png' %}");
+        background-image: url("{% static 'game/images/copy.webp' %}");
         background-size:50%;
         background-position: center;
         background-repeat: no-repeat;
@@ -379,13 +379,13 @@
     <meta property="og:site_name" content="リバーシWeb">
     <meta property="og:locale" content="ja_JP">
     <meta property="og:description" content="オンラインで楽しめるリバーシゲーム！（オセロ）">
-    <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/share-image.png' %}">
+    <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/share-image.webp' %}">
     <meta property="og:url" content="https://reversi.yuki-lab.com">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="リバーシWeb | 無料オセロゲーム">
     <meta name="twitter:description" content="ダウンロード不要！友達対戦やAIとの対戦が可能なブラウザゲームです">
-    <meta property="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/share-image.png' %}">
+    <meta property="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/share-image.webp' %}">
     
     <meta name="author" content="Yuki Lab">
     <meta name="robots" content="index, follow">    
@@ -400,7 +400,7 @@
             "applicationCategory": "GameApplication",
             "alternateName": "無料オセロゲームのスマートオセロ",
             "description": "無料のリバーシゲーム(オセロ)。一人で遊べるAI対戦モードや、友達とのオンライン対戦モードなどがありますも。ブラウザで今すぐプレイ！",
-            "image": "https://reversi.yuki-lab.com/static/game/images/share-image.png",
+            "image": "https://reversi.yuki-lab.com/static/game/images/share-image.webp",
             "url": "https://reversi.yuki-lab.com",
             "operatingSystem": "Web",
             "genre": "Board game",
@@ -565,7 +565,6 @@
             <span class="current-player" id="c_white">白番</span>
 
         </div>
-        <div id="copy-tooltip" class="tooltip">コピーして観戦者や<br>対戦相手を招待！</div>
 
     <div class="buttons_container">
         <button id="copy-url-btn" aria-label="オセロ盤の盤面を共有するURLをコピー"></button>
@@ -724,7 +723,7 @@
             <div class="guide-icons">
                 <img src="/static/game/images/share-icon.jpg" alt="iOSの共有ボタン" class="icon">
                 <span class="arrow">➡️</span>
-                <img src="/static/game/images/install-guide.png" alt="リバーシ（オセロ）を無料でホーム画面に追加する方法" id="install-guide-img" loading="lazy">
+                <img src="/static/game/images/install-guide.webp" alt="リバーシ（オセロ）を無料でホーム画面に追加する方法" id="install-guide-img" loading="lazy">
             </div>
             <button id="close-install-guide">✖️ 閉じる</button>
         
