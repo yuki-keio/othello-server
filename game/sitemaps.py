@@ -22,5 +22,7 @@ class StaticViewSitemap(Sitemap):
 
     def items(self):
         return ['player-mode', 'ai-mode', 'online-mode', 'blog-strategy']
+    def location(self, item):
+        return reverse(item) 
     def lastmod(self, item):
         return get_git_lastmod()
