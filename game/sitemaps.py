@@ -21,8 +21,6 @@ class StaticViewSitemap(Sitemap):
         return ['player-mode', 'ai-mode', 'online-mode', 'blog-strategy']
 
     def location(self, item):
-        if item == 'blog-strategy':
-            return '/strategy-reversi-othello.html'
         return reverse(item)
 
     def lastmod(self, item):
