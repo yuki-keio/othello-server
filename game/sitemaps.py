@@ -8,16 +8,11 @@ class StaticViewSitemap(Sitemap):
 
     def items(self):
         """各URLをリストとして返す"""
-        return [
-            {"url": reverse("player-mode")},
-            {"url": reverse("ai-mode")},
-            {"url": reverse("online-mode")},
-            {"url": "/strategy-reversi-othello.html"},  # 静的ページ
-        ]
+        return ["player-mode","ai-mode","online-mode","blog-strategy"]
 
     def location(self, item):
         """URLをそのまま返す"""
-        return item["url"]
+        return reverse(item)
 
     def lastmod(self, item):
         """Gitの最新コミット日を `datetime.date` 型で返す"""
