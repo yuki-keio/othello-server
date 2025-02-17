@@ -11,8 +11,7 @@ class StaticViewSitemap(Sitemap):
         return ["player-mode","ai-mode","online-mode","blog-strategy"]
 
     def location(self, item):
-        """URLをそのまま返す"""
-        return reverse(item)
+        return item
 
     def lastmod(self, item):
         """Gitの最新コミット日を `datetime.date` 型で返す"""
