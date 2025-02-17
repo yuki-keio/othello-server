@@ -30,12 +30,11 @@ class StaticViewSitemap(Sitemap):
         ]
 
     def location(self, item):
-        """URL を適切に出力"""
+        """適切なURLを返す"""
         if item[0] == 'blog-strategy':
             return 'https://reversi.yuki-lab.com/strategy-reversi-othello.html'
         return f'https://reversi.yuki-lab.com{reverse(item[0])}'
 
     def lastmod(self, item):
-        """最終更新日を ISO 8601 形式 (YYYY-MM-DDTHH:MM:SS+TZ) で返す"""
-        lastmod_date = get_git_lastmod(item[1])
-        return lastmod_date.isoformat()  # Google 用に時間情報も含める
+        """適切な `filepath` を `get_git_lastmod()` に渡す"""
+        return get_git_lastmod(item[1])
