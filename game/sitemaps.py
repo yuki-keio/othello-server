@@ -21,8 +21,16 @@ class StaticViewSitemap(Sitemap):
     priority = 0.5        
 
     def items(self):
-        return ['player-mode', 'ai-mode', 'online-mode', 'blog-strategy']
+        """各URLを直接リストとして返す"""
+        return [
+            reverse("player-mode"),
+            reverse("ai-mode"),
+            reverse("online-mode"),
+            "/strategy-reversi-othello.html",  # 静的ページ
+        ]
+
     def location(self, item):
-        return reverse(item) 
+        """文字列のURLをそのまま返す"""
+        return item
     def lastmod(self, item):
         return get_git_lastmod()
