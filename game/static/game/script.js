@@ -720,9 +720,9 @@ function endGame(online_data, winner = null) {
 
     }else if (gameFinishedCount === 3 && deferredPrompt) {
         showInstallPrompt();
-    }else if (isIOS() && gameFinishedCount === 1) {
+    }else if (isIOS() && !window.navigator.standalone && gameFinishedCount === 1) {
             iOSinstallGuide();
-        } else if (isIOS() && gameFinishedCount === 3) {
+        } else if (isIOS() && !window.navigator.standalone && gameFinishedCount === 3) {
             iOSinstallGuide();
         }
 }

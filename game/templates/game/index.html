@@ -386,6 +386,7 @@
     <meta name="twitter:title" content="リバーシWeb | 無料オセロゲーム">
     <meta name="twitter:description" content="ダウンロード不要！友達対戦やAIとの対戦が可能なブラウザゲームです">
     <meta property="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/share-image.png' %}">
+    
     <meta name="author" content="Yuki Lab">
     <meta name="robots" content="index, follow">    
 
@@ -428,14 +429,14 @@
           }
         </script>
 
-    <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="{% static 'game/images/favicon/favicon.ico' %}">
-    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'game/images/favicon/apple-touch-icon.png' %}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'game/images/favicon/favicon-16x16.png' %}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'game/images/favicon/favicon-32x32.png' %}">
-    <link rel="icon" type="image/png" sizes="48x48" href="{% static 'game/images/favicon/favicon-48x48.png' %}">
-    <link rel="icon" type="image/png" sizes="96x96" href="{% static 'game/images/favicon/favicon-96x96.png' %}">
-    <link rel="icon" type="image/png" sizes="192x192" href="{% static 'game/images/favicon/favicon-192x192.png' %}">
-    <link rel="manifest" href="{% static 'game/images/favicon/manifest.json' %}">
+    <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/favicon.ico' %}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/favicon-16x16.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="48x48" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/favicon-48x48.png' %}">
+    <link rel="icon" type="image/png" sizes="96x96" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/favicon-96x96.png' %}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/favicon-192x192.png' %}">
+    <link rel="manifest" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/manifest.json' %}">
     
     <meta name="theme-color" content="#007508">
 
