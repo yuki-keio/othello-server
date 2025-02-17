@@ -35,7 +35,7 @@ def othello_view(request):
 
 def robots_txt(request):
     content = """User-agent: *
-Allow: /
+Disallow:
 
 Sitemap: https://reversi.yuki-lab.com/sitemap.xml
 """

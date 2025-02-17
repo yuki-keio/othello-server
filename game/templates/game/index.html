@@ -359,17 +359,7 @@
 
     <script defer src="{% static 'game/script.js' %}"></script>
 
-    <meta name="description" content="
-    {% if mode == 'online' %}
-        オセロのオンライン対戦ができる無料Webゲームサイト。離れた場所にいる相手とも、リアルタイムで通信対戦が可能です。ブラウザさえあれば、オセロ盤の用意やアプリのダウンロードが一切不要！スマホ・PC・iPadなど好きなデバイスから、オセロゲームの友達対戦が無料でできるWebサイトです。（旧サービス名：スマートオセロ）
-    {% elif mode == 'ai' %}
-        AIとオセロ対戦！一人で楽しめる無料Webゲームです。スマホ・PC・iPadなどデバイス一台で、リバーシが無料で遊べます。ブラウザさえあれば、オセロ盤の用意やアプリのインストールが必要ないので、Web上で気軽にオセロを楽しみたい人におすすめ！（旧サービス名：スマートオセロ）
-    {% elif mode == 'player' %}
-        無料の電子オセロ盤！。アプリのインストールは必要なし！リバーシの友達対戦をブラウザで遊べるスマートなWebオセロ盤です。スマホ・PC・iPadなどWebが使えるデバイス一台あればどこでも遊べるので、旅行先でのレクリエーションにもオススメ。ブラウザゲーの定番です（旧サービス名：スマートオセロ）
-    {% else %}
-        オセロの無料Webゲーム。オンライン対戦・AI対戦・オフライン対戦が可能！アプリ不要でブラウザからすぐ遊べます。（旧サービス名：スマートオセロ）
-    {% endif %}
-">
+    <meta name="description" content="{% if mode == 'online' %}オセロのオンライン対戦ができる無料Webゲームサイト。離れた場所にいる相手とも、リアルタイムで通信対戦が可能です。ブラウザさえあれば、オセロ盤の用意やアプリのダウンロードが一切不要！スマホ・PC・iPadなど好きなデバイスから、オセロゲームの友達対戦が無料でできるWebサイトです。（旧サービス名：スマートオセロ）{% elif mode == 'ai' %}AIとオセロ対戦！一人で楽しめる無料Webゲームです。スマホ・PC・iPadなどデバイス一台で、リバーシが無料で遊べます。ブラウザさえあれば、オセロ盤の用意やアプリのインストールが必要ないので、Web上で気軽にオセロを楽しみたい人におすすめ！（旧サービス名：スマートオセロ）{% elif mode == 'player' %}無料の電子オセロ盤！。アプリのインストールは必要なし！リバーシの友達対戦をブラウザで遊べるスマートなWebオセロ盤です。スマホ・PC・iPadなどWebが使えるデバイス一台あればどこでも遊べるので、旅行先でのレクリエーションにもオススメ。ブラウザゲーの定番です（旧サービス名：スマートオセロ）{% else %}オセロの無料Webゲーム。オンライン対戦・AI対戦・オフライン対戦が可能！アプリ不要でブラウザからすぐ遊べます。（旧サービス名：スマートオセロ）{% endif %}">
 
     <title>
         {% if mode == 'online' %}
@@ -444,17 +434,7 @@
     
     <meta name="theme-color" content="#007508">
 
-    <link rel="canonical" href="
-    {% if mode == 'online' %}
-        https://reversi.yuki-lab.com/online/
-    {% elif mode == 'ai' %}
-        https://reversi.yuki-lab.com/ai/
-    {% elif mode == 'player' %}
-        https://reversi.yuki-lab.com/player/
-    {% else %}
-        https://reversi.yuki-lab.com/
-    {% endif %}
-    ">
+    <link rel="canonical" href="{% if mode == 'online' %}https://reversi.yuki-lab.com/online/{% elif mode == 'ai' %}https://reversi.yuki-lab.com/ai/{% elif mode == 'player' %}https://reversi.yuki-lab.com/player/{% else %}https://reversi.yuki-lab.com/{% endif %}">
 
     
     <!-- Google Analytics 最適化 -->
@@ -670,7 +650,21 @@
         -->
     <section class="notes">
         <h2>本サイト・リバーシWebの機能</h2>
-        <p>リバーシ（オセロゲーム）が無料ですぐ遊べるWebサイトです。<a href="https://reversi.yuki-lab.com/ai/">CPU対戦</a>、<a href="https://reversi.yuki-lab.com/online/">オンライン対戦</a>、<a href="https://reversi.yuki-lab.com/player/">電子オセロ盤モード</a>など、様々な機能に対応しています。 <strong>独自のURLシェア機能</strong> によって、友達との対戦や観戦、棋譜の共有などが簡単に行える点も特徴です</p>
+        <p>リバーシ（オセロゲーム）が無料ですぐ遊べるWebサイトです。<a href="https://reversi.yuki-lab.com/ai/">AI対戦</a>、<a href="https://reversi.yuki-lab.com/online/">オンライン対戦</a>、<a href="https://reversi.yuki-lab.com/player/">電子オセロ盤</a>など、様々な機能に対応しています。 <strong>独自のURLシェア機能</strong> によって、友達との対戦や観戦、棋譜の共有などが簡単に行える点も特徴です</p>
+        <h3>現在選択されているモード：{% if mode == 'online' %}オンライン対戦{% elif mode == 'ai' %}AI対戦{% elif mode == 'player' %}電子オセロ盤{% else %}なし{% endif %}</h3>
+        <p>
+    {% if mode == 'online' %}
+        オンライン対戦モード（通信対戦モード）では、別々のデバイスからゲームに参加できます。遠く離れた場所にいる人ともオセロを遊ぶことができます。招待URLを共有するか、QRコードをスキャンすることで、対局への参加や観戦が可能です。
+        
+    {% elif mode == 'ai' %}
+        初級から上級まで、自分に合った強さのオセロAIと対戦できます。素早くプレイしたい場合は、最も高速な初級AIがおすすめです。
+        
+    {% elif mode == 'player' %}
+        電子オセロ盤モードでは、デバイス1台でオセロを遊ぶことができます。現地で家族や友達とオセロを遊びたいけれど、現物のオセロ盤を持っていない時に便利です。
+    {% else %}
+        
+    {% endif %}
+        </p>
         <h3>機能のオン・オフ</h3>
         <p>効果音・ハイライト表示・制限時間の機能は、<a href="#settings">「設定」</a>からオン・オフを切り替えられます。次回以降に同じブラウザで遊ぶ場合もその設定を引き継げます。</p>
         <div class="small">※ ただし通信対戦モードが選択された場合は、通信対戦における設定に合わせてハイライト表示設定が変更されます。</div>
