@@ -82,8 +82,9 @@ let currentPlayerTimer;
 let gameEnded = false;
 let share_winner = "";
 
-let gameMode = window.location.pathname.split('/').filter(Boolean) || 'player';
+let gameMode = window.location.pathname.split('/').filter(Boolean)[0] || 'player';
 gameMode = gameMode.length ? gameMode : 'player';
+
 
 let aimove = false;
 
@@ -896,7 +897,7 @@ function restart() {
         // 新しい部屋IDをランダムに生成（UUID の代わりに短いランダム文字列）
         const newRoomId = Math.random().toString(36).substring(2, 8);
         const newUrl = `${window.location.origin}/online/?room=${newRoomId}`;
-
+        console.log(`[restart] New room URL: ${newUrl}`);
         window.location.href = newUrl; // 新しい部屋へ遷移
 
 
@@ -1486,7 +1487,6 @@ window.addEventListener('DOMContentLoaded',_DOMContenLoaded);}
 function _DOMContenLoaded() {
     const inviteBtn = document.getElementById("qr");
     const qrPopup = document.getElementById("qr-popup");
-    const closeQr = document.getElementById("close-qr");
     const qrcodeContainer = document.getElementById("qrcode");
     var link = document.getElementById("dynamic-fonts");
     var dcss = document.getElementById("dynamic-css");
@@ -1497,7 +1497,7 @@ function _DOMContenLoaded() {
         dcss.media = "all";
     }
 
-    if (inviteBtn && qrPopup && closeQr && qrcodeContainer) {
+    if (inviteBtn && qrPopup && qrcodeContainer) {
 
         inviteBtn.addEventListener("click", function () {
             const inviteUrl = window.location.href;  // 現在のURLを取得
@@ -1509,12 +1509,21 @@ function _DOMContenLoaded() {
                 height: 200
             });
     
-            qrPopup.style.display = "block";  // ポップアップを表示
+            qrPopup.style.display = "flex";  // ポップアップを表示
+
+            document.addEventListener("click", (e) => {
+                // closest() で親要素をたどって .popup-content が見つかるかどうかを確認
+                if (!e.target.closest(".qr-popup") && e.target.id !== "qr-icon") {
+                  // 外側をクリックしたらポップアップを非表示
+                  console.log("close"+e.target);
+                  qrPopup.style.display = "none";
+                }
+              });
+
         });
     
-        closeQr.addEventListener("click", function () {
-            qrPopup.style.display = "none";  // ポップアップを閉じる
-        });
+   
+      
 
     }
    
@@ -1538,6 +1547,7 @@ function _DOMContenLoaded() {
             btn.classList.add('active');
         }
     });
+  
     if (gameMode === 'online') {
         onlineUI();
         online = true;
