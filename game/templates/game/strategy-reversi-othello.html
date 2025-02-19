@@ -1,13 +1,15 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="リバーシ（オセロ）中級者・上級者向け攻略法。戦略的なプレイで勝率を上げる方法を解説。">
-    <meta name="keywords" content="リバーシ, オセロ, ゲーム, 攻略, 無料, Web, ボードゲーム">
+    <meta name="description" content="{% trans "リバーシ（オセロ）中級者・上級者向け攻略法。戦略的なプレイで勝率を上げる方法を解説。" %}">
+    <meta name="robots" content="index, follow">
+    <meta name="keywords" content="{% trans "リバーシ, オセロ, ゲーム, 攻略, 無料, Web, ボードゲーム" %}">
     <meta name="author" content="Yuki Lab">
-    <title>オセロ攻略法 | リバーシWeb</title>
+    <title>{% trans "オセロ攻略法 | リバーシWeb" %}</title>
     <link rel="stylesheet" href="{% static 'game/strategy.css' %}">
     <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="{% static 'game/images/favicon/favicon.ico' %}">
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'game/images/favicon/apple-touch-icon.png' %}">
@@ -19,14 +21,14 @@
     <meta name="theme-color" content="#007508">
     
     
-    <meta property="og:title" content="オセロ攻略 | リバーシWeb">
-    <meta property="og:description" content="中・上級者向けのリバーシ（オセロ）攻略">
+    <meta property="og:title" content="{% trans "オセロ攻略 | リバーシWeb" %}">
+    <meta property="og:description" content="{% trans "中・上級者向けのリバーシ（オセロ）攻略" %}">
     <meta property="og:image" content="https://reversi.yuki-lab.com/static/game/images/share-image.webp">
     <meta property="og:url" content="https://reversi.yuki-lab.com">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="オセロ攻略 | リバーシWeb">
-    <meta name="twitter:description" content="中・上級者向けのリバーシ（オセロ）攻略">
+    <meta name="twitter:title" content="{% trans "オセロ攻略 | リバーシWeb" %}">
+    <meta name="twitter:description" content="{% trans "中・上級者向けのリバーシ（オセロ）攻略" %}">
     <meta name="twitter:image" content="https://reversi.yuki-lab.com/static/game/images/share-image.webp">
      
     <!-- Google Analytics 最適化 -->
@@ -70,37 +72,38 @@
 </head>
 <body>
     <header>
-        <h1>中級者・上級者向けオセロ攻略法</h1>
-        <p>戦略を磨き、勝率を上げるためのオセロ攻略ガイド</p>
+        <h1>{% trans "中級者・上級者向けオセロ攻略法" %}</h1>
+        <p>{% trans "戦略を磨き、勝率を上げるためのオセロ攻略ガイド" %}</p>
     </header>
     <main>
        
             <section>
-                <h2>序盤の立ち回り</h2>
-                <p>序盤は、自分の石を増やすことよりも、相手に有利な手を打たせないことが重要です。角の確保を見据えて、盤面のコントロールを行いましょう。相手が辺や角に石を起きづらいように、相手の動きを戦略的に制限していきます</p>
+                <h2>{% trans "序盤の立ち回り" %}</h2>
+                <p>{% trans "序盤は、自分の石を増やすことよりも、相手に有利な手を打たせないことが重要です。角の確保を見据えて、盤面のコントロールを行いましょう。相手が辺や角に石を起きづらいように、相手の動きを戦略的に制限していきます" %}</p>
             </section>
             <section>
-                <h2>中盤の立ち回り</h2>
-                <p>中盤では、相手に隙を与えない打ち方を意識しましょう。相手の石を増やしすぎず、終盤に有利な形を作ることがカギです。特に、「X打ち」や「C打ち」には注意してください</p>
-                <p><strong>X打ちとは？</strong><br>
-                   X打ちは、角の隣（斜め）に打つ手で、相手に角を取られる危険があるため、慎重に使う必要があります。</p>
-                <p><strong>C打ちとは？</strong><br>
-                   C打ちは、角の隣（辺の側）に打つ手で、適切に利用すれば勝負の決めてにすることができます。例えば、自分の番で他に打つ手がない時にC打ちで凌いだり、終盤に確定石を増やしたりすることができます。</p>
-                <p>※ <strong>C打ちの留意点</strong><br>
+                <h2>{% trans "中盤の立ち回り" %}</h2>
+                <p>{% trans "中盤では、相手に隙を与えない打ち方を意識しましょう。相手の石を増やしすぎず、終盤に有利な形を作ることがカギです。特に、「X打ち」や「C打ち」には注意してください" %}</p>
+                <p><strong>{% trans "X打ちとは？" %}</strong><br>
+                   {% trans "X打ちは、角の隣（斜め）に打つ手で、相手に角を取られる危険があるため、慎重に使う必要があります。" %}</p>
+                <p><strong>{% trans "C打ちとは？" %}</strong><br>
+                   {% trans "C打ちは、角の隣（辺の側）に打つ手で、適切に利用すれば勝負の決めてにすることができます。例えば、自分の番で他に打つ手がない時にC打ちで凌いだり、終盤に確定石を増やしたりすることができます。" %}</p>
+                <p>※ <strong>{% trans "C打ちの留意点" %}</strong><br>
                      <ul>
-                          <li>打ち手の制限: C打ちをすると、相手に角を取られるリスクは高まってしまいます。そのため、相手の次の手を考慮しながら行う必要があります。</li>
+                          <li>{% trans "打ち手の制限: C打ちをすると、相手に角を取られるリスクは高まってしまいます。そのため、相手の次の手を考慮しながら行う必要があります。" %}</li>
                         </ul>
             </section>
             <section>
-                <h2>終盤の必勝テクニック</h2>
-                <p>最終盤面での勝敗は石の数で決まりますが、中盤〜終盤では「確定石」の確保も重要です。相手が石を打てる場所を減らし、最適な手を選ぶことで勝率が向上します。</p>
-                <p><strong>確定石とは？</strong><br>
-                   確定石とは、ゲーム終了まで絶対にひっくり返らない石のことを指します。確定石を増やすことで、盤面を安定させ、勝利へと近づけます
+                <h2>{% trans "終盤の必勝テクニック" %}</h2>
+                <p>{% trans "最終盤面での勝敗は石の数で決まりますが、中盤〜終盤では「確定石」の確保も重要です。相手が石を打てる場所を減らし、最適な手を選ぶことで勝率が向上します。" %}</p>
+                <p><strong>{% trans "確定石とは？" %}</strong><br>
+                   {% trans "確定石とは、ゲーム終了まで絶対にひっくり返らない石のことを指します。確定石を増やすことで、盤面を安定させ、勝利へと近づけます" %}
                 </p>
             </section>
             <section>
-                <h2>オセロAIと対戦して練習</h2>
-                <p>本サイト（リバーシWeb）では、オセロAIと無料で対戦したり、Web上で友達とオセロを遊んだりすることができます。こちらからお試しください：<a href="https://reversi.yuki-lab.com">🎮️ オセロで遊ぶ</a></p>
+                <h2>{% trans "オセロAIと対戦して練習" %}</h2>
+                <p>{% trans "本サイト（リバーシWeb）では、オセロAIと無料で対戦したり、Web上で友達とオセロを遊んだりすることができます。こちらからお試しください：" %}<a href="{% if request.LANGUAGE_CODE == 'en' %}https://reversi.yuki-lab.com/en/{% else %}https://reversi.yuki-lab.com/{% endif %}">{% trans "🎮️ オセロで遊ぶ" %}</a>
+                </p>
             </section>
     </main>
     <footer>

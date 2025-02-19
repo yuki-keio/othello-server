@@ -81,9 +81,12 @@ let currentPlayerTimer;
 
 let gameEnded = false;
 let share_winner = "";
-
+let lang = "ja";
 let gameMode = window.location.pathname.split('/').filter(Boolean)[0] || 'player';
-gameMode = gameMode.length ? gameMode : 'player';
+if (gameMode ==="en"){
+    gameMode = window.location.pathname.split('/').filter(Boolean)[1] || 'player';
+    lang = "en";
+}
 
 
 let aimove = false;
@@ -170,11 +173,24 @@ function setDisc(row, col, color) {
     } else {
         cell.innerHTML = `<div class="disc ${color}"></div>`;
     }
-    cell.setAttribute('aria-label', "abcdefgh"[col] + `${row + 1}：${color === 'black' ? '黒' : '白'}`);
+    cell.setAttribute('aria-label', "abcdefgh"[col] + `${row + 1}：${color === 'black' ? lang_black : lang_white}`);
 }
 
 function notifyNoValidMoves(player) {
-    alert(`${player === 'black' ? '黒' : '白'}には次に打てる場所がないので、もう一度${player === 'black' ? '白' : '黒'}の番になります。`);
+    if (online){
+        if (role_online === player) {
+            alert(lang_you_pass);
+            return;
+        }else{
+            alert(lang_opponent_pass);
+            return;
+        }
+    }
+    if (player === 'black') {
+        alert(lang_notify_b);
+    }else{
+        alert(lang_notify_w);
+    }
 }
 
 //盤面がすべて埋まっているかのチェック
@@ -242,9 +258,9 @@ async function applyServerMove(row, col, player, status, final = false) {
                 if (status === 0) {
                     notifyNoValidMoves(currentPlayer); //友達対戦の場合のパス
                 } else if (status === 1) {
-                    alert(`${currentPlayer}には次に打てる場所がなかったので、パスされました`) // リプレイ時のパス
+                    notifyNoValidMoves(currentPlayer);
                 } else if (status === 2) {
-                    alert(`あなたには次に打てる場所がなかったので、もう一度AI（白）の番になります`) // AIの後のパス
+                    alert(lang_you_pass) // AIの後のパス
                 }
                 aimove = false;
 
@@ -310,16 +326,16 @@ function makeMove(row, col, status = 0) {
 
     if (online) {
         if (role_online === "unknown") {
-            alert("接続中です。しばらくお待ちください。");
+            alert(lang_connecting);
             return;
         } else if (role_online === "spectator") {
-            alert("観戦中です。あなたは手を打つことができません。");
+            alert(lang_spec_cant_play);
             return;
         } else if (role_online === currentPlayer) {
             sendMove(row, col);
         } else {
-            const roleDisplay = role_online === "black" ? "黒" : role_online === "white" ? "白" : "観客";
-            alert(`あなたの手番ではありません。手番：${currentPlayer === 'black' ? '黒' : '白'}, あなた：${roleDisplay}`);
+            const roleDisplay = role_online === "black" ? lang_black : role_online === "white" ? lang_white : lang_spec;
+            alert(`${lang_not_your_turn}：${currentPlayer === 'black' ? lang_black : lang_white}, ${lang_you}：${roleDisplay}`);
 
             return;
         }
@@ -531,7 +547,7 @@ function startTimer() {
         if (remainingTime <= 0) {
             clearInterval(currentPlayerTimer);
             if (!online) {
-                alert('時間切れのため、' + (currentPlayer === 'black' ? '白' : '黒') + 'の勝ちです。');
+                alert( lang_timeout_winner + (currentPlayer === 'black' ? lang_white : lang_black));
                 endGame("offline", currentPlayer === 'black' ? 'white' : 'black'); // 時間切れになったプレイヤーの負けとしてゲームを終了
             }
         }
@@ -596,7 +612,7 @@ function endGame(online_data, winner = null) {
     } else if (online_data !== "offline") {
         if (online_data.reason === "surrender") {
             share_winner = online_data.winner;
-            result = `${online_data.winner === 'black' ? '黒' : '白'}の勝ち! (${online_data.winner === 'black' ? '白' : '黒'}が投了)`;
+            result = lang_surrender_winner + (online_data.winner === 'black' ? lang_black : lang_white);
             if (gameEndSoundEnabled) {
                 if (online_data.winner === role_online) {
                     victorySound.currentTime = 0;
@@ -613,7 +629,7 @@ function endGame(online_data, winner = null) {
             }
         } else if (online_data.reason === "timeout") {
             share_winner = online_data.winner;
-            result = `${online_data.winner === 'black' ? '黒' : '白'}の勝ち! (${online_data.loser === 'black' ? '黒' : '白'}が時間切れ)`;
+            result = lang_timeout_winner + (online_data.loser === 'black' ? lang_black : lang_white);
             if (gameEndSoundEnabled) {
                 if (online_data.winner === role_online) {
                     victorySound.currentTime = 0;
@@ -630,7 +646,8 @@ function endGame(online_data, winner = null) {
         } else if (online_data.reason === "natural") {
             //石の数だけで勝敗が決められる場合
             share_winner = "won";
-            result = `${online_data.winner === 'black' ? '黒' : '白'}の勝ち!`;
+            result = lang_winner + (online_data.winner === 'black' ? lang_black : lang_white);
+            
             if (gameEndSoundEnabled) {
                 if (online_data.winner === role_online) {
                     victorySound.currentTime = 0;
@@ -649,7 +666,7 @@ function endGame(online_data, winner = null) {
 
     } else if (winner) {
         // 時間切れの場合は、相手のプレイヤーの勝ち
-        result = `${winner === 'black' ? '黒' : '白'}の勝ち! (${winner === 'black' ? '白' : '黒'}が時間切れ)`;
+        result = lang_timeout_winner + (winner === 'black' ? lang_white : lang_black);
 
         share_winner = winner; // 時間切れ勝ちなら、石の数で負けていても大丈夫なように明確に共有時に伝える必要があるので、winnerを明示する
 
@@ -669,7 +686,7 @@ function endGame(online_data, winner = null) {
         share_winner = "won";
 
         if (blackCount > whiteCount) {
-            result = '黒の勝ち!';
+            result = lang_winner + lang_black;
             if (gameEndSoundEnabled) {
                 victorySound.currentTime = 0;
                 victorySound.play().catch(error => {
@@ -677,7 +694,7 @@ function endGame(online_data, winner = null) {
                 });;
             }
         } else if (whiteCount > blackCount) {
-            result = '白の勝ち!';
+            result = lang_winner + lang_white;
             if (gameMode === "ai" && gameEndSoundEnabled) {
                 defeatSound.currentTime = 0;
                 defeatSound.play().catch(error => {
@@ -690,7 +707,7 @@ function endGame(online_data, winner = null) {
                 });;
             }
         } else {
-            result = '引き分け!';
+            result = lang_draw;
             if (gameMode === "ai" && gameEndSoundEnabled) {
                 defeatSound.currentTime = 0;
                 defeatSound.play().catch(error => {
@@ -710,7 +727,7 @@ function endGame(online_data, winner = null) {
     url.searchParams.set('won', share_winner);
     history.pushState(null, '', url);
 
-    statusB.textContent = `ゲーム終了 - ${result} 黒: ${blackCount} 白: ${whiteCount}`;
+    statusB.textContent = `${lang_game_end} - ${result} （${lang_black} :${blackCount}, ${lang_white}: ${whiteCount}）`;
 
     stopTimer();
     gameFinishedCount++;
@@ -757,10 +774,15 @@ function updateURL() {
     const serializedMoves = serializeMoveHistory();
     const url = new URL(window.location);
     let newPath = `/${gameMode}/`;
-
     if (gameMode === "player") {
         newPath = `/`;
     }
+
+    if (window.location.pathname.split('/').filter(Boolean)[0] === "en") {
+        newPath = "en" + newPath;
+    }
+
+
     url.pathname = newPath;
     url.searchParams.set('moves', serializedMoves);
     url.searchParams.set('timeLimit', timeLimit);
@@ -775,8 +797,14 @@ function loadBoardFromURL() {
     const timeLimitFromURL = urlParams.get('timeLimit');
     const showValidMovesFromURL = urlParams.get('showValidMoves');
     const pathParts = window.location.pathname.split('/').filter(Boolean);
+
+    let modeFromPath = pathParts[0] || 'player';
+
+
+    if (pathParts[0] === "en") {
+        modeFromPath = pathParts[1] || 'player';
+    }
     
-    const modeFromPath = pathParts[0] || 'player';
     const won = urlParams.get('won');
     const aiLevelFromURL = urlParams.get('aiLevel');
 
@@ -864,12 +892,12 @@ function loadBoardFromURL() {
 
 function copyURLToClipboard(matchRoom=false) {
     const url = new URL(window.location);
-    let alertText = '🔗 現在の石の配置を共有するURLをコピーしました！';
+    let alertText = lang_copy_url;
     if (online) {
         if (onlineGameStarted) {
-            alertText = '👀 現在のゲームを観戦するためのURLをコピーしました！'
+            alertText = lang_copy_spec;
         } else {
-            alertText = '🎮 現在のゲームへの招待URLをコピーしました！対戦相手にURLを送って対戦を始めましょう！';
+            alertText = lang_copy_invite;
         }
     } else {
     }
@@ -879,7 +907,7 @@ function copyURLToClipboard(matchRoom=false) {
     navigator.clipboard.writeText(url.toString()).then(() => {
         alert(alertText);
     }).catch(err => {
-        alert('URLのコピーに失敗しました。');
+        alert(lang_copy_failed);
         console.error('Failed to copy URL: ', err);
     });
 }
@@ -896,13 +924,26 @@ function restart() {
         // 新しい部屋を生成
         // 新しい部屋IDをランダムに生成（UUID の代わりに短いランダム文字列）
         const newRoomId = Math.random().toString(36).substring(2, 8);
-        const newUrl = `${window.location.origin}/online/?room=${newRoomId}`;
+
+        let newUrl = `${window.location.origin}/online/?room=${newRoomId}`;
+
+
+        if (window.location.pathname.split('/').filter(Boolean)[0] === "en") {
+            newUrl = `${window.location.origin}/en/online/?room=${newRoomId}`;
+
+        }
+
+
         console.log(`[restart] New room URL: ${newUrl}`);
         window.location.href = newUrl; // 新しい部屋へ遷移
 
 
     } else {
-        const newUrl = `${window.location.origin}/${gameMode}/`;
+        let newUrl = `${window.location.origin}/${gameMode}/`;
+
+        if (window.location.pathname.split('/').filter(Boolean)[0] === "en") {
+            newUrl = `${window.location.origin}/en/${gameMode}/`;
+        }
 
         localStorage.setItem('deleted_urls', JSON.stringify([]));
         window.location.href = newUrl;
@@ -951,7 +992,7 @@ function goToNextMove() {
         window.location = url;
 
     } else {
-        alert('これ以上進めません');
+        alert(lang_cant_go_more);
     }
 
 }
@@ -1269,13 +1310,13 @@ function evaluateBoard(board) {
 
 function changeTitle() {
     if (gameMode === 'ai') {
-        document.getElementById('title').textContent = 'オセロAI対戦';
+        document.getElementById('title').textContent = ai_h1;
         document.getElementById('level_ai').style.display = 'block';
     } else if (gameMode === 'player') {
-        document.getElementById('title').textContent = 'オセロ盤モード';
+        document.getElementById('title').textContent = player_h1;
         document.getElementById('level_ai').style.display = 'none';
     } else if (gameMode === 'online') {
-        document.getElementById('title').textContent = 'オセロ通信対戦';
+        document.getElementById('title').textContent = online_h1;
         document.getElementById('level_ai').style.display = 'none';
     }
 }
@@ -1304,9 +1345,12 @@ function processPassMessage(data) {
     // data.new_turn がサーバーから送信された新しい手番
     currentPlayer = data.new_turn;
 
-    // （例）パスであることをステータスエリアやアラートで表示
-    // ※ アラート以外に、status エリアにメッセージを差し込む方法も考えられます
-    alert("パスが成立しました。次は " + (currentPlayer === 'black' ? '黒' : '白') + " の番です。");
+    if (currentPlayer === role_online) {
+        alert(lang_opponent_pass);
+    }else{
+        alert(lang_you_pass);
+
+    }
 
     // 状態更新（タイマーの再設定や手番表示更新）
     updateStatus();
@@ -1348,15 +1392,15 @@ function updatePlayerList(players) {
     playerListElement.innerHTML = ''; // クリア
 
     Object.entries(players).forEach(([id, [ws_role, name]]) => {
-        const role = (ws_role === "black") ? "黒" : (ws_role === "white") ? "白" : "観戦者";
+        const role = (ws_role === "black") ? lang_black : (ws_role === "white") ? lang_white : lang_spec;
         const span = document.createElement('span');
         if (id === playerId) {
             span.style.fontWeight = 'bold';
-            display_player_name = `あなた（${name}）`;
+            display_player_name = lang_you +`（${name}）`;
         } else {
             display_player_name = name;
         }
-        span.textContent = ((role !== "黒") ? "　" : "") + `${role}: ${display_player_name}`;
+        span.textContent = ((role !== lang_black) ? "　" : "") + `${role}: ${display_player_name}`;
         playerListElement.appendChild(span);
     });
 }
@@ -1365,21 +1409,22 @@ function updatePlayerList(players) {
 function changeHead() {
     let titleText, metaDescription, canonicalUrl;
 
+
     if (gameMode === 'ai') {
-        titleText = 'オセロAIと対戦 | リバーシWeb - 無料で遊べるオセロゲーム（旧サービス名：スマートオセロ）';
-        metaDescription = 'オセロAIと対戦！Web上で一人で遊べる無料オセロゲームです。スマホ・PC・iPadなどデバイス一台で、リバーシを無料で遊べます。ブラウザさえあれば、オセロ盤の用意やアプリのインストールが必要ないので、Web上で気軽にオセロを楽しみたい人におすすめ！（旧サービス名：スマートオセロ）';
+        titleText = ai_title;
+        metaDescription = ai_description;
         canonicalUrl = 'https://reversi.yuki-lab.com/ai/';
     } else if (gameMode === 'player') {
-        titleText = '電子オセロ盤 | リバーシWeb - 無料で遊べるオセロゲーム（旧サービス名：スマートオセロ）';
-        metaDescription = '【電子オセロ盤モード】無料のWebオセロ盤（旧サービス名：スマートオセロ）。アプリのインストールは必要なし！リバーシの友達対戦をブラウザで遊べるスマートなオセロゲームです。スマホ・PC・iPadなどWebが使えるデバイス一台あればどこでも遊べるので、旅行先でのレクリエーションにもオススメ。ブラウザゲーの定番です';
+        titleText = player_title;
+        metaDescription = player_description;
         canonicalUrl = 'https://reversi.yuki-lab.com/';
     } else if (gameMode === 'online') {
-        titleText = '通信対戦 | リバーシWeb - 無料で遊べるオセロゲーム（旧サービス名：スマートオセロ）';
-        metaDescription = '【オンライン対戦モード】Web上で遊べる無料オセロゲーム。離れた場所にいる相手とも、リアルタイムでのオンライン対戦が可能です。ブラウザさえあれば、オセロ盤の用意やアプリのダウンロードが一切不要！スマホ・PC・iPadなど好きなデバイスから、オセロゲームの友達対戦が無料でできるWebサイトです。（旧サービス名：スマートオセロ）';
+        titleText = online_title;
+        metaDescription = online_description;
         canonicalUrl = 'https://reversi.yuki-lab.com/online/';
     } else {
-        titleText = 'リバーシ（オセロ） | リバーシWeb - 無料で遊べるオセロゲーム（旧サービス名：スマートオセロ）';
-        metaDescription = 'オセロの無料Webゲーム。オンライン対戦・AI対戦・オフライン対戦が可能！アプリ不要でブラウザからすぐ遊べます（旧サービス名：スマートオセロ）';
+        titleText = else_title;
+        metaDescription = else_description;
         canonicalUrl = 'https://reversi.yuki-lab.com/';
     }
 
@@ -1595,7 +1640,7 @@ function sendSettings() {
 
 function makeSocket() {
 
-    socket = new WebSocket(`${ws_scheme}://${window.location.host}/ws/othello/${gameRoom}/?playerId=${playerId}&timeLimit=${timeLimit}&showValidMoves=${showValidMoves}&playerName=${encodeURIComponent(playerName)}`);
+    socket = new WebSocket(`${ws_scheme}://${window.location.host}/ws/othello/${gameRoom}/?playerId=${playerId}&timeLimit=${timeLimit}&showValidMoves=${showValidMoves}&playerName=${encodeURIComponent(playerName)}&lang=${lang}`);
 
     console.log(`Connecting to WebSocket server...${ws_scheme}://${window.location.host}/ws/othello/${gameRoom}/?playerId=${playerId}&timeLimit=${timeLimit}&showValidMoves=${showValidMoves}&playerName=${encodeURIComponent(playerName)}`);
 
@@ -1799,13 +1844,13 @@ window.addEventListener("beforeinstallprompt", (event) => {
     installButton.addEventListener("click", showInstallPrompt);
 });
 window.addEventListener("appinstalled", () => {
-    alert("🎮️ インストールありがとうございます！（開発者より）");
+    alert(lang_thanks_install);
 });
 
 
 // 降伏ボタンをクリックしたとき、確認後にサーバーへ降伏メッセージを送信
 surrenderBtn.addEventListener('click', () => {
-    if (confirm("本当に投了しますか？")) {
+    if (confirm(lang_surrender_right)) {
         socket.send(JSON.stringify({ action: "surrender" }));
     }
 });
@@ -1854,7 +1899,7 @@ if (playerName_el){
         if (/^[a-zA-Z0-9]+$/.test(nameInput)) {
 
                 playerName = profanityCleaner.clean(nameInput);
-                document.getElementById("player-list").children[0].textContent = `黒: あなた(${playerName})`;
+                document.getElementById("player-list").children[0].textContent = lang_black+":"+ lang_you + "(" + playerName + ")";
 
                 playerName_el.value = playerName;
                 localStorage.setItem("playerName", playerName);
@@ -1863,12 +1908,12 @@ if (playerName_el){
 
             
         }else{
-            warning.textContent = "⚠️ 英数字のみ入力可能です";
+            warning.textContent = lang_warn_EnOnly;
         }
         
     }else{
 
-        warning.textContent = "⚠️ 1文字以上ご入力ください";
+        warning.textContent = lang_warn_charLimit;
   
     }
     

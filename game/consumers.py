@@ -5,10 +5,16 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from urllib.parse import parse_qs
 import time
 import traceback
+from django.utils.translation import gettext as _
+from django.utils.translation import activate
+
 
 logger = logging.getLogger(__name__)
 
-#todo 多言語対応, 表示名の設定, マルチプレイヤーモードの実装
+#todo 多言語対応
+# jsの変換はまだ
+# htmlでも英訳が表示されない問題に対応
+
 
 class OthelloConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -26,15 +32,17 @@ class OthelloConsumer(AsyncWebsocketConsumer):
             query_params = parse_qs(self.scope.get("query_string", b"").decode())
             player_id = query_params.get("playerId", [None])[0]
             player_name = query_params.get("playerName", [None])[0]
+            language = query_params.get("lang", ["ja"])[0]
+            activate(language)
            
 
             if not player_id:
-                await self.send(text_data=json.dumps({"error": "プレイヤーIDが提供されていません"}))
+                await self.send(text_data=json.dumps({"error": _("プレイヤーIDが提供されていません")}))
                 await self.close()
                 return
             
             if not player_name:
-                await self.send(text_data=json.dumps({"error": "プレイヤー名が提供されていません"}))
+                await self.send(text_data=json.dumps({"error": _("プレイヤー名が提供されていません")}))
                 await self.close()
                 return
             
@@ -205,9 +213,11 @@ class OthelloConsumer(AsyncWebsocketConsumer):
             
             # 通信対戦の場合、部屋内に2人未満なら手を受け付けない
             if len(game_state["players"]) < 2 and self.role in ["black", "white"]:
+
+                print(_("対戦相手がまだ接続していません"))
                 
                 await self.send(text_data=json.dumps({
-                    "error": "対戦相手がまだ接続していません"
+                    "error": _("対戦相手がまだ接続していません")
                 }))
                 return
             
@@ -235,7 +245,7 @@ class OthelloConsumer(AsyncWebsocketConsumer):
             if data.get("action") == "surrender":
                 if self.role not in ["black", "white"]:
                     await self.send(text_data=json.dumps({
-                        "error": "観戦者は降参できません"
+                        "error": _("観戦者は降参できません")
                     }))
                     return
                 opponent = "white" if self.role == "black" else "black"
@@ -258,7 +268,7 @@ class OthelloConsumer(AsyncWebsocketConsumer):
                 valid_moves = self.get_valid_moves(board, game_state["turn"])
                 if valid_moves:
                     await self.send(text_data=json.dumps({
-                        "error": "有効な手が存在するため、パスはできません"
+                        "error": _("有効な手が存在するため、パスはできません")
                     }))
                     return
                 # パスが有効な場合：連続パス回数を増加
@@ -290,7 +300,7 @@ class OthelloConsumer(AsyncWebsocketConsumer):
             # ターンチェック
             if player != game_state["turn"]:
                 await self.send(text_data=json.dumps({
-                    "error": f"Not your turn: 現在は {game_state['turn']} の番です。"
+                    "error": f"[Not your turn] current : {game_state['turn']} "
                 }))
                 return
 

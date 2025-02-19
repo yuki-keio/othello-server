@@ -1,11 +1,19 @@
 from django.shortcuts import render, redirect
 from urllib.parse import urlencode
 from django.http import HttpResponse
+import logging
+from django.utils.translation import get_language
+
+logger = logging.getLogger(__name__)
+
 
 def index(request):
-    return render(request, "game/index.html", {"mode": 'player'})
+    return render(request, "game/index.html", {"mode": 'player' })
 
 def game_view(request, mode=None):
+
+    logger.info(f"Current language: {get_language()}")
+    logger.info(f"Request LANGUAGE_CODE: {request.LANGUAGE_CODE}")
     query_mode = request.GET.get('mode')
 
     # `/player/` へのアクセスを `/` へリダイレクト
@@ -31,7 +39,7 @@ def game_view(request, mode=None):
 
         return redirect(new_url, permanent=True)
 
-    return render(request, "game/index.html", {"mode": mode})
+    return render(request, "game/index.html", {"mode": mode })
 
 def othello_view(request):
     return render(request, "game/strategy-reversi-othello.html")

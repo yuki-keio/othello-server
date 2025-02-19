@@ -22,6 +22,9 @@ from django.conf import settings
 from django.contrib.sitemaps.views import sitemap
 from game.sitemaps import StaticViewSitemap
 from django.views.generic.base import RedirectView
+from django.conf.urls.i18n import i18n_patterns  
+from game.views import game_view
+
 
 
 
@@ -31,8 +34,9 @@ sitemaps = {  # ← ここで sitemaps を定義
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('game.urls')), 
+    path('', include('game.urls')),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
+    path('i18n/', include('django.conf.urls.i18n')),
     path(
         "google3cf76dfeb0923fe8.html",
         serve,
@@ -45,3 +49,9 @@ urlpatterns = [
     
 
 ]
+
+urlpatterns += i18n_patterns(
+
+    path('', include('game.urls')),
+    prefix_default_language=False
+)

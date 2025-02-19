@@ -5,13 +5,23 @@ from datetime import datetime
 
 class StaticViewSitemap(Sitemap):
     priority = 0.5        
+    changefreq = 'monthly'
+
+    i18n = True
+    alternates = True
+
+    
 
     def items(self):
         """各URLをリストとして返す"""
-        return ["index","ai-mode","online-mode","blog-strategy"]
+        return ["index", "ai-mode", "online-mode", "blog-strategy"]
 
     def location(self, item):
         return reverse(item)
+
+    def priority(self, item):
+        """ホームページのみ優先度を0.8に、それ以外は0.5"""
+        return 0.8 if item == "index" else 0.5
 
     def lastmod(self, item):
         """Gitの最新コミット日を `datetime.date` 型で返す"""

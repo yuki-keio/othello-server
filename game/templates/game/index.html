@@ -1,4 +1,5 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -358,39 +359,104 @@
     
 
     <script defer src="{% static 'game/script.js' %}"></script>
+   
 
-    <meta name="description" content="{% if mode == 'online' %}Web上で遊べる無料オセロゲーム。離れた場所にいる相手とも、リアルタイムでのオンライン対戦が可能です。ブラウザさえあれば、オセロ盤の用意やアプリのダウンロードが一切不要！スマホ・PC・iPadなど好きなデバイスから、オセロゲームの友達対戦が無料でできるWebサイトです。（旧サービス名：スマートオセロ）{% elif mode == 'ai' %}Web上で遊べる無料オセロゲーム。オセロAIと対戦できます！一人で楽しめる無料Webオセロゲームです。スマホ・PC・iPadなどデバイス一台で、リバーシを無料で遊べます。ブラウザさえあれば、オセロ盤の用意やアプリのインストールが必要ないので、Web上で気軽にオセロを楽しみたい人におすすめ！（旧サービス名：スマートオセロ）{% elif mode == 'player' %}Web上で遊べる無料オセロゲーム【電子オセロ盤モード】（旧サービス名：スマートオセロ）。アプリのインストールは必要なし！リバーシの友達対戦をブラウザで遊べるスマートなWebオセロ盤です。スマホ・PC・iPadなどWebが使えるデバイス一台あればどこでも遊べるので、旅行先でのレクリエーションにもオススメ。ブラウザゲーの定番です{% else %}オセロの無料Webゲーム。オンライン対戦・AI対戦・オフライン対戦が可能！アプリ不要でブラウザからすぐ遊べます。{% endif %}">
+
+    {% with online_description=_("Web上で遊べる無料オセロゲーム。離れた場所にいる相手とも、リアルタイムでのオンライン対戦が可能です。ブラウザさえあれば、オセロ盤の用意やアプリのダウンロードが一切不要！スマホ・PC・iPadなど好きなデバイスから、オセロゲームの友達対戦が無料でできるWebサイトです。（旧サービス名：スマートオセロ）") ai_description=_("Web上で遊べる無料オセロゲーム。オセロAIと対戦できます！一人で楽しめる無料Webオセロゲームです。スマホ・PC・iPadなどデバイス一台で、リバーシを無料で遊べます。ブラウザさえあれば、オセロ盤の用意やアプリのインストールが必要ないので、Web上で気軽にオセロを楽しみたい人におすすめ！（旧サービス名：スマートオセロ）") player_description=_("Web上で遊べる無料オセロゲーム【電子オセロ盤モード】（旧サービス名：スマートオセロ）。アプリのインストールは必要なし！リバーシの友達対戦をブラウザで遊べるスマートなWebオセロ盤です。スマホ・PC・iPadなどWebが使えるデバイス一台あればどこでも遊べるので、旅行先でのレクリエーションにもオススメ。ブラウザゲーの定番です") else_description=_("オセロの無料Webゲーム。オンライン対戦・AI対戦・オフライン対戦が可能！アプリ不要でブラウザからすぐ遊べます。") %}
+
+    <meta name="description" content="{% if mode == 'online' %}{{online_description}}{% elif mode == 'ai' %}{{ai_description}}{% elif mode == 'player' %}{{player_description}}{% else %}{{else_description}}{% endif %}">
+    <script nonce="{{ request.csp_nonce }}">
+        const online_description = "{{online_description|escapejs}}";
+        const ai_description = "{{ai_description|escapejs}}";
+        const player_description = "{{player_description|escapejs}}";
+        const else_description = "{{else_description|escapejs}}";
+
+        const lang_black = "{% trans "黒"|escapejs %}";
+        const lang_white = "{% trans "白"|escapejs %}";
+        const lang_spec = "{% trans "観客"|escapejs %}";
+
+        const lang_notify_b = "{% trans "黒には次に打てる場所がないので、もう一度白の番になります。"|escapejs %}";
+        const lang_notify_w = "{% trans "白には次に打てる場所がないので、もう一度黒の番になります。"|escapejs %}";
+
+        const lang_not_your_turn = "{% trans "あなたの手番ではありません。手番："|escapejs %}";
+        const lang_you = "{% trans "あなた"|escapejs %}";
+        const lang_timeout_winner = "{% trans "【時間切れ】 勝者："|escapejs %}";
+
+        const lang_surrender_winner = "{% trans "【投了】 勝者："|escapejs %}";
+
+        const lang_draw = "{% trans "引き分け！"|escapejs %}";
+        const lang_winner = "{% trans "勝者："|escapejs %}";
+        const lang_game_end = "{% trans "ゲーム終了"|escapejs %}"
+
+        const lang_you_pass = "{% trans "あなたには次に打てる場所がなかったのでもう一度、相手の番になります"|escapejs %}"
+        const lang_opponent_pass = "{% trans "相手には次に打てる場所がなかったのでもう一度、あなたの番になります"|escapejs %}"
+        const lang_warn_EnOnly = "{% trans "⚠️ 英数字のみ入力可能です"|escapejs %}"
+        const lang_warn_charLimit = "{% trans "⚠️ 文字数：1〜10文字"|escapejs %}"
+
+        const lang_connecting = "{% trans "接続中です。しばらくお待ちください。"|escapejs %}";
+        const lang_spec_cant_play = "{% trans "観戦中です。あなたは手を打つことができません。"|escapejs %}";
+
+        const lang_copy_url = "{% trans "🔗 現在の石の配置を共有するURLをコピーしました！"|escapejs %}";
+        const lang_copy_spec = "{% trans "👀 現在のゲームを観戦するためのURLをコピーしました！"|escapejs %}";
+        const lang_copy_invite = "{% trans "🎮 現在のゲームへの招待URLをコピーしました！対戦相手にURLを送って対戦を始めましょう！"|escapejs %}";
+        const lang_copy_failed = "{% trans "URLのコピーに失敗しました。"|escapejs %}";
+
+        const lang_cant_go_more = "{% trans "これ以上進めません"|escapejs %}";
+
+        const thanks_install = "{% trans "🎮️ インストールありがとうございます！（開発者より）"|escapejs %}";
+
+        const lang_surrender_right = "{% trans "本当に投了しますか？"|escapejs %}";
+
+    </script>
+    {% endwith %}
+
+
+    {% with online_title=_("オセロ対戦（オンライン） | 無料ゲームのリバーシWeb （旧サービス名：スマートオセロ）") ai_title=_("オセロAIと対戦 | 無料ゲームのリバーシWeb （旧サービス名：スマートオセロ）") player_title=_("オセロ | 無料ゲームのリバーシWeb （旧サービス名：スマートオセロ）") else_title=_("無料ゲームのリバーシWeb （旧サービス名：スマートオセロ）") %}
+
 
     <title>
         {% if mode == 'online' %}
-            オセロ対戦（オンライン） | リバーシWeb - ブラウザで遊べる無料オセロゲーム（旧サービス名：スマートオセロ）
+        {{online_title}}
         {% elif mode == 'ai' %}
-            オセロAIと対戦 | リバーシWeb - ブラウザで遊べる無料オセロゲーム（旧サービス名：スマートオセロ）
+        {{ai_title}}
         {% elif mode == 'player' %}
-            電子オセロ盤 | リバーシWeb - ブラウザで遊べる無料オセロゲーム（旧サービス名：スマートオセロ）
+        {{player_title}}
         {% else %}
-            リバーシWeb - ブラウザで遊べる無料オセロゲーム（旧サービス名：スマートオセロ）
+        {{else_title}}
         {% endif %}
-    </title>    
+    </title> 
+    <script nonce="{{ request.csp_nonce }}">
+        const online_title = "{{online_title|escapejs}}";
+        const ai_title = "{{ai_title|escapejs}}";
+        const player_title = "{{player_title|escapejs}}";
+        const else_title = "{{else_title|escapejs}}";
+    </script>
+    
+    {% endwith %}
   
     <script async src="https://cdn.jsdelivr.net/npm/profanity-cleaner@latest?source=false"></script>
     <script async src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <meta property="og:title" content="リバーシWeb">
-    <meta property="og:site_name" content="リバーシWeb">
+    <meta property="og:title" content="{% trans "リバーシWeb" %}">
+    <meta property="og:site_name" content="{% trans "リバーシWeb" %}">
+    {% if LANGUAGE_CODE == "ja" %}
     <meta property="og:locale" content="ja_JP">
-    <meta property="og:description" content="オンラインで楽しめるリバーシゲーム！（オセロ）">
+    {% else %}
+    <meta property="og:locale" content="en_US">
+    {% endif %}
+    <meta property="og:description" content="{% trans "オンラインで楽しめるリバーシゲーム！（オセロ）" %}">
     <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/share-image.webp' %}">
     <meta property="og:url" content="https://reversi.yuki-lab.com">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="リバーシWeb | 無料オセロゲーム">
-    <meta name="twitter:description" content="ダウンロード不要！友達対戦やAIとの対戦が可能なブラウザゲームです">
+    <meta name="twitter:title" content="{% trans "リバーシWeb | 無料オセロゲーム" %}">
+    <meta name="twitter:description" content="{% trans "ダウンロード不要！友達対戦やAIとの対戦が可能なブラウザゲームです" %}">
     <meta property="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/share-image.webp' %}">
     
     <meta name="author" content="Yuki Lab">
     <meta name="robots" content="index, follow">    
 
-    <meta name="keywords" content="オセロ, リバーシWeb, スマートオセロ, リバーシ, ゲーム, 無料, Web, おせろ, 電子オセロ盤, オセロAI, 友達対戦, ボードゲーム, オンライン, ブラウザゲー, 一人で遊べる">
+    <meta name="keywords" content="{% trans "オセロ, リバーシWeb, スマートオセロ, リバーシ, ゲーム, 無料, Web, おせろ, 電子オセロ盤, オセロAI, 友達対戦, ボードゲーム, オンライン, ブラウザゲー, 一人で遊べる" %}">
+
     <script type="application/ld+json">
         {
             "@context": "https://schema.org",
@@ -442,6 +508,10 @@
 
     <link rel="canonical" href="{% if mode == 'online' %}https://reversi.yuki-lab.com/online/{% elif mode == 'ai' %}https://reversi.yuki-lab.com/ai/{% elif mode == 'player' %}https://reversi.yuki-lab.com/{% else %}https://reversi.yuki-lab.com/{% endif %}">
 
+    <link rel="alternate" hreflang="ja" href="{% if mode == 'online' %}https://reversi.yuki-lab.com/online/{% elif mode == 'ai' %}https://reversi.yuki-lab.com/ai/{% elif mode == 'player' %}https://reversi.yuki-lab.com/{% else %}https://reversi.yuki-lab.com/{% endif %}" />
+    <link rel="alternate" hreflang="en" href="{% if mode == 'online' %}https://reversi.yuki-lab.com/en/online/{% elif mode == 'ai' %}https://reversi.yuki-lab.com/en/ai/{% elif mode == 'player' %}https://reversi.yuki-lab.com/en/{% else %}https://reversi.yuki-lab.com/en/{% endif %}" />
+    <link rel="alternate" hreflang="x-default" href="https://reversi.yuki-lab.com/" />
+    
     
     <!-- Google Analytics 最適化 -->
     <script nonce="{{ request.csp_nonce }}">
@@ -486,23 +556,35 @@
 <div id="game-container">
         <!-- モード選択バナー -->
         <div id="mode-selection-banner">
-            <button class="mode-btn" data-mode="player">オセロ盤</button>
-            <button class="mode-btn" data-mode="ai">AI対戦</button>
-            <button class="mode-btn" data-mode="online">通信対戦</button>
+            <button class="mode-btn" data-mode="player">{% trans "オセロ盤" %}</button>
+            <button class="mode-btn" data-mode="ai">{% trans "AI対戦" %}</button>
+            <button class="mode-btn" data-mode="online">{% trans "通信対戦" %}</button>
         </div>
+
+        {% with online_h1=_("オセロ通信対戦") ai_h1=_("オセロAI対戦") player_h1=_("オセロ盤") else_h1=_("リバーシWeb") %}
+
         <h1 id="title">
             {% if mode == 'online' %}
-                オセロ通信対戦
+                {{online_h1}}
             {% elif mode == 'ai' %}
-                オセロAI対戦
+                {{ai_h1}}
             {% elif mode == 'player' %}
-                オセロ盤モード
+                {{player_h1}}
             {% else %}
-                リバーシWeb
+                {{else_h1}}
             {% endif %}
         </h1>
+
+        <script nonce="{{ request.csp_nonce }}">
+            const online_h1 = "{{online_h1|escapejs}}";
+            const ai_h1 = "{{ai_h1|escapejs}}";
+            const player_h1 = "{{player_h1|escapejs}}";
+            const else_h1 = "{{else_h1|escapejs}}";
+        </script>
+
+        {% endwith %}
     
-        <img src="{% static 'game/images/setting.svg' %}" alt="リバーシ（オセロ）の設定" id="setting">
+        <img src="{% static 'game/images/setting.svg' %}" alt="{% trans "リバーシ（オセロ）の設定" %}" id="setting">
         <div id="player-info"><ul id="player-list"></ul></div>
         <span id="timer-display"></span>
         <div id="board-container">
@@ -512,35 +594,35 @@
             {% if mode == 'online' %}
             <div id="game-settings-overlay">
                 <div id="game-settings">
-                    <h3>対戦設定</h3>
+                    <h3>{% trans "対戦設定" %}</h3>
 
                     <div id="contents-overlay-setting">
                         <div id="player-name-container">
-                            <label for="player-name" id="label4name">表示名：</label>
-                            <input type="text" id="player-name" placeholder="英数字のみ入力可能">
+                            <label for="player-name" id="label4name">{% trans "表示名：" %}</label>
+                            <input type="text" id="player-name" placeholder="{% trans "英数字のみ入力可能" %}" maxlength="10">
                             <div id="warning"></div>
                           
                         </div>
-                        <label id="time_overlay-label">持ち時間：
+                        <label id="time_overlay-label">{% trans "持ち時間：" %}
                             <select id="time-limit">
-                                <option value="0">制限なし</option>
-                                <option value="10">10秒</option>
-                                <option value="30">30秒</option>
-                                <option value="60">1分</option>
-                                <option value="180">3分</option>
-                                <option value="300">5分</option>
+                                <option value="0">{% trans "制限なし" %}</option>
+                                <option value="10">{% trans "10秒" %}</option>
+                                <option value="30">{% trans "30秒" %}</option>
+                                <option value="60">{% trans "1分" %}</option>
+                                <option value="180">{% trans "3分" %}</option>
+                                <option value="300">{% trans "5分" %}</option>
                             </select>
                         </label>
                         <br>
                         <label>
-                            <input type="checkbox" id="highlight-moves" checked> 有効な手をハイライト表示
+                            <input type="checkbox" id="highlight-moves" checked> {% trans "有効な手をハイライト表示" %}
                         </label>
                     </div>
                     <div class="invite-container">
 
-                    <button id="start-match" class="btn-primary">招待URLをコピー</button>
+                    <button id="start-match" class="btn-primary">{% trans "招待URLをコピー" %}</button>
                     <button id="qr">
-                        <img src="{% static 'game/images/qr.svg' %}" alt="オセロ対戦への招待用QRコード" id="qr-icon">
+                        <img src="{% static 'game/images/qr.svg' %}" alt="{% trans "オセロ対戦への招待用QRコード" %}" id="qr-icon">
                     </button>
                     </div>
                 </div>
@@ -548,7 +630,7 @@
             <!-- QRコード用のポップアップ -->
             <div id="qr-popup" class="qr-popup">
                 <div class="qr-popup-content">
-                    <h3>招待用QRコード</h3>
+                    <h3>{% trans "招待用QRコード" %}</h3>
                     <div id="qrcode"></div>
                 </div>
             </div>
@@ -556,50 +638,50 @@
             {% endif %}
         </div>
         <div id="status">
-            <span class="current-player" id="c_black">黒番</span>
+            <span class="current-player" id="c_black">{% trans "黒番" %}</span>
             <div id="black_circle"></div>
             <span id="score_black"></span>：<span id="score_white"></span>
             <div id="white_circle"></div>
 
-            <span class="current-player" id="c_white">白番</span>
+            <span class="current-player" id="c_white">{% trans "白番" %}</span>
 
         </div>
 
     <div class="buttons_container">
-        <button id="copy-url-btn" aria-label="オセロ盤の盤面を共有するURLをコピー"></button>
-        <button id="surrender-btn" aria-label="投了">投了</button>
-        <button id="restart-btn" aria-label="新しい対局を開始">🚩 新規対局</button>
+        <button id="copy-url-btn" aria-label="{% trans "オセロ盤の盤面を共有するURLをコピー" %}"></button>
+        <button id="surrender-btn" aria-label="{% trans "投了" %}">{% trans "投了" %}</button>
+        <button id="restart-btn" aria-label="{% trans "新しい対局を開始" %}">{% trans "🚩 新規対局" %}</button>
     </div>
         <div id="move-history">
-            <h3>棋譜</h3>
+            <h3>{% trans "棋譜" %}</h3>
             
             <button id="prev-move-btn">＜</button>
             <button id="next-move-btn">＞</button>
             
-            <pre id="move-list">　棋譜はまだありません</pre>
+            <pre id="move-list">{% trans "　棋譜はまだありません" %}</pre>
 
         </div>
         
 
         <div id="settings">
-            <h3>設定</h3>
+            <h3>{% trans "設定" %}</h3>
             <div class="container">
-                🔈 効果音： <br>
+               {% trans "🔈 効果音：" %} <br>
                 <div id="soundSettingContainer">
                 <label>
-                    <input type="checkbox" id="gameEndSoundCheckbox" checked> 勝利 / 敗北
+                    <input type="checkbox" id="gameEndSoundCheckbox" checked> {% trans "勝利 / 敗北" %}
                 </label> <br><br>
                 <label>
-                    <input type="checkbox" id="soundEffectsCheckbox" checked> 石を置く
+                    <input type="checkbox" id="soundEffectsCheckbox" checked> {% trans "石を置く" %}
                 </label> <br><br>
                 <div id="timeLimitBox_">
                     <label>
-                        <input type="checkbox" id="timeLimitSoundCheckbox" checked> 残り時間あと少し
+                        <input type="checkbox" id="timeLimitSoundCheckbox" checked> {% trans "残り時間あと少し" %}
                     </label> <br><br>
                 </div>
                 <div id="playerJoinSoundBox">
                     <label>
-                        <input type="checkbox" id="playerJoinSoundCheckbox" checked> プレイヤー参加
+                        <input type="checkbox" id="playerJoinSoundCheckbox" checked> {% trans "プレイヤー参加" %}
                     </label> <br><br>
                 </div>
                 
@@ -610,31 +692,31 @@
                 
                 <div id="timeLimitContainer">
                 <label>
-                    ⏱ 一手あたりの持ち時間： 
+                    {% trans "⏱ 一手あたりの持ち時間：" %}
                     <select id="timeLimitSelect">
-                        <option value="0">制限なし</option>
-                        <option value="300">5分</option>
-                        <option value="180">3分</option>
-                        <option value="60">1分</option>
-                        <option value="30">30秒</option>
-                        <option value="10">10秒</option>
+                        <option value="0">{% trans "制限なし" %}</option>
+                        <option value="300">{% trans "5分" %}</option>
+                        <option value="180">{% trans "3分" %}</option>
+                        <option value="60">{% trans "1分" %}</option>
+                        <option value="30">{% trans "30秒" %}</option>
+                        <option value="10">{% trans "10秒" %}</option>
                         
                     </select>
                 </label>
                 </div>
                 <br>
                 <label id="level_ai">
-                    🤖 AIのレベル：
+                    {% trans "🤖 AIのレベル：" %}
                     <select id="aiLevelSelect">
-                        <option value="0">初級</option>
-                        <option value="2">中級</option>
-                        <option value="9">上級</option>
+                        <option value="0">{% trans "初級" %}</option>
+                        <option value="2">{% trans "中級" %}</option>
+                        <option value="9">{% trans "上級" %}</option>
                     </select>
                 </label>
                 <div id="validContainer">
                     <label>
                         👍
-                        <input type="checkbox" id="showValidMovesCheckbox" checked> 有効な手をハイライト
+                        <input type="checkbox" id="showValidMovesCheckbox" checked> {% trans "有効な手をハイライト" %}
                     </label>
                 </div>
                 <br>
@@ -644,94 +726,123 @@
                   
 
                 <div class="caution">
-                    ※ 変更後の持ち時間は、次の一手から適用されます。 <br>
+                    {% blocktrans trimmed %}
+                    ※ 変更後の持ち時間は、次の一手から適用されます。<br>
                     ※ 持ち時間がゼロになると <strong>直ちに負け</strong> となる設計のため、ご注意ください。そのままURLをリロードすると、持ち時間をリセットして再開できます。                    
-                    
+                    {% endblocktrans %}
                 </div>
             </div>
         </div>  
         <!--<a href="https://pc.moppy.jp/entry/invite.php?invite=y22tA17c&type=service"><img decoding="async" loading="lazy" src="https://img.moppy.jp/pub/pc/friend/640x480-13.jpg" alt="アプリインストール・ゲームアプリで無料で簡単にポイントが貯まる！楽しくポイ活するならモッピー" id="ad" ></a>
         -->
     <section class="notes">
-        <h2>本サイト・リバーシWebの機能</h2>
-        <p>リバーシ（オセロゲーム）が無料ですぐ遊べるWebサイトです。<a href="https://reversi.yuki-lab.com/ai/">AI対戦</a>、<a href="https://reversi.yuki-lab.com/online/">オンライン対戦</a>、<a href="https://reversi.yuki-lab.com/">電子オセロ盤</a>など、様々な機能に対応しています。 <strong>独自のURLシェア機能</strong> によって、友達との対戦や観戦、棋譜の共有などが簡単に行える点も特徴です</p>
-        <h3>現在選択されているモード：{% if mode == 'online' %}通信対戦{% elif mode == 'ai' %}AI対戦{% elif mode == 'player' %}電子オセロ盤{% else %}なし{% endif %}</h3>
+        <h2>{% trans "本サイト・リバーシWebの機能" %}</h2>
+        <p>{% blocktrans trimmed %}
+            リバーシ（オセロゲーム）が無料ですぐ遊べるWebサイトです。<a href="https://reversi.yuki-lab.com/ai/">AI対戦</a>、<a href="https://reversi.yuki-lab.com/online/">オンライン対戦</a>、<a href="https://reversi.yuki-lab.com/">電子オセロ盤</a>など、様々な機能に対応しています。 <strong>独自のURLシェア機能</strong> によって、友達との対戦や観戦、棋譜の共有などが簡単に行える点も特徴です
+        {% endblocktrans %}
+        </p>
+        <h3>
+            {% if mode == 'online' %}
+              {% trans "現在選択されているモード：通信対戦" %}
+            {% elif mode == 'ai' %}
+              {% trans "現在選択されているモード：AI対戦" %}
+            {% elif mode == 'player' %}
+              {% trans "現在選択されているモード：電子オセロ盤" %}
+            {% else %}
+              {% trans "現在選択されているモード：なし" %}
+            {% endif %}
+        </h3>
+          
         <p>
     {% if mode == 'online' %}
-        オンライン対戦モード（通信対戦モード）では、別々のデバイスからゲームに参加できます。遠く離れた場所にいる人ともオセロを遊ぶことができます。招待URLを共有するか、QRコードをスキャンすることで、対局への参加や観戦が可能です。
+        
+        {% trans "オンライン対戦モード（通信対戦モード）では、別々のデバイスからゲームに参加できます。遠く離れた場所にいる人ともオセロを遊ぶことができます。招待URLを共有するか、QRコードをスキャンすることで、対局への参加や観戦が可能です。" %}
         
     {% elif mode == 'ai' %}
-        初級から上級まで、自分に合った強さのオセロAIと対戦できます。素早くプレイしたい場合は、最も高速な初級AIがおすすめです。
+        {% trans "初級から上級まで、自分に合った強さのオセロAIと対戦できます。素早くプレイしたい場合は、最も高速な初級AIがおすすめです。" %}
         
     {% elif mode == 'player' %}
-        電子オセロ盤モードでは、デバイス1台でオセロを遊ぶことができます。現地で家族や友達とオセロを遊びたいけれど、現物のオセロ盤を持っていない時に便利です。
+        {% trans "電子オセロ盤モードでは、デバイス1台でオセロを遊ぶことができます。現地で家族や友達とオセロを遊びたいけれど、現物のオセロ盤を持っていない時に便利です。" %}
     {% else %}
         
     {% endif %}
         </p>
-        <h3>機能のオン・オフ</h3>
-        <p>効果音・ハイライト表示・制限時間の機能は、<a href="#settings">「設定」</a>からオン・オフを切り替えられます。次回以降に同じブラウザで遊ぶ場合もその設定を引き継げます。</p>
-        <div class="small">※ ただし通信対戦モードが選択された場合は、通信対戦における設定に合わせてハイライト表示設定が変更されます。</div>
-        <h3>アプリ版で遊ぶ</h3>
-        <p>本サイトはブラウザゲームですが、Webアプリ（PWA）としてホーム画面に追加することもできます。Webアプリの特徴として、デバイスの容量はほぼ消費せず、さらに起動も高速になります。アプリ版では主な機能をオフラインでも利用できます。アプリ設置の所要時間は数秒です。ぜひお試しください</p>
-        <button id="install-btn">Webアプリとしてホーム画面に追加</button>
+        <h3>{% trans "機能のオン・オフ" %}</h3>
+        <p>
+            <p>
+                {% blocktrans asvar settings_text %}効果音・ハイライト表示・制限時間の機能は、<a href="#settings">「設定」</a>からオン・オフを切り替えられます。次回以降に同じブラウザで遊ぶ場合もその設定を引き継げます。{% endblocktrans %}
+                {{ settings_text|safe }}
+            </p>
+            
+        
+        </p>
+        <div class="small">{% trans "※ ただし通信対戦モードが選択された場合は、通信対戦における設定に合わせてハイライト表示設定が変更されます。" %}</div>
+        <h3>{% trans "アプリ版で遊ぶ" %}</h3>
+        <p>{% trans "本サイトはブラウザゲームですが、Webアプリ（PWA）としてホーム画面に追加することもできます。Webアプリの特徴として、デバイスの容量はほぼ消費せず、さらに起動も高速になります。アプリ版では主な機能をオフラインでも利用できます。アプリ設置の所要時間は数秒です。ぜひお試しください" %}</p>
+        <button id="install-btn">{% trans "Webアプリとしてホーム画面に追加" %}</button>
 
 
     </section>
 
     <section class ="notes" id="rules">
-        <h2>リバーシ（オセロ）のルール</h2>
+        <h2>{% trans "リバーシ（オセロ）のルール" %}</h2>
     
-        <h3>基本ルール</h3>
-        <p>リバーシは 8×8 の盤面で行うボードゲームです。「オセロ」という名前でも親しまれています。本ゲームの対戦は、以下のルールで進行します。</p>
+        <h3>{% trans "基本ルール" %}</h3>
+        <p>{% trans "リバーシは 8×8 の盤面で行うボードゲームです。「オセロ」という名前でも親しまれています。本ゲームの対戦は、以下のルールで進行します。" %}</p>
         <ul>
+            {% blocktrans trimmed %}
             <li>ゲーム開始時は中央に黒と白の石が 2 個ずつ配置されます。</li>
             <li>黒が先手、白が後手で交互に手を打ちます。</li>
             <li>相手の石を挟むと、自分の石に変わります。縦・横・斜めのどの方向でも挟むことができます</li>
             <li>自分の石は、相手の石を挟んで取れる場所（ <strong>合法手</strong> ）に置くことができます。</li>
             <li>自分の <strong>【合法手】</strong> がない場合は、自動的に相手の番へ <strong>【パス】</strong> されます。両者とも <strong>【パス】</strong> になった場合はゲーム終了です。</li>
+            {% endblocktrans %}
         </ul>
     
-        <h3>【合法手】について</h3>
-        <p>本ゲームでは、プレイヤーが打てる <strong>【合法手】</strong> を自動で判定し、視認しやすいようにハイライト表示する機能があります。この機能は設定からオフにできます</p>
+        <h3>{% trans "【合法手】について" %}</h3>
+        <p>{% trans "本ゲームでは、プレイヤーが打てる <strong>【合法手】</strong> を自動で判定し、視認しやすいようにハイライト表示する機能があります。この機能は設定からオフにできます" %}</p>
     
-        <h3>時間制限</h3>
+        <h3>{% trans "時間制限" %}</h3>
+        {% blocktrans trimmed %}
         <p>ゲームのスピード感を高めるために <strong>制限時間</strong> を設定できます。最短では <strong>10秒ルール</strong> の超高速対局も可能です！</p>
+        {% endblocktrans %}
     
-        <h3>勝利条件</h3>
+        <h3>{% trans "勝利条件" %}</h3>
         <ul>
+            {% blocktrans trimmed %}
             <li>ゲーム終了時に、自分の石の数が相手より多ければ勝利となります。同数の場合は引き分けです。</li>
             <li><strong>制限時間</strong> のある対局では、相手が時間切れになった場合も勝利となります</li>
             <li><a href="https://reversi.yuki-lab.com/online/">通信対戦</a> では、<strong>投了</strong> ボタンが使えます。相手が <strong>投了</strong> した場合、自分の勝利となります</li>
+            {% endblocktrans %}
         </ul>
     </section>
     <section class ="notes" id="blog">
-        <h3>リバーシ（オセロ）で勝つためのコツ</h3>
-        <p>本サイト・リバーシWebの開発者が執筆した<a href="https://reversi.yuki-lab.com/strategy-reversi-othello.html">こちらの記事</a> では、オセロゲームの中・上級者向け攻略法を無料で紹介しています。ぜひご覧ください</p>
+        <h3>{% trans "リバーシ（オセロ）で勝つためのコツ" %}</h3>
+        <p>{% blocktrans trimmed %}本サイト・リバーシWebの開発者が執筆した<a href="https://reversi.yuki-lab.com/strategy-reversi-othello.html">こちらの記事</a> では、オセロゲームの中・上級者向け攻略法を無料で紹介しています。ぜひご覧ください{% endblocktrans %}</p>
     </section>
     <!-- iOS専用のインストールガイド -->
     <div id="ios-install-guide" class="install-guide">
         <div class="install-guide-content">
-            <h5>「ホーム画面に追加」でもっと快適に遊べます!</h5>
-            <ul>
+            <h5>{% trans "「ホーム画面に追加」でもっと快適に遊べます!" %}</h5>
+            <ul>{% blocktrans trimmed %}
                 <li>✅️ Webアプリだからアプリ容量はほぼ0！</li>
                 <li>✅️ 高速に起動して時短！</li>
                 <li>✅️ オフラインでも一部遊べる！</li>
+                {% endblocktrans %}
             </ul>            
         </div>
             <div class="guide-icons">
-                <img src="/static/game/images/share-icon.jpg" alt="iOSの共有ボタン" class="icon">
+                <img src="/static/game/images/share-icon.jpg" alt="{% trans "iOSの共有ボタン" %}" class="icon">
                 <span class="arrow">➡️</span>
-                <img src="/static/game/images/install-guide.webp" alt="リバーシ（オセロ）を無料でホーム画面に追加する方法" id="install-guide-img" loading="lazy">
+                <img src="/static/game/images/install-guide.webp" alt="{% trans "リバーシ（オセロ）を無料でホーム画面に追加する方法" %}" id="install-guide-img" loading="lazy">
             </div>
-            <button id="close-install-guide">✖️ 閉じる</button>
+            <button id="close-install-guide">{% trans "✖️ 閉じる" %}</button>
         
     </div>
 
     <div class="credit">
-            <!--copyright-->
-            © 2024~ Yuki-Lab |
-            本ゲームでは、多くの人にとって読みやすいユニバーサルデザインフォントを使用しています
+    <!--copyright-->
+    {% trans "© 2024~ Yuki-Lab | 本ゲームでは、多くの人にとって読みやすいユニバーサルデザインフォントを使用しています" %}
     </div>
 </div>
 
