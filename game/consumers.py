@@ -33,8 +33,6 @@ class OthelloConsumer(AsyncWebsocketConsumer):
             player_id = query_params.get("playerId", [None])[0]
             player_name = query_params.get("playerName", [None])[0]
             language = query_params.get("lang", ["ja"])[0]
-            print(language)
-            print(qery_params.get("lang"))
             activate(language)
             
            
