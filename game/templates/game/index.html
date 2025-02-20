@@ -87,7 +87,7 @@
     <script async src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <meta property="og:title" content="{% trans "リバーシWeb" %}">
     <meta property="og:site_name" content="{% trans "リバーシWeb" %}">
-    {% if LANGUAGE_CODE == "ja" %}
+    {% if request.LANGUAGE_CODE == "ja" %}
     <meta property="og:locale" content="ja_JP">
     {% else %}
     <meta property="og:locale" content="en_US">
