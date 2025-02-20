@@ -18,7 +18,7 @@
             box-sizing: border-box; /* Ensures padding and border are included in element's total width and height */
         }
         h1{
-            font-family:"BIZ UDGothic", "Arial", sans-serif ;
+            font-family:'Noto Sans JP', Arial, sans-serif ;
             font-size: 1.4em; 
         }
         
@@ -353,7 +353,7 @@
 
     <link rel="stylesheet" href="{% static 'game/style.css' %}" media="print" id="dynamic-css">
 
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDGothic:wght@400;700&family=BIZ+UDPMincho:wght@400;700&display=swap"
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPMincho&display=swap"
     media="print" id="dynamic-fonts" >
     <script nonce="{{ request.csp_nonce }}">
         const PLACE_STONE_SOUND = "{% static 'game/sounds/place-stone.mp3' %}";  
