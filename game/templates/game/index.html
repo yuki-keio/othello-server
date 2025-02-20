@@ -17,7 +17,7 @@
             box-sizing: border-box; /* Ensures padding and border are included in element's total width and height */
         }
         h1{
-            font-family: "Noto Sans JP", "游ゴシック", "ヒラギノ角ゴ ProN", Arial, sans-serif;
+            font-family: sans-serif;
             font-size: 1.4em; 
         }
         
@@ -357,9 +357,6 @@
         const PLACE_STONE_SOUND = "{% static 'game/sounds/place-stone.mp3' %}";  
     </script>
     <script defer src="{% static 'game/script.js' %}"></script>
-
-
-
     {% with online_description=_("Web上で遊べる無料オセロゲーム。離れた場所にいる相手とも、リアルタイムでのオンライン対戦が可能です。ブラウザさえあれば、オセロ盤の用意やアプリのダウンロードが一切不要！PC・スマホ・iPadなど好きなデバイスから、オセロゲームの友達対戦が無料でできるWebサイトです。（旧サービス名：スマートオセロ）") ai_description=_("Web上で遊べる無料オセロゲーム。オセロAIと対戦できます！一人で楽しめる無料Webオセロゲームです。PC・スマホ・iPadなどデバイス一台で、リバーシを無料で遊べます。ブラウザさえあれば、オセロ盤の用意やアプリのインストールが必要ないので、Web上で気軽にオセロを楽しみたい人におすすめ！（旧サービス名：スマートオセロ）") player_description=_("Web上で遊べる無料オセロゲーム【電子オセロ盤モード】（旧サービス名：スマートオセロ）。アプリのインストールは必要なし！リバーシの友達対戦をブラウザで遊べるスマートなWebオセロ盤です。PC・スマホ・iPadなどWebが使えるデバイス一台あればどこでも遊べるので、旅行先でのレクリエーションにもオススメ。ブラウザゲーの定番です") else_description=_("オセロの無料Webゲーム。オンライン対戦・AI対戦・オフライン対戦が可能！アプリ不要でブラウザからすぐ遊べます。") %}
 
     <meta name="description" content="{% if mode == 'online' %}{{online_description}}{% elif mode == 'ai' %}{{ai_description}}{% elif mode == 'player' %}{{player_description}}{% else %}{{else_description}}{% endif %}">
