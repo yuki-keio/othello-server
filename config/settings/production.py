@@ -65,6 +65,7 @@ CSP_FRAME_SRC = (
 )
 CSP_STYLE_SRC = (
     "'self'",
+    
     "https://fonts.googleapis.com",
     "https://pagead2.googlesyndication.com",
     "https://reversi.yuki-lab.com/static/",  
