@@ -155,7 +155,12 @@
     
     <meta name="theme-color" content="#007508">
 
+
+    {% if request.LANGUAGE_CODE == "ja" %}
     <link rel="canonical" href="{% if mode == 'online' %}https://reversi.yuki-lab.com/online/{% elif mode == 'ai' %}https://reversi.yuki-lab.com/ai/{% elif mode == 'player' %}https://reversi.yuki-lab.com/{% else %}https://reversi.yuki-lab.com/{% endif %}">
+    {% else %}
+    <link rel="canonical" href="{% if mode == 'online' %}https://reversi.yuki-lab.com/en/online/{% elif mode == 'ai' %}https://reversi.yuki-lab.com/en/ai/{% elif mode == 'player' %}https://reversi.yuki-lab.com/en/{% else %}https://reversi.yuki-lab.com/en/{% endif %}">
+    {% endif %}
 
     <link rel="alternate" hreflang="ja" href="{% if mode == 'online' %}https://reversi.yuki-lab.com/online/{% elif mode == 'ai' %}https://reversi.yuki-lab.com/ai/{% elif mode == 'player' %}https://reversi.yuki-lab.com/{% else %}https://reversi.yuki-lab.com/{% endif %}" />
     <link rel="alternate" hreflang="en" href="{% if mode == 'online' %}https://reversi.yuki-lab.com/en/online/{% elif mode == 'ai' %}https://reversi.yuki-lab.com/en/ai/{% elif mode == 'player' %}https://reversi.yuki-lab.com/en/{% else %}https://reversi.yuki-lab.com/en/{% endif %}" />
