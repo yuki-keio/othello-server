@@ -59,7 +59,7 @@ let socket = null;
 
 let soundEffects = !(localStorage.getItem('soundEffects') === "false");
 let timeLimitSoundEnabled = !(localStorage.getItem('timeLimitSoundEnabled') === "false");
-let gameEndSoundEnabled = !(localStorage.getItem('gameEndSoundEnabled') === "false");
+let gameEndSoundEnabled = localStorage.getItem('gameEndSoundEnabled') === "true";
 let playerJoinSoundEnabled = !(localStorage.getItem('playerJoinSoundEnabled') === "false");
 
 let currentPlayer = 'black';
@@ -1452,10 +1452,10 @@ function changeHead() {
 
 
 //音量調整
-victorySound.volume = 0.01;
-defeatSound.volume = 0.007;
-warningSound.volume = 0.02;
-playerJoin.volume = 0.04;
+victorySound.volume = 0.009;
+defeatSound.volume = 0.008;
+warningSound.volume = 0.08;
+playerJoin.volume = 0.1;
 
 //時間制限の「音量設定」のためのボックスの表示可否
 if (timeLimit === 0) {
