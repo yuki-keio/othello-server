@@ -596,14 +596,29 @@ function updateMoveList() {
 }
 
 function launchConfetti() {
+    confetti({
+        particleCount: 150,
+        angle: 75,
+        spread: 100,
+        gravity: 0.2,
+        origin: {
+          x: 0, //  (0 = 左端、1 = 右端)
+          y: 0.85  // (0 = 上端、1 = 下端)
+        },
+        colors: ['#165B33', '#BB2528', '#146B3A', '#EA4630'],
+        shapes: ['square', 'circle'],
+        scalar: 0.8,
+        zIndex: 100
+      });
     setTimeout(() => {
+        
         confetti({
-            particleCount: 100,
-            angle: 75,
+            particleCount: 150,
+            angle: 105,
             spread: 100,
             gravity: 0.2,
             origin: {
-              x: -0.1, //  (0 = 左端、1 = 右端)
+              x: 1, //  (0 = 左端、1 = 右端)
               y: 0.85  // (0 = 上端、1 = 下端)
             },
             colors: ['#165B33', '#BB2528', '#146B3A', '#EA4630'],
@@ -722,11 +737,13 @@ function endGame(online_data, winner = null) {
                 defeatSound.play().catch(error => {
                     console.warn("audio was blocked:", error);
                 });;
-            } else if (gameEndSoundEnabled) {
+            } else {
+                if (gameEndSoundEnabled) {
                 victorySound.currentTime = 0;
                 victorySound.play().catch(error => {
                     console.warn("audio was blocked:", error);
                 });
+                }
                 launchConfetti();
             }
 
@@ -737,12 +754,14 @@ function endGame(online_data, winner = null) {
                 defeatSound.play().catch(error => {
                     console.warn("audio was blocked:", error);
                 });;
-            } else if (gameEndSoundEnabled) {
+            } else {if (gameEndSoundEnabled) {
                 victorySound.currentTime = 0;
                 victorySound.play().catch(error => {
                     console.warn("audio was blocked:", error);
                 });
-                launchConfetti();
+                
+                }
+            launchConfetti();
             }
         }
 
