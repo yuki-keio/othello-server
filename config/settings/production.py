@@ -43,6 +43,7 @@ CSP_SCRIPT_SRC = (
     "https://googleads.g.doubleclick.net",
     "https://cdnjs.cloudflare.com",
     "https://cdn.jsdelivr.net",  
+    
     )
 CSP_IMG_SRC = (
     "'self'",
