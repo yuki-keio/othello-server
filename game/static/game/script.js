@@ -8,17 +8,16 @@ const moveListElement = document.getElementById('move-list');
 const copyUrlBtn = document.getElementById("copy-url-btn");
 
 
-
 const startMatchBtn = document.getElementById("start-match");
 const overlay = document.getElementById("game-settings-overlay");
 
 const surrenderBtn = document.getElementById('surrender-btn');
 
+//音関係----
 const warningSound = document.getElementById('warningSound');
 const victorySound = document.getElementById('victorySound');
 const defeatSound = document.getElementById('defeatSound');
 const playerJoin = document.getElementById('playerJoin');
-
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 let placeStoneBuffer = null;
 let lastPlayTime = 0;
@@ -27,12 +26,9 @@ gainNode.connect(audioContext.destination); // 出力先に接続
 gainNode.gain.value = 0.09;
 
 let resumed = null;
-
-
 let onlineGameStarted = false;
 
 let deferredPrompt;
-
 
 
 // プレイヤーの一意なIDを取得・保存（なければ新規作成）
@@ -55,23 +51,21 @@ const ws_scheme = window.location.protocol === "https:" ? "wss" : "ws";
 
 let socket = null;
 
-
-
+// 設定関係
 let soundEffects = !(localStorage.getItem('soundEffects') === "false");
 let timeLimitSoundEnabled = !(localStorage.getItem('timeLimitSoundEnabled') === "false");
 let gameEndSoundEnabled = localStorage.getItem('gameEndSoundEnabled') === "true";
 let playerJoinSoundEnabled = !(localStorage.getItem('playerJoinSoundEnabled') === "false");
+
+let showValidMoves = !(localStorage.getItem('showValidMoves') === "false");
+let timeLimit = parseInt(localStorage.getItem('timeLimit') || 0);
+let aiLevel = parseInt(localStorage.getItem('aiLevel') || 0);
 
 let currentPlayer = 'black';
 let gameBoard = Array.from({ length: 8 }, () => Array(8).fill(''));
 let moveHistory = [];
 let currentMoveIndex = -1; // Track the current move index
 let lastMoveCell = null;
-
-
-let showValidMoves = !(localStorage.getItem('showValidMoves') === "false");
-let timeLimit = parseInt(localStorage.getItem('timeLimit') || 0);
-let aiLevel = parseInt(localStorage.getItem('aiLevel') || 0);
 
 let gameFinishedCount =  parseInt(localStorage.getItem('gameFinishedCount') || 0);
 
@@ -81,6 +75,8 @@ let currentPlayerTimer;
 
 let gameEnded = false;
 let share_winner = "";
+
+//言語設定
 let lang = "ja";
 let gameMode = window.location.pathname.split('/').filter(Boolean)[0] || 'player';
 if (gameMode ==="en"){
@@ -147,6 +143,8 @@ function setInitialStones() {
     // Add initial setup to move history
 
 }
+
+// 盤面に黒ポチを追加
 function add4x4Markers() {
     const markers = [
         { row: 1, col: 1 },
@@ -211,11 +209,8 @@ async function applyServerMove(row, col, player, status, final = false) {
     if (lastMoveCell) {
         lastMoveCell.classList.remove('last-move');
     }
-      
-   
 
     setDisc(row, col, player);
-
 
     if (soundEffects) {
         if (status !== 1){
@@ -231,8 +226,8 @@ async function applyServerMove(row, col, player, status, final = false) {
      currentCell.firstChild.classList.add('last-move');
      lastMoveCell = currentCell.firstChild;
 
- 
     console.log("board::", gameBoard);
+
     // 石をひっくり返す
     flipDiscs(row, col, player);
 
@@ -1464,6 +1459,7 @@ if (timeLimit === 0) {
     document.getElementById("timeLimitBox_").style.display = "block";
 };
 
+//画面トップに表示されるモード切り替えバナー
 document.querySelectorAll('.mode-btn').forEach(btn => {
     btn.addEventListener('click', function () {
         const selectedMode = this.getAttribute('data-mode');
@@ -1521,7 +1517,6 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
     });
 });
 
-// ページ読み込み時に、保存されたモードに応じてバナーの active クラスを設定
 
 if (document.readyState !== "loading") {
     document.removeEventListener("DOMContentLoaded", _DOMContenLoaded);
@@ -1832,7 +1827,6 @@ document.getElementById('restart-btn').addEventListener('click', restart);
 document.getElementById('prev-move-btn').addEventListener('click', goToPreviousMove);
 document.getElementById('next-move-btn').addEventListener('click', goToNextMove);
 
-
 window.addEventListener("beforeinstallprompt", (event) => {
     event.preventDefault();
     deferredPrompt = event; // イベントを保存
@@ -1846,7 +1840,6 @@ window.addEventListener("beforeinstallprompt", (event) => {
 window.addEventListener("appinstalled", () => {
     alert(lang_thanks_install);
 });
-
 
 // 降伏ボタンをクリックしたとき、確認後にサーバーへ降伏メッセージを送信
 surrenderBtn.addEventListener('click', () => {
@@ -1968,6 +1961,10 @@ document.getElementById('gameEndSoundCheckbox').addEventListener('change', () =>
     gameEndSoundEnabled = document.getElementById('gameEndSoundCheckbox').checked;
     localStorage.setItem('gameEndSoundEnabled', gameEndSoundEnabled);
 });
+window.addEventListener('popstate', function (event) {
+    location.reload();
+});
+
 
 
 // 初期チェック状態を設定
@@ -1975,11 +1972,5 @@ document.getElementById('soundEffectsCheckbox').checked = soundEffects;
 document.getElementById('timeLimitSoundCheckbox').checked = timeLimitSoundEnabled;
 document.getElementById('gameEndSoundCheckbox').checked = gameEndSoundEnabled;
 document.getElementById('playerJoinSoundCheckbox').checked = playerJoinSoundEnabled;
-
-
-
-window.addEventListener('popstate', function (event) {
-    location.reload();
-});
 
 initializeBoard();

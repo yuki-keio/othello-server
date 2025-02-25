@@ -16,4 +16,22 @@
 
 本ソフトウェアを使用する際は、この著作権表示をそのまま保持してください。
 
+## 使用技術
 
+### フロントエンド
+ - HTML
+ - CSS：ユニバーサルデザインを採用しています
+ - JavaScript：αβ法を用いてAI対戦機能を構築
+
+### バックエンド
+ - Python (Django)：オンライン対戦機能を実装
+   - Django Channels：WebSocketを用いたリアルタイム通信を実現
+
+### インフラ
+ - Heroku：本番環境へのデプロイ
+ - Cloudflare：DNS管理
+
+### その他
+ - Google Analytics：ユーザー行動の分析
+ - AdSense：広告配信による収益化
+ - Django Internationalization (i18n)：英語への対応

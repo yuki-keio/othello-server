@@ -11,11 +11,6 @@ from django.utils.translation import activate
 
 logger = logging.getLogger(__name__)
 
-#todo 多言語対応
-# jsの変換はまだ
-# htmlでも英訳が表示されない問題に対応
-
-
 class OthelloConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         try:
