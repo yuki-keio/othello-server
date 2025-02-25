@@ -596,6 +596,11 @@ function updateMoveList() {
 }
 
 function launchConfetti() {
+    const rect = board.getBoundingClientRect()
+    const windowHeight = window.innerHeight;
+    const originY = (rect.top + rect.height * 0.85) / windowHeight;
+
+
     confetti({
         particleCount: 150,
         angle: 75,
@@ -603,7 +608,7 @@ function launchConfetti() {
         gravity: 0.2,
         origin: {
           x: 0, //  (0 = 左端、1 = 右端)
-          y: 0.85  // (0 = 上端、1 = 下端)
+          y: originY  // (0 = 上端、1 = 下端)
         },
         colors: ['#165B33', '#BB2528', '#146B3A', '#EA4630'],
         shapes: ['square', 'circle'],
@@ -619,7 +624,7 @@ function launchConfetti() {
             gravity: 0.2,
             origin: {
               x: 1, //  (0 = 左端、1 = 右端)
-              y: 0.85  // (0 = 上端、1 = 下端)
+              y: originY  // (0 = 上端、1 = 下端)
             },
             colors: ['#165B33', '#BB2528', '#146B3A', '#EA4630'],
             shapes: ['square', 'circle'],
