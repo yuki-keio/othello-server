@@ -7,7 +7,6 @@ const currentPlayerWhite = document.getElementById('c_white');
 const moveListElement = document.getElementById('move-list');
 const copyUrlBtn = document.getElementById("copy-url-btn");
 
-
 const startMatchBtn = document.getElementById("start-match");
 const overlay = document.getElementById("game-settings-overlay");
 
