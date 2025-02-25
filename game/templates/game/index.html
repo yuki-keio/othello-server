@@ -85,8 +85,7 @@
         const else_title = "{{else_title|escapejs}}";
     </script>
     {% endwith %}
-    <script async src="https://cdn.jsdelivr.net/npm/profanity-cleaner@latest?source=false"></script>
-    <script async src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
     <meta property="og:title" content="{% trans "リバーシWeb" %}">
     <meta property="og:site_name" content="{% trans "リバーシWeb" %}">
     {% if request.LANGUAGE_CODE == "ja" %}
@@ -169,6 +168,10 @@
     <link rel="alternate" hreflang="x-default" href="https://reversi.yuki-lab.com/" />
     
     
+    <script async src="{% static "game/confetti.browser.min.js" %}"></script>
+    <script async src="https://cdn.jsdelivr.net/npm/profanity-cleaner@latest?source=false"></script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
     <!-- Google Analytics 最適化 -->
     <script nonce="{{ request.csp_nonce }}">
         function loadGoogleAnalytics() {
@@ -206,6 +209,7 @@
         }
         document.addEventListener("DOMContentLoaded", loadGoogleAnalytics);
     </script>
+
     
 </head>
 <body>
@@ -515,7 +519,6 @@
     <audio id="warningSound" src="{% static 'game/sounds/warning.mp3' %}" preload="auto"></audio>
     <audio id="playerJoin" src="{% static 'game/sounds/playerJoin.mp3' %}" preload="none"></audio>
 </body>
-
 <script nonce="{{ request.csp_nonce }}" >
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register("{% static 'game/sw.js' %}")

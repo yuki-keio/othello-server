@@ -594,6 +594,25 @@ function updateMoveList() {
     moveListElement.scrollTop = moveListElement.scrollHeight;
 }
 
+function launchConfetti() {
+    setTimeout(() => {
+        confetti({
+            particleCount: 100,
+            angle: 75,
+            spread: 100,
+            gravity: 0.2,
+            origin: {
+              x: -0.1, //  (0 = 左端、1 = 右端)
+              y: 0.85  // (0 = 上端、1 = 下端)
+            },
+            colors: ['#165B33', '#BB2528', '#146B3A', '#EA4630'],
+            shapes: ['square', 'circle'],
+            scalar: 0.8,
+            zIndex: 100
+          });
+    }, 800); 
+}
+
 function endGame(online_data, winner = null) {
 
     const blackCount = gameBoard.flat().filter(cell => cell === 'black').length;
@@ -605,15 +624,19 @@ function endGame(online_data, winner = null) {
         share_winner = "won";
 
     } else if (online_data !== "offline") {
+        if (online_data.winner === role_online) {
+            launchConfetti();
+        }
         if (online_data.reason === "surrender") {
             share_winner = online_data.winner;
             result = lang_surrender_winner + (online_data.winner === 'black' ? lang_black : lang_white);
+            
             if (gameEndSoundEnabled) {
                 if (online_data.winner === role_online) {
                     victorySound.currentTime = 0;
                     victorySound.play().catch(error => {
                         console.warn("audio was blocked:", error);
-                    });;
+                    });
                 } else {
                     defeatSound.currentTime = 0;
 
@@ -668,6 +691,7 @@ function endGame(online_data, winner = null) {
         if (winner === "white" && gameMode === "ai") {
         }
         else {
+            
             if (gameEndSoundEnabled) {
                 victorySound.currentTime = 0;
 
@@ -675,6 +699,8 @@ function endGame(online_data, winner = null) {
                     console.warn("audio was blocked:", error);
                 });;
             }
+            launchConfetti();
+           
         }
 
     } else {
@@ -688,6 +714,7 @@ function endGame(online_data, winner = null) {
                     console.warn("audio was blocked:", error);
                 });;
             }
+            launchConfetti();
         } else if (whiteCount > blackCount) {
             result = lang_winner + lang_white;
             if (gameMode === "ai" && gameEndSoundEnabled) {
@@ -699,8 +726,10 @@ function endGame(online_data, winner = null) {
                 victorySound.currentTime = 0;
                 victorySound.play().catch(error => {
                     console.warn("audio was blocked:", error);
-                });;
+                });
+                launchConfetti();
             }
+
         } else {
             result = lang_draw;
             if (gameMode === "ai" && gameEndSoundEnabled) {
@@ -712,7 +741,8 @@ function endGame(online_data, winner = null) {
                 victorySound.currentTime = 0;
                 victorySound.play().catch(error => {
                     console.warn("audio was blocked:", error);
-                });;
+                });
+                launchConfetti();
             }
         }
 
@@ -1444,6 +1474,7 @@ function changeHead() {
     }
     canonicalTag.setAttribute("href", canonicalUrl);
 }
+
 
 
 //音量調整
