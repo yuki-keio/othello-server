@@ -497,7 +497,9 @@ function updateStatus() {
 
         if (timeLimit > 0) {
             timerDisplay.style.display = 'inline-block'; // 表示
-            startTimer();
+            console.log("updateStatus→startTimer");
+            if(!gameEnded) startTimer();
+        
         } else {
             timerDisplay.style.display = 'none'; // 非表示
 
@@ -547,6 +549,7 @@ function startTimer() {
     }, 1000);
 }
 function stopTimer() {
+    console.log("stopTimer");
     if (currentPlayerTimer) {
         clearInterval(currentPlayerTimer);
         currentPlayerTimer = null;
@@ -612,7 +615,6 @@ function launchConfetti() {
 }
 
 function endGame(online_data, winner = null) {
-
     const blackCount = gameBoard.flat().filter(cell => cell === 'black').length;
     const whiteCount = gameBoard.flat().filter(cell => cell === 'white').length;
     let result;
