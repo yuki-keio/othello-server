@@ -304,7 +304,7 @@ async function applyServerMove(row, col, player, status, final = false) {
 
 
     if ((final !== false ||gameMode!==online)) {
-        alert(lang_turn + (currentPlayer === 'black' ? lang_black : lang_white));
+        updateStatus();
     }
 }
 function makeMove(row, col, status = 0) {
