@@ -33,6 +33,6 @@
 
 ### その他
  - Google Analytics：ユーザー行動の分析
- - Google Search Console / Bing Webmaster Tools：SEO最適化
+ - Google Search Console + Bing Webmaster Tools：SEO最適化
  - AdSense：広告配信による収益化
  - Django Internationalization (i18n)：日本語・英語の両方に対応
