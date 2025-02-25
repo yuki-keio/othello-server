@@ -598,7 +598,7 @@ function updateMoveList() {
 function launchConfetti() {
     const rect = board.getBoundingClientRect()
     const windowHeight = window.innerHeight;
-    const originY = (rect.top + rect.height * 0.85) / windowHeight;
+    const originY = (rect.top + rect.height) / windowHeight;
 
 
     confetti({
