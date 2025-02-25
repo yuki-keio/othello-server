@@ -275,7 +275,7 @@ async function applyServerMove(row, col, player, status, final = false) {
             }
         }//↑終了：有効手がなかった場合
     }
-console.log(`whitch-${currentPlayer},gameEnded:${gameEnded},status:${status},final:${final},aimove:${aimove}`);
+    console.log(`whitch-${currentPlayer},gameEnded:${gameEnded},status:${status},final:${final},aimove:${aimove}`);
     if (gameMode === 'ai' && currentPlayer === 'white' && !gameEnded && status !== 1 && aimove === false) {
         aimove = true;
         stopTimer();
@@ -304,7 +304,7 @@ console.log(`whitch-${currentPlayer},gameEnded:${gameEnded},status:${status},fin
 
 
     if ((final !== false ||gameMode!==online)) {
-        updateStatus();
+        alert(lang_turn + (currentPlayer === 'black' ? lang_black : lang_white));
     }
 }
 function makeMove(row, col, status = 0) {
@@ -497,7 +497,6 @@ function updateStatus() {
 
         if (timeLimit > 0) {
             timerDisplay.style.display = 'inline-block'; // 表示
-
             startTimer();
         } else {
             timerDisplay.style.display = 'none'; // 非表示
