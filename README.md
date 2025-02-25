@@ -19,8 +19,8 @@
 ## 使用技術
 
 ### フロントエンド
- - HTML
- - CSS：Neuro-inclusiveなデザインを採用しています
+ - HTML：非同期での読み込みにより高速化
+ - CSS：UDフォントの採用やAltの追加など、インクルーシブデザインを意識しています。
  - JavaScript：αβ法を用いてAI対戦機能を構築
 
 ### バックエンド
@@ -33,5 +33,6 @@
 
 ### その他
  - Google Analytics：ユーザー行動の分析
+ - Google Search Console / Bing Webmaster Tools：SEO最適化
  - AdSense：広告配信による収益化
- - Django Internationalization (i18n)：英語への対応
+ - Django Internationalization (i18n)：日本語・英語の両方に対応
