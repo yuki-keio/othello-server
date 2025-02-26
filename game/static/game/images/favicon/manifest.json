@@ -18,7 +18,7 @@
 	"theme_color": "#007508",
 	"background_color": "#007508",
 	"display": "standalone",
-	"scope": "/",
-	"start_url": "/"
+	"scope": "https://reversi.yuki-lab.com/",
+	"start_url": "https://reversi.yuki-lab.com/"
   }
   
