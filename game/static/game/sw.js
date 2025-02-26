@@ -1,6 +1,7 @@
 const CACHE_NAME = "my-django-app-cache-v1";
 const urlsToCache = [
     "/",
+    "/strategy-reversi-othello.html",
     "/static/game/images/favicon/favicon.ico",
     "/static/game/images/favicon/favicon-192x192.png",
     "/static/game/images/favicon/favicon-512x512.png",
@@ -16,8 +17,6 @@ const urlsToCache = [
     "/static/game/sounds/warning.mp3",
     "/static/game/style.css",
     "/static/game/strategy.css",
-    "/static/template/game/index.html",
-    "/static/template/game/strategy-reversi-othello.html",
 ];
 
 // インストール時にキャッシュする
