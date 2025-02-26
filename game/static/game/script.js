@@ -76,11 +76,11 @@ let gameEnded = false;
 let share_winner = "";
 
 //言語設定
-let lang = "ja";
+let langCode = "ja";
 let gameMode = window.location.pathname.split('/').filter(Boolean)[0] || 'player';
 if (gameMode ==="en"){
     gameMode = window.location.pathname.split('/').filter(Boolean)[1] || 'player';
-    lang = "en";
+    langCode = "en";
 }
 
 
@@ -170,23 +170,23 @@ function setDisc(row, col, color) {
     } else {
         cell.innerHTML = `<div class="disc ${color}"></div>`;
     }
-    cell.setAttribute('aria-label', "abcdefgh"[col] + `${row + 1}：${color === 'black' ? lang_black : lang_white}`);
+    cell.setAttribute('aria-label', "abcdefgh"[col] + `${row + 1}：${color === 'black' ? lang.black : lang.white}`);
 }
 
 function notifyNoValidMoves(player) {
     if (online){
         if (role_online === player) {
-            alert(lang_you_pass);
+            alert(lang.you_pass);
             return;
         }else{
-            alert(lang_opponent_pass);
+            alert(lang.opponent_pass);
             return;
         }
     }
     if (player === 'black') {
-        alert(lang_notify_b);
+        alert(lang.notify_b);
     }else{
-        alert(lang_notify_w);
+        alert(lang.notify_w);
     }
 }
 
@@ -254,7 +254,7 @@ async function applyServerMove(row, col, player, status, final = false) {
                 } else if (status === 1) {
                     notifyNoValidMoves(currentPlayer);
                 } else if (status === 2) {
-                    alert(lang_you_pass) // AIの後のパス
+                    alert(lang.you_pass) // AIの後のパス
                 }
                 aimove = false;
 
@@ -300,7 +300,7 @@ function startAIMove() {
     timerDisplay_.classList.remove('warning1', 'warning2'); // 警告クラスを削除
 
     timerDisplay_.style.display = 'inline-block'; // 表示
-    timerDisplay_.textContent = '🤖 考え中';
+    timerDisplay_.textContent = lang.thinking;
     board.classList.add('thinking');
 
 
@@ -325,16 +325,16 @@ function makeMove(row, col, status = 0) {
 
     if (online) {
         if (role_online === "unknown") {
-            alert(lang_connecting);
+            alert(lang.connecting);
             return;
         } else if (role_online === "spectator") {
-            alert(lang_spec_cant_play);
+            alert(lang.spec_cant_play);
             return;
         } else if (role_online === currentPlayer) {
             sendMove(row, col);
         } else {
-            const roleDisplay = role_online === "black" ? lang_black : role_online === "white" ? lang_white : lang_spec;
-            alert(`${lang_not_your_turn}：${currentPlayer === 'black' ? lang_black : lang_white}, ${lang_you}：${roleDisplay}`);
+            const roleDisplay = role_online === "black" ? lang.black : role_online === "white" ? lang.white : lang.spec;
+            alert(`${lang.not_your_turn}：${currentPlayer === 'black' ? lang.black : lang.white}, ${lang.you}：${roleDisplay}`);
 
             return;
         }
@@ -547,7 +547,7 @@ function startTimer() {
         if (remainingTime <= 0) {
             clearInterval(currentPlayerTimer);
             if (!online) {
-                alert( lang_timeout_winner + (currentPlayer === 'black' ? lang_white : lang_black));
+                alert( lang.timeout_winner + (currentPlayer === 'black' ? lang.white : lang.black));
                 endGame("offline", currentPlayer === 'black' ? 'white' : 'black'); // 時間切れになったプレイヤーの負けとしてゲームを終了
             }
         }
@@ -654,7 +654,7 @@ function endGame(online_data, winner = null) {
         }
         if (online_data.reason === "surrender") {
             share_winner = online_data.winner;
-            result = lang_surrender_winner + (online_data.winner === 'black' ? lang_black : lang_white);
+            result = lang.surrender_winner + (online_data.winner === 'black' ? lang.black : lang.white);
             
             if (gameEndSoundEnabled) {
                 if (online_data.winner === role_online) {
@@ -672,7 +672,7 @@ function endGame(online_data, winner = null) {
             }
         } else if (online_data.reason === "timeout") {
             share_winner = online_data.winner;
-            result = lang_timeout_winner + (online_data.loser === 'black' ? lang_black : lang_white);
+            result = lang.timeout_winner + (online_data.loser === 'black' ? lang.black : lang.white);
             if (gameEndSoundEnabled) {
                 if (online_data.winner === role_online) {
                     victorySound.currentTime = 0;
@@ -689,7 +689,7 @@ function endGame(online_data, winner = null) {
         } else if (online_data.reason === "natural") {
             //石の数だけで勝敗が決められる場合
             share_winner = "won";
-            result = lang_winner + (online_data.winner === 'black' ? lang_black : lang_white);
+            result = lang.winner + (online_data.winner === 'black' ? lang.black : lang.white);
             
             if (gameEndSoundEnabled) {
                 if (online_data.winner === role_online) {
@@ -709,7 +709,7 @@ function endGame(online_data, winner = null) {
 
     } else if (winner) {
         // 時間切れの場合は、相手のプレイヤーの勝ち
-        result = lang_timeout_winner + (winner === 'black' ? lang_white : lang_black);
+        result = lang.timeout_winner + (winner === 'black' ? lang.white : lang.black);
 
         share_winner = winner; // 時間切れ勝ちなら、石の数で負けていても大丈夫なように明確に共有時に伝える必要があるので、winnerを明示する
 
@@ -732,7 +732,7 @@ function endGame(online_data, winner = null) {
         share_winner = "won";
 
         if (blackCount > whiteCount) {
-            result = lang_winner + lang_black;
+            result = lang.winner + lang.black;
             if (gameEndSoundEnabled) {
                 victorySound.currentTime = 0;
                 victorySound.play().catch(error => {
@@ -741,7 +741,7 @@ function endGame(online_data, winner = null) {
             }
             launchConfetti();
         } else if (whiteCount > blackCount) {
-            result = lang_winner + lang_white;
+            result = lang.winner + lang.white;
             if (gameMode === "ai" && gameEndSoundEnabled) {
                 defeatSound.currentTime = 0;
                 defeatSound.play().catch(error => {
@@ -758,7 +758,7 @@ function endGame(online_data, winner = null) {
             }
 
         } else {
-            result = lang_draw;
+            result = lang.draw;
             if (gameMode === "ai" && gameEndSoundEnabled) {
                 defeatSound.currentTime = 0;
                 defeatSound.play().catch(error => {
@@ -781,7 +781,7 @@ function endGame(online_data, winner = null) {
     url.searchParams.set('won', share_winner);
     history.pushState(null, '', url);
 
-    statusB.textContent = `${lang_game_end} - ${result} （${lang_black} :${blackCount}, ${lang_white}: ${whiteCount}）`;
+    statusB.textContent = `${lang.game_end} - ${result} （${lang.black} :${blackCount}, ${lang.white}: ${whiteCount}）`;
 
     stopTimer();
     gameFinishedCount++;
@@ -946,12 +946,12 @@ function loadBoardFromURL() {
 
 function copyURLToClipboard(matchRoom=false) {
     const url = new URL(window.location);
-    let alertText = lang_copy_url;
+    let alertText = lang.copy_url;
     if (online) {
         if (onlineGameStarted) {
-            alertText = lang_copy_spec;
+            alertText = lang.copy_spec;
         } else {
-            alertText = lang_copy_invite;
+            alertText = lang.copy_invite;
         }
     } else {
     }
@@ -961,7 +961,7 @@ function copyURLToClipboard(matchRoom=false) {
     navigator.clipboard.writeText(url.toString()).then(() => {
         alert(alertText);
     }).catch(err => {
-        alert(lang_copy_failed);
+        alert(lang.copy_failed);
         console.error('Failed to copy URL: ', err);
     });
 }
@@ -1046,7 +1046,7 @@ function goToNextMove() {
         window.location = url;
 
     } else {
-        alert(lang_cant_go_more);
+        alert(lang.cant_go_more);
     }
 
 }
@@ -1400,9 +1400,9 @@ function processPassMessage(data) {
     currentPlayer = data.new_turn;
 
     if (currentPlayer === role_online) {
-        alert(lang_opponent_pass);
+        alert(lang.opponent_pass);
     }else{
-        alert(lang_you_pass);
+        alert(lang.you_pass);
 
     }
 
@@ -1445,15 +1445,15 @@ function updatePlayerList(players) {
     playerListElement.innerHTML = ''; // クリア
 
     Object.entries(players).forEach(([id, [ws_role, name]]) => {
-        const role = (ws_role === "black") ? lang_black : (ws_role === "white") ? lang_white : lang_spec;
+        const role = (ws_role === "black") ? lang.black : (ws_role === "white") ? lang.white : lang.spec;
         const span = document.createElement('span');
         if (id === playerId) {
             span.style.fontWeight = 'bold';
-            display_player_name = lang_you +`（${name}）`;
+            display_player_name = lang.you +`（${name}）`;
         } else {
             display_player_name = name;
         }
-        span.textContent = ((role !== lang_black) ? "　" : "") + `${role}: ${display_player_name}`;
+        span.textContent = ((role !== lang.black) ? "　" : "") + `${role}: ${display_player_name}`;
         playerListElement.appendChild(span);
     });
 }
@@ -1693,7 +1693,7 @@ function sendSettings() {
 
 function makeSocket() {
 
-    socket = new WebSocket(`${ws_scheme}://${window.location.host}/ws/othello/${gameRoom}/?playerId=${playerId}&timeLimit=${timeLimit}&showValidMoves=${showValidMoves}&playerName=${encodeURIComponent(playerName)}&lang=${lang}`);
+    socket = new WebSocket(`${ws_scheme}://${window.location.host}/ws/othello/${gameRoom}/?playerId=${playerId}&timeLimit=${timeLimit}&showValidMoves=${showValidMoves}&playerName=${encodeURIComponent(playerName)}&lang=${langCode}`);
 
     console.log(`Connecting to WebSocket server...${ws_scheme}://${window.location.host}/ws/othello/${gameRoom}/?playerId=${playerId}&timeLimit=${timeLimit}&showValidMoves=${showValidMoves}&playerName=${encodeURIComponent(playerName)}`);
 
@@ -1896,13 +1896,13 @@ window.addEventListener("beforeinstallprompt", (event) => {
     installButton.addEventListener("click", showInstallPrompt);
 });
 window.addEventListener("appinstalled", () => {
-    alert(lang_thanks_install);
+    alert(lang.thanks_install);
 });
 
 // 降伏ボタンをクリックしたとき、確認後にサーバーへ降伏メッセージを送信
 if (surrenderBtn) {
     surrenderBtn.addEventListener('click', () => {
-        if (confirm(lang_surrender_right)) {
+        if (confirm(lang.surrender_right)) {
             socket.send(JSON.stringify({ action: "surrender" }));
         }
     });
@@ -1952,7 +1952,7 @@ if (playerName_el){
         if (/^[a-zA-Z0-9]+$/.test(nameInput)) {
 
                 playerName = profanityCleaner.clean(nameInput);
-                document.getElementById("player-list").children[0].textContent = lang_black+":"+ lang_you + "(" + playerName + ")";
+                document.getElementById("player-list").children[0].textContent = lang.black+":"+ lang.you + "(" + playerName + ")";
 
                 playerName_el.value = playerName;
                 localStorage.setItem("playerName", playerName);
@@ -1961,12 +1961,12 @@ if (playerName_el){
 
             
         }else{
-            warning.textContent = lang_warn_EnOnly;
+            warning.textContent = lang.warn_EnOnly;
         }
         
     }else{
 
-        warning.textContent = lang_warn_charLimit;
+        warning.textContent = lang.warn_charLimit;
   
     }
     

@@ -5,7 +5,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <!--Critical CSS-->
     <style nonce="{{ request.csp_nonce }}">
    body{font-family:"BIZ UDPMincho",serif;font-weight:400;display:flex;justify-content:center;align-items:center;margin:0;background-color:#f0f0f0;box-sizing:border-box;line-height:1}h1{font-family:"BIZ UDPGothic",Arial,sans-serif;font-size:1.4em}#setting{position:absolute;right:-3px;top:85px;width:29px;height:29px;cursor:pointer}#prev-move-btn,#next-move-btn{margin:5px;padding:5px 10px;font-size:14px;color:#fff;border:none;border-radius:5px;cursor:pointer;display:inline-block;position:absolute;top:30px}#prev-move-btn{right:55px;background-color:#a34d4d}#next-move-btn{right:10px;background-color:#55b149}#black_circle{width:15px;height:15px;transform:translate(0,1px);border-radius:50%;background-color:#000;display:inline-block}#white_circle{width:15px;height:15px;transform:translate(0,1px);border-radius:50%;background-color:#fff;display:inline-block}#score_black{width:100px;text-align:right;font-weight:lighter}#score_white{width:100px;text-align:left;font-weight:lighter}.marker{width:10%;height:10%;border-radius:50%;background-color:#000;position:relative;top:52.3%;left:51.9%;z-index:10}#game-container{text-align:center;width:90%;height:100%;max-width:600px;box-sizing:border-box;position:relative;margin-bottom:50px}#settings{margin-top:18px;margin-bottom:40px;background-color:#fff;border:#ccc solid 1.3px;border-radius:5px}.container{text-align:left;margin:10px 10px 10px 10px}#board{display:grid;grid-template-columns:repeat(8,1fr);grid-gap:2px;background-color:green;padding:2%;margin:0;border-radius:5px;aspect-ratio:1 / 1;height:96%;width:96%}.row{display:contents}.cell{width:100%;aspect-ratio:1 / 1;background-color:#00a000;border-radius:8%;display:flex;justify-content:center;align-items:center;cursor:pointer;position:relative}.valid-move{background-color:#00c000}.opponent-turn .valid-move{background-color:#00c000c0}.valid-move:hover{background-color:#00e000}.opponent-turn .valid-move:hover{background-color:#00c000c0}.opponent-turn .cell{cursor:default}.disc{width:80%;height:80%;border-radius:50%;position:absolute;box-shadow:0 4px 8px rgba(0,0,0,.3),inset 0 -2px 4px rgba(0,0,0,.2)}.last-move{box-shadow:0 0 10px 2px rgba(255,242,0,.7);border:2px solid rgb(255,64,0)}.faint-disc{opacity:.5;width:10%;height:10%;border-radius:50%;position:absolute}.black{background:radial-gradient(circle at 30% 30%,#333,#000)}.white{background:radial-gradient(circle at 30% 30%,#fff,#ccc)}.faint-black{background-color:#000}.faint-white{background-color:#fff;opacity:.7}#status{margin-top:20px;font-size:18px;background-color:#e0e0e0;padding:10px;border-radius:5px;font-weight:700}.current-player{font-weight:700;padding:5px 10px;margin:-5px 5px;border-radius:5px;color:#fff}#c_black{background-color:#000;float:left;color:#fff}#c_white{background-color:#fff;color:#fff;float:right;color:#000}#move-history{margin-top:20px;text-align:left;max-height:200px;overflow-y:auto;background-color:#fff;padding:10px;border-radius:5px;border:1px solid #ccc;box-sizing:border-box;position:relative}#move-list{height:45px}.buttons_container{display:flex;align-items:center;justify-content:center;gap:13px;margin-top:19px}#copy-url-btn{position:relative;padding:10px 20px;width:44px;height:44px;font-size:16px;background-color:#bedeff;background-image:url("{% static 'game/images/copy.webp' %}");background-size:50%;background-position:center;background-repeat:no-repeat;color:#fff;border:none;border-radius:5px;display:inline-block;cursor:copy}#restart-btn{padding:10px 20px;font-size:16px;background-color:#007508;color:#fff;border:none;border-radius:8px;cursor:pointer;display:inline-block;transition:background-color 0.2s ease-in-out}#restart-btn:hover{background-color:#2e7d32}#board-container{position:relative;min-width:96%}#mode-selection-banner{position:relative;top:10px;left:50%;transform:translateX(-50%);background:rgba(25,25,25,.7);padding:7px;margin-bottom:30px;border-radius:5px;display:flex;justify-content:center;align-items:center;z-index:1000;width:auto}.mode-btn{background:rgb(250,250,250);color:#000;padding:10px 15px;font-size:16px;cursor:pointer;transition:background 0.3s ease-in-out;flex:1;border:#000 solid 1.3px;text-align:center;width:96%}.mode-btn:hover{background:#009e00;color:#fff;transform:scale(1.05)}.mode-btn.active{background:#007508;color:#fff;font-weight:700;box-shadow:0 0 10px rgba(0,117,8,.5)}
@@ -14,10 +13,7 @@
     <style nonce="{{ request.csp_nonce }}">
         #surrender-btn{padding:10px 20px;font-size:16px;background-color:#d32f2f;color:#fff;border:none;border-radius:8px;cursor:pointer;display:inline-block;transition:background-color 0.2s ease-in-out}#surrender-btn:hover{background-color:#b71c1c}#game-settings-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);display:none;justify-content:center;align-items:center;z-index:10}#game-settings{background:#fff;padding-bottom:19px;padding-left:10px;padding-right:10px;border-radius:8px;text-align:center;box-shadow:0 4px 10px rgba(0,0,0,.3);width:80%;max-width:260px}#contents-overlay-setting{text-align:left;padding:13px}#time_overlay-label{font-size:14px;display:block}#time-limit{padding:6px;font-size:14px;border-radius:5px;border:1px solid #ccc}#highlight-moves{margin-right:5px}#start-match{padding:10px 20px;font-size:16px;background-color:#007408;color:#fff;border:none;border-radius:5px;cursor:copy;display:flex;align-items:center;justify-content:center;width:auto;height:40px;white-space:nowrap}#start-match:hover{background:#00ab0b}.qr-popup{display:none;position:absolute;z-index:1000;left:50%;top:50%;transform:translate(-50%,-50%);width:85%;aspect-ratio:1/1;max-width:285px;background:#fff;padding-bottom:15px;border-radius:10px;box-shadow:0 0 10px rgba(0,0,0,.5);align-items:center;justify-content:center}.qr-popup-content{position:relative}#qr{margin-left:5px;width:40px;height:40px;background:transparent;border:none;cursor:pointer;transition:background 0.2s;display:flex}#qr-icon{width:100%;height:100%}.invite-container{margin-top:10px;display:flex;align-items:center;justify-content:center}#qrcode{display:flex;justify-content:center;align-items:center;width:100%;aspect-ratio:1/1;margin:0 auto}
     </style>
-    
     {% endif %}
-
-
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="stylesheet" href="{% static 'game/style.css' %}" media="print" id="dynamic-css">
@@ -34,45 +30,39 @@
         const player_description = "{{player_description|escapejs}}";
         const else_description = "{{else_description|escapejs}}";
 
-        const lang_black = "{% trans "黒"|escapejs %}";
-        const lang_white = "{% trans "白"|escapejs %}";
-        const lang_spec = "{% trans "観客"|escapejs %}";
-
-        const lang_notify_b = "{% trans "黒には次に打てる場所がないので、もう一度白の番になります。"|escapejs %}";
-        const lang_notify_w = "{% trans "白には次に打てる場所がないので、もう一度黒の番になります。"|escapejs %}";
-
-        const lang_not_your_turn = "{% trans "あなたの手番ではありません。手番："|escapejs %}";
-        const lang_you = "{% trans "あなた"|escapejs %}";
-        const lang_timeout_winner = "{% trans "【時間切れ】 勝者："|escapejs %}";
-
-        const lang_surrender_winner = "{% trans "【投了】 勝者："|escapejs %}";
-
-        const lang_draw = "{% trans "引き分け！"|escapejs %}";
-        const lang_winner = "{% trans "勝者："|escapejs %}";
-        const lang_game_end = "{% trans "ゲーム終了"|escapejs %}"
-
-        const lang_you_pass = "{% trans "あなたには次に打てる場所がなかったのでもう一度、相手の番になります"|escapejs %}"
-        const lang_opponent_pass = "{% trans "相手には次に打てる場所がなかったのでもう一度、あなたの番になります"|escapejs %}"
-        const lang_warn_EnOnly = "{% trans "⚠️ 英数字のみ入力可能です"|escapejs %}"
-        const lang_warn_charLimit = "{% trans "⚠️ 文字数：1〜10文字"|escapejs %}"
-
-        const lang_connecting = "{% trans "接続中です。しばらくお待ちください。"|escapejs %}";
-        const lang_spec_cant_play = "{% trans "観戦中です。あなたは手を打つことができません。"|escapejs %}";
-
-        const lang_copy_url = "{% trans "🔗 現在の石の配置を共有するURLをコピーしました！"|escapejs %}";
-        const lang_copy_spec = "{% trans "👀 現在のゲームを観戦するためのURLをコピーしました！"|escapejs %}";
-        const lang_copy_invite = "{% trans "🎮 現在のゲームへの招待URLをコピーしました！対戦相手にURLを送って対戦を始めましょう！"|escapejs %}";
-        const lang_copy_failed = "{% trans "URLのコピーに失敗しました。"|escapejs %}";
-
-        const lang_cant_go_more = "{% trans "これ以上進めません"|escapejs %}";
-
-        const thanks_install = "{% trans "🎮️ インストールありがとうございます！（開発者より）"|escapejs %}";
-
-        const lang_surrender_right = "{% trans "本当に投了しますか？"|escapejs %}";
-
+        const lang = {
+            "online_description":"{{online_description|escapejs}}",
+            "ai_description": "{{ai_description|escapejs}}",
+            "player_description" : "{{player_description|escapejs}}",
+            "else_description" :"{{else_description|escapejs}}",
+            "black": "{% trans "黒"|escapejs %}",
+            "white": "{% trans "白"|escapejs %}",
+            "spec": "{% trans "観客"|escapejs %}",
+            "notify_b": "{% trans "黒には次に打てる場所がないので、もう一度白の番になります。"|escapejs %}",
+            "notify_w": "{% trans "白には次に打てる場所がないので、もう一度黒の番になります。"|escapejs %}",
+            "not_your_turn": "{% trans "あなたの手番ではありません。手番："|escapejs %}",
+            "you": "{% trans "あなた"|escapejs %}",
+            "timeout_winner": "{% trans "【時間切れ】 勝者："|escapejs %}",
+            "surrender_winner": "{% trans "【投了】 勝者："|escapejs %}",
+            "draw": "{% trans "引き分け！"|escapejs %}",
+            "winner": "{% trans "勝者："|escapejs %}",
+            "game_end": "{% trans "ゲーム終了"|escapejs %}",
+            "you_pass": "{% trans "あなたには次に打てる場所がなかったのでもう一度、相手の番になります"|escapejs %}",
+            "opponent_pass": "{% trans "相手には次に打てる場所がなかったのでもう一度、あなたの番になります"|escapejs %}",
+            "warn_EnOnly": "{% trans "⚠️ 英数字のみ入力可能です"|escapejs %}",
+            "warn_charLimit": "{% trans "⚠️ 文字数：1〜10文字"|escapejs %}",
+            "connecting": "{% trans "接続中です。しばらくお待ちください。"|escapejs %}",
+            "spec_cant_play": "{% trans "観戦中です。あなたは手を打つことができません。"|escapejs %}",
+            "copy_url": "{% trans "🔗 現在の石の配置を共有するURLをコピーしました！"|escapejs %}",
+            "copy_spec": "{% trans "👀 現在のゲームを観戦するためのURLをコピーしました！"|escapejs %}",
+            "copy_invite": "{% trans "🎮 現在のゲームへの招待URLをコピーしました！対戦相手にURLを送って対戦を始めましょう！"|escapejs %}",
+            "copy_failed": "{% trans "URLのコピーに失敗しました。"|escapejs %}",
+            "cant_go_more": "{% trans "これ以上進めません"|escapejs %}","thanks_install": "{% trans "🎮️ インストールありがとうございます！（開発者より）"|escapejs %}",
+            "surrender_right": "{% trans "本当に投了しますか？"|escapejs %}",
+            "thinking": "{% trans "🤖 考え中"|escapejs %}"
+        };
     </script>
     {% endwith %}
-
 
     {% with online_title=_("オセロ対戦（オンライン） | 無料ゲームのリバーシWeb （旧スマートオセロ）") ai_title=_("オセロAIと対戦 | 無料ゲームのリバーシWeb （旧スマートオセロ）") player_title=_("オセロ | 無料ゲームのリバーシWeb （旧スマートオセロ）") else_title=_("無料ゲームのリバーシWeb （旧スマートオセロ）") %}
     <title>
@@ -115,9 +105,7 @@
     
     <meta name="author" content="Yuki Lab">
     <meta name="robots" content="index, follow">    
-
     <meta name="keywords" content="{% trans "オセロ, リバーシWeb, スマートオセロ, リバーシ, ゲーム, 無料, Web, おせろ, 電子オセロ盤, オセロAI, 友達対戦, ボードゲーム, オンライン, ブラウザゲー, 一人で遊べる" %}">
-
     <script type="application/ld+json">
         {
             "@context": "https://schema.org",
@@ -155,7 +143,6 @@
 
           }
         </script>
-
     <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/favicon.ico' %}">
     <link rel="apple-touch-icon" sizes="180x180" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/apple-touch-icon.png' %}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/favicon-16x16.png' %}">
@@ -164,24 +151,15 @@
     <link rel="icon" type="image/png" sizes="96x96" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/favicon-96x96.png' %}">
     <link rel="icon" type="image/png" sizes="192x192" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/favicon-192x192.png' %}">
     <link rel="manifest" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/manifest.json' %}">
-    
     <meta name="theme-color" content="#007508">
-
-
     {% if request.LANGUAGE_CODE == "ja" %}
     <link rel="canonical" href="{% if mode == 'online' %}https://reversi.yuki-lab.com/online/{% elif mode == 'ai' %}https://reversi.yuki-lab.com/ai/{% elif mode == 'player' %}https://reversi.yuki-lab.com/{% else %}https://reversi.yuki-lab.com/{% endif %}">
     {% else %}
     <link rel="canonical" href="{% if mode == 'online' %}https://reversi.yuki-lab.com/en/online/{% elif mode == 'ai' %}https://reversi.yuki-lab.com/en/ai/{% elif mode == 'player' %}https://reversi.yuki-lab.com/en/{% else %}https://reversi.yuki-lab.com/en/{% endif %}">
     {% endif %}
-
     <link rel="alternate" hreflang="ja" href="{% if mode == 'online' %}https://reversi.yuki-lab.com/online/{% elif mode == 'ai' %}https://reversi.yuki-lab.com/ai/{% elif mode == 'player' %}https://reversi.yuki-lab.com/{% else %}https://reversi.yuki-lab.com/{% endif %}" />
     <link rel="alternate" hreflang="en" href="{% if mode == 'online' %}https://reversi.yuki-lab.com/en/online/{% elif mode == 'ai' %}https://reversi.yuki-lab.com/en/ai/{% elif mode == 'player' %}https://reversi.yuki-lab.com/en/{% else %}https://reversi.yuki-lab.com/en/{% endif %}" />
     <link rel="alternate" hreflang="x-default" href="https://reversi.yuki-lab.com/" />
-    
-    
-   
-    
-    
     <!-- Google Analytics 最適化 -->
     <script nonce="{{ request.csp_nonce }}">
         function loadGoogleAnalytics() {
@@ -203,10 +181,6 @@
                // setTimeout(loadAdSense, 1000);
             }
         }
-
-        
-
-
         function loadAdSense() {
             if (!window.adsLoaded) {
                 window.adsLoaded = true;
@@ -219,8 +193,6 @@
         }
         document.addEventListener("DOMContentLoaded", loadGoogleAnalytics);
     </script>
-
-    
 </head>
 <body>
 <div id="game-container">
@@ -232,7 +204,6 @@
         </div>
 
         {% with online_h1=_("オセロ通信対戦") ai_h1=_("オセロAI対戦") player_h1=_("オセロ盤") else_h1=_("リバーシWeb") %}
-
         <h1 id="title">
             {% if mode == 'online' %}
                 {{online_h1}}
@@ -244,23 +215,19 @@
                 {{else_h1}}
             {% endif %}
         </h1>
-
         <script nonce="{{ request.csp_nonce }}">
             const online_h1 = "{{online_h1|escapejs}}";
             const ai_h1 = "{{ai_h1|escapejs}}";
             const player_h1 = "{{player_h1|escapejs}}";
             const else_h1 = "{{else_h1|escapejs}}";
         </script>
-
         {% endwith %}
-    
         <img src="{% static 'game/images/setting.svg' %}" alt="{% trans "リバーシ（オセロ）の設定" %}" id="setting">
         <div id="player-info"><ul id="player-list"></ul></div>
         <span id="timer-display"></span>
         <div id="board-container">
             <div id="board" role="grid" >
             </div>
-            
             {% if mode == 'online' %}
             <div id="game-settings-overlay">
                 <div id="game-settings">
@@ -271,7 +238,6 @@
                             <label for="player-name" id="label4name">{% trans "表示名：" %}</label>
                             <input type="text" id="player-name" placeholder="{% trans "英数字のみ入力可能" %}" maxlength="10">
                             <div id="warning"></div>
-                          
                         </div>
                         <label id="time_overlay-label">{% trans "持ち時間：" %}
                             <select id="time-limit">
@@ -289,7 +255,6 @@
                         </label>
                     </div>
                     <div class="invite-container">
-
                     <button id="start-match" class="btn-primary">{% trans "招待URLをコピー" %}</button>
                     <button id="qr">
                         <img src="{% static 'game/images/qr.svg' %}" alt="{% trans "オセロ対戦への招待用QRコード" %}" id="qr-icon">
@@ -304,7 +269,6 @@
                     <div id="qrcode"></div>
                 </div>
             </div>
-
             {% endif %}
         </div>
         <div id="status">
@@ -314,9 +278,7 @@
             <div id="white_circle"></div>
 
             <span class="current-player" id="c_white">{% trans "白番" %}</span>
-
         </div>
-
     <div class="buttons_container">
         <button id="copy-url-btn" aria-label="{% trans "オセロ盤の盤面を共有するURLをコピー" %}"></button>
         {% if mode == "online" %}
@@ -326,15 +288,10 @@
     </div>
         <div id="move-history">
             <h3>{% trans "棋譜" %}</h3>
-            
             <button id="prev-move-btn">＜</button>
             <button id="next-move-btn">＞</button>
-            
             <pre id="move-list">{% trans "　棋譜はまだありません" %}</pre>
-
         </div>
-        
-
         <div id="settings">
             <h3>{% trans "設定" %}</h3>
             <div class="container">
@@ -356,12 +313,7 @@
                         <input type="checkbox" id="playerJoinSoundCheckbox" checked> {% trans "プレイヤー参加" %}
                     </label> <br><br>
                 </div>
-                
-
                 </div>
-
-               
-                
                 <div id="timeLimitContainer">
                 <label>
                     {% trans "⏱ 一手あたりの持ち時間：" %}
@@ -372,7 +324,6 @@
                         <option value="60">{% trans "1分" %}</option>
                         <option value="30">{% trans "30秒" %}</option>
                         <option value="10">{% trans "10秒" %}</option>
-                        
                     </select>
                 </label>
                 </div>
@@ -391,21 +342,15 @@
                     </label>
                 </div>
                 <br>
-                
-               
-             
-                  
-
                 <div class="caution">
                     {% blocktrans trimmed %}
                     ※ 変更後の持ち時間は、次の一手から適用されます。<br>
-                    ※ 持ち時間がゼロになると <strong>直ちに負け</strong> となる設計のため、ご注意ください。そのままURLをリロードすると、持ち時間をリセットして再開できます。                    
+                    ※ 持ち時間がゼロになると <strong>直ちに負け</strong> となる設計のため、ご注意ください。そのままURLをリロードすると、持ち時間をリセットして再開できます。
                     {% endblocktrans %}
                 </div>
             </div>
         </div>  
-        <!--<a href="https://pc.moppy.jp/entry/invite.php?invite=y22tA17c&type=service"><img decoding="async" loading="lazy" src="https://img.moppy.jp/pub/pc/friend/640x480-13.jpg" alt="アプリインストール・ゲームアプリで無料で簡単にポイントが貯まる！楽しくポイ活するならモッピー" id="ad" ></a>
-        -->
+        <!--<a href="https://pc.moppy.jp/entry/invite.php?invite=y22tA17c&type=service"><img decoding="async" loading="lazy" src="https://img.moppy.jp/pub/pc/friend/640x480-13.jpg" alt="アプリインストール・ゲームアプリで無料で簡単にポイントが貯まる！楽しくポイ活するならモッピー" id="ad" ></a>-->
     <section class="notes">
         <h2>{% trans "本サイト・リバーシWebの機能" %}</h2>
         <p>{% blocktrans trimmed %}
@@ -426,16 +371,12 @@
           
         <p>
     {% if mode == 'online' %}
-        
         {% trans "オンライン対戦モード（通信対戦モード）では、別々のデバイスからゲームに参加できます。遠く離れた場所にいる人ともオセロを遊ぶことができます。招待URLを共有するか、QRコードをスキャンすることで、対局への参加や観戦が可能です。" %}
-        
     {% elif mode == 'ai' %}
         {% trans "初級から上級まで、自分に合った強さのオセロAIと対戦できます。素早くプレイしたい場合は、最も高速な初級AIがおすすめです。" %}
-        
     {% elif mode == 'player' %}
         {% trans "電子オセロ盤モードでは、デバイス1台でオセロを遊ぶことができます。現地で家族や友達とオセロを遊びたいけれど、現物のオセロ盤を持っていない時に便利です。" %}
     {% else %}
-        
     {% endif %}
         </p>
         <h3>{% trans "機能のオン・オフ" %}</h3>
@@ -444,20 +385,14 @@
                 {% blocktrans asvar settings_text %}効果音・ハイライト表示・制限時間の機能は、<a href="#settings">「設定」</a>からオン・オフを切り替えられます。次回以降に同じブラウザで遊ぶ場合もその設定を引き継げます。{% endblocktrans %}
                 {{ settings_text|safe }}
             </p>
-            
-        
         </p>
         <div class="small">{% trans "※ ただし通信対戦モードが選択された場合は、通信対戦における設定に合わせてハイライト表示設定が変更されます。" %}</div>
         <h3>{% trans "アプリ版で遊ぶ" %}</h3>
         <p>{% trans "本サイトはブラウザゲームですが、Webアプリ（PWA）としてホーム画面に追加することもできます。Webアプリの特徴として、デバイスの容量はほぼ消費せず、さらに起動も高速になります。アプリ版では主な機能をオフラインでも利用できます。アプリ設置の所要時間は数秒です。ぜひお試しください" %}</p>
         <button id="install-btn">{% trans "Webアプリとしてホーム画面に追加" %}</button>
-
-
     </section>
-
     <section class ="notes" id="rules">
         <h2>{% trans "リバーシ（オセロ）のルール" %}</h2>
-    
         <h3>{% trans "基本ルール" %}</h3>
         <p>{% trans "リバーシは 8×8 の盤面で行うボードゲームです。「オセロ」という名前でも親しまれています。本ゲームの対戦は、以下のルールで進行します。" %}</p>
         <ul>
@@ -469,15 +404,12 @@
             <li>自分の <strong>【合法手】</strong> がない場合は、自動的に相手の番へ <strong>【パス】</strong> されます。両者とも <strong>【パス】</strong> になった場合はゲーム終了です。</li>
             {% endblocktrans %}
         </ul>
-    
         <h3>{% trans "【合法手】について" %}</h3>
         <p>{% trans "本ゲームでは、プレイヤーが打てる <strong>【合法手】</strong> を自動で判定し、視認しやすいようにハイライト表示する機能があります。この機能は設定からオフにできます" %}</p>
-    
         <h3>{% trans "時間制限" %}</h3>
         {% blocktrans trimmed %}
         <p>ゲームのスピード感を高めるために <strong>制限時間</strong> を設定できます。最短では <strong>10秒ルール</strong> の超高速対局も可能です！</p>
         {% endblocktrans %}
-    
         <h3>{% trans "勝利条件" %}</h3>
         <ul>
             {% blocktrans trimmed %}
@@ -488,15 +420,13 @@
         </ul>
     </section>
     <section class ="notes" id="blog">
-        <h3>{% trans "リバーシ（オセロ）で勝つためのコツ" %}</h3>
+        <h2>{% trans "リバーシ（オセロ）で勝つためのコツ" %}</h2>
         <p>
             {% if request.LANGUAGE_CODE == 'en' %}
             <a href="https://reversi.yuki-lab.com/en/">This article</a>, written by the developer of this site, Reversi Web, offers free strategies for intermediate and advanced players of the reversi game. Be sure to check it out!
             {% else %}
-
             本サイト・リバーシWebの開発者が執筆した<a href="https://reversi.yuki-lab.com/">こちらの記事</a> では、オセロゲームの中・上級者向け攻略法を無料で紹介しています。ぜひご覧ください
             {% endif %}
-            
             </p>
     </section>
     <!-- iOS専用のインストールガイド -->
@@ -516,15 +446,12 @@
                 <img src="/static/game/images/install-guide.webp" alt="{% trans "リバーシ（オセロ）を無料でホーム画面に追加する方法" %}" id="install-guide-img" loading="lazy">
             </div>
             <button id="close-install-guide">{% trans "✖️ 閉じる" %}</button>
-        
     </div>
-
     <div class="credit">
     <!--copyright-->
     {% trans "© 2024~ Yuki-Lab | 本ゲームでは、多くの人にとって読みやすいユニバーサルデザインフォントを使用しています" %}
     </div>
 </div>
-
     <audio id="victorySound" src="{% static 'game/sounds/victory.mp3' %}" preload="none"></audio>
     <audio id="defeatSound" src="{% static 'game/sounds/defeat.mp3' %}" preload="none"></audio>
     <audio id="warningSound" src="{% static 'game/sounds/warning.mp3' %}" preload="auto"></audio>
