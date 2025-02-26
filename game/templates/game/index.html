@@ -22,14 +22,10 @@
         const PLACE_STONE_SOUND = "{% static 'game/sounds/place-stone.mp3' %}";  
     </script>
     <script defer src="{% static 'game/script.js' %}"></script>
+    <!-- 翻訳後の文字列をmain.jsへ受け渡し-->
     {% with online_description=_("オンライン対戦モードで遠くの友達と対戦！リアルでの対人戦や、強力なAIとの対戦も可能です。【PC・スマホ・iPad対応】今すぐプレイ！（旧スマートオセロ）") ai_description=_("強力なオセロAIと対戦！オンライン対戦モードでは遠くの友達とも遊べます。【PC・スマホ・iPad対応】今すぐプレイ！（旧スマートオセロ）") player_description=_("対人戦や、強力なAIとの対戦が可能！オンライン対戦では遠くの友達とも遊べます。【PC・スマホ・iPad対応】今すぐプレイ！（旧サービス名：スマートオセロ）") else_description=_("対人戦や強力なAIとの対戦が可能！オンライン対戦では遠くの友達とも遊べます。【PC・スマホ・iPad対応】今すぐプレイ！（旧スマートオセロ）") %}
     <meta name="description" content="{% if mode == 'online' %}{{online_description}}{% elif mode == 'ai' %}{{ai_description}}{% elif mode == 'player' %}{{player_description}}{% else %}{{else_description}}{% endif %}">
     <script nonce="{{ request.csp_nonce }}">
-        const online_description = "{{online_description|escapejs}}";
-        const ai_description = "{{ai_description|escapejs}}";
-        const player_description = "{{player_description|escapejs}}";
-        const else_description = "{{else_description|escapejs}}";
-
         const lang = {
             "online_description":"{{online_description|escapejs}}",
             "ai_description": "{{ai_description|escapejs}}",
@@ -86,7 +82,6 @@
     <script async src="https://cdn.jsdelivr.net/npm/profanity-cleaner@latest?source=false"></script>
     <script async src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script async src="{% static "game/confetti.browser.min.js" %}"></script>
-
     <meta property="og:title" content="{% trans "リバーシWeb" %}">
     <meta property="og:site_name" content="{% trans "リバーシWeb" %}">
     {% if request.LANGUAGE_CODE == "ja" %}
@@ -209,7 +204,9 @@
                 {{online_h1}}
             {% elif mode == 'ai' %}
                 {{ai_h1}}
-            {% elif mode == 'player' %}
+            {% elif mode == 'player' and request.LANGUAGE_CODE == 'en' %}
+                Reversi Board
+            {% elif mode == 'player' and not request.LANGUAGE_CODE == 'en' %}
                 {{player_h1}}
             {% else %}
                 {{else_h1}}

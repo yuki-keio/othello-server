@@ -43,7 +43,6 @@ if (!playerName) {
     localStorage.setItem("playerName", playerName);
 }
 
-
 const gUrlParams = new URLSearchParams(window.location.search);
 let gameRoom = gUrlParams.get('room');
 const ws_scheme = window.location.protocol === "https:" ? "wss" : "ws";
@@ -484,8 +483,6 @@ function updateStatus() {
         currentPlayerWhite.style.visibility = "visible";
     }
 
-
-
     if (showValidMoves || showValidMoves === "true") {
         highlightValidMoves();
 
@@ -504,7 +501,6 @@ function updateStatus() {
             timerDisplay.style.display = 'inline-block'; // 表示
             console.log("updateStatus→startTimer");
             if(!gameEnded) startTimer();
-        
         } else {
             timerDisplay.style.display = 'none'; // 非表示
 
@@ -769,7 +765,6 @@ function endGame(online_data, winner = null) {
                 victorySound.play().catch(error => {
                     console.warn("audio was blocked:", error);
                 });
-                
                 }
             launchConfetti();
             }
@@ -788,7 +783,6 @@ function endGame(online_data, winner = null) {
     localStorage.setItem('gameFinishedCount', gameFinishedCount);
     if (gameFinishedCount === 1 && deferredPrompt) {
         showInstallPrompt();
-
     }else if (gameFinishedCount === 3 && deferredPrompt) {
         showInstallPrompt();
     }else if (isIOS() && !window.navigator.standalone && gameFinishedCount === 1) {
@@ -1462,25 +1456,23 @@ function updatePlayerList(players) {
 function changeHead() {
     let titleText, metaDescription, canonicalUrl;
 
-
     if (gameMode === 'ai') {
         titleText = ai_title;
-        metaDescription = ai_description;
+        metaDescription = lang.ai_description;
         canonicalUrl = 'https://reversi.yuki-lab.com/ai/';
     } else if (gameMode === 'player') {
         titleText = player_title;
-        metaDescription = player_description;
+        metaDescription = lang.player_description;
         canonicalUrl = 'https://reversi.yuki-lab.com/';
     } else if (gameMode === 'online') {
         titleText = online_title;
-        metaDescription = online_description;
+        metaDescription = lang.online_description;
         canonicalUrl = 'https://reversi.yuki-lab.com/online/';
     } else {
         titleText = else_title;
-        metaDescription = else_description;
+        metaDescription = lang.else_description;
         canonicalUrl = 'https://reversi.yuki-lab.com/';
     }
-
     // ページのタイトルを変更
     document.title = titleText;
 
@@ -1502,8 +1494,6 @@ function changeHead() {
     }
     canonicalTag.setAttribute("href", canonicalUrl);
 }
-
-
 
 //音量調整
 victorySound.volume = 0.009;
@@ -1533,49 +1523,34 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
         changeHead();
 
         if (selectedMode === 'online') {
-
-
             online = true;  // オンラインモードのフラグを立てる
-
-
             restart();
-
         } else {
             document.getElementById("playerJoinSoundBox").style.display = "none";
-
             //もしあれば overlay を非表示
-
             if (overlay) {
                 overlay.style.display = "none";
             }
-
             if (previousMode === 'online') {
                 online = false; // オンラインモードのフラグを下げる
                 const url = new URL(window.location);
                 url.searchParams.delete("room");
                 history.pushState(null, "", url);
 
-
-
                 if (socket) {
                     socket.close();
                     socket = null;
                 }
-
                 restart();
 
             } else if (selectedMode === 'ai') {
                 if (gameMode === 'ai' && currentPlayer === 'white' && !gameEnded){startAIMove();}
-        
             }
-
         }
-
         //トップにスクロール
         document.getElementById('game-container').scrollIntoView({ behavior: "smooth" });
     });
 });
-
 
 if (document.readyState !== "loading") {
     document.removeEventListener("DOMContentLoaded", _DOMContenLoaded);
@@ -1850,13 +1825,7 @@ async function playStoneSound() {
     source.buffer = buffer;
     source.connect(gainNode); 
     source.start(0);
-
-
-
-   
 }
-
-
 
 // ページ離脱時に AudioContext を解放
 window.addEventListener("beforeunload", async () => {
