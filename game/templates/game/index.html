@@ -353,7 +353,7 @@
     <section class="notes">
         <h2>{% trans "本サイト・リバーシWebの機能" %}</h2>
         <p>{% blocktrans trimmed %}
-            リバーシ（オセロゲーム）が無料ですぐ遊べるWebサイトです。<a href="https://reversi.yuki-lab.com/ai/">AI対戦</a>、<a href="https://reversi.yuki-lab.com/online/">オンライン対戦</a>、<a href="https://reversi.yuki-lab.com/">電子オセロ盤</a>など、様々な機能に対応しています。 <strong>独自のURLシェア機能</strong> によって、友達との対戦や観戦、棋譜の共有などが簡単に行える点も特徴です
+            リバーシ（オセロゲーム）が無料ですぐ遊べるWebサイトです。<a href="/ai/">AI対戦</a>、<a href="/online/">オンライン対戦</a>、<a href="/">電子オセロ盤</a>など、様々な機能に対応しています。 <strong>独自のURLシェア機能</strong> によって、友達との対戦や観戦、棋譜の共有などが簡単に行える点も特徴です
         {% endblocktrans %}
         </p>
         <h3>
@@ -414,7 +414,7 @@
             {% blocktrans trimmed %}
             <li>ゲーム終了時に、自分の石の数が相手より多ければ勝利となります。同数の場合は引き分けです。</li>
             <li><strong>制限時間</strong> のある対局では、相手が時間切れになった場合も勝利となります</li>
-            <li><a href="https://reversi.yuki-lab.com/online/">通信対戦</a> では、<strong>投了</strong> ボタンが使えます。相手が <strong>投了</strong> した場合、自分の勝利となります</li>
+            <li><a href="/online/">通信対戦</a> では、<strong>投了</strong> ボタンが使えます。相手が <strong>投了</strong> した場合、自分の勝利となります</li>
             {% endblocktrans %}
         </ul>
     </section>
@@ -422,9 +422,9 @@
         <h2>{% trans "リバーシ（オセロ）で勝つためのコツ" %}</h2>
         <p>
             {% if request.LANGUAGE_CODE == 'en' %}
-            <a href="./strategy-reversi-othello.html">This article</a>, written by the developer of this site, Reversi Web, offers free strategies for intermediate and advanced players of the reversi game. Be sure to check it out!
+            <a href="/en/strategy-reversi-othello.html">This article</a>, written by the developer of this site, Reversi Web, offers free strategies for intermediate and advanced players of the reversi game. Be sure to check it out!
             {% else %}
-            本サイト・リバーシWebの開発者が執筆した<a href="./strategy-reversi-othello.html">こちらの記事</a> では、オセロゲームの中・上級者向け攻略法を無料で紹介しています。ぜひご覧ください
+            本サイト・リバーシWebの開発者が執筆した<a href="/strategy-reversi-othello.html">こちらの記事</a> では、オセロゲームの中・上級者向け攻略法を無料で紹介しています。ぜひご覧ください
             {% endif %}
             </p>
     </section>
@@ -440,9 +440,9 @@
             </ul>
         </div>
             <div class="guide-icons">
-                <img src="/static/game/images/share-icon.webp" alt="{% trans "iOSの共有ボタン" %}" class="icon" loading="lazy">
+                <img src="{% static 'game/images/share-icon.webp' %}" alt="{% trans "iOSの共有ボタン" %}" class="icon" loading="lazy">
                 <span class="arrow">➡️</span>
-                <img src="/static/game/images/install-guide.webp" alt="{% trans "リバーシ（オセロ）を無料でホーム画面に追加する方法" %}" id="install-guide-img" loading="lazy">
+                <img src="{% static 'static/game/images/install-guide.webp' %}" alt="{% trans "リバーシ（オセロ）を無料でホーム画面に追加する方法" %}" id="install-guide-img" loading="lazy">
             </div>
             <button id="close-install-guide">{% trans "✖️ 閉じる" %}</button>
     </div>
