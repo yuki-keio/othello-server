@@ -1427,7 +1427,6 @@ function sendMove(row, col) {
 function onlineUI() {
     // 通信対戦モードの場合のUI調整
     if (gameMode === 'online') {
-        surrenderBtn.style.display = 'inline-block'; // 降伏ボタンを表示
 
         //設定から時間やハイライトを変更できないように消す
         document.getElementById('timeLimitContainer').style.display = 'none';
@@ -1563,9 +1562,6 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
                     socket = null;
                 }
 
-                if (surrenderBtn.style.display !== 'none') {
-                    surrenderBtn.style.display = 'none'; // 降伏ボタンを非表示
-                }
                 restart();
 
             } else if (selectedMode === 'ai') {
@@ -1660,7 +1656,6 @@ function _DOMContenLoaded() {
         document.getElementById("playerJoinSoundBox").style.display = "block";
     } else {
         online = false;
-        surrenderBtn.style.display = 'none';
         const url = new URL(window.location);
         url.searchParams.delete("room");
         history.replaceState(null, "", url);
@@ -1905,11 +1900,13 @@ window.addEventListener("appinstalled", () => {
 });
 
 // 降伏ボタンをクリックしたとき、確認後にサーバーへ降伏メッセージを送信
-surrenderBtn.addEventListener('click', () => {
-    if (confirm(lang_surrender_right)) {
-        socket.send(JSON.stringify({ action: "surrender" }));
-    }
-});
+if (surrenderBtn) {
+    surrenderBtn.addEventListener('click', () => {
+        if (confirm(lang_surrender_right)) {
+            socket.send(JSON.stringify({ action: "surrender" }));
+        }
+    });
+}
 // 設定変更時に Local Storage に保存
 document.getElementById('showValidMovesCheckbox').addEventListener('change', () => {
     showValidMoves = document.getElementById('showValidMovesCheckbox').checked;

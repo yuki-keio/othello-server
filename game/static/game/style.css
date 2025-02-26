@@ -1,7 +1,4 @@
-#settings{
-  padding-top:10px;
-  }
-  .credit{
+.credit{
   font-size: 0.7em;
   text-align: center;
   margin-top: 20px;
@@ -65,8 +62,8 @@
   color: #333;
   background-color: #f9f9f9;
   padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  box-shadow: 0 4px 5px rgba(0, 0, 0, 0.1);
 }
 
 .notes h2 {
