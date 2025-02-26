@@ -277,24 +277,7 @@ async function applyServerMove(row, col, player, status, final = false) {
     }
     console.log(`whitch-${currentPlayer},gameEnded:${gameEnded},status:${status},final:${final},aimove:${aimove}`);
     if (gameMode === 'ai' && currentPlayer === 'white' && !gameEnded && status !== 1 && aimove === false) {
-        aimove = true;
-        stopTimer();
-        // 「考え中」のログを表示
-        const timerDisplay_ = document.getElementById('timer-display');
-
-        timerDisplay_.classList.remove('warning1', 'warning2'); // 警告クラスを削除
-
-        timerDisplay_.style.display = 'inline-block'; // 表示
-        timerDisplay_.textContent = '🤖 考え中';
-        board.classList.add('thinking');
-
-
-        setTimeout(() => {
-            updateStatus();
-            aiMakeMove();
-            updateURL();
-            console.log("ai");
-        }, 10);
+        startAIMove();
 
     } else {
         if (final !== false ||gameMode!==online) {
@@ -307,6 +290,28 @@ async function applyServerMove(row, col, player, status, final = false) {
         updateStatus();
     }
 }
+
+function startAIMove() {
+    aimove = true;
+    stopTimer();
+    // 「考え中」のログを表示
+    const timerDisplay_ = document.getElementById('timer-display');
+
+    timerDisplay_.classList.remove('warning1', 'warning2'); // 警告クラスを削除
+
+    timerDisplay_.style.display = 'inline-block'; // 表示
+    timerDisplay_.textContent = '🤖 考え中';
+    board.classList.add('thinking');
+
+
+    setTimeout(() => {
+        updateStatus();
+        aiMakeMove();
+        updateURL();
+        console.log("ai");
+    }, 10);
+}
+
 function makeMove(row, col, status = 0) {
     //console.log(`[makeMove] Called with row: ${row}, col: ${col}, status: ${status}, currentPlayer: ${currentPlayer}, gameEnded: ${gameEnded}, isvalid?: ${isValidMove(row, col)}`);
 
@@ -1563,6 +1568,9 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
                 }
                 restart();
 
+            } else if (selectedMode === 'ai') {
+                if (gameMode === 'ai' && currentPlayer === 'white' && !gameEnded){startAIMove();}
+        
             }
 
         }
