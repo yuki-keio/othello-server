@@ -73,6 +73,7 @@ let currentPlayerTimer;
 
 let gameEnded = false;
 let share_winner = "";
+let ifVitory = false;
 
 //言語設定
 let langCode = "ja";
@@ -555,13 +556,15 @@ function isIOS() {
 }
 
 
-function recordMove(row, col) {
+function recordMove(row, col, status) {
 
     const cols = 'abcdefgh';
     const moveNotation = `${cols[col]}${row + 1}`;
 
-    moveHistory.push({ row, col, player: currentPlayer, moveNotation, token: "recordMove" });
-    localStorage.setItem("deleted_urls", JSON.stringify([]));
+    if (status !== 1) {
+        moveHistory.push({ row, col, player: currentPlayer, moveNotation, token: "recordMove" });
+        localStorage.setItem("deleted_urls", JSON.stringify([]));
+    }
     currentMoveIndex = moveHistory.length - 1;
 
     updateMoveList();
@@ -581,7 +584,7 @@ function launchConfetti() {
     const rect = board.getBoundingClientRect()
     const windowHeight = window.innerHeight;
     const originY = (rect.top + rect.height) / windowHeight;
-
+    ifVitory = true;
 
     confetti({
         particleCount: 150,
@@ -617,6 +620,7 @@ function launchConfetti() {
 }
 
 function endGame(online_data, winner = null) {
+    ifVitory = false;
     console.log(`[endGame] Game ended. Winner: ${winner}`+"gameMode:" + gameMode);
     const blackCount = gameBoard.flat().filter(cell => cell === 'black').length;
     const whiteCount = gameBoard.flat().filter(cell => cell === 'white').length;
@@ -757,6 +761,13 @@ function endGame(online_data, winner = null) {
             }
         }
 
+    }
+
+    if (gameMode === "ai" && ifVitory) {
+        const currentAiLevel = document.getElementById('aiLevelSelect').value;
+        if (window.unlockNextAiLevel) {
+        window.unlockNextAiLevel(currentAiLevel);
+        }
     }
 
     url = new URL(window.location);
@@ -1056,13 +1067,6 @@ function aiMakeMove() {
     // 現在の盤面を効率的にコピー
     const initialBoard = gameBoard.map(row => [...row]);
     const validMoves = hasValidMove();
-    const nofvalidMoves = validMoves.length;
-
-    // 有効な手がない場合の早期リターン
-    if (nofvalidMoves === 0) {
-        endMove(null, timeLimit, gameEnded, aimove);
-        return;
-    }
 
     // 全ての有効な手を探索
     for (let i = 0; i < validMoves.length; i++) {
@@ -1148,10 +1152,15 @@ function adjustSearchDepth(estimatedTime, aiLevel) {
         if (estimatedTime > aiLevel * 1000) {
             minimax_depth--;
         }
-        if (minimax_depth <  1) {
-            minimax_depth = 1;
-        }
+      
     }
+    if (minimax_depth <  0) {
+        minimax_depth = 0;
+    }
+    if (minimax_depth > aiLevel) {
+        minimax_depth = aiLevel;
+    }
+    console.log(`[aiMakeMove] Adjusted search depth to ${minimax_depth}`);
 }
 
 function endMove(bestMove, timeLimit, gameEnded, fromAI) {
@@ -1287,11 +1296,10 @@ function finalEvaluation(board) {
 // 盤面の評価関数
 function evaluateBoard(board) {
     // 重み定数
-    const cornerWeight = 100000;     // 角の重み
+    const cornerWeight = 30;     // 角の重み
     const edgeWeight = 5;        // 辺の重み
     const mobilityWeight = 0.2;  // 機動力の重み
-    const stabilityWeight = 3;   // 安定した石の重み
-    const xcCellPenalty = 30;    // XCセルのペナルティ
+    const xcCellPenalty = 7;    // XCセルのペナルティ
 
     let blackScore = 0;
     let whiteScore = 0;
@@ -1370,10 +1378,14 @@ function evaluateBoard(board) {
     }
 
     // AIレベルに応じた評価戦略
-    if (aiLevel > 4) {
+    if (aiLevel > 1) {
+        if (aiLevel === 6) {
+            //! 「最弱級」指定のAI。評価関数は敢えて反転させる
+            return blackScore - whiteScore;
+        }
         return whiteScore - blackScore;
     } else {
-        return whiteCount - blackCount + (Math.random() * ( 3 - aiLevel) ) * 5 ;
+        return whiteCount - blackCount;
     }
 }
 
@@ -1592,6 +1604,11 @@ if (document.readyState !== "loading") {
 }
 
 function _DOMContenLoaded() {
+
+  
+
+
+
     const inviteBtn = document.getElementById("qr");
     const qrPopup = document.getElementById("qr-popup");
     const qrcodeContainer = document.getElementById("qrcode");
@@ -1679,6 +1696,65 @@ function _DOMContenLoaded() {
             document.getElementById('level_ai').style.display = 'none';
         }
     }
+
+      // AIレベルのロック解除機能
+      const aiLevelSelect = document.getElementById('aiLevelSelect');
+      if (aiLevelSelect) {
+        // 保存されたAIレベル解放状況を確認
+        const unlockedLevels = JSON.parse(localStorage.getItem('unlockedAiLevels') || '{"0":true,"1":true,"2":true,"6":true}');
+        
+        // ロックされたレベルを処理
+        const lockedOptions = aiLevelSelect.querySelectorAll('.locked-level');
+        let temp_nextLevel;
+        lockedOptions.forEach(option => {
+          const unlockLevel = option.getAttribute('data-unlock-level');
+          
+          // まだ解放されていないレベルの場合
+          if (!unlockedLevels[option.value]) {
+            // 前のレベルがクリアされているかチェック
+            if (unlockedLevels[unlockLevel]) {
+              temp_nextLevel = option.textContent;
+              option.textContent = `？`;
+              option.disabled = true;
+            } else {
+              option.style.display = 'none';
+            }
+          }
+        });
+        
+        // AIに勝った時のイベントハンドラ
+        window.unlockNextAiLevel = function(currentLevel) {
+          const nextLevelOption = Array.from(aiLevelSelect.querySelectorAll('.locked-level')).find(
+            option => option.getAttribute('data-unlock-level') == currentLevel
+          );
+          
+          if (nextLevelOption) {
+            const nextLevel = nextLevelOption.value;
+            unlockedLevels[nextLevel] = true;
+            localStorage.setItem('unlockedAiLevels', JSON.stringify(unlockedLevels));
+            
+            // 解放メッセージを表示
+            alert(lang.congrats_aiLevel_unlocked);
+            nextLevelOption.textContent = temp_nextLevel;
+            nextLevelOption.disabled = false;
+
+               // 次のレベルがあれば表示
+            const furtherNextOption = Array.from(aiLevelSelect.querySelectorAll('.locked-level')).find(
+                option => option.getAttribute('data-unlock-level') == nextLevel && option.style.display === 'none'
+            );
+            if (furtherNextOption) {
+                furtherNextOption.style.display = '';
+                option.textContent = `？`;
+                option.disabled = true;
+            }
+
+
+          }
+        };
+      }
+  
+
+
 
 
 }

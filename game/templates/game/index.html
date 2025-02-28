@@ -31,6 +31,7 @@
             "ai_description": "{{ai_description|escapejs}}",
             "player_description" : "{{player_description|escapejs}}",
             "else_description" :"{{else_description|escapejs}}",
+            "congrats_aiLevel_unlocked":"{% trans "🎉 条件達成により、新しいAIが解放されました！" %}",
             "black": "{% trans "黒"|escapejs %}",
             "white": "{% trans "白"|escapejs %}",
             "spec": "{% trans "観客"|escapejs %}",
@@ -150,12 +151,12 @@
     <link rel="manifest" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/manifest.json' %}">
     <meta name="theme-color" content="#007508">
     {% if request.LANGUAGE_CODE == "ja" %}
-    <link rel="canonical" href="{% if mode == 'online' %}https://reversi.yuki-lab.com/online/{% elif mode == 'ai' %}https://reversi.yuki-lab.com/ai/{% elif mode == 'player' %}https://reversi.yuki-lab.com/{% else %}https://reversi.yuki-lab.com/{% endif %}">
+    <link rel="canonical" href="https://reversi.yuki-lab.com/">
     {% else %}
-    <link rel="canonical" href="{% if mode == 'online' %}https://reversi.yuki-lab.com/en/online/{% elif mode == 'ai' %}https://reversi.yuki-lab.com/en/ai/{% elif mode == 'player' %}https://reversi.yuki-lab.com/en/{% else %}https://reversi.yuki-lab.com/en/{% endif %}">
+    <link rel="canonical" href="https://reversi.yuki-lab.com/en/">
     {% endif %}
-    <link rel="alternate" hreflang="ja" href="{% if mode == 'online' %}https://reversi.yuki-lab.com/online/{% elif mode == 'ai' %}https://reversi.yuki-lab.com/ai/{% elif mode == 'player' %}https://reversi.yuki-lab.com/{% else %}https://reversi.yuki-lab.com/{% endif %}" />
-    <link rel="alternate" hreflang="en" href="{% if mode == 'online' %}https://reversi.yuki-lab.com/en/online/{% elif mode == 'ai' %}https://reversi.yuki-lab.com/en/ai/{% elif mode == 'player' %}https://reversi.yuki-lab.com/en/{% else %}https://reversi.yuki-lab.com/en/{% endif %}" />
+    <link rel="alternate" hreflang="ja" href="https://reversi.yuki-lab.com/" />
+    <link rel="alternate" hreflang="en" href="https://reversi.yuki-lab.com/en/" />
     <link rel="alternate" hreflang="x-default" href="https://reversi.yuki-lab.com/" />
     <!-- Google Analytics 最適化 -->
     <script nonce="{{ request.csp_nonce }}">
@@ -331,12 +332,14 @@
                     {% trans "🤖 AIのレベル：" %}
                     <select id="aiLevelSelect">
                         <option value="0">{% trans "初級" %}</option>
-                        <option value="1">{% trans "中級" %}</option>
+                        <option value="1">{% trans "中級（推奨）" %}</option>
                         <option value="2">{% trans "上級" %}</option>
-                        <option value="3">{% trans "達人級" %}</option>
-                        <option value="5">{% trans "名人級" %}</option>
-                        <option value="7">{% trans "偉人級" %}</option>
-                        <option value="9">{% trans "超越級" %}</option>
+                        <option value="3" class="locked-level" data-unlock-level="2">{% trans "達人級" %}</option>
+                        <option value="5" class="locked-level" data-unlock-level="3">{% trans "名人級" %}</option>
+                        <option value="7" class="locked-level" data-unlock-level="5">{% trans "🔆偉人級" %}</option>
+                        <option value="9" class="locked-level" data-unlock-level="7">{% trans "👺超越級" %}</option>
+                        <option value="6">{% trans "🐤最弱級" %}</option>
+                       
                     </select>
                 </label>
                 <div id="validContainer">
