@@ -168,9 +168,10 @@
             script.nonce = "{{ request.csp_nonce }}"; // CSP対応
             document.head.appendChild(script);
 
+            window.dataLayer = window.dataLayer || [];
+            window.gtag = function() { dataLayer.push(arguments); };
+    
             script.onload = function () {
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
                 gtag('js', new Date());
                 gtag('config', 'G-4JKZC3VNE7', { 'cookie_domain': 'auto' });
             };

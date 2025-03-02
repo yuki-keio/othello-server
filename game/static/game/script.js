@@ -630,6 +630,8 @@ function endGame(online_data, winner = null) {
         share_winner = "won";
 
     } else if (online_data !== "offline") {
+
+
         if (online_data.winner === role_online) {
             launchConfetti();
         }
@@ -767,7 +769,14 @@ function endGame(online_data, winner = null) {
         if (window.unlockNextAiLevel) {
             window.unlockNextAiLevel(currentAiLevel);
         }
+
     }
+    gtag('event', 'game_result', {
+        'result': ifVitory,
+        'gameMode': gameMode,
+        'player_id': playerId,
+      });
+      
 
     url = new URL(window.location);
     url.searchParams.set('won', share_winner);
@@ -2046,8 +2055,27 @@ window.addEventListener("beforeinstallprompt", (event) => {
 
     installButton.addEventListener("click", showInstallPrompt);
 });
+
 window.addEventListener("appinstalled", () => {
     alert(lang.thanks_install);
+     // ユーザーのブラウザ情報を取得
+    const browser = navigator.userAgent.includes('Chrome') ? 'Chrome' : 
+    navigator.userAgent.includes('Safari') ? 'Safari' : 
+    navigator.userAgent.includes('Firefox') ? 'Firefox' :
+    'Other';
+
+// Google Analytics にイベント送信
+gtag('event', 'pwa_installed', {
+'event_category': 'engagement',
+'event_label': 'PWA Installed',
+'browser': browser,
+'timestamp': new Date().toISOString(),
+"id": playerId,
+'game_mode': gameMode,
+"gameFinishedCount": gameFinishedCount,
+"Won":ifVitory,
+});
+
 });
 
 // 降伏ボタンをクリックしたとき、確認後にサーバーへ降伏メッセージを送信
