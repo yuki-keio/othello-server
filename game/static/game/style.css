@@ -9,19 +9,114 @@
   transform: translateX(-50%);
   width: 100%;
   }
-  .caution{
+.caution{
   padding: 15px;
   font-size: 0.8em;
-  }
+}
 
 .locked-level {
     color: #888;
     font-style: italic;
-  }
+}
   
-.locked-level:disabled {
-    color: #aaa;
-  }
+
+
+   
+#ai-level-display {
+  position: relative;
+  top: -6px;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  background: linear-gradient(to bottom, #009e00, #007508);
+  color: white;
+  padding: 10px 17px;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  transition: all 0.2s ease;
+  margin: 0;
+  font-size: 0.7em;
+  font-weight: 400;
+}
+
+#ai-level-display:after {
+  content: " ▼";
+  font-size: 0.5em;
+  margin-left: 6px;
+  transition: transform 0.3s ease;
+}
+
+#ai-level-display:hover {
+  background: linear-gradient(to bottom, #00b900, #009e00);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+  transform: translateY(-1px);
+}
+
+#ai-level-display:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+#ai-level-display.active:after {
+  transform: rotate(180deg);
+}
+
+/* AI level popup styles */
+#ai-level-popup {
+  display: none;
+  position: absolute;
+  top: 148px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  z-index: 1000;
+  padding: 15px;
+  padding-top: 25px;
+  width: 80%;
+  max-width: 300px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translate(-50%, -10px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+#ai-level-popup h3 {
+  margin-top: 0;
+  color: #000000;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 8px;
+}
+
+#ai-level-list {
+  margin-top: 10px;
+}
+
+.ai-level-item {
+  padding: 12px 15px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-bottom: 5px;
+  transition: all 0.2s ease;
+}
+
+.ai-level-item:hover {
+  background-color: #ebfbff;
+}
+
+.ai-level-item.locked-level {
+  color: #999;
+  cursor: not-allowed;
+  background-color: #f8f8f8;
+}
+
+.ai-level-item.selected {
+  background-color: #ceffce;
+  border-left: 3px solid #007508;
+}
 
 /* ポップアップの基本デザイン */
 .install-guide {

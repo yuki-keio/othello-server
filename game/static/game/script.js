@@ -29,7 +29,6 @@ let onlineGameStarted = false;
 
 let deferredPrompt;
 
-
 // プレイヤーの一意なIDを取得・保存（なければ新規作成）
 let playerId = localStorage.getItem("playerId");
 if (!playerId) {
@@ -82,7 +81,6 @@ if (gameMode === "en") {
     gameMode = window.location.pathname.split('/').filter(Boolean)[1] || 'player';
     langCode = "en";
 }
-
 
 let aimove = false;
 
@@ -201,7 +199,7 @@ async function applyServerMove(row, col, player, status, final = false) {
     // statusが2の場合は、これはAIendMoveによる手であり、serverからの手ではないです
     //console.log(`[applyServerMove] row: ${row}, col: ${col}, player: ${player}, status: ${status}, currentPlayer: ${currentPlayer}`);
     if (gameBoard[row][col] !== '' || !isValidMove(row, col, player)) {
-        console.error(`[applyServerMove] Invalid move: (${row},${col}), gameBoard[${row}][${col}]: ${gameBoard[row][col]}, isValidMove: ${isValidMove(row, col, player)}`);
+        console.warn(`[applyServerMove] Invalid move: (${row},${col}), gameBoard[${row}][${col}]: ${gameBoard[row][col]}, isValidMove: ${isValidMove(row, col, player)}`);
         return;
     }
     // 以前のハイライトを削除
@@ -296,7 +294,8 @@ function startAIMove() {
     timerDisplay_.classList.remove('warning1', 'warning2'); // 警告クラスを削除
 
     timerDisplay_.style.display = 'inline-block'; // 表示
-    timerDisplay_.textContent = lang.thinking;
+    const timerPrefix = aiLevel === 6 ? "🐤 " : aiLevel === 9 ? "👺 " : aiLevel === 7 ? "🔆 " : "🤔 ";
+    timerDisplay_.textContent = timerPrefix + lang.thinking;
     board.classList.add('thinking');
 
 
@@ -621,7 +620,7 @@ function launchConfetti() {
 
 function endGame(online_data, winner = null) {
     ifVitory = false;
-    console.log(`[endGame] Game ended. Winner: ${winner}`+"gameMode:" + gameMode);
+    console.log(`[endGame] Game ended. Winner: ${winner}` + "gameMode:" + gameMode);
     const blackCount = gameBoard.flat().filter(cell => cell === 'black').length;
     const whiteCount = gameBoard.flat().filter(cell => cell === 'white').length;
     let result;
@@ -696,7 +695,7 @@ function endGame(online_data, winner = null) {
         share_winner = winner; // 時間切れ勝ちなら、石の数で負けていても大丈夫なように明確に共有時に伝える必要があるので、winnerを明示する
 
         if (winner === "white" && gameMode === "ai") {
-        }else {
+        } else {
             if (gameEndSoundEnabled) {
                 victorySound.currentTime = 0;
 
@@ -729,7 +728,7 @@ function endGame(online_data, winner = null) {
                         console.warn("audio was blocked:", error);
                     });
                 }
-                
+
             } else {
                 if (gameEndSoundEnabled) {
                     victorySound.currentTime = 0;
@@ -743,13 +742,13 @@ function endGame(online_data, winner = null) {
         } else {
             result = lang.draw;
             if (gameMode === "ai") {
-                if (gameEndSoundEnabled){
-                defeatSound.currentTime = 0;
-                defeatSound.play().catch(error => {
-                    console.warn("audio was blocked:", error);
-                });
+                if (gameEndSoundEnabled) {
+                    defeatSound.currentTime = 0;
+                    defeatSound.play().catch(error => {
+                        console.warn("audio was blocked:", error);
+                    });
                 }
-                
+
             } else {
                 if (gameEndSoundEnabled) {
                     victorySound.currentTime = 0;
@@ -766,7 +765,7 @@ function endGame(online_data, winner = null) {
     if (gameMode === "ai" && ifVitory) {
         const currentAiLevel = document.getElementById('aiLevelSelect').value;
         if (window.unlockNextAiLevel) {
-        window.unlockNextAiLevel(currentAiLevel);
+            window.unlockNextAiLevel(currentAiLevel);
         }
     }
 
@@ -1152,9 +1151,9 @@ function adjustSearchDepth(estimatedTime, aiLevel) {
         if (estimatedTime > aiLevel * 1000) {
             minimax_depth--;
         }
-      
+
     }
-    if (minimax_depth <  0) {
+    if (minimax_depth < 0) {
         minimax_depth = 0;
     }
     if (minimax_depth > aiLevel) {
@@ -1259,7 +1258,7 @@ function getValidMovesForBoard(board, player) {
 
     for (let row = 0; row < 8; row++) {
         for (let col = 0; col < 8; col++) {
-          
+
             if (board[row][col] !== "") continue;
 
             // この位置に石を置いたときに、相手の石を裏返せるか確認
@@ -1341,23 +1340,23 @@ function evaluateBoard(board) {
         else if (board[row][col] === 'white') whiteScore += edgeWeight;
     }
 
-    // 危険な位置（XCセル）のペナルティ - 改良版
+    // 危険な位置（XCセル）のペナルティ
     const dangerPositions = [[1, 1], [1, 6], [6, 1], [6, 6]];
     for (const [row, col] of dangerPositions) {
         const nearCorner = getNearestCorner(row, col);
         const cornerState = board[nearCorner[0]][nearCorner[1]];
-        
+
         // XCセルのペナルティはゲームの初期〜中盤で特に重要
         const xcPenaltyMultiplier = Math.max(0, 1 - gamePhase * 1.1); // ゲーム終盤に向けて減少
-        
+
         // 角が空の場合は最大のペナルティ
         if (cornerState === '') {
             if (board[row][col] === 'black') blackScore -= xcCellPenalty * xcPenaltyMultiplier;
             if (board[row][col] === 'white') whiteScore -= xcCellPenalty * xcPenaltyMultiplier;
         }
         // 角が相手の石の場合も高いペナルティ
-        else if ((cornerState === 'white' && board[row][col] === 'black') || 
-                (cornerState === 'black' && board[row][col] === 'white')) {
+        else if ((cornerState === 'white' && board[row][col] === 'black') ||
+            (cornerState === 'black' && board[row][col] === 'white')) {
             if (board[row][col] === 'black') blackScore -= xcCellPenalty * 0.8 * xcPenaltyMultiplier;
             if (board[row][col] === 'white') whiteScore -= xcCellPenalty * 0.8 * xcPenaltyMultiplier;
         }
@@ -1402,7 +1401,15 @@ function getNearestCorner(row, col) {
 
 function changeTitle() {
     if (gameMode === 'ai') {
-        document.getElementById('title').textContent = ai_h1;
+        if (aiLevelSelect.selectedIndex === 1) {
+            document.getElementById('title').innerHTML = "<span id=\"ai-level-display\">"+ lang.middle +" AI</span>";
+        }else{
+            document.getElementById('title').innerHTML = "<span id=\"ai-level-display\">"+ document.getElementById('aiLevelSelect').options[aiLevelSelect.selectedIndex].text +" AI</span>";
+        }
+        
+        
+        
+
         document.getElementById('level_ai').style.display = 'block';
     } else if (gameMode === 'player') {
         document.getElementById('title').textContent = player_h1;
@@ -1589,6 +1596,7 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
 
             } else if (selectedMode === 'ai') {
                 if (gameMode === 'ai' && currentPlayer === 'white' && !gameEnded) { startAIMove(); }
+                initAIMode();
             }
         }
         //トップにスクロール
@@ -1604,11 +1612,6 @@ if (document.readyState !== "loading") {
 }
 
 function _DOMContenLoaded() {
-
-  
-
-
-
     const inviteBtn = document.getElementById("qr");
     const qrPopup = document.getElementById("qr-popup");
     const qrcodeContainer = document.getElementById("qrcode");
@@ -1651,9 +1654,15 @@ function _DOMContenLoaded() {
 
     }
 
-
+   
     document.getElementById("title").addEventListener("click", function () {
-        location.reload(); // ページをリロード
+        if (gameMode === "ai") {
+           
+
+        } else {
+            location.reload(); // ページをリロード
+        }
+
     });
     if (startMatchBtn && overlay) {
         startMatchBtn.addEventListener("click", function () {
@@ -1697,68 +1706,132 @@ function _DOMContenLoaded() {
         }
     }
 
-      // AIレベルのロック解除機能
-      const aiLevelSelect = document.getElementById('aiLevelSelect');
-      if (aiLevelSelect) {
-        // 保存されたAIレベル解放状況を確認
-        const unlockedLevels = JSON.parse(localStorage.getItem('unlockedAiLevels') || '{"0":true,"1":true,"2":true,"6":true}');
-        
-        // ロックされたレベルを処理
-        const lockedOptions = aiLevelSelect.querySelectorAll('.locked-level');
-        let temp_nextLevel;
-        lockedOptions.forEach(option => {
-          const unlockLevel = option.getAttribute('data-unlock-level');
-          
-          // まだ解放されていないレベルの場合
-          if (!unlockedLevels[option.value]) {
+    
+    if (gameMode === 'ai') {
+        initAIMode()
+    }
+}
+function initAIMode() {
+    const aiLevelSelect = document.getElementById('aiLevelSelect');
+
+    document.getElementById("ai-level-display").addEventListener("click", function () {
+        const popup = document.getElementById('ai-level-popup');
+        popup.style.display = popup.style.display !== 'block' ? 'block' : 'none';
+        updateAiLevelDisplay();
+    });
+
+    // 保存されたAIレベル解放状況を確認
+    const unlockedLevels = JSON.parse(localStorage.getItem('unlockedAiLevels') || '{"0":true,"1":true,"2":true,"6":true}');
+
+    // ロックされたレベルを処理
+    const lockedOptions = document.querySelectorAll('.locked-level');
+    let temp_nextLevel;
+    lockedOptions.forEach(option => {
+        const unlockLevel = option.getAttribute('data-unlock-level');
+
+        // まだ解放されていないレベルの場合
+        if (!unlockedLevels[option.value]) {
+            console.log(`[aiLevelSelect] Locking level ${option.textContent}`);
             // 前のレベルがクリアされているかチェック
             if (unlockedLevels[unlockLevel]) {
-              temp_nextLevel = option.textContent;
-              option.textContent = `？`;
-              option.disabled = true;
+                temp_nextLevel = option.textContent;
+                option.textContent = `？`;
+                option.disabled = true;
             } else {
-              option.style.display = 'none';
+                option.style.display = 'none';
             }
-          }
-        });
-        
-        // AIに勝った時のイベントハンドラ
-        window.unlockNextAiLevel = function(currentLevel) {
-          const nextLevelOption = Array.from(aiLevelSelect.querySelectorAll('.locked-level')).find(
+        }
+    });
+
+    // AIに勝った時のイベントハンドラ
+    window.unlockNextAiLevel = function (currentLevel) {
+        const nextLevelOption = Array.from(aiLevelSelect.querySelectorAll('.locked-level')).find(
             option => option.getAttribute('data-unlock-level') == currentLevel
-          );
-          
-          if (nextLevelOption) {
+        );
+
+        if (nextLevelOption) {
             const nextLevel = nextLevelOption.value;
             unlockedLevels[nextLevel] = true;
             localStorage.setItem('unlockedAiLevels', JSON.stringify(unlockedLevels));
-            
+
             // 解放メッセージを表示
             alert(lang.congrats_aiLevel_unlocked);
             nextLevelOption.textContent = temp_nextLevel;
             nextLevelOption.disabled = false;
 
-               // 次のレベルがあれば表示
+            // 次のレベルがあれば表示
             const furtherNextOption = Array.from(aiLevelSelect.querySelectorAll('.locked-level')).find(
                 option => option.getAttribute('data-unlock-level') == nextLevel && option.style.display === 'none'
             );
             if (furtherNextOption) {
                 furtherNextOption.style.display = '';
-                option.textContent = `？`;
-                option.disabled = true;
+                furtherNextOption.textContent = `？`;
+                furtherNextOption.disabled = true;
             }
 
 
-          }
-        };
-      }
-  
+        }
+    };
 
 
+    // AIレベル表示の更新関数
+    function updateAiLevelDisplay() {
+            const currentLevel = aiLevelSelect.options[aiLevelSelect.selectedIndex].text;
+            const displayEl = document.getElementById('ai-level-display');
+            displayEl.textContent = `${currentLevel} AI`;
+            if (aiLevelSelect.selectedIndex===1){
+                displayEl.textContent = `${lang.middle} AI`;
+            }
 
+            // ポップアップ内の選択状態も更新
+            const levelItems = document.querySelectorAll('.ai-level-item');
+            levelItems.forEach(item => {
+                if (item.getAttribute('data-level') === aiLevelSelect.value) {
+                    item.classList.add('selected');
+                } else {
+                    item.classList.remove('selected');
+                }
+            });
+        
+    }
 
+    // AIレベル選択時の処理
+    const levelItems = document.querySelectorAll('.ai-level-item');
+    levelItems.forEach(item => {
+        item.addEventListener('click', function () {
+            // ロックされたレベルは選択不可
+            if (this.classList.contains('locked-level')) {
+                return;
+            }
+
+            const level = this.getAttribute('data-level');
+            aiLevelSelect.value = level;
+
+            // 既存のchangeイベントをトリガー
+            const event = new Event('change');
+            aiLevelSelect.dispatchEvent(event);
+
+            updateAiLevelDisplay();
+
+            // ポップアップを閉じる
+            document.getElementById('ai-level-popup').style.display = 'none';
+        });
+    });
+
+    // ポップアップ外クリックで閉じる
+    document.addEventListener('click', function (e) {
+        const popup = document.getElementById('ai-level-popup');
+
+        if (popup.style.display === 'block' && !popup.contains(e.target) && e.target !== document.getElementById('ai-level-display')) {
+            popup.style.display = 'none';
+        }
+    });
+
+    aiLevelSelect.addEventListener('change', updateAiLevelDisplay);
+    // 初期表示を設定
+    setTimeout(updateAiLevelDisplay, 100);
+    
 }
-
 function sendSettings() {
     let overlayTimeLimit = timelimit_el.value;
     let overlayHighlightMoves = highlightMoves_el.checked;
