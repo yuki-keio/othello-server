@@ -775,8 +775,8 @@ function endGame(online_data, winner = null) {
         'result': ifVitory,
         'gameMode': gameMode,
         'player_id': playerId,
-      });
-      
+    });
+
 
     url = new URL(window.location);
     url.searchParams.set('won', share_winner);
@@ -1411,13 +1411,13 @@ function getNearestCorner(row, col) {
 function changeTitle() {
     if (gameMode === 'ai') {
         if (aiLevelSelect.selectedIndex === 1) {
-            document.getElementById('title').innerHTML = "<span id=\"ai-level-display\">"+ lang.middle +" AI</span>";
-        }else{
-            document.getElementById('title').innerHTML = "<span id=\"ai-level-display\">"+ document.getElementById('aiLevelSelect').options[aiLevelSelect.selectedIndex].text +" AI</span>";
+            document.getElementById('title').innerHTML = "<span id=\"ai-level-display\">" + lang.middle + " AI</span>";
+        } else {
+            document.getElementById('title').innerHTML = "<span id=\"ai-level-display\">" + document.getElementById('aiLevelSelect').options[aiLevelSelect.selectedIndex].text + " AI</span>";
         }
-        
-        
-        
+
+
+
 
         document.getElementById('level_ai').style.display = 'block';
     } else if (gameMode === 'player') {
@@ -1663,10 +1663,10 @@ function _DOMContenLoaded() {
 
     }
 
-   
+
     document.getElementById("title").addEventListener("click", function () {
         if (gameMode === "ai") {
-           
+
 
         } else {
             location.reload(); // ページをリロード
@@ -1715,7 +1715,7 @@ function _DOMContenLoaded() {
         }
     }
 
-    
+
     if (gameMode === 'ai') {
         initAIMode()
     }
@@ -1731,25 +1731,31 @@ function initAIMode() {
 
     // 保存されたAIレベル解放状況を確認
     const unlockedLevels = JSON.parse(localStorage.getItem('unlockedAiLevels') || '{"0":true,"1":true,"2":true,"6":true}');
+    console.log(`[aiLevelSelect] Unlocked levels: ${JSON.stringify(unlockedLevels)}`);
 
     // ロックされたレベルを処理
     const lockedOptions = document.querySelectorAll('.locked-level');
     let temp_nextLevel;
     lockedOptions.forEach(option => {
-        const unlockLevel = option.getAttribute('data-unlock-level');
+        const unlockLevel = option.getAttribute('data-unlock-level')
 
-        // まだ解放されていないレベルの場合
-        if (!unlockedLevels[option.value]) {
-            console.log(`[aiLevelSelect] Locking level ${option.textContent}`);
-            // 前のレベルがクリアされているかチェック
-            if (unlockedLevels[unlockLevel]) {
-                temp_nextLevel = option.textContent;
-                option.textContent = `？`;
-                option.disabled = true;
-            } else {
-                option.style.display = 'none';
-            }
+
+
+        console.log(`[aiLevelSelect] Locking level v ${option.getAttribute("data-level")}`);
+        console.log(`[aiLevelSelect] Locking level t ${option.textContent}`);
+        if (unlockedLevels[option.getAttribute("data-level") || option.value]) {
+            option.classList.remove('locked-level');
+            option.disabled = false;
+            option.style.display = '';
+        } else if (unlockedLevels[unlockLevel]) {
+            console.log(`[aiLevelSelect] just Unlocking level ${unlockLevel}`);
+            temp_nextLevel = option.textContent;
+            option.textContent = `？`;
+            option.disabled = true;
+        } else {
+            option.style.display = 'none';
         }
+
     });
 
     // AIに勝った時のイベントハンドラ
@@ -1765,18 +1771,11 @@ function initAIMode() {
 
             // 解放メッセージを表示
             alert(lang.congrats_aiLevel_unlocked);
-            nextLevelOption.textContent = temp_nextLevel;
-            nextLevelOption.disabled = false;
 
-            // 次のレベルがあれば表示
-            const furtherNextOption = Array.from(aiLevelSelect.querySelectorAll('.locked-level')).find(
-                option => option.getAttribute('data-unlock-level') == nextLevel && option.style.display === 'none'
-            );
-            if (furtherNextOption) {
-                furtherNextOption.style.display = '';
-                furtherNextOption.textContent = `？`;
-                furtherNextOption.disabled = true;
-            }
+            setTimeout(() => {
+           
+                location.reload();
+            }, 1000);
 
 
         }
@@ -1785,23 +1784,23 @@ function initAIMode() {
 
     // AIレベル表示の更新関数
     function updateAiLevelDisplay() {
-            const currentLevel = aiLevelSelect.options[aiLevelSelect.selectedIndex].text;
-            const displayEl = document.getElementById('ai-level-display');
-            displayEl.textContent = `${currentLevel} AI`;
-            if (aiLevelSelect.selectedIndex===1){
-                displayEl.textContent = `${lang.middle} AI`;
-            }
+        const currentLevel = aiLevelSelect.options[aiLevelSelect.selectedIndex].text;
+        const displayEl = document.getElementById('ai-level-display');
+        displayEl.textContent = `${currentLevel} AI`;
+        if (aiLevelSelect.selectedIndex === 1) {
+            displayEl.textContent = `${lang.middle} AI`;
+        }
 
-            // ポップアップ内の選択状態も更新
-            const levelItems = document.querySelectorAll('.ai-level-item');
-            levelItems.forEach(item => {
-                if (item.getAttribute('data-level') === aiLevelSelect.value) {
-                    item.classList.add('selected');
-                } else {
-                    item.classList.remove('selected');
-                }
-            });
-        
+        // ポップアップ内の選択状態も更新
+        const levelItems = document.querySelectorAll('.ai-level-item');
+        levelItems.forEach(item => {
+            if (item.getAttribute('data-level') === aiLevelSelect.value) {
+                item.classList.add('selected');
+            } else {
+                item.classList.remove('selected');
+            }
+        });
+
     }
 
     // AIレベル選択時の処理
@@ -1839,7 +1838,7 @@ function initAIMode() {
     aiLevelSelect.addEventListener('change', updateAiLevelDisplay);
     // 初期表示を設定
     setTimeout(updateAiLevelDisplay, 100);
-    
+
 }
 function sendSettings() {
     let overlayTimeLimit = timelimit_el.value;
@@ -2058,23 +2057,23 @@ window.addEventListener("beforeinstallprompt", (event) => {
 
 window.addEventListener("appinstalled", () => {
     alert(lang.thanks_install);
-     // ユーザーのブラウザ情報を取得
-    const browser = navigator.userAgent.includes('Chrome') ? 'Chrome' : 
-    navigator.userAgent.includes('Safari') ? 'Safari' : 
-    navigator.userAgent.includes('Firefox') ? 'Firefox' :
-    'Other';
+    // ユーザーのブラウザ情報を取得
+    const browser = navigator.userAgent.includes('Chrome') ? 'Chrome' :
+        navigator.userAgent.includes('Safari') ? 'Safari' :
+            navigator.userAgent.includes('Firefox') ? 'Firefox' :
+                'Other';
 
-// Google Analytics にイベント送信
-gtag('event', 'pwa_installed', {
-'event_category': 'engagement',
-'event_label': 'PWA Installed',
-'browser': browser,
-'timestamp': new Date().toISOString(),
-"id": playerId,
-'game_mode': gameMode,
-"gameFinishedCount": gameFinishedCount,
-"Won":ifVitory,
-});
+    // Google Analytics にイベント送信
+    gtag('event', 'pwa_installed', {
+        'event_category': 'engagement',
+        'event_label': 'PWA Installed',
+        'browser': browser,
+        'timestamp': new Date().toISOString(),
+        "id": playerId,
+        'game_mode': gameMode,
+        "gameFinishedCount": gameFinishedCount,
+        "Won": ifVitory,
+    });
 
 });
 
