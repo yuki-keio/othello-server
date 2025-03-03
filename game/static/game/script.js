@@ -113,12 +113,14 @@ function refreshBoard() {
 
 // `Event Delegation` を使って、`board` にイベントを一括設定
 board.addEventListener('click', (event) => {
-    const cell = event.target.closest('.cell');
-    if (!cell) return;
+    if (!aimove){
+        const cell = event.target.closest('.cell');
+        if (!cell) return;
 
-    const row = parseInt(cell.dataset.row, 10);
-    const col = parseInt(cell.dataset.col, 10);
-    makeMove(row, col);
+        const row = parseInt(cell.dataset.row, 10);
+        const col = parseInt(cell.dataset.col, 10);
+        makeMove(row, col);
+    }
 });
 
 function initializeBoard() {
@@ -244,12 +246,14 @@ async function applyServerMove(row, col, player, status, final = false) {
                 }
 
             } else {
-                if (status === 0) {
-                    notifyNoValidMoves(currentPlayer); //友達対戦の場合のパス
-                } else if (status === 1) {
-                    notifyNoValidMoves(currentPlayer);
-                } else if (status === 2) {
-                    alert(lang.you_pass) // AIの後のパス
+                if (status !== 1) {
+                    if (status === 0) {
+                        notifyNoValidMoves(currentPlayer); //友達対戦の場合のパス
+                    } else if (status === 1) {
+                        notifyNoValidMoves(currentPlayer);
+                    } else if (status === 2) {
+                        alert(lang.you_pass) // AIの後のパス
+                    }
                 }
                 aimove = false;
 
