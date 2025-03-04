@@ -150,14 +150,13 @@
     <link rel="icon" type="image/png" sizes="96x96" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/favicon-96x96.png' %}">
     <link rel="icon" type="image/png" sizes="192x192" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/favicon-192x192.png' %}">
     <link rel="manifest" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/manifest.json' %}">
-    <meta name="theme-color" content="#007508">
     {% if request.LANGUAGE_CODE == "ja" %}
-    <link rel="canonical" href="https://reversi.yuki-lab.com/">
+    <link rel="canonical" href="{% if mode == 'online' %}https://reversi.yuki-lab.com/online/{% elif mode == 'ai' %}https://reversi.yuki-lab.com/ai/{% elif mode == 'player' %}https://reversi.yuki-lab.com/{% else %}https://reversi.yuki-lab.com/{% endif %}">
     {% else %}
-    <link rel="canonical" href="https://reversi.yuki-lab.com/en/">
+    <link rel="canonical" href="{% if mode == 'online' %}https://reversi.yuki-lab.com/en/online/{% elif mode == 'ai' %}https://reversi.yuki-lab.com/en/ai/{% elif mode == 'player' %}https://reversi.yuki-lab.com/en/{% else %}https://reversi.yuki-lab.com/en/{% endif %}">
     {% endif %}
-    <link rel="alternate" hreflang="ja" href="https://reversi.yuki-lab.com/" />
-    <link rel="alternate" hreflang="en" href="https://reversi.yuki-lab.com/en/" />
+    <link rel="alternate" hreflang="ja" href="{% if mode == 'online' %}https://reversi.yuki-lab.com/online/{% elif mode == 'ai' %}https://reversi.yuki-lab.com/ai/{% elif mode == 'player' %}https://reversi.yuki-lab.com/{% else %}https://reversi.yuki-lab.com/{% endif %}" />
+    <link rel="alternate" hreflang="en" href="{% if mode == 'online' %}https://reversi.yuki-lab.com/en/online/{% elif mode == 'ai' %}https://reversi.yuki-lab.com/en/ai/{% elif mode == 'player' %}https://reversi.yuki-lab.com/en/{% else %}https://reversi.yuki-lab.com/en/{% endif %}" />
     <link rel="alternate" hreflang="x-default" href="https://reversi.yuki-lab.com/" />
     <!-- Google Analytics 最適化 -->
     <script nonce="{{ request.csp_nonce }}">
