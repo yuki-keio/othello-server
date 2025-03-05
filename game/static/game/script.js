@@ -582,7 +582,6 @@ function updateMoveList() {
     moveListElement.textContent = moveNotations.join('\n');
     moveListElement.scrollTop = moveListElement.scrollHeight;
 }
-
 function launchConfetti() {
     const rect = board.getBoundingClientRect()
     const windowHeight = window.innerHeight;
@@ -621,7 +620,6 @@ function launchConfetti() {
         });
     }, 800);
 }
-
 function endGame(online_data, winner = null) {
     ifVitory = false;
     console.log(`[endGame] Game ended. Winner: ${winner}` + "gameMode:" + gameMode);
@@ -632,7 +630,6 @@ function endGame(online_data, winner = null) {
     gameEnded = true;
     if (winner === "won") {
         share_winner = "won";
-
     } else if (online_data !== "offline") {
 
 
@@ -779,6 +776,9 @@ function endGame(online_data, winner = null) {
         'result': ifVitory,
         'gameMode': gameMode,
         'player_id': playerId,
+        'timeLimit': timeLimit,
+        'showValidMoves': showValidMoves,
+        'aiLevel': aiLevel,
     });
 
 

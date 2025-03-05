@@ -23,7 +23,7 @@
     </script>
     <script defer src="{% static 'game/script.js' %}"></script>
     <!-- 翻訳後の文字列をmain.jsへ受け渡し-->
-    {% with online_description=_("オンライン対戦モードで遠くの友達と対戦！リアルでの対人戦や、強力なAIとの対戦も可能です。【PC・スマホ・iPad対応】今すぐプレイ！（旧スマートオセロ）") ai_description=_("強力なオセロAIと対戦！オンライン対戦モードでは遠くの友達とも遊べます。【PC・スマホ・iPad対応】今すぐプレイ！（旧スマートオセロ）") player_description=_("対人戦や、強力なAIとの対戦が可能！オンライン対戦では遠くの友達とも遊べます。【PC・スマホ・iPad対応】今すぐプレイ！（旧サービス名：スマートオセロ）") else_description=_("対人戦や強力なAIとの対戦が可能！オンライン対戦では遠くの友達とも遊べます。【PC・スマホ・iPad対応】今すぐプレイ！（旧スマートオセロ）") %}
+    {% with online_description=_("オンライン対戦モードで遠くの友達と対戦！リアルでの対人戦や、強力なAIとの対戦が可能です。遊びやすいスマートなグラフィックも特徴【PC・スマホ・iPad対応】今すぐプレイ！（旧スマートオセロ）") ai_description=_("強力なオセロAIと対戦！オンライン対戦モードでは遠くの友達とも遊べます。遊びやすいスマートなグラフィックも特徴【PC・スマホ・iPad対応】今すぐプレイ！（旧スマートオセロ）") player_description=_("対人戦や、強力なAIとの対戦が可能！オンライン対戦では遠くの友達とも遊べます。遊びやすいスマートなグラフィックも特徴【PC・スマホ・iPad対応】今すぐプレイ！（旧サービス名：スマートオセロ）") else_description=_("対人戦や強力なAIとの対戦が可能！オンライン対戦では遠くの友達とも遊べます。【PC・スマホ・iPad対応】今すぐプレイ！（旧スマートオセロ）") %}
     <meta name="description" content="{% if mode == 'online' %}{{online_description}}{% elif mode == 'ai' %}{{ai_description}}{% elif mode == 'player' %}{{player_description}}{% else %}{{else_description}}{% endif %}">
     <script nonce="{{ request.csp_nonce }}">
         const lang = {
@@ -62,7 +62,7 @@
     </script>
     {% endwith %}
 
-    {% with online_title=_("オセロ対戦（オンライン） | 無料ゲームのリバーシWeb （旧スマートオセロ）") ai_title=_("オセロAIと対戦 | 無料ゲームのリバーシWeb （旧スマートオセロ）") player_title=_("オセロ | 無料ゲームのリバーシWeb （旧スマートオセロ）") else_title=_("無料ゲームのリバーシWeb （旧スマートオセロ）") %}
+    {% with online_title=_("オセロ対戦（オンライン） | リバーシWeb") ai_title=_("オセロAIと対戦 | リバーシWeb") player_title=_("オセロ | リバーシWeb") else_title=_("オセロ | リバーシWeb") %}
     <title>
         {% if mode == 'online' %}
         {{online_title}}
@@ -157,6 +157,7 @@
     {% endif %}
     <link rel="alternate" hreflang="ja" href="{% if mode == 'online' %}https://reversi.yuki-lab.com/online/{% elif mode == 'ai' %}https://reversi.yuki-lab.com/ai/{% elif mode == 'player' %}https://reversi.yuki-lab.com/{% else %}https://reversi.yuki-lab.com/{% endif %}" />
     <link rel="alternate" hreflang="en" href="{% if mode == 'online' %}https://reversi.yuki-lab.com/en/online/{% elif mode == 'ai' %}https://reversi.yuki-lab.com/en/ai/{% elif mode == 'player' %}https://reversi.yuki-lab.com/en/{% else %}https://reversi.yuki-lab.com/en/{% endif %}" />
+
     <link rel="alternate" hreflang="x-default" href="https://reversi.yuki-lab.com/" />
     <!-- Google Analytics 最適化 -->
     <script nonce="{{ request.csp_nonce }}">
