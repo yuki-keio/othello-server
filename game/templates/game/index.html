@@ -80,22 +80,8 @@
         const player_title = "{{player_title|escapejs}}";
         const else_title = "{{else_title|escapejs}}";
     </script>
-    <meta name="twitter:title" content="{% if mode == 'online' %}{{online_title}}
-        {% elif mode == 'ai' %}
-        {{ai_title}}
-        {% elif mode == 'player' %}
-        {{player_title}}
-        {% else %}
-        {{else_title}}
-        {% endif %}">
-    <meta property="og:title" content=" {% if mode == 'online' %}{{online_title}}
-        {% elif mode == 'ai' %}
-        {{ai_title}}
-        {% elif mode == 'player' %}
-        {{player_title}}
-        {% else %}
-        {{else_title}}
-        {% endif %}">
+    <meta name="twitter:title" content="{% if mode == 'online' %}{{online_title}}{% elif mode == 'ai' %}{{ai_title}}{% elif mode == 'player' %}{{player_title}}{% else %}{{else_title}}{% endif %}">
+    <meta property="og:title" content=" {% if mode == 'online' %}{{online_title}}{% elif mode == 'ai' %}{{ai_title}}{% elif mode == 'player' %}{{player_title}}{% else %}{{else_title}}{% endif %}">
     {% endwith %}
     {% if mode == "online" %}
     <script async src="https://cdn.jsdelivr.net/npm/profanity-cleaner@latest?source=false"></script>
