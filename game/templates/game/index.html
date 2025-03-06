@@ -80,29 +80,27 @@
         const player_title = "{{player_title|escapejs}}";
         const else_title = "{{else_title|escapejs}}";
     </script>
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{% if mode == 'online' %}{{online_title}}{% elif mode == 'ai' %}{{ai_title}}{% elif mode == 'player' %}{{player_title}}{% else %}{{else_title}}{% endif %}">
+    <meta property="og:description" content="{% trans 'オンラインで楽しめる無料オセロゲーム！' %}">
+    <meta property="og:url" content="https://reversi.yuki-lab.com">
+    <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/share-image.webp' %}">
+    <meta property="og:site_name" content="{% trans 'リバーシWeb' %}">
     <meta name="twitter:title" content="{% if mode == 'online' %}{{online_title}}{% elif mode == 'ai' %}{{ai_title}}{% elif mode == 'player' %}{{player_title}}{% else %}{{else_title}}{% endif %}">
-    <meta property="og:title" content=" {% if mode == 'online' %}{{online_title}}{% elif mode == 'ai' %}{{ai_title}}{% elif mode == 'player' %}{{player_title}}{% else %}{{else_title}}{% endif %}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:description" content="{% trans 'ダウンロード不要！友達対戦やAIとの対戦が可能なブラウザゲームです' %}">
+    <meta property="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/share-image.webp' %}">
     {% endwith %}
     {% if mode == "online" %}
     <script async src="https://cdn.jsdelivr.net/npm/profanity-cleaner@latest?source=false"></script>
     <script async src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     {% endif %}
     <script async src="{% static 'game/confetti.browser.min.js' %}"></script>
- 
-    <meta property="og:site_name" content="{% trans 'リバーシWeb' %}">
     {% if request.LANGUAGE_CODE == "ja" %}
     <meta property="og:locale" content="ja_JP">
     {% else %}
     <meta property="og:locale" content="en_US">
     {% endif %}
-    <meta property="og:description" content="{% trans 'オンラインで楽しめる無料オセロゲーム！' %}">
-    <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/share-image.webp' %}">
-    <meta property="og:url" content="https://reversi.yuki-lab.com">
-    <meta property="og:type" content="website">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:description" content="{% trans 'ダウンロード不要！友達対戦やAIとの対戦が可能なブラウザゲームです' %}">
-    <meta property="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/share-image.webp' %}">
-    
     <meta name="author" content="Yuki Lab">
     <meta name="robots" content="index, follow">    
     <meta name="keywords" content="{% trans 'オセロ, リバーシWeb, スマートオセロ, リバーシ, ゲーム, 無料, Web, おせろ, 電子オセロ盤, オセロAI, 友達対戦, ボードゲーム, オンライン, ブラウザゲー, 一人で遊べる' %}">
