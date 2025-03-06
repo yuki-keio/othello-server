@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-05 13:22+0900\n"
+"POT-Creation-Date: 2025-03-06 21:33+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -58,9 +58,9 @@ msgstr ""
 
 #: game/templates/game/index.html:26
 msgid ""
-"対人戦や、強力なAIとの対戦が可能！オンライン対戦では遠くの友達とも遊べます。"
-"遊びやすいスマートなグラフィックも特徴【PC・スマホ・iPad対応】今すぐプレイ！"
-"（旧サービス名：スマートオセロ）"
+"ブラウザで遊べるスマートオセロ盤です。対人戦や、強力なAIとの対戦も可能！オン"
+"ライン対戦では遠くの友達とも遊べます。遊びやすいスマートなグラフィックも特徴"
+"【PC・スマホ・iPad対応】今すぐプレイ！（旧サービス名：スマートオセロ）"
 msgstr ""
 "Play against powerful AI or human! In online matches, you can also play with "
 "distant friends! [PC, Smartphone, and iPad compatible] Play now!"
@@ -191,17 +191,17 @@ msgid "考え中"
 msgstr "Hmm..."
 
 #: game/templates/game/index.html:65
-msgid "オセロ対戦（オンライン） | リバーシWeb"
+msgid "オセロ対戦（オンライン） - 無料で遊べるWebゲーム"
 msgstr ""
-"Reversi Match (Online) | Free Reversi Game Web (Formerly Smart Othello)"
+"Reversi Match (Online) | Free Reversi Game (Formerly Smart Othello)"
 
 #: game/templates/game/index.html:65
-msgid "オセロAIと対戦 | リバーシWeb"
-msgstr "Reversi Web"
+msgid "オセロAIと対戦 - 無料で遊べるWebゲーム"
+msgstr "AI Match | Free Reversi Game"
 
 #: game/templates/game/index.html:65
-msgid "オセロ | リバーシWeb"
-msgstr "Reversi Web"
+msgid "オセロ盤 - 無料で遊べるWebゲーム"
+msgstr "Reversi Board | Free Reversi Game"
 
 #: game/templates/game/index.html:89 game/templates/game/index.html:90
 #: game/templates/game/index.html:206
@@ -814,6 +814,9 @@ msgstr ""
 #: game/templates/game/strategy-reversi-othello.html:106
 msgid "🎮️ オセロで遊ぶ"
 msgstr "🎮️ Play Reversi"
+
+#~ msgid "オセロ | リバーシWeb"
+#~ msgstr "Reversi Web"
 
 #~ msgid "オセロAIと対戦 | 無料ゲームのリバーシWeb （旧スマートオセロ）"
 #~ msgstr ""

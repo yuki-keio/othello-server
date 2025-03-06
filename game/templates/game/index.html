@@ -23,7 +23,7 @@
     </script>
     <script defer src="{% static 'game/script.js' %}"></script>
     <!-- 翻訳後の文字列をmain.jsへ受け渡し-->
-    {% with online_description=_("オンライン対戦モードで遠くの友達と対戦！リアルでの対人戦や、強力なAIとの対戦が可能です。遊びやすいスマートなグラフィックも特徴【PC・スマホ・iPad対応】今すぐプレイ！（旧スマートオセロ）") ai_description=_("強力なオセロAIと対戦！オンライン対戦モードでは遠くの友達とも遊べます。遊びやすいスマートなグラフィックも特徴【PC・スマホ・iPad対応】今すぐプレイ！（旧スマートオセロ）") player_description=_("対人戦や、強力なAIとの対戦が可能！オンライン対戦では遠くの友達とも遊べます。遊びやすいスマートなグラフィックも特徴【PC・スマホ・iPad対応】今すぐプレイ！（旧サービス名：スマートオセロ）") else_description=_("対人戦や強力なAIとの対戦が可能！オンライン対戦では遠くの友達とも遊べます。【PC・スマホ・iPad対応】今すぐプレイ！（旧スマートオセロ）") %}
+    {% with online_description=_("オンライン対戦モードで遠くの友達と対戦！リアルでの対人戦や、強力なAIとの対戦が可能です。遊びやすいスマートなグラフィックも特徴【PC・スマホ・iPad対応】今すぐプレイ！（旧スマートオセロ）") ai_description=_("強力なオセロAIと対戦！オンライン対戦モードでは遠くの友達とも遊べます。遊びやすいスマートなグラフィックも特徴【PC・スマホ・iPad対応】今すぐプレイ！（旧スマートオセロ）") player_description=_("ブラウザで遊べるスマートオセロ盤です。対人戦や、強力なAIとの対戦も可能！オンライン対戦では遠くの友達とも遊べます。遊びやすいスマートなグラフィックも特徴【PC・スマホ・iPad対応】今すぐプレイ！（旧サービス名：スマートオセロ）") else_description=_("対人戦や強力なAIとの対戦が可能！オンライン対戦では遠くの友達とも遊べます。【PC・スマホ・iPad対応】今すぐプレイ！（旧スマートオセロ）") %}
     <meta name="description" content="{% if mode == 'online' %}{{online_description}}{% elif mode == 'ai' %}{{ai_description}}{% elif mode == 'player' %}{{player_description}}{% else %}{{else_description}}{% endif %}">
     <script nonce="{{ request.csp_nonce }}">
         const lang = {
@@ -62,7 +62,7 @@
     </script>
     {% endwith %}
 
-    {% with online_title=_("オセロ対戦（オンライン） | リバーシWeb") ai_title=_("オセロAIと対戦 | リバーシWeb") player_title=_("オセロ | リバーシWeb") else_title=_("オセロ | リバーシWeb") %}
+    {% with online_title=_("オセロ対戦（オンライン） - 無料で遊べるWebゲーム") ai_title=_("オセロAIと対戦 - 無料で遊べるWebゲーム") player_title=_("オセロ盤 - 無料で遊べるWebゲーム") else_title=_("オセロ - 無料で遊べるWebゲーム") %}
     <title>
         {% if mode == 'online' %}
         {{online_title}}
@@ -93,12 +93,13 @@
     {% else %}
     <meta property="og:locale" content="en_US">
     {% endif %}
-    <meta property="og:description" content="{% trans "オンラインで楽しめるリバーシゲーム！（オセロ）" %}">
+    <meta property="og:description" content="{% trans "オンラインで楽しめる無料オセロゲーム！" %}">
     <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/share-image.webp' %}">
     <meta property="og:url" content="https://reversi.yuki-lab.com">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{% trans "リバーシWeb | 無料オセロゲーム" %}">
+    <meta name="twitter:title" content="{% trans "
+    オセロ - 無料で遊べるWebゲーム" %}">
     <meta name="twitter:description" content="{% trans "ダウンロード不要！友達対戦やAIとの対戦が可能なブラウザゲームです" %}">
     <meta property="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/share-image.webp' %}">
     
@@ -110,10 +111,10 @@
             "@context": "https://schema.org",
             "@type": "SoftwareApplication",
             "@additionalType": ["https://schema.org/VideoGame", "https://schema.org/WebApplication"],
-            "name": "リバーシWeb - ブラウザで遊べる無料ゲーム",
+            "name": "オセロ - 無料で遊べるWebゲーム",
             "applicationCategory": "GameApplication",
             "alternateName": "無料オセロゲームのスマートオセロ",
-            "description": "無料のリバーシゲーム(オセロ)。一人で遊べるAI対戦モードや、友達とのオンライン対戦モードなどがありますも。ブラウザで今すぐプレイ！",
+            "description": "無料で遊べるオセロゲーム。一人で遊べるAI対戦モードや、友達とのオンライン対戦モードなどがあります。ブラウザで今すぐプレイ！",
             "image": "https://reversi.yuki-lab.com/static/game/images/share-image.webp",
             "url": "https://reversi.yuki-lab.com",
             "operatingSystem": "Web",
@@ -126,7 +127,7 @@
             "hasPart": [
               {
                 "@type": "WebPage",
-                "name": "電子オセロ盤",
+                "name": "オセロ盤",
                 "url": "https://reversi.yuki-lab.com"
               },
               {
@@ -136,7 +137,7 @@
               },
               {
                 "@type": "WebPage",
-                "name": "通信対戦",
+                "name": "オンライン対戦",
                 "url": "https://reversi.yuki-lab.com/online"
               }]
 
