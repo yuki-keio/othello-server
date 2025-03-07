@@ -23,7 +23,7 @@
     </script>
     <script defer src="{% static 'game/script.js' %}"></script>
     <!-- 翻訳後の文字列をmain.jsへ受け渡し-->
-    {% with online_description=_("オンライン対戦モードで遠くの友達と対戦！リアルでの対人戦や、強力なAIとの対戦が可能です。遊びやすいスマートなグラフィックも特徴【PC・スマホ・iPad対応】今すぐプレイ！（旧スマートオセロ）") ai_description=_("強力なオセロAIと対戦！オンライン対戦モードでは遠くの友達とも遊べます。遊びやすいスマートなグラフィックも特徴【PC・スマホ・iPad対応】今すぐプレイ！（旧スマートオセロ）") player_description=_("ブラウザで遊べるスマートオセロ盤です。対人戦や、強力なAIとの対戦も可能！オンライン対戦では遠くの友達とも遊べます。遊びやすいスマートなグラフィックも特徴【PC・スマホ・iPad対応】今すぐプレイ！（旧サービス名：スマートオセロ）") else_description=_("対人戦や強力なAIとの対戦が可能！オンライン対戦では遠くの友達とも遊べます。【PC・スマホ・iPad対応】今すぐプレイ！（旧スマートオセロ）") %}
+    {% with online_description=_("オンライン対戦モードで遠くの人ともWebオセロ！リアルでの対人戦や、強力なAIとの対戦が可能です。遊びやすいスマートなグラフィックも特徴【PC・スマホ・iPad対応】今すぐプレイ！（旧スマートオセロ）") ai_description=_("強力なオセロAIとWeb上で対戦！オンライン対戦モードでは遠くの友達とも遊べます。遊びやすいスマートなグラフィックも特徴【PC・スマホ・iPad対応】今すぐプレイ！（旧スマートオセロ）") player_description=_("Webブラウザで遊べるスマートオセロ盤です。対人戦や、強力なAIとの対戦も可能！オンライン対戦では遠くの友達とも遊べます。遊びやすいスマートなグラフィックも特徴【PC・スマホ・iPad対応】今すぐプレイ！（旧サービス名：スマートオセロ）") else_description=_("対人戦や強力なAIとの対戦が可能！オンライン対戦では遠くの友達とも遊べます。【PC・スマホ・iPad対応】今すぐプレイ！（旧スマートオセロ）") %}
     <meta name="description" content="{% if mode == 'online' %}{{online_description}}{% elif mode == 'ai' %}{{ai_description}}{% elif mode == 'player' %}{{player_description}}{% else %}{{else_description}}{% endif %}">
     <script nonce="{{ request.csp_nonce }}">
         const lang = {
@@ -374,9 +374,9 @@
         </div>  
         <!--<a href="https://pc.moppy.jp/entry/invite.php?invite=y22tA17c&type=service"><img decoding="async" loading="lazy" src="https://img.moppy.jp/pub/pc/friend/640x480-13.jpg" alt="アプリインストール・ゲームアプリで無料で簡単にポイントが貯まる！楽しくポイ活するならモッピー" id="ad" ></a>-->
     <section class="notes">
-        <h2>{% trans "本サイト・リバーシWebの機能" %}</h2>
+        <h2>{% trans "当サイト「リバーシWeb」の機能" %}</h2>
         <p>{% blocktrans trimmed %}
-            リバーシ（オセロゲーム）が無料ですぐ遊べるWebサイトです。<a href="/ai/">AI対戦</a>、<a href="/online/">オンライン対戦</a>、<a href="/">電子オセロ盤</a>など、様々な機能に対応しています。 <strong>独自のURLシェア機能</strong> によって、友達との対戦や観戦、棋譜の共有などが簡単に行える点も特徴です
+            オセロを無料で遊べるWebサイトです。<a href="/ai/">AI対戦</a>、<a href="/online/">オンライン対戦</a>、<a href="/">電子オセロ盤</a>など、様々な機能に対応しています。 <strong>独自のURLシェア機能</strong> によって、友達との対戦や観戦、棋譜の共有などが簡単に行える点も特徴です
         {% endblocktrans %}
         </p>
         <h3>
@@ -393,9 +393,9 @@
           
         <p>
     {% if mode == 'online' %}
-        {% trans "オンライン対戦モード（通信対戦モード）では、別々のデバイスからゲームに参加できます。遠く離れた場所にいる人ともオセロを遊ぶことができます。招待URLを共有するか、QRコードをスキャンすることで、対局への参加や観戦が可能です。" %}
+        {% trans "オンライン対戦モード（通信対戦モード）では、別々のデバイスからゲームに参加できます。遠く離れた場所にいる人ともWeb上でオセロを遊ぶことができます。招待URLを共有するか、QRコードをスキャンすることで、対局への参加や観戦が可能です。" %}
     {% elif mode == 'ai' %}
-        {% trans "初級から上級まで、自分に合った強さのオセロAIと対戦できます。素早くプレイしたい場合は、最も高速な初級AIがおすすめです。" %}
+        {% trans "初級から上級まで、自分に合った強さのオセロAIとWeb上で対戦できます。素早くプレイしたい場合は、最も高速な初級AIがおすすめです。" %}
     {% elif mode == 'player' %}
         {% trans "電子オセロ盤モードでは、デバイス1台でオセロを遊ぶことができます。現地で家族や友達とオセロを遊びたいけれど、現物のオセロ盤を持っていない時に便利です。" %}
     {% else %}
