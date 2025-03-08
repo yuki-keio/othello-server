@@ -60,9 +60,9 @@ self.addEventListener("fetch", event => {
         }
         return;
     }
-    console.log("request:", event.request.url.replace(location.origin, "").replace("https://reversi.yuki-lab.com", ""));
+    console.log("request:", event.request.url.replace(location.origin, "").replace("https://reversi.yuki-lab.com", "").replace(/(\.[a-f0-9]{8,})(\.[^/.]+)$/, "$2"));
     event.respondWith(
-        caches.match(event.request.url.replace(location.origin, "").replace("https://reversi.yuki-lab.com", ""))
+        caches.match(event.request.url.replace(location.origin, "").replace("https://reversi.yuki-lab.com", "").replace(/(\.[a-f0-9]{8,})(\.[^/.]+)$/, "$2"))
             .then(response => response || fetch(event.request)).catch(error => {
                 console.error("Fetch Error(not '/online/' page):", error);
             })

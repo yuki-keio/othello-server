@@ -5,9 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% trans "オフライン" %}</title>
-    <style>
-        body { text-align: center; padding: 20px; font-family: Arial, sans-serif; }
-        .message { font-size: 20px; color: red; }
+    <style nonce="{{ request.csp_nonce }}">
+        body { text-align: center; padding: 20px; font-family: Arial, sans-serif}.message { font-size: 20px; color: red; }
     </style>
 </head>
 <body>
