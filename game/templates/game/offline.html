@@ -1,0 +1,18 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="{% if request.LANGUAGE_CODE == 'en' %}en{% else %}ja{% endif %}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% trans "オフライン" %}</title>
+    <style>
+        body { text-align: center; padding: 20px; font-family: Arial, sans-serif; }
+        .message { font-size: 20px; color: red; }
+    </style>
+</head>
+<body>
+    <h1>{% trans "オフライン状態です" %}</h1>
+    <p class="message">{% trans "オンライン対戦モードを遊ぶためには、オンライン状態である必要があります" %}</p>
+    <a href="{% if request.LANGUAGE_CODE == 'en' %}/en/{% else %}/{% endif %}">{% trans "ホーム画面に戻る" %}</a>
+</body>
+</html>

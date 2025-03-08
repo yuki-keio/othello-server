@@ -23,10 +23,7 @@ from django.contrib.sitemaps.views import sitemap
 from game.sitemaps import StaticViewSitemap
 from django.views.generic.base import RedirectView
 from django.conf.urls.i18n import i18n_patterns  
-from game.views import game_view
-
-
-
+from game.views import game_view, service_worker
 
 sitemaps = {  # ← ここで sitemaps を定義
     'static': StaticViewSitemap(),
@@ -34,6 +31,7 @@ sitemaps = {  # ← ここで sitemaps を定義
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path("sw.js", service_worker, name="service_worker"),
     path('', include('game.urls')),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path('i18n/', include('django.conf.urls.i18n')),

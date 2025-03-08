@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-08 19:23+0900\n"
+"POT-Creation-Date: 2025-03-08 21:47+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -671,6 +671,22 @@ msgid ""
 msgstr ""
 "© 2024~ Yuki-Lab | This game uses a universal design font that is easy to "
 "read for many people."
+
+#: game/templates/game/offline.html:7
+msgid "オフライン"
+msgstr "Offline"
+
+#: game/templates/game/offline.html:14
+msgid "オフライン状態です"
+msgstr "You are offline"
+
+#: game/templates/game/offline.html:15
+msgid "オンライン対戦モードを遊ぶためには、オンライン状態である必要があります"
+msgstr "You need to be online to play online matches."
+
+#: game/templates/game/offline.html:16
+msgid "ホーム画面に戻る"
+msgstr "Back to Home"
 
 #: game/templates/game/strategy-reversi-othello.html:9
 msgid ""

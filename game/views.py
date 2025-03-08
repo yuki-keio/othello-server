@@ -3,6 +3,8 @@ from urllib.parse import urlencode
 from django.http import HttpResponse
 import logging
 from django.utils.translation import get_language
+import os
+from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
@@ -43,6 +45,17 @@ def game_view(request, mode=None):
 
 def othello_view(request):
     return render(request, "game/strategy-reversi-othello.html")
+
+def offline_view(request):
+    return render(request, "game/offline.html")
+
+def service_worker(request):
+    """Service Worker ファイルを提供"""
+    sw_path = os.path.join(settings.BASE_DIR, "game/static/game/sw.js")
+    with open(sw_path, "r", encoding="utf-8") as sw_file:
+        response = HttpResponse(sw_file.read(), content_type="application/javascript; charset=utf-8")
+        response["Service-Worker-Allowed"] = "/"
+        return response
 
 def robots_txt(request):
     content = """User-agent: *
