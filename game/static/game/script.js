@@ -976,9 +976,6 @@ function restart() {
         timeLimit = 0;
         localStorage.setItem('timeLimit', timeLimit);
 
-
-
-
         // 新しい部屋を生成
         // 新しい部屋IDをランダムに生成（UUID の代わりに短いランダム文字列）
         const newRoomId = Math.random().toString(36).substring(2, 8);
@@ -998,9 +995,15 @@ function restart() {
 
     } else {
         let newUrl = `${window.location.origin}/${gameMode}/`;
+        if (gameMode === "player") {
+            newUrl = `${window.location.origin}/`;
+        }
 
         if (window.location.pathname.split('/').filter(Boolean)[0] === "en") {
             newUrl = `${window.location.origin}/en/${gameMode}/`;
+            if (gameMode === "player") {
+                newUrl = `${window.location.origin}/en/`;
+            }
         }
 
         localStorage.setItem('deleted_urls', JSON.stringify([]));
