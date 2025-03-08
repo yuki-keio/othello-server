@@ -1,4 +1,4 @@
-const CACHE_NAME = "my-django-app-cache-v3";
+const CACHE_NAME = "my-django-app-cache-v5";
 const urlsToCache = [
     "/",  // ホーム
     "/ai/",
@@ -22,7 +22,7 @@ const urlsToCache = [
     "/static/game/sounds/place-stone.mp3",
     "/static/game/sounds/warning.mp3",
     "/static/game/style.css",
-    "/static/game/strategy.css"
+    "/static/game/strategy.css",
 ];
 
 // インストール時にキャッシュする
@@ -40,7 +40,7 @@ self.addEventListener("fetch", event => {
         switch (lang) {
             case "en":
                 event.respondWith(
-                    fetch(event.request) // ネットワークにアクセスを試みる
+                    fetch(event.request,{ cache: "no-store", mode: "no-cors"}) // ネットワークにアクセスを試みる
                         .catch(() => { // ネットワークエラーならオフラインページを返す
                             return caches.match("/en/offline.html")
                         })
@@ -50,7 +50,7 @@ self.addEventListener("fetch", event => {
 
             default:
                 event.respondWith(
-                    fetch(event.request) // ネットワークにアクセスを試みる
+                    fetch(event.request,{ cache: "no-store", mode: "no-cors"}) // ネットワークにアクセスを試みる
                         .catch(() => { // ネットワークエラーならオフラインページを返す
                             return caches.match("/offline.html")
                         })
@@ -65,6 +65,11 @@ self.addEventListener("fetch", event => {
         caches.match(event.request.url.replace(location.origin, "").replace("https://reversi.yuki-lab.com", "").replace(/(\.[a-f0-9]{8,})(\.[^/.]+)$/, "$2"))
             .then(response => response || fetch(event.request)).catch(error => {
                 console.error("Fetch Error(not '/online/' page):", error);
+                return new Response("Offline content not available", {
+                    status: 503,
+                    statusText: "Service Unavailable",
+                    headers: { "Content-Type": "text/plain" }
+                });
             })
     );
 });
