@@ -32,7 +32,8 @@ CSP_CONNECT_SRC = (
     "https://ep2.adtrafficquality.google",
     "https://fonts.googleapis.com/",
     "https://fonts.gstatic.com/",
-    "https://cdn.jsdelivr.net/"
+    "https://cdn.jsdelivr.net/",
+    "https://cdnjs.cloudflare.com/"
 )
 
 CSP_SCRIPT_SRC = (
