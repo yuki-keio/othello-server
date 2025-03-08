@@ -3,10 +3,10 @@ const urlsToCache = [
     "/",  // ホーム
     "/ai/",
     "/en/",  // 英語版ホーム
-    "/en/ai/",  
-    "/offline.html",  
-    "/en/offline.html",  
-    "/strategy-reversi-othello.html", 
+    "/en/ai/",
+    "/offline.html",
+    "/en/offline.html",
+    "/strategy-reversi-othello.html",
     "/en/strategy-reversi-othello.html",
     "/static/game/images/favicon/favicon.ico",
     "/static/game/images/favicon/favicon-192x192.png",
@@ -35,26 +35,36 @@ self.addEventListener("install", event => {
 
 // キャッシュを使ってリクエストを処理
 self.addEventListener("fetch", event => {
-    if (!navigator.onLine) {
-        // オフライン時に "/online-match" へアクセスしようとしたら、オフラインページへリダイレクト
-        if (event.request.url.includes("/online")) {
-            const lang = window.location.pathname.split('/').filter(Boolean)[0];
-            switch (lang) {
-                case "en":
-                    event.respondWith(caches.match("/en/offline.html"));
-                    break;
-            
-                default:
-                    event.respondWith(caches.match("/offline.html"));
-                    break;
-            }
-            return;
+    if (event.request.url.includes("/online")) {
+        const lang = location.pathname.split('/').filter(Boolean)[0];
+        switch (lang) {
+            case "en":
+                event.respondWith(
+                    fetch(event.request) // ネットワークにアクセスを試みる
+                        .catch(() => { // ネットワークエラーならオフラインページを返す
+                            return caches.match("/en/offline.html")
+                        })
+                );
+
+                break;
+
+            default:
+                event.respondWith(
+                    fetch(event.request) // ネットワークにアクセスを試みる
+                        .catch(() => { // ネットワークエラーならオフラインページを返す
+                            return caches.match("/offline.html")
+                        })
+                );
+
+                break;
         }
+        return;
     }
+    console.log("request:", event.request.url.replace(location.origin, "").replace("https://reversi.yuki-lab.com", ""));
     event.respondWith(
-        caches.match(event.request)
+        caches.match(event.request.url.replace(location.origin, "").replace("https://reversi.yuki-lab.com", ""))
             .then(response => response || fetch(event.request)).catch(error => {
-                console.error("Fetch Error:", error);
+                console.error("Fetch Error(not '/online/' page):", error);
             })
     );
 });
@@ -65,7 +75,7 @@ self.addEventListener("activate", event => {
         caches.keys().then(cacheNames => {
             return Promise.all(
                 cacheNames.filter(cacheName => cacheName !== CACHE_NAME)
-                          .map(cacheName => caches.delete(cacheName))
+                    .map(cacheName => caches.delete(cacheName))
             );
         })
     );
