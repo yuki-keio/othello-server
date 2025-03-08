@@ -30,7 +30,7 @@ CSP_CONNECT_SRC = (
     "https://googleads.g.doubleclick.net",
     "https://ep1.adtrafficquality.google",
     "https://ep2.adtrafficquality.google",
-    
+    "https://fonts.googleapis.com/",
 )
 
 CSP_SCRIPT_SRC = (
@@ -66,7 +66,6 @@ CSP_FRAME_SRC = (
 )
 CSP_STYLE_SRC = (
     "'self'",
-    
     "https://fonts.googleapis.com",
     "https://pagead2.googlesyndication.com",
     "https://reversi.yuki-lab.com/static/",  
