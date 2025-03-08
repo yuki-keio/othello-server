@@ -14,6 +14,11 @@
         #surrender-btn{padding:10px 20px;font-size:16px;background-color:#d32f2f;color:#fff;border:none;border-radius:8px;cursor:pointer;display:inline-block;transition:background-color 0.2s ease-in-out}#surrender-btn:hover{background-color:#b71c1c}#game-settings-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);display:none;justify-content:center;align-items:center;z-index:10}#game-settings{background:#fff;padding-bottom:19px;padding-left:10px;padding-right:10px;border-radius:8px;text-align:center;box-shadow:0 4px 10px rgba(0,0,0,.3);width:80%;max-width:260px}#contents-overlay-setting{text-align:left;padding:13px}#time_overlay-label{font-size:14px;display:block}#time-limit{padding:6px;font-size:14px;border-radius:5px;border:1px solid #ccc}#highlight-moves{margin-right:5px}#start-match{padding:10px 20px;font-size:16px;background-color:#007408;color:#fff;border:none;border-radius:5px;cursor:copy;display:flex;align-items:center;justify-content:center;width:auto;height:40px;white-space:nowrap}#start-match:hover{background:#00ab0b}.qr-popup{display:none;position:absolute;z-index:1000;left:50%;top:50%;transform:translate(-50%,-50%);width:85%;aspect-ratio:1/1;max-width:285px;background:#fff;padding-bottom:15px;border-radius:10px;box-shadow:0 0 10px rgba(0,0,0,.5);align-items:center;justify-content:center}.qr-popup-content{position:relative}#qr{margin-left:5px;width:40px;height:40px;background:transparent;border:none;cursor:pointer;transition:background 0.2s;display:flex}#qr-icon{width:100%;height:100%}.invite-container{margin-top:10px;display:flex;align-items:center;justify-content:center}#qrcode{display:flex;justify-content:center;align-items:center;width:100%;aspect-ratio:1/1;margin:0 auto}
     </style>
     {% endif %}
+    {% if request.LANGUAGE_CODE == "en" %}
+        <style nonce="{{ request.csp_nonce }}">
+            #ai-level-display{top:-1px;right: -35px;font-size:.5em;width:130px}#ai-level-display:after{content:" ▼";font-size:.4em;margin-left:6px;transition:transform 0.3s ease}
+        </style>
+    {% endif %}
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="stylesheet" href="{% static 'game/style.css' %}" media="print" id="dynamic-css">
