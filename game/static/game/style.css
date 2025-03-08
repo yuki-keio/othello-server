@@ -24,15 +24,15 @@
    
 #ai-level-display {
   position: relative;
-  top: -6px;
+  top: -8px;
   display: inline-flex;
   align-items: center;
   cursor: pointer;
-  background: linear-gradient(to bottom, #009e00, #007508);
-  color: white;
+  background: linear-gradient(to bottom, transparent 0%,transparent 70%, #cfcfcf);
+  border: 1px solid #828282;
+  color: black;
   padding: 10px 17px;
   border-radius: 6px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
   transition: all 0.2s ease;
   margin: 0;
   font-size: 0.7em;
@@ -47,8 +47,8 @@
 }
 
 #ai-level-display:hover {
-  background: linear-gradient(to bottom, #00b900, #009e00);
-  box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+  background: rgb(243, 243, 243);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.2);
   transform: translateY(-1px);
 }
 
