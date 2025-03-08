@@ -18,33 +18,6 @@
     color: #888;
     font-style: italic;
 }
-  
-
-
-   
-#ai-level-display {
-  position: relative;
-  top: -8px;
-  display: inline-flex;
-  align-items: center;
-  cursor: pointer;
-  background: linear-gradient(to bottom, transparent 0%,transparent 70%, #cfcfcf);
-  border: 1px solid #828282;
-  color: black;
-  padding: 10px 17px;
-  border-radius: 6px;
-  transition: all 0.2s ease;
-  margin: 0;
-  font-size: 0.7em;
-  font-weight: 400;
-}
-
-#ai-level-display:after {
-  content: " ▼";
-  font-size: 0.5em;
-  margin-left: 6px;
-  transition: transform 0.3s ease;
-}
 
 #ai-level-display:hover {
   background: rgb(243, 243, 243);
