@@ -67,7 +67,7 @@
     </script>
     {% endwith %}
 
-    {% with online_title=_("オセロ対戦（オンライン） - 無料Webオセロゲーム") ai_title=_("オセロAIと対戦 - 無料Webオセロゲーム") player_title=_("オセロ盤 - 無料Webオセロゲーム") else_title=_("オセロ - 無料Webオセロゲーム") %}
+    {% with online_title=_("オセロ対戦（オンライン） - 無料Webオセロゲーム") ai_title=_("オセロAIと対戦 - 無料Webオセロゲーム") player_title=_("オセロ - 無料Webゲーム") else_title=_("オセロ - 無料Webゲーム") %}
     <title>
         {% if mode == 'online' %}
         {{online_title}}
@@ -459,19 +459,18 @@
     <!-- iOS専用のインストールガイド -->
     <div id="ios-install-guide" class="install-guide">
         <div class="install-guide-content">
-            <h5>{% trans "「ホーム画面に追加」でもっと快適に遊べます!" %}</h5>
+            <h5>{% trans "「ホーム画面に追加」すると、もっと快適に遊べます!" %}</h5>
             <ul>{% blocktrans trimmed %}
                 <li>✅️ Webアプリだからアプリ容量はほぼ0！</li>
                 <li>✅️ 高速に起動して時短！</li>
-                <li>✅️ オフラインでも一部遊べる！</li>
+                <li>✅️ オフラインで遊べる！</li>
                 {% endblocktrans %}
             </ul>
+            <h5 id="how2install">{% trans "▼ 追加方法" %}</h5>
         </div>
-            <div class="guide-icons">
-                <img src="{% static 'game/images/share-icon.webp' %}" alt="{% trans 'iOSの共有ボタン' %}" class="icon" loading="lazy">
-                <span class="arrow">➡️</span>
-                <img src="{% static 'game/images/install-guide.webp' %}" alt="{% trans 'リバーシ（オセロ）を無料でホーム画面に追加する方法' %}" id="install-guide-img" loading="lazy">
-            </div>
+        
+            <img src="{% static 'game/images/iOSinstall.webp' %}" alt="{% trans 'iOSでのインストール方法：共有ボタンを押し、次にホーム画面に追加を選択' %}" id="ios-install-guide-img">
+      
             <button id="close-install-guide">{% trans "✖️ 閉じる" %}</button>
     </div>
     <!--フィードバック用フォームへのリンク-->

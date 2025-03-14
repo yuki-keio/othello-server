@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-08 21:47+0900\n"
+"POT-Creation-Date: 2025-03-15 00:26+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -199,12 +199,8 @@ msgid "オセロAIと対戦 - 無料Webオセロゲーム"
 msgstr "AI Match | Free Reversi Game"
 
 #: game/templates/game/index.html:70
-msgid "オセロ盤 - 無料Webオセロゲーム"
-msgstr "Reversi Board | Free Reversi Game"
-
-#: game/templates/game/index.html:70
-msgid "オセロ - 無料Webオセロゲーム"
-msgstr "Reversi Web | Free Reversi Game"
+msgid "オセロ - 無料Webゲーム"
+msgstr "Reversi Web | Free Othello Game"
 
 #: game/templates/game/index.html:90
 msgid "オンラインで楽しめる無料オセロゲーム！"
@@ -637,34 +633,34 @@ msgid "リバーシ（オセロ）で勝つためのコツ"
 msgstr "Tips for Winning in Reversi (Othello)"
 
 #: game/templates/game/index.html:462
-msgid "「ホーム画面に追加」でもっと快適に遊べます!"
+msgid "「ホーム画面に追加」すると、もっと快適に遊べます!"
 msgstr "Add to Home Screen for a Better Experience!"
 
 #: game/templates/game/index.html:463
 msgid ""
 "<li>✅️ Webアプリだからアプリ容量はほぼ0！</li> <li>✅️ 高速に起動して時短！</"
-"li> <li>✅️ オフラインでも一部遊べる！</li>"
+"li> <li>✅️ オフラインで遊べる！</li>"
 msgstr ""
-"<li>✅️ Web app with almost zero storage usage!</li> <li>✅️ Fast startup for "
-"quick play!</li> <li>✅️ Some features available offline!</li>"
+"<li>✅️ Almost zero storage usage!</li> <li>✅️ Fast startup for quick play!</"
+"li> <li>✅️ Some features will be available offline!</li>"
 
-#: game/templates/game/index.html:471
-msgid "iOSの共有ボタン"
-msgstr "iOS Share Button"
+#: game/templates/game/index.html:469
+msgid "▼ 追加方法"
+msgstr "▼ How to Add"
 
-#: game/templates/game/index.html:473
-msgid "リバーシ（オセロ）を無料でホーム画面に追加する方法"
-msgstr "How to Add Reversi (Othello) to Your Home Screen for Free"
+#: game/templates/game/index.html:472
+msgid "iOSでのインストール方法：共有ボタンを押し、次にホーム画面に追加を選択"
+msgstr "How to install on iOS: Press the share button, then select Add to Home Screen"
 
-#: game/templates/game/index.html:475
+#: game/templates/game/index.html:474
 msgid "✖️ 閉じる"
 msgstr "✖️ Close"
 
-#: game/templates/game/index.html:479
+#: game/templates/game/index.html:478
 msgid "開発者へフィードバックを送る"
 msgstr "Send Feedback to the Developer"
 
-#: game/templates/game/index.html:483
+#: game/templates/game/index.html:482
 msgid ""
 "© 2024~ Yuki-Lab | 本ゲームでは、多くの人にとって読みやすいユニバーサルデザイ"
 "ンフォントを使用しています"
@@ -676,15 +672,15 @@ msgstr ""
 msgid "オフライン"
 msgstr "Offline"
 
-#: game/templates/game/offline.html:14
+#: game/templates/game/offline.html:13
 msgid "オフライン状態です"
 msgstr "You are offline"
 
-#: game/templates/game/offline.html:15
+#: game/templates/game/offline.html:14
 msgid "オンライン対戦モードを遊ぶためには、オンライン状態である必要があります"
 msgstr "You need to be online to play online matches."
 
-#: game/templates/game/offline.html:16
+#: game/templates/game/offline.html:15
 msgid "ホーム画面に戻る"
 msgstr "Back to Home"
 

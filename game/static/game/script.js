@@ -765,13 +765,7 @@ function endGame(online_data, winner = null) {
 
     }
 
-    if (gameMode === "ai" && ifVitory) {
-        const currentAiLevel = document.getElementById('aiLevelSelect').value;
-        if (window.unlockNextAiLevel) {
-            window.unlockNextAiLevel(currentAiLevel);
-        }
-
-    }
+   
     gtag('event', 'game_result', {
         'result': ifVitory,
         'gameMode': gameMode,
@@ -795,11 +789,20 @@ function endGame(online_data, winner = null) {
         showInstallPrompt();
     } else if (gameFinishedCount === 3 && deferredPrompt) {
         showInstallPrompt();
-    } else if (isIOS() && !window.navigator.standalone && gameFinishedCount === 1) {
+    } 
+    if (isIOS() && !window.navigator.standalone && gameFinishedCount === 1) {
         iOSinstallGuide();
     } else if (isIOS() && !window.navigator.standalone && gameFinishedCount === 3) {
         iOSinstallGuide();
+    } else{
+        if (gameMode === "ai" && ifVitory) {
+            const currentAiLevel = document.getElementById('aiLevelSelect').value;
+            if (window.unlockNextAiLevel) {
+                window.unlockNextAiLevel(currentAiLevel);
+            }
+        }
     }
+    
 }
 
 function serializeMoveHistory() {
@@ -2164,6 +2167,12 @@ document.getElementById("setting").addEventListener('click', () => {
 });
 document.getElementById("close-install-guide").addEventListener("click", () => {
     document.getElementById("ios-install-guide").style.display = "none";
+    if (gameMode === "ai" && ifVitory) {
+        const currentAiLevel = document.getElementById('aiLevelSelect').value;
+        if (window.unlockNextAiLevel) {
+            window.unlockNextAiLevel(currentAiLevel);
+        }
+    }
 });
 document.getElementById('showValidMovesCheckbox').checked = showValidMoves;
 
