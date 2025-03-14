@@ -1,6 +1,7 @@
 {
 	"name": "リバーシWeb | yuki-lab",
 	"short_name": "リバーシ",
+	"description": "無料で遊べるオセロゲーム！",
 	"icons": [
 	  {
 		"src": "https://reversi.yuki-lab.com/static/game/images/favicon/android-chrome-192x192.png",
@@ -15,10 +16,16 @@
 		"purpose": "any maskable"
 	  }
 	],
+	"screenshots": [
+		{
+			"src": "https://reversi.yuki-lab.com/static/game/images/share-image.webp",
+			"sizes": "960x488",
+			"type": "image/png"
+		}
+	],
 	"theme_color": "#007508",
 	"background_color": "#007508",
 	"display": "standalone",
 	"scope": "https://reversi.yuki-lab.com/",
 	"start_url": "https://reversi.yuki-lab.com/"
-  }
-  
+}

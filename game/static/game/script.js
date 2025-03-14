@@ -331,7 +331,7 @@ function makeMove(row, col, status = 0) {
             sendMove(row, col);
         } else {
             const roleDisplay = role_online === "black" ? lang.black : role_online === "white" ? lang.white : lang.spec;
-            alert(`${lang.not_your_turn}：${currentPlayer === 'black' ? lang.black : lang.white}, ${lang.you}：${roleDisplay}`);
+            alert(`${lang.not_your_turn}${currentPlayer === 'black' ? lang.black : lang.white}, ${lang.you}：${roleDisplay}`);
 
             return;
         }
