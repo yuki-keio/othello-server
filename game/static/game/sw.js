@@ -1,4 +1,4 @@
-const CACHE_NAME = "my-django-app-cache-v8";
+const CACHE_NAME = "my-django-app-cache-v9";
 const urlsToCache = [
     "/",  // ホーム
     "/ai/",
@@ -90,6 +90,6 @@ self.addEventListener("activate", event => {
                 cacheNames.filter(cacheName => cacheName !== CACHE_NAME)
                     .map(cacheName => caches.delete(cacheName))
             );
-        })
+        }).then(() => self.clients.claim())
     );
 });
