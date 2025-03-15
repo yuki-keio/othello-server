@@ -61,6 +61,14 @@ self.addEventListener("fetch", event => {
         return;
     }
     console.log("request:", event.request.url.replace(location.origin, "").replace("https://reversi.yuki-lab.com", "").replace(/(\.[a-f0-9]{8,})(\.[^/.]+)$/, "$2"));
+
+    const url = new URL(event.request.url);
+
+    if (url.origin === "https://fonts.gstatic.com" ||url.origin === "https://cdn.jsdelivr.net/" || url.origin === "https://cdnjs.cloudflare.com") {
+        event.respondWith(fetch(event.request, { mode: "cors" }));
+        return;
+    }
+
     event.respondWith(
         caches.match(event.request.url.replace(location.origin, "").replace("https://reversi.yuki-lab.com", "").replace(/(\.[a-f0-9]{8,})(\.[^/.]+)$/, "$2"))
             .then(response => response || fetch(event.request)).catch(error => {
