@@ -28,7 +28,7 @@
     </script>
     <script defer src="{% static 'game/script.js' %}"></script>
     <!-- 翻訳後の文字列をmain.jsへ受け渡し-->
-    {% with online_description=_("オンライン対戦モードで遠くの人ともWebオセロ！リアルでの対人戦や、強力なAIとの対戦が可能です。遊びやすいスマートなグラフィックも特徴【PC・スマホ・iPad対応】今すぐプレイ！（旧スマートオセロ）") ai_description=_("強力なオセロAIとWeb上で対戦！オンライン対戦モードでは遠くの友達とも遊べます。遊びやすいスマートなグラフィックも特徴【PC・スマホ・iPad対応】今すぐプレイ！（旧スマートオセロ）") player_description=_("Webブラウザで遊べるスマートオセロ盤です。対人戦や、強力なAIとの対戦も可能！オンライン対戦では遠くの友達とも遊べます。遊びやすいスマートなグラフィックも特徴【PC・スマホ・iPad対応】今すぐプレイ！（旧サービス名：スマートオセロ）") else_description=_("対人戦や強力なAIとの対戦が可能！オンライン対戦では遠くの友達とも遊べます。【PC・スマホ・iPad対応】今すぐプレイ！（旧スマートオセロ）") %}
+    {% with online_description=_("オンライン対戦モードで遠くの友達と対戦！強力なAIモードも完備。スマホ・PC対応。今すぐプレイ！（旧スマートオセロ）") ai_description=_("初心者から上級者まで楽しめる、強力なオセロAIとWeb上で対戦！スマホ・PC・タブレット対応、オンラインで友達対戦も楽しめます。遊びやすいスマートなグラフィックも特徴。今すぐプレイ！（旧スマートオセロ）") player_description=_("Web上で遊べる無料オセロゲーム！友達とのオンライン対戦、強力なオセロAI対戦、そしてシンプルで遊びやすい電子オセロ盤機能を搭載。スマホ・PC対応ですぐにプレイ可能！（旧スマートオセロ）") else_description=_("Web上で遊べる無料オセロゲーム！友達とのオンライン対戦、強力なオセロAI対戦、シンプルで遊びやすい電子オセロ盤機能を搭載。スマホ・PC対応ですぐにプレイ可能！（旧スマートオセロ）") %}
     <meta name="description" content="{% if mode == 'online' %}{{online_description}}{% elif mode == 'ai' %}{{ai_description}}{% elif mode == 'player' %}{{player_description}}{% else %}{{else_description}}{% endif %}">
     <script nonce="{{ request.csp_nonce }}">
         const lang = {
@@ -67,7 +67,7 @@
     </script>
     {% endwith %}
 
-    {% with online_title=_("オセロ対戦（オンライン） - 無料Webオセロゲーム") ai_title=_("オセロAIと対戦 - 無料Webオセロゲーム") player_title=_("オセロ - 無料Webゲーム") else_title=_("オセロ - 無料Webゲーム") %}
+    {% with online_title=_("オセロ対戦（オンライン） - 無料Webゲーム") ai_title=_("オセロAI対戦 - 無料Webゲーム") player_title=_("オセロ（リバーシ） - 無料Webゲーム") else_title=_("オセロ（リバーシ） - 無料Webゲーム") %}
     <title>
         {% if mode == 'online' %}
         {{online_title}}

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-15 00:26+0900\n"
+"POT-Creation-Date: 2025-03-15 16:07+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -39,40 +39,34 @@ msgstr "A valid move exists, so you cannot pass."
 
 #: game/templates/game/index.html:31
 msgid ""
-"オンライン対戦モードで遠くの人ともWebオセロ！リアルでの対人戦や、強力なAIとの"
-"対戦が可能です。遊びやすいスマートなグラフィックも特徴【PC・スマホ・iPad対"
-"応】今すぐプレイ！（旧スマートオセロ）"
+"オンライン対戦モードで遠くの友達と対戦！強力なAIモードも完備。スマホ・PC対"
+"応。今すぐプレイ！（旧スマートオセロ）"
 msgstr ""
-"Play against distant friends in online match mode! You can also play face-to-"
-"face or against a powerful AI. [PC, Smartphone, and iPad compatible] Play "
-"now!"
+"Play reversi against distant friends in online match mode! A powerful AI mode is also available. [PC, Smartphone, and iPad compatible] Play now!"
 
 #: game/templates/game/index.html:31
 msgid ""
-"強力なオセロAIとWeb上で対戦！オンライン対戦モードでは遠くの友達とも遊べます。"
-"遊びやすいスマートなグラフィックも特徴【PC・スマホ・iPad対応】今すぐプレイ！"
+"初心者から上級者まで楽しめる、強力なオセロAIとWeb上で対戦！スマホ・PC・タブ"
+"レット対応、オンラインで友達対戦も楽しめます。遊びやすいスマートなグラフィッ"
+"クも特徴。今すぐプレイ！（旧スマートオセロ）"
+msgstr ""
+"Play against a powerful Reversi AI on the web, suitable for beginners to advanced players! [PC, Smartphone, and Tablet compatible] You can also Enjoy online matche mode with friends. Play now!"
+
+#: game/templates/game/index.html:31
+msgid ""
+"Web上で遊べる無料オセロゲーム！友達とのオンライン対戦、強力なオセロAI対戦、そ"
+"してシンプルで遊びやすい電子オセロ盤機能を搭載。スマホ・PC対応ですぐにプレイ"
+"可能！（旧スマートオセロ）"
+msgstr ""
+"Play Reversi Web for free! Play against friends online, battle a powerful Reversi AI, and enjoy the simple and easy-to-play digital Reversi board feature. Play now!"
+
+#: game/templates/game/index.html:31
+msgid ""
+"Web上で遊べる無料オセロゲーム！友達とのオンライン対戦、強力なオセロAI対戦、シ"
+"ンプルで遊びやすい電子オセロ盤機能を搭載。スマホ・PC対応ですぐにプレイ可能！"
 "（旧スマートオセロ）"
 msgstr ""
-"Challenge a powerful Reversi AI! In online match mode, you can also play "
-"with distant friends. [PC, Smartphone, and iPad compatible] Play now!"
-
-#: game/templates/game/index.html:31
-msgid ""
-"Webブラウザで遊べるスマートオセロ盤です。対人戦や、強力なAIとの対戦も可能！オ"
-"ンライン対戦では遠くの友達とも遊べます。遊びやすいスマートなグラフィックも特"
-"徴【PC・スマホ・iPad対応】今すぐプレイ！（旧サービス名：スマートオセロ）"
-msgstr ""
-"Play against powerful AI or human! In online matches, you can also play with "
-"distant friends! [PC, Smartphone, and iPad compatible] Play now!"
-
-#: game/templates/game/index.html:31
-msgid ""
-"対人戦や強力なAIとの対戦が可能！オンライン対戦では遠くの友達とも遊べます。"
-"【PC・スマホ・iPad対応】今すぐプレイ！（旧スマートオセロ）"
-msgstr ""
-"Play face-to-face or against a powerful AI! In online matches, you can also "
-"play with distant friends. [PC, Smartphone, and iPad compatible] Play now! "
-"(Formerly Smart Othello)"
+"Play Reversi Web for free! Play against friends online, battle a powerful Reversi AI, and enjoy the simple and easy-to-play digital Reversi board feature. Play now!"
 
 #: game/templates/game/index.html:39
 msgid "中級"
@@ -191,16 +185,16 @@ msgid "考え中"
 msgstr "Hmm..."
 
 #: game/templates/game/index.html:70
-msgid "オセロ対戦（オンライン） - 無料Webオセロゲーム"
+msgid "オセロ対戦（オンライン） - 無料Webゲーム"
 msgstr "Reversi Match (Online) | Free Reversi Game"
 
 #: game/templates/game/index.html:70
-msgid "オセロAIと対戦 - 無料Webオセロゲーム"
-msgstr "AI Match | Free Reversi Game"
+msgid "オセロAI対戦 - 無料Webゲーム"
+msgstr "Reversi AI Match | Free Reversi Game"
 
 #: game/templates/game/index.html:70
-msgid "オセロ - 無料Webゲーム"
-msgstr "Reversi Web | Free Othello Game"
+msgid "オセロ（リバーシ） - 無料Webゲーム"
+msgstr "Reversi (Othello) | Free Reversi Game"
 
 #: game/templates/game/index.html:90
 msgid "オンラインで楽しめる無料オセロゲーム！"
@@ -650,7 +644,8 @@ msgstr "▼ How to Add"
 
 #: game/templates/game/index.html:472
 msgid "iOSでのインストール方法：共有ボタンを押し、次にホーム画面に追加を選択"
-msgstr "How to install on iOS: Press the share button, then select Add to Home Screen"
+msgstr ""
+"How to install on iOS: Press the share button, then select Add to Home Screen"
 
 #: game/templates/game/index.html:474
 msgid "✖️ 閉じる"
