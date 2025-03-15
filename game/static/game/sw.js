@@ -1,4 +1,4 @@
-const CACHE_NAME = "my-django-app-cache-v10";
+const CACHE_NAME = "my-django-app-cache-v11";
 const urlsToCache = [
     "/",  // ホーム
     "/ai/",
@@ -64,7 +64,7 @@ self.addEventListener("fetch", event => {
 
     const url = new URL(event.request.url);
 
-    if (url.origin === "https://fonts.gstatic.com" ||url.origin === "https://cdn.jsdelivr.net/" || url.origin === "https://cdnjs.cloudflare.com") {
+    if (url.origin === "https://fonts.gstatic.com" ||url.origin === "https://cdn.jsdelivr.net/" || url.origin === "https://cdnjs.cloudflare.com" || url.origin === "https://fonts.googleapis.com") {
         event.respondWith(fetch(event.request, { mode: "cors", credentials: "omit"}));
         return;
     }
