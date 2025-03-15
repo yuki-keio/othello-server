@@ -180,9 +180,9 @@
                 gtag('config', 'G-4JKZC3VNE7', { 'cookie_domain': 'auto' });
             };
             if ('requestIdleCallback' in window) {
-               // requestIdleCallback(loadAdSense);
+               requestIdleCallback(loadAdSense);
             } else {
-               // setTimeout(loadAdSense, 1000);
+               setTimeout(loadAdSense, 1000);
             }
         }
         function loadAdSense() {
