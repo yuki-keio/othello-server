@@ -47,6 +47,10 @@ INSTALLED_APPS = [
     'channels',
     'game',  
     "csp", 
+    'two_factor',
+    'django_otp',
+    'django_otp.plugins.otp_totp',
+    'axes',
 ]
 
 MIDDLEWARE = [
@@ -61,7 +65,18 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'axes.middleware.AxesMiddleware', 
 ]
+
+# Axesの設定（10回失敗でロック）
+AXES_FAILURE_LIMIT = 10  # 失敗回数
+AXES_LOCK_OUT_AT_FAILURE = True  # 失敗回数超過でロック
+AXES_RESET_ON_SUCCESS = True  # 成功したらリセット
+
+LOGIN_URL = 'two_factor:login'
+LOGIN_REDIRECT_URL = '/admin-site/'  # デバッグ用の管理画面にリダイレクト
+TWO_FACTOR_LOGIN_REDIRECT_URL = '/admin-site/'  # 2FA ログイン後のリダイレクト
+AUTH_USER_MODEL = 'game.CustomUser'
 
 ROOT_URLCONF = 'config.urls'
 
@@ -116,6 +131,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'axes.backends.AxesStandaloneBackend', 
+    'django.contrib.auth.backends.ModelBackend',  
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/

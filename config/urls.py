@@ -16,6 +16,10 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include, re_path
+from two_factor.urls import urlpatterns as tf_urls
+from axes.decorators import axes_dispatch
+from django.contrib.auth.views import LoginView
+
 from django.views.static import serve
 import os
 from django.conf import settings
@@ -30,7 +34,8 @@ sitemaps = {  # ← ここで sitemaps を定義
 }
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', include(tf_urls)),  # 2FA付きの管理画面
+    path('admin/account/login/', axes_dispatch(LoginView.as_view()), name='login'),  
     path("sw.js", service_worker, name="service_worker"),
     path('', include('game.urls')),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
@@ -53,3 +58,8 @@ urlpatterns += i18n_patterns(
     path('', include('game.urls')),
     prefix_default_language=False
 )
+
+if settings.DEBUG:  # デバッグモードのときだけ admin-site を有効化
+    urlpatterns += [
+        path('admin-site/', admin.site.urls),  # 2FAなしの管理画面（デバッグ用）
+    ]

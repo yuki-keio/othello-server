@@ -19,6 +19,8 @@ const defeatSound = document.getElementById('defeatSound');
 const playerJoin = document.getElementById('playerJoin');
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 let placeStoneBuffer = null;
+let placeStoneBufferPromise = null;
+
 let lastPlayTime = 0;
 let gainNode = audioContext.createGain(); // 音量調整用ノード
 gainNode.connect(audioContext.destination); // 出力先に接続
@@ -1643,6 +1645,10 @@ function _DOMContenLoaded() {
         dcss.media = "all";
     }
 
+    placeStoneBufferPromise = getAudioBuffer(PLACE_STONE_SOUND).then(buffer => {
+        console.log("Audio preloaded");
+    }).catch(e => console.error("Failed to preload audio:", e));
+
     if (inviteBtn && qrPopup && qrcodeContainer) {
 
         inviteBtn.addEventListener("click", function () {
@@ -2007,12 +2013,19 @@ async function playStoneSound() {
             console.warn("Failed to resume AudioContext:", error);
         });
     }
-    console.log("playStoneSound" + PLACE_STONE_SOUND);
-    const buffer = await getAudioBuffer(PLACE_STONE_SOUND);
-    console.log("buffer" + buffer);
+    // バッファがすでにロード済みならawait不要
+    if (!placeStoneBuffer) {
+        try {
+            await placeStoneBufferPromise; // 初回のみawait（すでにロード済なら即時解決）
+        } catch (e) {
+            console.warn("Buffer failed to load:", e);
+            return;
+        }
+    }
+
+    const buffer = placeStoneBuffer;
     if (!buffer) return;
-    console.log("now" + audioContext.currentTime);
-    console.log("last" + lastPlayTime);
+
     const now = audioContext.currentTime;
     if (resumed) {
         resumed = false;
