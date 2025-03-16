@@ -60,7 +60,6 @@ self.addEventListener("fetch", event => {
         }
         return;
     }
-    console.log("request:", event.request.url.replace(location.origin, "").replace("https://reversi.yuki-lab.com", "").replace(/(\.[a-f0-9]{8,})(\.[^/.]+)$/, "$2"));
 
     const url = new URL(event.request.url);
 

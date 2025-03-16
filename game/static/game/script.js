@@ -1596,6 +1596,25 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
 
         if (selectedMode === 'online') {
             online = true;  // オンラインモードのフラグを立てる
+           setTimeout(() => {
+                
+            // ローディング表示を追加
+            const loadingOverlay = document.createElement('div');
+            loadingOverlay.id = 'loading-overlay';
+            
+            // オセロディスクのローディングアニメーション
+            loadingOverlay.innerHTML = `
+                <div class="loading-container">
+                    <div class="loading-disc">
+                        <div class="disc-inner"></div>
+                    </div>
+                    <div class="loading-text">Loading...</div>
+                </div>
+            `;
+            document.body.appendChild(loadingOverlay);
+            }
+            , 1000);
+            
             restart();
         } else {
             document.getElementById("playerJoinSoundBox").style.display = "none";
