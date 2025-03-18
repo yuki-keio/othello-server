@@ -105,7 +105,8 @@ class OthelloConsumer(AsyncWebsocketConsumer):
                 "action": "assign_role",
                 "role": role,
                 "reconnect": is_reconnect,
-                "history": game_state["history"]
+                "history": game_state["history"],
+                "n_players": len(players)
             }))
 
             # プレイヤーの場合、ターンタイマーをセット

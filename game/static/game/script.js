@@ -1924,7 +1924,7 @@ function makeSocket() {
         } else if (data.action === "assign_role") {
             role_online = data.role; // サーバーから受け取った役割
             console.log(`あなたの役割: ${role_online}, データ${data}, (ID: ${playerId}), 再接続${data.reconnect}, ロール${role_online}`);
-            if (role_online === 'black' && data.reconnect === false) {
+            if (data.n_players === 1) {
                 overlay.style.display = 'flex';
             }
             if (data.reconnect === true) {

@@ -35,13 +35,14 @@ self.addEventListener("install", event => {
 
 // キャッシュを使ってリクエストを処理
 self.addEventListener("fetch", event => {
+
     if (event.request.url.includes("/online")) {
         const lang = location.pathname.split('/').filter(Boolean)[0];
         switch (lang) {
             case "en":
+                
                 event.respondWith(
-                    fetch(event.request,{ cache: "no-store", mode: "no-cors"}) // ネットワークにアクセスを試みる
-                        .catch(() => { // ネットワークエラーならオフラインページを返す
+                    fetch(event.request,{ cache: "no-store", mode: "no-cors"}).catch(() => {
                             return caches.match("/en/offline.html")
                         })
                 );
@@ -50,8 +51,7 @@ self.addEventListener("fetch", event => {
 
             default:
                 event.respondWith(
-                    fetch(event.request,{ cache: "no-store", mode: "no-cors"}) // ネットワークにアクセスを試みる
-                        .catch(() => { // ネットワークエラーならオフラインページを返す
+                    fetch(event.request,{ cache: "no-store", mode: "no-cors"}).catch(() => { 
                             return caches.match("/offline.html")
                         })
                 );
