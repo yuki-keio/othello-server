@@ -159,6 +159,12 @@
 .notes strong {
   color: #cb1400;
 }
+.notes strong a {
+  color: #cb1400;
+}
+.notes strong a:hover {
+  color: #ff3620;
+}
 
 .notes p {
   font-size: 1.1em;
