@@ -69,7 +69,13 @@ self.addEventListener("fetch", event => {
     }
 
     event.respondWith(
-        caches.match(event.request.url.replace(location.origin, "").replace("https://reversi.yuki-lab.com", "").replace(/(\.[a-f0-9]{8,})(\.[^/.]+)$/, "$2"))
+        caches.match(
+            event.request.url
+            .replace(location.origin, "")  // オリジンを削除
+            .replace("https://reversi.yuki-lab.com", "")  // 特定のドメインを削除
+            .replace(/(\.[a-f0-9]{8,})(\.[^/.]+)$/, "$2")  // ハッシュを削除
+            .split("?")[0]  // クエリパラメータを削除 → 相対パスに変換
+        )
             .then(response => response || fetch(event.request)).catch(error => {
                 console.error("Fetch Error(not '/online/' page):", error);
                 return new Response("Offline content not available", {
