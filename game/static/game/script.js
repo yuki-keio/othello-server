@@ -2,8 +2,7 @@ const board = document.getElementById('board');
 const statusB = document.getElementById('status');
 const scoreB = document.getElementById('score_black');
 const scoreW = document.getElementById('score_white');
-const currentPlayerBlack = document.getElementById('c_black');
-const currentPlayerWhite = document.getElementById('c_white');
+const turnDisplay = document.getElementById('turn_display');
 const moveListElement = document.getElementById('move-list');
 const copyUrlBtn = document.getElementById("copy-url-btn");
 
@@ -467,12 +466,11 @@ function updateStatus() {
     scoreW.textContent = whiteCount;
 
     if (currentPlayer === 'black') {
-        currentPlayerBlack.style.visibility = "visible";
-        currentPlayerWhite.style.visibility = "hidden";
-    }
-    else {
-        currentPlayerBlack.style.visibility = "hidden";
-        currentPlayerWhite.style.visibility = "visible";
+        statusB.style.backgroundColor = '#000';
+        turnDisplay.textContent = lang.black_turn;
+    } else {
+        statusB.style.backgroundColor = '#fff';
+        turnDisplay.textContent = lang.white_turn;
     }
 
     if (showValidMoves || showValidMoves === "true") {
@@ -1586,6 +1584,7 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
         const selectedMode = this.getAttribute('data-mode');
         const previousMode = gameMode;
         gameMode = selectedMode;
+        if (selectedMode === previousMode) return;
         localStorage.setItem('gameMode', selectedMode);
         // ボタンのactiveクラスを更新
         document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
