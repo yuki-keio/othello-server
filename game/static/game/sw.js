@@ -1,4 +1,4 @@
-const CACHE_NAME = "my-django-app-cache-v12";
+const CACHE_NAME = "my-django-app-cache-v13";
 const urlsToCache = [
     "/",  // ホーム
     "/ai/",
@@ -27,6 +27,7 @@ const urlsToCache = [
 
 // インストール時にキャッシュする
 self.addEventListener("install", event => {
+    self.skipWaiting();
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then(cache => cache.addAll(urlsToCache))
