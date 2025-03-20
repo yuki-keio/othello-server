@@ -2,6 +2,7 @@ import os
 from django.contrib.sitemaps import Sitemap
 from django.urls import reverse
 from datetime import datetime
+from django.conf import settings
 
 class StaticViewSitemap(Sitemap):
     priority = 0.5        
@@ -30,8 +31,7 @@ class StaticViewSitemap(Sitemap):
     @staticmethod
     def get_git_lastmod():
         """Gitの最新コミット日を取得"""
-        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        deploy_timestamp_path = os.path.join(BASE_DIR, "deploy_timestamp.txt")
+        deploy_timestamp_path = os.path.join(settings.BASE_DIR, "deploy_timestamp.txt")
 
         try:
             with open(deploy_timestamp_path, "r") as f:
