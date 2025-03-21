@@ -36,32 +36,7 @@ self.addEventListener("install", event => {
 
 // キャッシュを使ってリクエストを処理
 self.addEventListener("fetch", event => {
-
-    if (event.request.url.includes("/online")) {
-        const lang = location.pathname.split('/').filter(Boolean)[0];
-        switch (lang) {
-            case "en":
-                
-                event.respondWith(
-                    fetch(event.request,{ cache: "no-store", mode: "no-cors"}).catch(() => {
-                            return caches.match("/en/offline.html")
-                        })
-                );
-
-                break;
-
-            default:
-                event.respondWith(
-                    fetch(event.request,{ cache: "no-store", mode: "no-cors"}).catch(() => { 
-                            return caches.match("/offline.html")
-                        })
-                );
-
-                break;
-        }
-        return;
-    }
-
+   
     const url = new URL(event.request.url);
 
     if (((url.origin === "https://fonts.gstatic.com" || url.origin === "https://fonts.googleapis.com") && event.request.destination === "font") ||url.origin === "https://cdn.jsdelivr.net" || url.origin === "https://cdnjs.cloudflare.com") {
@@ -69,6 +44,7 @@ self.addEventListener("fetch", event => {
         return;
     }
     const cacheKey = new URL(event.request.url).pathname;
+    console.log('Service Worker cacheKey:', cacheKey)
     event.respondWith(
         caches.match(cacheKey)
             .then(response => response || fetch(event.request)).catch(error => {

@@ -865,6 +865,12 @@ function loadBoardFromURL() {
     if (pathParts[0] === "en") {
         modeFromPath = pathParts[1] || 'player';
     }
+    
+    if (!navigator.onLine &&  modeFromPath === "online") {
+        const offlinePath = langCode === "en" ? "/en/offline.html" : "/offline.html";
+        window.location.href = offlinePath;
+        return;
+    }
 
     const won = urlParams.get('won');
     const aiLevelFromURL = urlParams.get('aiLevel');
