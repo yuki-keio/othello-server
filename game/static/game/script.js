@@ -780,7 +780,9 @@ function endGame(online_data, winner = null) {
     url.searchParams.set('won', share_winner);
     history.pushState(null, '', url);
 
-    statusB.textContent = `${lang.game_end} - ${result} （${lang.black} :${blackCount}, ${lang.white}: ${whiteCount}）`;
+    document.getElementById('score_display').innerHTML = `${result} | <span id="black_circle"></span> ${blackCount} : ${whiteCount} <span id="white_circle"></span>`;
+
+
 
     stopTimer();
     gameFinishedCount++;
@@ -865,7 +867,7 @@ function loadBoardFromURL() {
     if (pathParts[0] === "en") {
         modeFromPath = pathParts[1] || 'player';
     }
-    
+
     if (!navigator.onLine &&  modeFromPath === "online") {
         const offlinePath = langCode === "en" ? "/en/offline.html" : "/offline.html";
         window.location.href = offlinePath;

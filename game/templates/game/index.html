@@ -47,11 +47,10 @@
             "notify_w": "{% trans '白には次に打てる場所がないので、もう一度黒の番になります。'|escapejs %}",
             "not_your_turn": "{% trans 'あなたの手番ではありません。手番：'|escapejs %}",
             "you": "{% trans 'あなた'|escapejs %}",
-            "timeout_winner": "{% trans '【時間切れ】 勝者：'|escapejs %}",
-            "surrender_winner": "{% trans '【投了】 勝者：'|escapejs %}",
+            "timeout_winner": "{% trans '【時間切れ】👑 勝者：'|escapejs %}",
+            "surrender_winner": "{% trans '【投了】👑 勝者：'|escapejs %}",
             "draw": "{% trans '引き分け！'|escapejs %}",
-            "winner": "{% trans '勝者：'|escapejs %}",
-            "game_end": "{% trans 'ゲーム終了'|escapejs %}",
+            "winner": "{% trans '👑 勝者：'|escapejs %}",
             "you_pass": "{% trans 'あなたには次に打てる場所がなかったのでもう一度、相手の番になります'|escapejs %}",
             "opponent_pass": "{% trans '相手には次に打てる場所がなかったのでもう一度、あなたの番になります'|escapejs %}",
             "warn_EnOnly": "{% trans '⚠️ 英数字のみ入力可能です'|escapejs %}",
@@ -491,7 +490,7 @@
 </body>
 <script nonce="{{ request.csp_nonce }}" >
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register("/sw.js?v=2", { scope: "/"})
+        navigator.serviceWorker.register("/sw.js?v=4", { scope: "/"})
         .then(registration => console.log("Service Worker registered:", registration))
         .catch(error => console.log("Service Worker registration failed:", error));
     }
