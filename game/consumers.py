@@ -303,7 +303,7 @@ class OthelloConsumer(AsyncWebsocketConsumer):
 
             # 着手妥当性チェック（空セルであり、ひっくり返せる石が存在するか）
             if not self.is_valid_move(board, row, col, player):
-                await self.send(text_data=json.dumps({"error": f"このマス({row}, {col}) には石を置けません"}))
+                await self.send(text_data=json.dumps({"error": _("このマスには石を置けません：")+f"{'abcdefgh'[col]}{row+1} ({row+1}, {col+1})"}))
                 return
 
             # 着手可能な場合、ひっくり返す石を取得

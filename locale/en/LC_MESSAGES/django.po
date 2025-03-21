@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-21 21:20+0900\n"
+"POT-Creation-Date: 2025-03-21 22:21+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,6 +36,10 @@ msgstr "Spectators cannot forfeit."
 #: game/consumers.py:268
 msgid "有効な手が存在するため、パスはできません"
 msgstr "A valid move exists, so you cannot pass."
+
+#: game/consumers.py:306
+msgid "このマスには石を置けません："
+msgstr "You cannot place a stone here: "
 
 #: game/templates/game/index.html:31
 msgid ""
