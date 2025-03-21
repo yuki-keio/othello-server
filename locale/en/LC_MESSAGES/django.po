@@ -156,8 +156,8 @@ msgid "⚠️ 文字数：1〜10文字"
 msgstr "⚠️ Character limit: 1-10 characters."
 
 #: game/templates/game/index.html:59
-msgid "接続中です。しばらくお待ちください。"
-msgstr "Connecting... Please wait."
+msgid "ネットワーク接続がありません。"
+msgstr "No network connection."
 
 #: game/templates/game/index.html:60
 msgid "観戦中です。あなたは手を打つことができません。"
