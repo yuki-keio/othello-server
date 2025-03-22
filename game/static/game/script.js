@@ -284,7 +284,6 @@ async function applyServerMove(row, col, player, status, final = false) {
         }
     }
 
-
     if ((final !== false || gameMode !== online)) {
         updateStatus();
     }
@@ -302,7 +301,6 @@ function startAIMove() {
     const timerPrefix = aiLevel === 6 ? "🐤 " : aiLevel === 9 ? "👺 " : aiLevel === 7 ? "🔆 " : "🤔 ";
     timerDisplay_.textContent = timerPrefix + lang.thinking;
     board.classList.add('thinking');
-
 
     setTimeout(() => {
         updateStatus();
@@ -366,9 +364,6 @@ function wouldFlip(row, col, dx, dy, playerColor = currentPlayer) {
 function flipDiscs(row, col, playerColor = currentPlayer) {
     const directions = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
 
-
-
-
     for (const [dx, dy] of directions) {
         if (wouldFlip(row, col, dx, dy, playerColor)) {
             let x = row + dx;
@@ -384,8 +379,6 @@ function flipDiscs(row, col, playerColor = currentPlayer) {
 
     }
 
-
-
 }
 
 function isValidPosition(row, col) {
@@ -396,9 +389,7 @@ function getOpponentColor(playerColor = currentPlayer) {
     return playerColor === 'black' ? 'white' : 'black';
 }
 
-
 function hasValidMove(playerColor = currentPlayer) {
-
 
     const validMoves = [];
     for (let i = 0; i < 8; i++) {
@@ -480,11 +471,9 @@ function updateStatus() {
         removeHighlight();
     }
 
-
     if (!aimove) {
         // 制限時間表示を更新またはクリア
         const timerDisplay = document.getElementById('timer-display');
-
 
         if (timeLimit > 0) {
             timerDisplay.style.display = 'inline-block'; // 表示
@@ -519,8 +508,6 @@ function startTimer() {
             timerDisplay.classList.remove('warning1');
             timerDisplay.classList.add('warning2');
 
-
-
         } else if (remainingTime <= 15) {
             timerDisplay.classList.add('warning1');
         } else {
@@ -545,7 +532,6 @@ function stopTimer() {
         // 警告音を停止
         warningSound.pause();
 
-
     }
 }
 function formatTime(seconds) {
@@ -557,7 +543,6 @@ function formatTime(seconds) {
 function isIOS() {
     return /iPhone|iPad|iPod/.test(navigator.userAgent);
 }
-
 
 function recordMove(row, col, status) {
 
@@ -632,7 +617,6 @@ function endGame(online_data, winner = null) {
         share_winner = "won";
     } else if (online_data !== "offline") {
 
-
         if (online_data.winner === role_online) {
             launchConfetti();
         }
@@ -689,7 +673,6 @@ function endGame(online_data, winner = null) {
                 }
             }
         }
-
 
     } else if (winner) {
         // 時間切れの場合は、相手のプレイヤーの勝ち
@@ -775,14 +758,11 @@ function endGame(online_data, winner = null) {
         'aiLevel': aiLevel,
     });
 
-
     url = new URL(window.location);
     url.searchParams.set('won', share_winner);
     history.pushState(null, '', url);
 
     document.getElementById('score_display').innerHTML = `${result} | <span id="black_circle"></span> ${blackCount} : ${whiteCount} <span id="white_circle"></span>`;
-
-
 
     stopTimer();
     gameFinishedCount++;
@@ -828,9 +808,6 @@ function deserializeMoveHistory(serialized) {
     }
     );
 
-
-
-
 }
 
 function updateURL() {
@@ -844,7 +821,6 @@ function updateURL() {
     if (window.location.pathname.split('/').filter(Boolean)[0] === "en") {
         newPath = "en" + newPath;
     }
-
 
     url.pathname = newPath;
     url.searchParams.set('moves', serializedMoves);
@@ -863,7 +839,6 @@ function loadBoardFromURL() {
 
     let modeFromPath = pathParts[0] || 'player';
 
-
     if (pathParts[0] === "en") {
         modeFromPath = pathParts[1] || 'player';
     }
@@ -877,12 +852,10 @@ function loadBoardFromURL() {
     const won = urlParams.get('won');
     const aiLevelFromURL = urlParams.get('aiLevel');
 
-
     if (won === "won") {
         timeLimit = 0;
         stopTimer();
     }
-
 
     if (modeFromPath) {
         gameMode = modeFromPath;
@@ -893,7 +866,6 @@ function loadBoardFromURL() {
                 el.classList.add('active');
             }
         });
-
 
         if (gameMode === "ai") {
             document.getElementById('level_ai').style.display = 'block';
@@ -958,7 +930,6 @@ function loadBoardFromURL() {
     }
 }
 
-
 function copyURLToClipboard(matchRoom = false) {
     const url = new URL(window.location);
     let alertText = lang.copy_url;
@@ -981,29 +952,28 @@ function copyURLToClipboard(matchRoom = false) {
     });
 }
 
-function restart() {
+function restart(reload=true) {
     if (online) {
 
         timeLimit = 0;
         localStorage.setItem('timeLimit', timeLimit);
 
-        // 新しい部屋を生成
         // 新しい部屋IDをランダムに生成（UUID の代わりに短いランダム文字列）
         const newRoomId = Math.random().toString(36).substring(2, 8);
 
         let newUrl = `${window.location.origin}/online/?room=${newRoomId}`;
 
-
         if (window.location.pathname.split('/').filter(Boolean)[0] === "en") {
             newUrl = `${window.location.origin}/en/online/?room=${newRoomId}`;
 
         }
-
-
         console.log(`[restart] New room URL: ${newUrl}`);
-        window.location.href = newUrl; // 新しい部屋へ遷移
-
-
+        if (reload){
+            window.location.href = newUrl; // 新しい部屋へ遷移
+        }else{
+            gameRoom = newRoomId;
+            history.replaceState(null, '', newUrl);
+        }
     } else {
         let newUrl = `${window.location.origin}/${gameMode}/`;
         if (gameMode === "player") {
@@ -1019,7 +989,6 @@ function restart() {
 
         localStorage.setItem('deleted_urls', JSON.stringify([]));
         window.location.href = newUrl;
-
 
     }
 }
@@ -1042,11 +1011,7 @@ function goToPreviousMove() {
         localStorage.setItem('deleted_urls', JSON.stringify(deleted_urls));
     }
 
-
-
     window.location = url;
-
-
 
 }
 
@@ -1058,7 +1023,6 @@ function goToNextMove() {
 
     if (deleted_urls.length > 0) {
         url.searchParams.set('moves', move_now + deleted_urls.pop());
-
 
         localStorage.setItem('deleted_urls', JSON.stringify(deleted_urls));
         window.location = url;
@@ -1330,12 +1294,10 @@ function evaluateBoard(board) {
     let blackScore = 0;
     let whiteScore = 0;
 
-
     // 石の数をカウント
     const blackCount = board.flat().filter(cell => cell === 'black').length;
     const whiteCount = board.flat().filter(cell => cell === 'white').length;
     const totalStones = blackCount + whiteCount;
-
 
     // 終局状態の特別処理
     if (totalStones === 64) {
@@ -1391,8 +1353,6 @@ function evaluateBoard(board) {
         // この場合はペナルティなし
     }
 
-
-
     // 機動力（有効手の数）の評価（序盤〜中盤で重要）
     if (gamePhase < 0.7) {
         const mobilityMultiplier = (1 - gamePhase) * mobilityWeight;
@@ -1433,9 +1393,6 @@ function changeTitle() {
         } else {
             document.getElementById('title').innerHTML = "<span id=\"ai-level-display\">" + document.getElementById('aiLevelSelect').options[aiLevelSelect.selectedIndex].text + " AI</span>";
         }
-
-
-
 
         document.getElementById('level_ai').style.display = 'block';
     } else if (gameMode === 'player') {
@@ -1504,8 +1461,6 @@ function onlineUI() {
         document.getElementById('timeLimitContainer').style.display = 'none';
         document.getElementById('validContainer').style.display = 'none';
 
-
-
     } else {
         console.log("エラー：offline");
     }
@@ -1529,7 +1484,6 @@ function updatePlayerList(players) {
         playerListElement.appendChild(span);
     });
 }
-
 
 function changeHead() {
     let titleText, metaDescription, canonicalUrl;
@@ -1697,19 +1651,11 @@ function _DOMContenLoaded() {
                     qrPopup.style.display = "none";
                 }
             });
-
         });
-
-
-
-
     }
-
 
     document.getElementById("title").addEventListener("click", function () {
         if (gameMode === "ai") {
-
-
         } else {
             location.reload(); // ページをリロード
         }
@@ -1718,10 +1664,7 @@ function _DOMContenLoaded() {
     if (startMatchBtn && overlay) {
         startMatchBtn.addEventListener("click", function () {
 
-
             copyURLToClipboard(true);
-
-
 
         });
     }
@@ -1736,7 +1679,7 @@ function _DOMContenLoaded() {
         onlineUI();
         online = true;
         if (gameRoom === null) {
-            restart();
+            restart(false); //リロードはfalse
         }
         document.getElementById("playerJoinSoundBox").style.display = "block";
     } else {
@@ -1756,7 +1699,6 @@ function _DOMContenLoaded() {
             document.getElementById('level_ai').style.display = 'none';
         }
     }
-
 
     if (gameMode === 'ai') {
         initAIMode()
@@ -1780,8 +1722,6 @@ function initAIMode() {
     let temp_nextLevel;
     lockedOptions.forEach(option => {
         const unlockLevel = option.getAttribute('data-unlock-level')
-
-
 
         console.log(`[aiLevelSelect] Locking level v ${option.getAttribute("data-level")}`);
         console.log(`[aiLevelSelect] Locking level t ${option.textContent}`);
@@ -1815,14 +1755,11 @@ function initAIMode() {
             alert(lang.congrats_aiLevel_unlocked);
 
             setTimeout(() => {
-           
                 location.reload();
             }, 1000);
 
-
         }
     };
-
 
     // AIレベル表示の更新関数
     function updateAiLevelDisplay() {
@@ -1891,9 +1828,6 @@ function sendSettings() {
     localStorage.setItem('timeLimit', timeLimit);
     localStorage.setItem('showValidMoves', showValidMoves);
 
-
-
-
     socket.send(JSON.stringify({ action: "game_setting", time_limit: timeLimit, show_valid_moves: showValidMoves, player_name: playerName }));
 
 }
@@ -1903,7 +1837,6 @@ function makeSocket() {
     socket = new WebSocket(`${ws_scheme}://${window.location.host}/ws/othello/${gameRoom}/?playerId=${playerId}&timeLimit=${timeLimit}&showValidMoves=${showValidMoves}&playerName=${encodeURIComponent(playerName)}&lang=${langCode}`);
 
     console.log(`Connecting to WebSocket server...${ws_scheme}://${window.location.host}/ws/othello/${gameRoom}/?playerId=${playerId}&timeLimit=${timeLimit}&showValidMoves=${showValidMoves}&playerName=${encodeURIComponent(playerName)}`);
-
 
     // 接続成功時
     socket.onopen = function (e) {
@@ -1982,8 +1915,6 @@ function makeSocket() {
 
             onlineGameStarted = true;
 
-
-
             const tempUrl = new URL(window.location);
 
             stopTimer();
@@ -1996,9 +1927,6 @@ function makeSocket() {
             localStorage.setItem('showValidMoves', showValidMoves);
             document.getElementById('showValidMovesCheckbox').checked = showValidMoves;
             tempUrl.searchParams.set('showValidMoves', showValidMoves);
-
-
-
 
             if (timeLimit === 0) {
 
@@ -2016,18 +1944,14 @@ function toHalfWidth(str) {
         return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
     });
 }
-
 // 音声をロード（すでにロード済みなら再利用）
 async function getAudioBuffer(url) {
     if (placeStoneBuffer) return placeStoneBuffer;
-
     const response = await fetch(url);
     const arrayBuffer = await response.arrayBuffer();
     placeStoneBuffer = await audioContext.decodeAudioData(arrayBuffer);
     return placeStoneBuffer;
 }
-
-
 
 // 音声を再生（品質向上版）
 async function playStoneSound() {
@@ -2048,10 +1972,8 @@ async function playStoneSound() {
             return;
         }
     }
-
     const buffer = placeStoneBuffer;
     if (!buffer) return;
-
     const now = audioContext.currentTime;
     if (resumed) {
         resumed = false;
@@ -2059,22 +1981,17 @@ async function playStoneSound() {
         if (now - lastPlayTime < 0.1) return; // 0.1秒以内の多重再生を防ぐ}
     }
     lastPlayTime = now;
-
     const source = audioContext.createBufferSource();
     source.buffer = buffer;
     source.connect(gainNode);
     source.start(0);
 }
-
 // ページ離脱時に AudioContext を解放
 window.addEventListener("beforeunload", async () => {
     if (audioContext.state !== "closed") {
         await audioContext.close();
     }
 });
-
-
-
 
 if (window.location.hostname !== "127.0.0.1") {
     console.log("Skipping source maps in production." + window.location.hostname);
@@ -2085,25 +2002,19 @@ if (window.location.hostname !== "127.0.0.1") {
     });
 }
 
-
 // イベントリスナーを追加
-
 copyUrlBtn.addEventListener('click', copyURLToClipboard);
 document.getElementById('restart-btn').addEventListener('click', restart);
 document.getElementById('prev-move-btn').addEventListener('click', goToPreviousMove);
 document.getElementById('next-move-btn').addEventListener('click', goToNextMove);
-
 window.addEventListener("beforeinstallprompt", (event) => {
     event.preventDefault();
     deferredPrompt = event; // イベントを保存
-
     // インストールを促すボタンを表示
     const installButton = document.getElementById("install-btn");
     installButton.style.display = "block";
-
     installButton.addEventListener("click", showInstallPrompt);
 });
-
 window.addEventListener("appinstalled", () => {
     alert(lang.thanks_install);
     // ユーザーのブラウザ情報を取得
@@ -2111,7 +2022,6 @@ window.addEventListener("appinstalled", () => {
         navigator.userAgent.includes('Safari') ? 'Safari' :
             navigator.userAgent.includes('Firefox') ? 'Firefox' :
                 'Other';
-
     // Google Analytics にイベント送信
     gtag('event', 'pwa_installed', {
         'event_category': 'engagement',
@@ -2123,9 +2033,7 @@ window.addEventListener("appinstalled", () => {
         "gameFinishedCount": gameFinishedCount,
         "Won": ifVitory,
     });
-
 });
-
 // 降伏ボタンをクリックしたとき、確認後にサーバーへ降伏メッセージを送信
 if (surrenderBtn) {
     surrenderBtn.addEventListener('click', () => {
@@ -2139,65 +2047,46 @@ document.getElementById('showValidMovesCheckbox').addEventListener('change', () 
     showValidMoves = document.getElementById('showValidMovesCheckbox').checked;
     localStorage.setItem('showValidMoves', showValidMoves);
 
-
-
-
     updateStatus(); // 設定変更を反映
     updateURL(); // URL を更新
 });
 
-
 const timelimit_el = document.getElementById('time-limit');
 const highlightMoves_el = document.getElementById('highlight-moves');
-
 //time-limit要素が存在するかチェックし、存在する場合のみchangeイベントを確認
 if (timelimit_el) {
     timelimit_el.addEventListener('change', () => {
-
         //sendSettings();
-
     });
 }
-
 if (highlightMoves_el) {
     highlightMoves_el.addEventListener('change', () => {
         //sendSettings();
     });
 }
-
 const playerName_el = document.getElementById('player-name');
 if (playerName_el) {
     playerName_el.value = playerName;
     const warning = document.getElementById("warning");
     // プレイヤー名の保存ボタンの処理
     playerName_el.addEventListener("change", () => {
-
         const nameInput = toHalfWidth(playerName_el.value.trim());
         if (nameInput.length > 0) {
             playerName_el.value = nameInput;
-
             if (/^[a-zA-Z0-9]+$/.test(nameInput)) {
-
                 playerName = profanityCleaner.clean(nameInput);
                 document.getElementById("player-list").children[0].textContent = lang.black + ":" + lang.you + "(" + playerName + ")";
-
                 playerName_el.value = playerName;
                 localStorage.setItem("playerName", playerName);
                 //sendSettings();
                 warning.textContent = "";
 
-
             } else {
                 warning.textContent = lang.warn_EnOnly;
             }
-
         } else {
-
             warning.textContent = lang.warn_charLimit;
-
         }
-
-
 
     });
 }
@@ -2214,7 +2103,6 @@ document.getElementById("close-install-guide").addEventListener("click", () => {
     }
 });
 document.getElementById('showValidMovesCheckbox').checked = showValidMoves;
-
 document.getElementById('timeLimitSelect').value = timeLimit;
 document.getElementById('timeLimitSelect').addEventListener('change', () => {
     timeLimit = parseInt(document.getElementById('timeLimitSelect').value);
@@ -2224,17 +2112,12 @@ document.getElementById('timeLimitSelect').addEventListener('change', () => {
     } else {
         document.getElementById("timeLimitBox_").style.display = "block";
     }
-
 });
-
 document.getElementById('aiLevelSelect').value = aiLevel;
 document.getElementById('aiLevelSelect').addEventListener('change', () => {
     aiLevel = parseInt(document.getElementById('aiLevelSelect').value);
     localStorage.setItem('aiLevel', aiLevel);
-
 });
-
-
 
 // 音声設定の変更を Local Storage に保存
 document.getElementById('soundEffectsCheckbox').addEventListener('change', () => {
@@ -2249,7 +2132,6 @@ document.getElementById('playerJoinSoundCheckbox').addEventListener('change', ()
     playerJoinSoundEnabled = document.getElementById('playerJoinSoundCheckbox').checked;
     localStorage.setItem('playerJoinSoundEnabled', playerJoinSoundEnabled);
 });
-
 document.getElementById('gameEndSoundCheckbox').addEventListener('change', () => {
     gameEndSoundEnabled = document.getElementById('gameEndSoundCheckbox').checked;
     localStorage.setItem('gameEndSoundEnabled', gameEndSoundEnabled);
@@ -2257,13 +2139,9 @@ document.getElementById('gameEndSoundCheckbox').addEventListener('change', () =>
 window.addEventListener('popstate', function (event) {
     location.reload();
 });
-
-
-
 // 初期チェック状態を設定
 document.getElementById('soundEffectsCheckbox').checked = soundEffects;
 document.getElementById('timeLimitSoundCheckbox').checked = timeLimitSoundEnabled;
 document.getElementById('gameEndSoundCheckbox').checked = gameEndSoundEnabled;
 document.getElementById('playerJoinSoundCheckbox').checked = playerJoinSoundEnabled;
-
 initializeBoard();
