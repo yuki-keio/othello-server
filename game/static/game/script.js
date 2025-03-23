@@ -114,7 +114,7 @@ function refreshBoard() {
 
 // `Event Delegation` を使って、`board` にイベントを一括設定
 board.addEventListener('click', (event) => {
-    if (!aimove){
+    if (!aimove) {
         const cell = event.target.closest('.cell');
         if (!cell) return;
 
@@ -748,7 +748,7 @@ function endGame(online_data, winner = null) {
 
     }
 
-   
+
     gtag('event', 'game_result', {
         'result': ifVitory,
         'gameMode': gameMode,
@@ -771,12 +771,12 @@ function endGame(online_data, winner = null) {
         showInstallPrompt();
     } else if (gameFinishedCount === 3 && deferredPrompt) {
         showInstallPrompt();
-    } 
+    }
     if (isIOS() && !window.navigator.standalone && gameFinishedCount === 1) {
         iOSinstallGuide();
     } else if (isIOS() && !window.navigator.standalone && gameFinishedCount === 3) {
         iOSinstallGuide();
-    } else{
+    } else {
         if (gameMode === "ai" && ifVitory) {
             const currentAiLevel = document.getElementById('aiLevelSelect').value;
             if (window.unlockNextAiLevel) {
@@ -784,7 +784,7 @@ function endGame(online_data, winner = null) {
             }
         }
     }
-    
+
 }
 
 function serializeMoveHistory() {
@@ -843,7 +843,7 @@ function loadBoardFromURL() {
         modeFromPath = pathParts[1] || 'player';
     }
 
-    if (!navigator.onLine &&  modeFromPath === "online") {
+    if (!navigator.onLine && modeFromPath === "online") {
         const offlinePath = langCode === "en" ? "/en/offline.html" : "/offline.html";
         window.location.href = offlinePath;
         return;
@@ -879,6 +879,7 @@ function loadBoardFromURL() {
             online = true;
             onlineUI();
             document.getElementById("playerJoinSoundBox").style.display = "block";
+
         } else {
             if (timeLimitFromURL) {
                 timeLimit = parseInt(timeLimitFromURL);
@@ -952,7 +953,7 @@ function copyURLToClipboard(matchRoom = false) {
     });
 }
 
-function restart(reload=true) {
+function restart(reload = true) {
     if (online) {
 
         timeLimit = 0;
@@ -968,9 +969,9 @@ function restart(reload=true) {
 
         }
         console.log(`[restart] New room URL: ${newUrl}`);
-        if (reload){
+        if (reload) {
             window.location.href = newUrl; // 新しい部屋へ遷移
-        }else{
+        } else {
             gameRoom = newRoomId;
             history.replaceState(null, '', newUrl);
         }
@@ -1404,6 +1405,26 @@ function changeTitle() {
     }
 }
 
+function showDialog(type,value=null) {
+    const shouldHide = localStorage.getItem("hide"+type+"Dialog") === "true";
+    if (!shouldHide) {
+        if (type === "role") {
+            if (value==="black"){
+                document.getElementById(type + "-dialog-content").textContent = lang.roleDialogB;
+            }else{
+                document.getElementById(type + "-dialog-content").textContent = lang.roleDialogW;
+            }
+        }
+        document.getElementById(type+"-dialog").style.display = "block";
+        document.getElementById(type+"-dialog-overlay").style.display = "block";
+    }
+}
+function closeDialog(type) {
+    document.getElementById(type+"-dialog").style.display = "none";
+    document.getElementById(type+"-dialog-overlay").style.display = "none";
+    localStorage.setItem("hide"+type+"Dialog", document.getElementById(type+"-not-checkbox").checked);
+  }
+
 // インストールガイドを表示
 function iOSinstallGuide() {
     document.getElementById("ios-install-guide").style.display = "block";
@@ -1557,14 +1578,14 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
 
         if (selectedMode === 'online') {
             online = true;  // オンラインモードのフラグを立てる
-           setTimeout(() => {
-                
-            // ローディング表示を追加
-            const loadingOverlay = document.createElement('div');
-            loadingOverlay.id = 'loading-overlay';
-            
-            // オセロディスクのローディングアニメーション
-            loadingOverlay.innerHTML = `
+            setTimeout(() => {
+
+                // ローディング表示を追加
+                const loadingOverlay = document.createElement('div');
+                loadingOverlay.id = 'loading-overlay';
+
+                // オセロディスクのローディングアニメーション
+                loadingOverlay.innerHTML = `
                 <div class="loading-container">
                     <div class="loading-disc">
                         <div class="disc-inner"></div>
@@ -1572,10 +1593,10 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
                     <div class="loading-text">Loading...</div>
                 </div>
             `;
-            document.body.appendChild(loadingOverlay);
+                document.body.appendChild(loadingOverlay);
             }
-            , 1000);
-            
+                , 1000);
+
             restart();
         } else {
             document.getElementById("playerJoinSoundBox").style.display = "none";
@@ -1868,14 +1889,15 @@ function makeSocket() {
                 overlay.style.display = 'flex';
             }
             if (data.reconnect === true) {
-
                 board.innerHTML = '';
                 refreshBoard()
                 add4x4Markers();
                 deserializeMoveHistory(data.history);
                 console.log("moveHistory", moveHistory);
                 replayMovesUpToIndex(moveHistory.length - 1, 2);
+                console.log("recconect", data);
             }
+            
 
             //タイマーを止める
             timeLimit = 0;
@@ -1889,6 +1911,7 @@ function makeSocket() {
                 if (role_online === 'black') {
                     sendSettings();
                 }
+                showDialog("role", role_online);
                 overlay.style.display = 'none';
                 const qrPopup = document.getElementById("qr-popup");
                 qrPopup.style.display = "none";
@@ -2064,6 +2087,17 @@ if (highlightMoves_el) {
         //sendSettings();
     });
 }
+const closeRoleDialog_el = document.getElementById("closeRoleDialog");
+if (closeRoleDialog_el) {
+    closeRoleDialog_el.addEventListener("click", () => {
+        closeDialog("role");
+    });
+    document.getElementById("role-dialog-overlay").addEventListener("click", () => {
+        closeDialog("role");
+    }
+    );
+
+}
 const playerName_el = document.getElementById('player-name');
 if (playerName_el) {
     playerName_el.value = playerName;
@@ -2102,6 +2136,7 @@ document.getElementById("close-install-guide").addEventListener("click", () => {
         }
     }
 });
+
 document.getElementById('showValidMovesCheckbox').checked = showValidMoves;
 document.getElementById('timeLimitSelect').value = timeLimit;
 document.getElementById('timeLimitSelect').addEventListener('change', () => {

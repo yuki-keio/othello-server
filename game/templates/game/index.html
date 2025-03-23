@@ -11,8 +11,7 @@
     </style>
     {% if mode == 'online' %}
     <style nonce="{{ request.csp_nonce }}">
-        #surrender-btn{padding:10px 20px;font-size:16px;background-color:#d32f2f;color:#fff;border:none;border-radius:8px;cursor:pointer;display:inline-block;transition:background-color 0.2s ease-in-out}#surrender-btn:hover{background-color:#b71c1c}#game-settings-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);display:none;justify-content:center;align-items:center;z-index:10}#game-settings{background:#fff;padding-bottom:19px;padding-left:10px;padding-right:10px;border-radius:8px;text-align:center;box-shadow:0 4px 10px rgba(0,0,0,.3);width:80%;max-width:260px}#contents-overlay-setting{text-align:left;padding:13px}#time_overlay-label{font-size:14px;display:block}#time-limit{padding:6px;font-size:14px;border-radius:5px;border:1px solid #ccc}#highlight-moves{margin-right:5px}#start-match{padding:10px 20px;font-size:16px;background-color:#007408;color:#fff;border:none;border-radius:5px;cursor:copy;display:flex;align-items:center;justify-content:center;width:auto;height:40px;white-space:nowrap}#start-match:hover{background:#00ab0b}.qr-popup{display:none;position:absolute;z-index:1000;left:50%;top:50%;transform:translate(-50%,-50%);width:85%;aspect-ratio:1/1;max-width:285px;background:#fff;padding-bottom:15px;border-radius:10px;box-shadow:0 0 10px rgba(0,0,0,.5);align-items:center;justify-content:center}.qr-popup-content{position:relative}#qr{margin-left:5px;width:40px;height:40px;background:transparent;border:none;cursor:pointer;transition:background 0.2s;display:flex}#qr-icon{width:100%;height:100%}.invite-container{margin-top:10px;display:flex;align-items:center;justify-content:center}#qrcode{display:flex;justify-content:center;align-items:center;width:100%;aspect-ratio:1/1;margin:0 auto}
-    </style>
+        h1{position: absolute;width: 1px;height: 1px;padding: 0;margin: -1px;overflow: hidden;clip: rect(0, 0, 0, 0);border: 0;}#player-info{margin-bottom:20px}  #player-list{padding-inline-start: 0px;position: relative;top:7px;height:1em}#role-dialog{display:none;}#surrender-btn{padding:10px 20px;font-size:16px;background-color:#d32f2f;color:#fff;border:none;border-radius:8px;cursor:pointer;display:inline-block;transition:background-color 0.2s ease-in-out}#surrender-btn:hover{background-color:#b71c1c}#game-settings-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);display:none;justify-content:center;align-items:center;z-index:10}#game-settings{background:#fff;padding-bottom:19px;padding-left:10px;padding-right:10px;border-radius:8px;text-align:center;box-shadow:0 4px 10px rgba(0,0,0,.3);width:80%;max-width:260px}#contents-overlay-setting{text-align:left;padding:13px}#time_overlay-label{font-size:14px;display:block}#time-limit{padding:6px;font-size:14px;border-radius:5px;border:1px solid #ccc}#highlight-moves{margin-right:5px}#start-match{padding:10px 20px;font-size:16px;background-color:#007408;color:#fff;border:none;border-radius:5px;cursor:copy;display:flex;align-items:center;justify-content:center;width:auto;height:40px;white-space:nowrap}#start-match:hover{background:#00ab0b}.qr-popup{display:none;position:absolute;z-index:1000;left:50%;top:50%;transform:translate(-50%,-50%);width:85%;aspect-ratio:1/1;max-width:285px;background:#fff;padding-bottom:15px;border-radius:10px;box-shadow:0 0 10px rgba(0,0,0,.5);align-items:center;justify-content:center}.qr-popup-content{position:relative}#qr{margin-left:5px;width:40px;height:40px;background:transparent;border:none;cursor:pointer;transition:background 0.2s;display:flex}#qr-icon{width:100%;height:100%}.invite-container{margin-top:10px;display:flex;align-items:center;justify-content:center}#qrcode{display:flex;justify-content:center;align-items:center;width:100%;aspect-ratio:1/1;margin:0 auto}</style>
     {% endif %}
     {% if request.LANGUAGE_CODE == "en" %}
         <style nonce="{{ request.csp_nonce }}">
@@ -43,6 +42,8 @@
             "black_turn": "{% trans '（黒番）'|escapejs %}",
             "white_turn": "{% trans '（白番）'|escapejs %}",
             "spec": "{% trans '観客'|escapejs %}",
+            "roleDialogB": "{% trans 'あなたは先手（黒）です' %}",
+            "roleDialogW": "{% trans 'あなたは後手（白）です' %}",
             "notify_b": "{% trans '黒には次に打てる場所がないので、もう一度白の番になります。'|escapejs %}",
             "notify_w": "{% trans '白には次に打てる場所がないので、もう一度黒の番になります。'|escapejs %}",
             "not_your_turn": "{% trans 'あなたの手番ではありません。手番：'|escapejs %}",
@@ -302,6 +303,14 @@
                 <span id="white_circle"></span>
             </div>
         </div>
+    {% if mode == "online" %}
+    <div id="role-dialog-overlay"></div>
+    <div id="role-dialog">
+    <p id="role-dialog-content">Loading...</p>
+    <label><input type="checkbox" id="role-not-checkbox"><span id="span-role-not-show">{% trans "今後このダイアログを表示しない" %}</span></label><br><br>
+    <button id="closeRoleDialog">OK</button>
+    </div>
+    {% endif %}
     <div class="buttons_container">
         <button id="copy-url-btn" aria-label="{% trans 'オセロ盤の盤面を共有するURLをコピー' %}"></button>
         {% if mode == "online" %}
