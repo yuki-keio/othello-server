@@ -1404,19 +1404,51 @@ function changeTitle() {
         document.getElementById('level_ai').style.display = 'none';
     }
 }
-
+function showLoading(after=1000) {
+    setTimeout(() => {
+        // ローディング表示を追加
+        const loadingOverlay = document.createElement('div');
+        loadingOverlay.id = 'loading-overlay';
+        // オセロディスクのローディングアニメーション
+        loadingOverlay.innerHTML = `
+        <div class="loading-container">
+            <div class="loading-disc">
+                <div class="disc-inner"></div>
+            </div>
+            <div class="loading-text">Loading...</div>
+        </div>
+    `;
+        document.body.appendChild(loadingOverlay);
+    }, after);
+}
 function showDialog(type,value=null) {
     const shouldHide = localStorage.getItem("hide"+type+"Dialog") === "true";
     if (!shouldHide) {
         if (type === "role") {
             if (value==="black"){
                 document.getElementById(type + "-dialog-content").textContent = lang.roleDialogB;
-            }else{
+            } else {
                 document.getElementById(type + "-dialog-content").textContent = lang.roleDialogW;
             }
         }
         document.getElementById(type+"-dialog").style.display = "block";
         document.getElementById(type+"-dialog-overlay").style.display = "block";
+        let okBtn = null;
+        if (type === "role") {
+            okBtn = document.getElementById("closeRoleDialog");
+        }
+        if (okBtn) {
+            const keyHandler = (event) => {
+                if (event.key === "Enter") {
+                    okBtn.click();
+                }
+            };
+            document.addEventListener("keydown", keyHandler);
+            // 一度だけ実行するように、OKボタンでリスナー解除
+            okBtn.addEventListener("click", () => {
+                document.removeEventListener("keydown", keyHandler);
+            });
+        }
     }
 }
 function closeDialog(type) {
@@ -1424,6 +1456,14 @@ function closeDialog(type) {
     document.getElementById(type+"-dialog-overlay").style.display = "none";
     localStorage.setItem("hide"+type+"Dialog", document.getElementById(type+"-not-checkbox").checked);
   }
+function escapeHTML(str) {
+    return str
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+}
 
 // インストールガイドを表示
 function iOSinstallGuide() {
@@ -1501,9 +1541,14 @@ function updatePlayerList(players) {
         } else {
             display_player_name = name;
         }
-        span.textContent = ((role !== lang.black) ? "　" : "") + `${role}: ${display_player_name}`;
+        span.innerHTML = ((role !== lang.black) ?"　" :"") + `${(role===lang.black)?'<span id="black_circle"></span>':(role===lang.white)?'<span id="white_circle"></span>':role+":"} ${escapeHTML(display_player_name)}`;
         playerListElement.appendChild(span);
     });
+    if (Object.keys(players).length === 1) {
+        const span = document.createElement('span');
+        span.innerHTML = '　<span id="white_circle"></span> '+lang.opponent;
+        playerListElement.appendChild(span);
+    }
 }
 
 function changeHead() {
@@ -1578,25 +1623,7 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
 
         if (selectedMode === 'online') {
             online = true;  // オンラインモードのフラグを立てる
-            setTimeout(() => {
-
-                // ローディング表示を追加
-                const loadingOverlay = document.createElement('div');
-                loadingOverlay.id = 'loading-overlay';
-
-                // オセロディスクのローディングアニメーション
-                loadingOverlay.innerHTML = `
-                <div class="loading-container">
-                    <div class="loading-disc">
-                        <div class="disc-inner"></div>
-                    </div>
-                    <div class="loading-text">Loading...</div>
-                </div>
-            `;
-                document.body.appendChild(loadingOverlay);
-            }
-                , 1000);
-
+            showLoading();
             restart();
         } else {
             document.getElementById("playerJoinSoundBox").style.display = "none";
@@ -1614,6 +1641,7 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
                     socket.close();
                     socket = null;
                 }
+                showLoading();
                 restart();
 
             } else if (selectedMode === 'ai') {
@@ -1645,7 +1673,6 @@ function _DOMContenLoaded() {
     if (dcss) {
         dcss.media = "all";
     }
-
     placeStoneBufferPromise = getAudioBuffer(PLACE_STONE_SOUND).then(buffer => {
         console.log("Audio preloaded");
     }).catch(e => console.error("Failed to preload audio:", e));
@@ -1895,16 +1922,16 @@ function makeSocket() {
                 deserializeMoveHistory(data.history);
                 console.log("moveHistory", moveHistory);
                 replayMovesUpToIndex(moveHistory.length - 1, 2);
-                console.log("recconect", data);
+                if (data.n_players !== 1) {
+                document.getElementById("restart-btn").disabled = false;}
+                console.log("reconnect", data);
             }
-            
 
             //タイマーを止める
             timeLimit = 0;
             localStorage.setItem('timeLimit', timeLimit);
             stopTimer();
             document.getElementById("timeLimitBox_").style.display = "none";
-
         } else if (data.action === "update_players") {
             updatePlayerList(data.players);
             if (Object.keys(data.players).length === 2 && !data.setting) {
@@ -1933,9 +1960,6 @@ function makeSocket() {
             return;
         } else if (data.action === "game_start") {
             console.log(`Game started. ${data.time_limit},${data.show_valid_moves}.`);
-
-            overlay.style.display = 'none';
-
             onlineGameStarted = true;
 
             const tempUrl = new URL(window.location);
@@ -1950,14 +1974,13 @@ function makeSocket() {
             localStorage.setItem('showValidMoves', showValidMoves);
             document.getElementById('showValidMovesCheckbox').checked = showValidMoves;
             tempUrl.searchParams.set('showValidMoves', showValidMoves);
-
+            document.getElementById("restart-btn").disabled = false;
             if (timeLimit === 0) {
 
                 document.getElementById("timeLimitBox_").style.display = "none";
             } else {
                 document.getElementById("timeLimitBox_").style.display = "block";
             }
-
             return;
         }
     };
@@ -2109,7 +2132,7 @@ if (playerName_el) {
             playerName_el.value = nameInput;
             if (/^[a-zA-Z0-9]+$/.test(nameInput)) {
                 playerName = profanityCleaner.clean(nameInput);
-                document.getElementById("player-list").children[0].textContent = lang.black + ":" + lang.you + "(" + playerName + ")";
+                document.getElementById("player-list").children[0].innerHTML = '<span id="black_circle"></span> ' + lang.you + "(" + escapeHTML(playerName) + ")";
                 playerName_el.value = playerName;
                 localStorage.setItem("playerName", playerName);
                 //sendSettings();

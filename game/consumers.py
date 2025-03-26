@@ -11,11 +11,8 @@ from django.utils.translation import activate
 
 """ #todo
 lineのブラウザとデフォルトブラウザがごっちゃになっちゃう事例
-オセロ盤の上の表記は文字じゃなくてsvgにする
-2. 時間が立つと消えるアラートを実装→開始時にどっちのターンか知らせる
 1. 残り制限時間が表示されないバグ
 今のターンの側を赤線で囲う
-プレイヤーと観客の間には|を入れる
 """
 
 logger = logging.getLogger(__name__)
@@ -25,9 +22,7 @@ class OthelloConsumer(AsyncWebsocketConsumer):
         try:
             self.room_name = self.scope['url_route']['kwargs']['room_name']
             self.group_name = f"othello_{self.room_name}"
- 
-
-
+            
             # ゲーム状態を保持する辞書を channel_layer に用意
             if not hasattr(self.channel_layer, "game_rooms"):
                 self.channel_layer.game_rooms = {}
