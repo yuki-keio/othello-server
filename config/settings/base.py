@@ -203,7 +203,7 @@ ASGI_APPLICATION = "config.asgi.application"
 
 heroku_redis_ssl_host = {
     'address': os.environ.get("REDIS_URL", "redis://127.0.0.1:6379"),
-    'ssl': None,
+    "ssl_cert_reqs": None,
 }
 
 # Django Channels のチャンネルレイヤー
