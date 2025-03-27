@@ -28,7 +28,7 @@ class OthelloConsumer(AsyncWebsocketConsumer):
             ssl_context.check_hostname = False
             ssl_context.verify_mode = ssl.CERT_NONE
 
-            self.redis = redis.asyncio.Redis.from_url(
+            self.redis = aioredis.from_url(
                 os.environ.get("REDIS_URL", "redis://127.0.0.1:6379"),
                 decode_responses=True,
                 ssl=True,
