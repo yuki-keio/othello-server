@@ -9,6 +9,8 @@ from django.utils.translation import gettext as _
 from django.utils.translation import activate
 import redis.asyncio as aioredis
 import os
+import ssl
+
 
 """
 #todo
@@ -22,11 +24,17 @@ logger = logging.getLogger(__name__)
 class OthelloConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         try:
-            # ★★★ Redis クライアント初期化
-            self.redis = aioredis.from_url(
+            ssl_context = ssl.create_default_context()
+            ssl_context.check_hostname = False
+            ssl_context.verify_mode = ssl.CERT_NONE
+
+            self.redis = redis.asyncio.Redis.from_url(
                 os.environ.get("REDIS_URL", "redis://127.0.0.1:6379"),
-                decode_responses=True
+                decode_responses=True,
+                ssl=True,
+                ssl_cert_reqs=None, 
             )
+          
 
             self.room_name = self.scope['url_route']['kwargs']['room_name']
             self.group_name = f"othello_{self.room_name}"
