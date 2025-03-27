@@ -21,3 +21,4 @@ phonenumbers==9.0.1
 django-two-factor-auth==1.17.0
 django-axes==7.0.2
 channels_redis==4.2.1
+redis==5.2.1
