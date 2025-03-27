@@ -27,6 +27,35 @@ LOCALE_PATHS = [
 SECRET_KEY = os.environ.get("SECRET_KEY")  # 環境変数から取得
 DEBUG = os.getenv("DEBUG", "True") == "True"
 
+LOGGING_LEVEL = 'DEBUG' if DEBUG else 'INFO'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '[{levelname}] {asctime} {name} - {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '[{levelname}] {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+            'level': LOGGING_LEVEL,
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': LOGGING_LEVEL,
+    },
+}
+
+
 CSP_USE_NONCE = True
 
 CSRF_TRUSTED_ORIGINS = list(filter(None, os.getenv("CSRF_TRUSTED_ORIGINS", "https://127.0.0.1,https://localhost").split(",")))
@@ -175,6 +204,9 @@ ASGI_APPLICATION = "config.asgi.application"
 # Django Channels のチャンネルレイヤー
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer",  # 開発環境用 (本番はRedisを推奨)
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [os.environ.get("REDIS_URL", "redis://127.0.0.1:6379")],
+        },
     },
 }

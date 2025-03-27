@@ -503,7 +503,7 @@
 </body>
 <script nonce="{{ request.csp_nonce }}" >
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register("/sw.js?v=5", { scope: "/"})
+        navigator.serviceWorker.register("/sw.js?v=6", { scope: "/"})
         .then(registration => console.log("Service Worker registered:", registration))
         .catch(error => console.log("Service Worker registration failed:", error));
     }

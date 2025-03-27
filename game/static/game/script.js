@@ -1595,7 +1595,7 @@ function changeHead() {
 
 //音量調整
 victorySound.volume = 0.009;
-defeatSound.volume = 0.008;
+defeatSound.volume = 0.009;
 warningSound.volume = 0.08;
 playerJoin.volume = 0.1;
 

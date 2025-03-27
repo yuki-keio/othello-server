@@ -1,4 +1,4 @@
-const CACHE_NAME = "my-django-app-cache-v18";
+const CACHE_NAME = "my-django-app-cache-v19";
 const urlsToCache = [
     "/",  // ホーム
     "/ai/",
@@ -36,25 +36,40 @@ self.addEventListener("install", event => {
 
 // キャッシュを使ってリクエストを処理
 self.addEventListener("fetch", event => {
-   
     const url = new URL(event.request.url);
 
-    if (((url.origin === "https://fonts.gstatic.com" || url.origin === "https://fonts.googleapis.com") && event.request.destination === "font") ||url.origin === "https://cdn.jsdelivr.net" || url.origin === "https://cdnjs.cloudflare.com") {
-        event.respondWith(fetch(event.request, { mode: "cors", credentials: "omit"}));
+    // CDNからのフォントなどは毎回ネットワーク取得する。
+    if (((url.origin === "https://fonts.gstatic.com" || url.origin === "https://fonts.googleapis.com") && event.request.destination === "font") || url.origin === "https://cdn.jsdelivr.net" || url.origin === "https://cdnjs.cloudflare.com") {
+        event.respondWith(
+            fetch(event.request, { mode: "cors", credentials: "omit" })
+        );
         return;
     }
-    const cacheKey = new URL(event.request.url).pathname;
-    console.log('Service Worker cacheKey:', cacheKey)
+
+    // Stale-While-Revalidate 戦略
     event.respondWith(
-        caches.match(cacheKey)
-            .then(response => response || fetch(event.request)).catch(error => {
-                console.error("Fetch Error(not '/online/' page):", error);
-                return new Response("Offline content not available", {
-                    status: 503,
-                    statusText: "Service Unavailable",
-                    headers: { "Content-Type": "text/plain" }
-                });
-            })
+        caches.open(CACHE_NAME).then(cache => {
+            const cacheKey = url.pathname;
+            return cache.match(cacheKey).then(cachedResponse => {
+                // ネットワークから新鮮なデータを取得し、取得できたらキャッシュを更新
+                const fetchPromise = fetch(event.request)
+                    .then(networkResponse => {
+                        // ステータス200ならキャッシュへ保存
+                        if (networkResponse && networkResponse.status === 200) {
+                            cache.put(cacheKey, networkResponse.clone());
+                        }
+                        return networkResponse;
+                    })
+                    .catch(err => {
+                        // ネットワークエラー時はキャッシュを返す
+                        console.error("Fetch failed; returning cached data if available.", err);
+                        return cachedResponse;
+                    });
+
+                // まずキャッシュがあればそれを返し、なければネットワーク取得を待つ
+                return cachedResponse || fetchPromise;
+            });
+        })
     );
 });
 
