@@ -201,17 +201,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # ASGI 設定
 ASGI_APPLICATION = "config.asgi.application"
 
-heroku_redis_ssl_host = {
-    'address': os.environ.get("REDIS_URL", "redis://127.0.0.1:6379"),
-    "ssl_cert_reqs": None,
-}
-
 # Django Channels のチャンネルレイヤー
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts":  (heroku_redis_ssl_host,)
+            "hosts": [os.environ.get("REDIS_URL", "redis://127.0.0.1:6379")],
         },
     },
 }
