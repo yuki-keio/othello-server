@@ -24,15 +24,10 @@ logger = logging.getLogger(__name__)
 class OthelloConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         try:
-            ssl_context = ssl.create_default_context()
-            ssl_context.check_hostname = False
-            ssl_context.verify_mode = ssl.CERT_NONE
-
             self.redis = aioredis.from_url(
                 os.environ.get("REDIS_URL", "redis://127.0.0.1:6379"),
                 decode_responses=True,
-                ssl=True,
-                ssl_cert_reqs=None, 
+                ssl_cert_reqs=ssl.CERT_NONE
             )
           
 
