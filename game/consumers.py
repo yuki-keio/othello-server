@@ -25,9 +25,8 @@ class OthelloConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         try:
             self.redis = aioredis.from_url(
-                os.environ.get("REDIS_URL", "redis://127.0.0.1:6379"),
-                decode_responses=True,
-                ssl_cert_reqs=ssl.CERT_NONE
+            os.environ.get("REDIS_URL", "rediss://localhost:6379"),
+            decode_responses=True,
             )
           
 
