@@ -237,7 +237,7 @@
                  <h3>{% trans "AIレベルを選択" %}</h3>
                  <div id="ai-level-list">
                      <div data-level="0" class="ai-level-item">{% trans "初級AI" %}</div>
-                     <div data-level="1" class="ai-level-item">{% trans "中級AI（推奨）" %}</div>
+                     <div data-level="1" class="ai-level-item">{% trans "中級AI" %}</div>
                      <div data-level="2" class="ai-level-item">{% trans "上級AI" %}</div>
                      <div data-level="3" class="ai-level-item locked-level" data-unlock-level="2">{% trans "達人級AI" %}</div>
                      <div data-level="5" class="ai-level-item locked-level" data-unlock-level="3">{% trans "名人級AI" %}</div>
@@ -365,10 +365,10 @@
                 </div>
                 <br>
                 <label id="level_ai">
-                    {% trans "🤖 AIのレベル：" %}
+                    {% trans "🤖 AIの強さ：" %}
                     <select id="aiLevelSelect">
                         <option value="0">{% trans "初級" %}</option>
-                        <option value="1">{% trans "中級（推奨）" %}</option>
+                        <option value="1">{% trans "中級" %}</option>
                         <option value="2">{% trans "上級" %}</option>
                         <option value="3" class="locked-level" data-unlock-level="2">{% trans "達人級" %}</option>
                         <option value="5" class="locked-level" data-unlock-level="3">{% trans "名人級" %}</option>

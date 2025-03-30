@@ -27,7 +27,7 @@ LOCALE_PATHS = [
 SECRET_KEY = os.environ.get("SECRET_KEY")  # 環境変数から取得
 DEBUG = os.getenv("DEBUG", "True") == "True"
 
-LOGGING_LEVEL = 'DEBUG' if DEBUG else 'INFO'
+LOGGING_LEVEL = 'INFO'
 
 LOGGING = {
     'version': 1,

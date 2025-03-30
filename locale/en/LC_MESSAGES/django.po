@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-26 14:47+0900\n"
+"POT-Creation-Date: 2025-03-30 13:50+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,27 +17,27 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: game/consumers.py:40
+#: game/consumers.py:55
 msgid "プレイヤーIDが提供されていません"
 msgstr "Player ID has not been provided."
 
-#: game/consumers.py:45
+#: game/consumers.py:60
 msgid "プレイヤー名が提供されていません"
 msgstr "Player name has not been provided."
 
-#: game/consumers.py:218 game/consumers.py:221
+#: game/consumers.py:263
 msgid "対戦相手がまだ接続していません"
 msgstr "The opponent has not connected yet."
 
-#: game/consumers.py:249
+#: game/consumers.py:286
 msgid "観戦者は降参できません"
 msgstr "Spectators cannot forfeit."
 
-#: game/consumers.py:272
+#: game/consumers.py:312
 msgid "有効な手が存在するため、パスはできません"
 msgstr "A valid move exists, so you cannot pass."
 
-#: game/consumers.py:310
+#: game/consumers.py:349
 msgid "このマスには石を置けません："
 msgstr "You cannot place a stone here: "
 
@@ -79,7 +79,7 @@ msgstr ""
 "Reversi AI, and enjoy the simple and easy-to-play digital Reversi board "
 "feature. Play now!"
 
-#: game/templates/game/index.html:38
+#: game/templates/game/index.html:38 game/templates/game/index.html:371
 msgid "中級"
 msgstr "Intermediate"
 
@@ -269,8 +269,8 @@ msgid "初級AI"
 msgstr "Beginner"
 
 #: game/templates/game/index.html:240
-msgid "中級AI（推奨）"
-msgstr "Intermediate (Recommended)"
+msgid "中級AI"
+msgstr "Intermediate"
 
 #: game/templates/game/index.html:241
 msgid "上級AI"
@@ -413,16 +413,12 @@ msgid "⏱ 一手あたりの持ち時間："
 msgstr "⏱ Time per Move:"
 
 #: game/templates/game/index.html:368
-msgid "🤖 AIのレベル："
+msgid "🤖 AIの強さ："
 msgstr "🤖 AI Level:"
 
 #: game/templates/game/index.html:370
 msgid "初級"
 msgstr "Beginner"
-
-#: game/templates/game/index.html:371
-msgid "中級（推奨）"
-msgstr "Intermediate (Recommended)"
 
 #: game/templates/game/index.html:372
 msgid "上級"

@@ -13,9 +13,8 @@ import os
 
 """
 #todo
-lineのブラウザとデフォルトブラウザがごっちゃになっちゃう事例
-1. 残り制限時間が表示されないバグ
 今のターンの側を赤線で囲う
+切断時：数秒後に「相手が切断した」と表示→部屋を削除
 """
 
 logger = logging.getLogger(__name__)
@@ -113,6 +112,7 @@ class OthelloConsumer(AsyncWebsocketConsumer):
                 role = players[player_id][0]
                 player_name = players[player_id][1]
                 is_reconnect = True
+                players[player_id][2] = True
                 logger.info(f"[RECONNECT] {player_id} が {self.group_name} に再接続 （{self.group_name}")
             else:
                 is_reconnect = False
@@ -123,11 +123,12 @@ class OthelloConsumer(AsyncWebsocketConsumer):
                     role = "white"
                 else:
                     role = "spectator"
-                players[player_id] = [role, player_name]
+                players[player_id] = [role, player_name,True]
 
             self.role = role
             self.player_id = player_id
             self.player_name = player_name
+            self.connected = True
 
             logger.info(f"[ASSIGN ROLE] player:{player_id} -> role:{role} （ルーム名：{self.group_name}")
 
@@ -143,7 +144,9 @@ class OthelloConsumer(AsyncWebsocketConsumer):
                 "role": role,
                 "reconnect": is_reconnect,
                 "history": game_state["history"],
-                "n_players": len(players)
+                "n_players": len(players),
+                "time_limit": game_state["time_limit"],
+                "show_valid_moves": game_state["show_valid_moves"],
             }))
 
             # ターンタイマーがある場合
@@ -190,9 +193,11 @@ class OthelloConsumer(AsyncWebsocketConsumer):
             if raw_data:
                 game_state = json.loads(raw_data)
                 game_state["last_active"] = time.time()
+                game_state["players"][self.player_id][2] = False
                 await self.redis.set(f"game_rooms:{self.group_name}", json.dumps(game_state))
-
-                if len(game_state["players"]) == 0:
+                active_players = sum(1 for p in game_state["players"].values() if p[2] and p[0] != "spectator")
+                if active_players == 0:
+                    logger.info(f"[NO ACTIVE PLAYERS] {self.group_name} has no active players. Deleting room.")
                     asyncio.create_task(self.schedule_room_deletion(self.group_name))
 
         except Exception as e:
@@ -208,7 +213,6 @@ class OthelloConsumer(AsyncWebsocketConsumer):
             if time.time() - game_state["last_active"] >= 3600:
                 await self.redis.delete(f"game_rooms:{room_name}")
                 logger.info(f"[ROOM DELETED] {room_name} was deleted due to inactivity")
-
     async def receive(self, text_data):
         try:
             data = json.loads(text_data)
@@ -528,6 +532,7 @@ class OthelloConsumer(AsyncWebsocketConsumer):
         last_action_time = asyncio.get_event_loop().time()
         while True:
             await asyncio.sleep(30)
-            if asyncio.get_event_loop().time() - last_action_time > 600:
+            if asyncio.get_event_loop().time() - last_action_time > 36000:
+                logger.info(f"[PING] Closing connection because over 10 hours has past from when game started")
                 break
             await self.send(text_data=json.dumps({"type": "ping"}))

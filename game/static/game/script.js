@@ -1767,10 +1767,8 @@ function initAIMode() {
 
     // ロックされたレベルを処理
     const lockedOptions = document.querySelectorAll('.locked-level');
-    let temp_nextLevel;
     lockedOptions.forEach(option => {
         const unlockLevel = option.getAttribute('data-unlock-level')
-
         console.log(`[aiLevelSelect] Locking level v ${option.getAttribute("data-level")}`);
         console.log(`[aiLevelSelect] Locking level t ${option.textContent}`);
         if (unlockedLevels[option.getAttribute("data-level") || option.value]) {
@@ -1778,9 +1776,15 @@ function initAIMode() {
             option.disabled = false;
             option.style.display = '';
         } else if (unlockedLevels[unlockLevel]) {
-            console.log(`[aiLevelSelect] just Unlocking level ${unlockLevel}`);
-            temp_nextLevel = option.textContent;
-            option.textContent = `？`;
+            const level_before = document.querySelector('#aiLevelSelect option[value="' + unlockLevel + '"]');
+            switch (langCode) {
+                case "en":
+                    option.textContent = `Next Level: Defeat ${level_before.textContent} to unlock`;
+                    break;
+                default:
+                    option.textContent = `次のレベル : ${level_before.textContent}AIに勝利で解放`;
+                    break;
+            }
             option.disabled = true;
         } else {
             option.style.display = 'none';
@@ -1922,6 +1926,21 @@ function makeSocket() {
                 deserializeMoveHistory(data.history);
                 console.log("moveHistory", moveHistory);
                 replayMovesUpToIndex(moveHistory.length - 1, 2);
+                stopTimer();
+                timeLimit = data.time_limit;
+                localStorage.setItem('timeLimit', timeLimit);
+                document.getElementById('timeLimitSelect').value = timeLimit;
+                console.log(`ゲームが開始されました。${data.show_valid_moves}`);
+                showValidMoves = data.show_valid_moves === "true";
+                localStorage.setItem('showValidMoves', showValidMoves);
+                document.getElementById('showValidMovesCheckbox').checked = showValidMoves;
+                if (timeLimit === 0) {
+
+                    document.getElementById("timeLimitBox_").style.display = "none";
+                } else {
+                    document.getElementById("timeLimitBox_").style.display = "block";
+                }
+
                 if (data.n_players !== 1) {
                 document.getElementById("restart-btn").disabled = false;}
                 console.log("reconnect", data);
@@ -1962,21 +1981,17 @@ function makeSocket() {
             console.log(`Game started. ${data.time_limit},${data.show_valid_moves}.`);
             onlineGameStarted = true;
 
-            const tempUrl = new URL(window.location);
 
             stopTimer();
             timeLimit = data.time_limit;
             localStorage.setItem('timeLimit', timeLimit);
             document.getElementById('timeLimitSelect').value = timeLimit;
-            tempUrl.searchParams.set('timeLimit', timeLimit);
             console.log(`ゲームが開始されました。${data.show_valid_moves}`);
             showValidMoves = data.show_valid_moves === "true";
             localStorage.setItem('showValidMoves', showValidMoves);
             document.getElementById('showValidMovesCheckbox').checked = showValidMoves;
-            tempUrl.searchParams.set('showValidMoves', showValidMoves);
             document.getElementById("restart-btn").disabled = false;
             if (timeLimit === 0) {
-
                 document.getElementById("timeLimitBox_").style.display = "none";
             } else {
                 document.getElementById("timeLimitBox_").style.display = "block";
