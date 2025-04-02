@@ -331,12 +331,11 @@
     {% endif %}
         <!-- 対戦結果ポップアップ -->
         <div id="result-popup">
-            <img id="result-image" src="" alt="result image"><br>
-            {% trans "【得点】" %}<p id="r-score-container"><span id="score-difference">⚫️ 34 : 30 ⚪️</span></p>
+            <img id="result-image" src="" alt="result image"><div id="r-message"></div><p id="r-score-container"><span id="score-difference">⚫️ 34 : 30 ⚪️</span></p>
             <div id="result-container">
                 <button id="r-share-btn" aria-label="{% trans 'オセロ盤の盤面を共有するURLをコピー' %}"></button>
                 <button id="tweet-result">{% trans "𝕏 に投稿" %}</button>
-                <button id="restart-match">{% trans "🚩 新規対局" %}</button>
+                <button id="restart-match">{% trans "🔥 もう1回！" %}</button>
             </div>
             <button id="close-result">{% trans "❌️ 閉じる" %}</button>
         </div>

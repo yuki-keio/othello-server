@@ -775,6 +775,27 @@ function endGame(online_data, winner = null) {
 
     stopTimer();
     showResultPopup(ifVitory, blackCount, whiteCount);
+    setTimeout(() => {
+        gameFinishedCount++;
+        localStorage.setItem('gameFinishedCount', gameFinishedCount);
+        if (gameFinishedCount === 1 && deferredPrompt) {
+            showInstallPrompt();
+        } else if (gameFinishedCount === 3 && deferredPrompt) {
+            showInstallPrompt();
+        }
+        if (isIOS() && !window.navigator.standalone && gameFinishedCount === 1) {
+            iOSinstallGuide();
+        } else if (isIOS() && !window.navigator.standalone && gameFinishedCount === 3) {
+            iOSinstallGuide();
+        } else {
+            if (gameMode === "ai" && ifVitory) {
+                const currentAiLevel = document.getElementById('aiLevelSelect').value;
+                if (window.unlockNextAiLevel) {
+                    window.unlockNextAiLevel(currentAiLevel);
+                }
+            }
+        }
+    }, 2000);
 }
 
 function serializeMoveHistory() {
@@ -1479,6 +1500,7 @@ function showResultPopup(victory, scoreBlack, scoreWhite) {
     const resultImg = document.getElementById('result-image');
     const scoreDiff = document.getElementById('score-difference');
     let imagePath = '';
+    const rMessage = document.getElementById('r-message');
     
     if (victory) {
     imagePath = 'https://reversi.yuki-lab.com/static/game/images/win.png'; 
@@ -1486,6 +1508,14 @@ function showResultPopup(victory, scoreBlack, scoreWhite) {
     imagePath = 'https://reversi.yuki-lab.com/static/game/images/draw.png';
     } else {
     imagePath = 'https://reversi.yuki-lab.com/static/game/images/lose.png';
+    }
+    switch (langCode) {
+        case "en":
+            rMessage.textContent = (victory ? "🏆️ ":"") + `You ${victory ? "won" : "lost"} against ${opponentName} by ${Math.abs(scoreBlack - scoreWhite)} points`;
+            break;
+        default:
+            rMessage.textContent = (victory ? "🏆️ ":"") + `${opponentName}に${Math.abs(scoreB.textContent - scoreW.textContent)}点差で${ifVitory ? "勝利！" : "敗北"}`;
+            break;
     }
     scoreDiff.textContent = `⚫️ ${scoreBlack} : ${scoreWhite} ⚪️`;
     resultImg.src = imagePath;
@@ -2267,27 +2297,6 @@ document.getElementById('playerJoinSoundCheckbox').checked = playerJoinSoundEnab
 // 終了時のポップアップ関連
 document.getElementById('close-result').addEventListener('click', () => {
     document.getElementById('result-popup').style.display = 'none';
-
-    // ゲームの終了処理を続ける
-    gameFinishedCount++;
-    localStorage.setItem('gameFinishedCount', gameFinishedCount);
-    if (gameFinishedCount === 1 && deferredPrompt) {
-        showInstallPrompt();
-    } else if (gameFinishedCount === 3 && deferredPrompt) {
-        showInstallPrompt();
-    }
-    if (isIOS() && !window.navigator.standalone && gameFinishedCount === 1) {
-        iOSinstallGuide();
-    } else if (isIOS() && !window.navigator.standalone && gameFinishedCount === 3) {
-        iOSinstallGuide();
-    } else {
-        if (gameMode === "ai" && ifVitory) {
-            const currentAiLevel = document.getElementById('aiLevelSelect').value;
-            if (window.unlockNextAiLevel) {
-                window.unlockNextAiLevel(currentAiLevel);
-            }
-        }
-    }
 });
 document.getElementById('tweet-result').addEventListener('click', () => {
     const url = window.location.href;
@@ -2303,6 +2312,12 @@ document.getElementById('tweet-result').addEventListener('click', () => {
     const twitterIntentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
     window.open(twitterIntentUrl, '_blank');
 });
-document.getElementById('restart-match').addEventListener('click', restart);
+document.getElementById('restart-match').addEventListener('click', () => {
+    gtag('event', 'Next match', {
+        'event_category': 'engagement',
+        'event_label': 'Next match',
+    });
+    restart();
+});
 
 initializeBoard();
