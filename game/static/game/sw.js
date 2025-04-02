@@ -1,4 +1,4 @@
-const CACHE_NAME = "my-django-app-cache-v19";
+const CACHE_NAME = "my-django-app-cache-v22";
 const urlsToCache = [
     "/",  // ホーム
     "/ai/",
@@ -16,7 +16,7 @@ const urlsToCache = [
     "/static/game/confetti.browser.min.js",
     "/static/game/images/setting.svg",
     "/static/game/images/qr.svg",
-    "/static/game/images/copy.webp",
+    "/static/game/images/share.svg",
     "/static/game/sounds/defeat.mp3",
     "/static/game/sounds/victory.mp3",
     "/static/game/sounds/place-stone.mp3",

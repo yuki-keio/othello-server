@@ -52,7 +52,7 @@ let socket = null;
 // 設定関係
 let soundEffects = !(localStorage.getItem('soundEffects') === "false");
 let timeLimitSoundEnabled = !(localStorage.getItem('timeLimitSoundEnabled') === "false");
-let gameEndSoundEnabled = localStorage.getItem('gameEndSoundEnabled') === "true";
+let gameEndSoundEnabled = localStorage.getItem('gameEndSoundEnabled') !== "false";
 let playerJoinSoundEnabled = !(localStorage.getItem('playerJoinSoundEnabled') === "false");
 
 let showValidMoves = !(localStorage.getItem('showValidMoves') === "false");
@@ -87,6 +87,7 @@ let aimove = false;
 
 let online = false;
 let role_online = "unknown";
+let opponentName = undefined;
 
 function refreshBoard() {
     const fragment = document.createDocumentFragment();
@@ -279,12 +280,12 @@ async function applyServerMove(row, col, player, status, final = false) {
         startAIMove();
 
     } else {
-        if (final !== false || gameMode !== online) {
+        if (final !== false || !online) {
             updateURL();
         }
     }
 
-    if ((final !== false || gameMode !== online)) {
+    if ((final !== false || !online)) {
         updateStatus();
     }
 }
@@ -613,6 +614,10 @@ function endGame(online_data, winner = null) {
     let result;
 
     gameEnded = true;
+
+    if (gameMode==='ai'){
+        opponentName = aiLevelSelect.options[aiLevelSelect.selectedIndex].text;
+    }
     if (winner === "won") {
         share_winner = "won";
     } else if (online_data !== "offline") {
@@ -756,6 +761,10 @@ function endGame(online_data, winner = null) {
         'timeLimit': timeLimit,
         'showValidMoves': showValidMoves,
         'aiLevel': aiLevel,
+        'gameEndSoundEnabled': gameEndSoundEnabled,
+        'placeStoneSoundEnabled': soundEffects,
+        'playerJoinSoundEnabled': playerJoinSoundEnabled,
+        'timeLimitSoundEnabled': timeLimitSoundEnabled,
     });
 
     url = new URL(window.location);
@@ -765,26 +774,7 @@ function endGame(online_data, winner = null) {
     document.getElementById('score_display').innerHTML = `${result} | <span id="black_circle"></span> ${blackCount} : ${whiteCount} <span id="white_circle"></span>`;
 
     stopTimer();
-    gameFinishedCount++;
-    localStorage.setItem('gameFinishedCount', gameFinishedCount);
-    if (gameFinishedCount === 1 && deferredPrompt) {
-        showInstallPrompt();
-    } else if (gameFinishedCount === 3 && deferredPrompt) {
-        showInstallPrompt();
-    }
-    if (isIOS() && !window.navigator.standalone && gameFinishedCount === 1) {
-        iOSinstallGuide();
-    } else if (isIOS() && !window.navigator.standalone && gameFinishedCount === 3) {
-        iOSinstallGuide();
-    } else {
-        if (gameMode === "ai" && ifVitory) {
-            const currentAiLevel = document.getElementById('aiLevelSelect').value;
-            if (window.unlockNextAiLevel) {
-                window.unlockNextAiLevel(currentAiLevel);
-            }
-        }
-    }
-
+    showResultPopup(ifVitory, blackCount, whiteCount);
 }
 
 function serializeMoveHistory() {
@@ -940,7 +930,6 @@ function copyURLToClipboard(matchRoom = false) {
         } else {
             alertText = lang.copy_invite;
         }
-    } else {
     }
     if (!matchRoom) {
         url.searchParams.set('won', share_winner);
@@ -998,9 +987,12 @@ function goToPreviousMove() {
     //change URL params
     const url = new URL(window.location);
     const move_now = url.searchParams.get('moves');
+    if (!move_now) {
+        alert(lang.cant_go_more);
+        return;
+    }
     if (move_now.length > 3) {
         url.searchParams.set('moves', move_now.slice(0, move_now.lastIndexOf(',')));
-
     } else {
         url.searchParams.delete('moves');
     }
@@ -1011,9 +1003,16 @@ function goToPreviousMove() {
         deleted_urls.push(move_now.slice(move_now.lastIndexOf(',') + 1));
         localStorage.setItem('deleted_urls', JSON.stringify(deleted_urls));
     }
-
+    sessionStorage.setItem("scrollY", window.scrollY);
+    if (window.gtag) {
+        gtag('event', 'go_to_previous_move', {
+            'event_category': 'navigation',
+            'event_label': move_now.slice(move_now.lastIndexOf(',') + 1),
+        });
+    }else{
+        console.log("[goToPreviousMove] gtag not found");
+    }
     window.location = url;
-
 }
 
 function goToNextMove() {
@@ -1021,11 +1020,19 @@ function goToNextMove() {
     const url = new URL(window.location);
     const move_now = url.searchParams.get('moves') ? url.searchParams.get('moves') + ',' : '';
     const deleted_urls = JSON.parse(localStorage.getItem('deleted_urls'));
-
     if (deleted_urls.length > 0) {
         url.searchParams.set('moves', move_now + deleted_urls.pop());
 
         localStorage.setItem('deleted_urls', JSON.stringify(deleted_urls));
+        sessionStorage.setItem("scrollY", window.scrollY);
+        if (window.gtag) {
+            gtag('event', 'go_to_next_move', {
+                'event_category': 'navigation',
+                'event_label': deleted_urls.pop(),
+            });
+        }else{
+            console.log("[goToNextMove] gtag not found");
+        }
         window.location = url;
 
     } else {
@@ -1456,6 +1463,25 @@ function closeDialog(type) {
     document.getElementById(type+"-dialog-overlay").style.display = "none";
     localStorage.setItem("hide"+type+"Dialog", document.getElementById(type+"-not-checkbox").checked);
   }
+
+function showResultPopup(victory, scoreBlack, scoreWhite) {
+    const rPopup = document.getElementById('result-popup');
+    const resultImg = document.getElementById('result-image');
+    const scoreDiff = document.getElementById('score-difference');
+    let imagePath = '';
+
+    if (victory) {
+    imagePath = 'https://reversi.yuki-lab.com/static/game/images/win.png'; 
+    } else if (scoreBlack === scoreWhite) {
+    imagePath = 'https://reversi.yuki-lab.com/static/game/images/draw.png';
+    } else {
+    imagePath = 'https://reversi.yuki-lab.com/static/game/images/lose.png';
+    }
+    scoreDiff.textContent = `⚫️ ${scoreBlack} : ${scoreWhite} ⚪️`;
+    resultImg.src = imagePath;
+    rPopup.style.display = 'block';
+}
+
 function escapeHTML(str) {
     return str
       .replace(/&/g, "&amp;")
@@ -1472,15 +1498,9 @@ function iOSinstallGuide() {
 
 function showInstallPrompt() {
     deferredPrompt.prompt();
-    deferredPrompt.userChoice.then((choiceResult) => {
-        if (choiceResult.outcome === "accepted") {
-            console.log("PWA installed");
-        } else {
-            console.log("PWA installation dismissed");
-        }
+    deferredPrompt.userChoice.then(() => {
         deferredPrompt = null;
     });
-
 }
 
 // サーバーから受信したパスメッセージに基づいて、ターン更新と表示を行う
@@ -1540,6 +1560,9 @@ function updatePlayerList(players) {
             display_player_name = lang.you + `（${name}）`;
         } else {
             display_player_name = name;
+            if (ws_role !== "spectator"){
+                opponentName = name;
+            }
         }
         span.innerHTML = ((role !== lang.black) ?"　" :"") + `${(role===lang.black)?'<span id="black_circle"></span>':(role===lang.white)?'<span id="white_circle"></span>':role+":"} ${escapeHTML(display_player_name)}`;
         playerListElement.appendChild(span);
@@ -1594,8 +1617,8 @@ function changeHead() {
 }
 
 //音量調整
-victorySound.volume = 0.009;
-defeatSound.volume = 0.009;
+victorySound.volume = 0.013;
+defeatSound.volume = 0.012;
 warningSound.volume = 0.08;
 playerJoin.volume = 0.1;
 
@@ -1672,6 +1695,12 @@ function _DOMContenLoaded() {
     }
     if (dcss) {
         dcss.media = "all";
+    }
+    const savedScrollY = sessionStorage.getItem("scrollY");
+    console.log("scrollY", savedScrollY);
+    if (scrollY !== null) {
+        window.scrollTo(0, parseInt(savedScrollY));
+        sessionStorage.removeItem("scrollY");
     }
     placeStoneBufferPromise = getAudioBuffer(PLACE_STONE_SOUND).then(buffer => {
         console.log("Audio preloaded");
@@ -1818,9 +1847,6 @@ function initAIMode() {
         const currentLevel = aiLevelSelect.options[aiLevelSelect.selectedIndex].text;
         const displayEl = document.getElementById('ai-level-display');
         displayEl.textContent = `${currentLevel} AI`;
-        if (aiLevelSelect.selectedIndex === 1) {
-            displayEl.textContent = `${lang.middle} AI`;
-        }
 
         // ポップアップ内の選択状態も更新
         const levelItems = document.querySelectorAll('.ai-level-item');
@@ -1942,7 +1968,9 @@ function makeSocket() {
                 }
 
                 if (data.n_players !== 1) {
-                document.getElementById("restart-btn").disabled = false;}
+                    document.getElementById("restart-btn").disabled = false;
+                    document.getElementById("surrender-btn").disabled = false;
+                }
                 console.log("reconnect", data);
             }
 
@@ -1962,6 +1990,8 @@ function makeSocket() {
                 const qrPopup = document.getElementById("qr-popup");
                 qrPopup.style.display = "none";
                 highlightValidMoves();
+                document.getElementById("restart-btn").disabled = false;
+                document.getElementById("surrender-btn").disabled = false;
             }
             if (playerJoinSoundEnabled) {
                 if (data.player_id !== playerId) {
@@ -1980,8 +2010,14 @@ function makeSocket() {
         } else if (data.action === "game_start") {
             console.log(`Game started. ${data.time_limit},${data.show_valid_moves}.`);
             onlineGameStarted = true;
-
-
+            if (window.gtag) {
+                gtag('event', 'online_game_start', {
+                    'event_category': 'engagement',
+                    'event_label': '[Online] Game Start',
+                });
+            }else{
+                console.log("[gameStart] gtag not found");
+            }
             stopTimer();
             timeLimit = data.time_limit;
             localStorage.setItem('timeLimit', timeLimit);
@@ -1990,7 +2026,6 @@ function makeSocket() {
             showValidMoves = data.show_valid_moves === "true";
             localStorage.setItem('showValidMoves', showValidMoves);
             document.getElementById('showValidMovesCheckbox').checked = showValidMoves;
-            document.getElementById("restart-btn").disabled = false;
             if (timeLimit === 0) {
                 document.getElementById("timeLimitBox_").style.display = "none";
             } else {
@@ -2065,6 +2100,7 @@ if (window.location.hostname !== "127.0.0.1") {
 
 // イベントリスナーを追加
 copyUrlBtn.addEventListener('click', copyURLToClipboard);
+document.getElementById('r-share-btn').addEventListener('click', copyURLToClipboard);
 document.getElementById('restart-btn').addEventListener('click', restart);
 document.getElementById('prev-move-btn').addEventListener('click', goToPreviousMove);
 document.getElementById('next-move-btn').addEventListener('click', goToNextMove);
@@ -2217,4 +2253,46 @@ document.getElementById('soundEffectsCheckbox').checked = soundEffects;
 document.getElementById('timeLimitSoundCheckbox').checked = timeLimitSoundEnabled;
 document.getElementById('gameEndSoundCheckbox').checked = gameEndSoundEnabled;
 document.getElementById('playerJoinSoundCheckbox').checked = playerJoinSoundEnabled;
+
+// 終了時のポップアップ関連
+document.getElementById('close-result').addEventListener('click', () => {
+    document.getElementById('result-popup').style.display = 'none';
+
+    // ゲームの終了処理を続ける
+    gameFinishedCount++;
+    localStorage.setItem('gameFinishedCount', gameFinishedCount);
+    if (gameFinishedCount === 1 && deferredPrompt) {
+        showInstallPrompt();
+    } else if (gameFinishedCount === 3 && deferredPrompt) {
+        showInstallPrompt();
+    }
+    if (isIOS() && !window.navigator.standalone && gameFinishedCount === 1) {
+        iOSinstallGuide();
+    } else if (isIOS() && !window.navigator.standalone && gameFinishedCount === 3) {
+        iOSinstallGuide();
+    } else {
+        if (gameMode === "ai" && ifVitory) {
+            const currentAiLevel = document.getElementById('aiLevelSelect').value;
+            if (window.unlockNextAiLevel) {
+                window.unlockNextAiLevel(currentAiLevel);
+            }
+        }
+    }
+});
+document.getElementById('tweet-result').addEventListener('click', () => {
+    const url = window.location.href;
+    let tweetText = '';
+    switch (langCode) {
+        case "en":
+            tweetText = `${ifVitory ? "Victory!" : "Defeated..."}\nI played against ${opponentName} and ${ifVitory ? "won" : "lost"} by ${Math.abs(scoreB.textContent - scoreW.textContent)} points.\n\n【Final Score】 ⚫️ ${scoreB.textContent} : ${scoreW.textContent} ⚪️\n\n#ReversiWeb #Othello\n\n👇 Game record:\n${url}`;
+            break;
+        default:
+            tweetText = `${opponentName}に${Math.abs(scoreB.textContent - scoreW.textContent)}点差で【${ifVitory ? "勝利" : "敗北"}】\n\n結果 ▶ ⚫️ ${scoreB.textContent} vs ${scoreW.textContent} ⚪️\n\n#リバーシWeb #オセロ\n\n👇 棋譜はこちら！\n${url}`;
+            break;
+    }
+    const twitterIntentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
+    window.open(twitterIntentUrl, '_blank');
+});
+document.getElementById('restart-match').addEventListener('click', restart);
+
 initializeBoard();

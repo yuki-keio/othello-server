@@ -42,11 +42,12 @@
   left: 50%;
   transform: translateX(-50%);
   background: white;
-  border-radius: 8px;
+  border-radius: 5px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.2);
   z-index: 1000;
   padding: 15px;
   padding-top: 25px;
+  padding-bottom: 5px;
   width: 80%;
   max-width: 300px;
   animation: fadeIn 0.3s ease;
@@ -60,8 +61,12 @@
 #ai-level-popup h3 {
   margin-top: 0;
   color: #000000;
-  border-bottom: 2px solid #eee;
+  border-bottom: 2px solid #bbb;
   padding-bottom: 8px;
+}
+
+#weakest{
+  border-top: 2px solid #ddd;
 }
 
 #ai-level-list {
@@ -79,7 +84,6 @@
 .ai-level-item:hover {
   background-color: #ebfbff;
 }
-
 .ai-level-item.locked-level {
   color: #999;
   cursor: not-allowed;
@@ -114,9 +118,6 @@
   color: #333;
   text-align: left;
 }
-
-
-
 
 .notes {
   text-align: left;
@@ -171,16 +172,17 @@
   margin-bottom: 20px;
 }
 
-
 .thinking .cell{
   cursor: progress;
 }
 
-
 #level_ai{
   margin-bottom: 15px;
-  }
-  #timer-display {
+}
+#aiLevelSelect{
+width: 120px;
+}
+#timer-display {
   position: absolute;
   top: 87px; /* 上からの位置 */
   left: 0px; /* 左からの位置 */
@@ -191,23 +193,18 @@
   border-radius: 5px;
   font-weight: bold;
   display: none;
-  }
-  
-  #timer-display.warning1{
+}
+#timer-display.warning1{
   color: #db5f00;
   font-weight: bold;
   font-size: 1.25em;
-  
-  
-  }
-  #timer-display.warning2{
+}
+#timer-display.warning2{
   color: #ff0000;
   font-weight: bold;
   font-size: 1.4em;
-  
-  
-  }
-  
+}
+
 #ios-install-guide-img {
   width: 90%;
   max-width: 300px;
@@ -221,18 +218,18 @@
 
 /* 閉じるボタン */
 #close-install-guide {
-  background: #007aff;
-  color: white;
+  color: rgb(38, 38, 38);
   border: none;
   padding: 8px 15px;
   font-size: 14px;
   border-radius: 8px;
   cursor: pointer;
   margin-top: 10px;
+  background-color: transparent;
 }
 
 #close-install-guide:hover {
-  background: #005ecb;
+  background: #cbcbcb;
 }
 
 #install-btn{
@@ -393,7 +390,7 @@
   background-color: #007aff;
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 5px;
   cursor: pointer;
   font-size: 12px;
   transition: background-color 0.3s ease;
@@ -407,6 +404,75 @@
 #role-dialog-content{
   font-weight: bold;
 }
+#result-popup{
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  z-index:9999;
+  background:white;
+  border-radius:8px;
+  box-shadow:0 0 20px rgba(0,0,0,0.3);
+  padding:10px;
+  width:90%;
+  max-width:400px;
+  text-align:center;
+}
+#result-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#r-share-btn{
+  padding:8px 16px;
+  margin-right:4px;
+  width:32px;
+  height:32px;
+  border-radius:4px;
+}
+#tweet-result{
+  margin:5px;
+  padding:6px 12px;
+  background:#000000; 
+  color:white;
+  border:none;
+  border-radius:4px;
+  cursor:pointer;
+}
+#restart-match{
+  margin:5px;
+  padding:6px 12px;
+  background:#007508;
+  color:white;
+  border:none;
+  border-radius:4px;
+  cursor:pointer;
+}
+#close-result{
+  padding:5px 10px;
+  margin-top:10px ;
+  border:none;
+  border-radius:5px;
+  cursor:pointer;
+  background-color: transparent;
+}
+#close-result:hover{
+  background-color: #f0f0f0;
+}
+#score-difference{
+  font-size: 1.5em;
+  font-weight: bold;
+}
+#r-score-container{
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+#result-image{
+  width: 120px;
+  height: auto;
+  margin: 10px auto;
+}
+
 @keyframes flip {
   0% {
     transform: rotateY(0) scaleX(1);
