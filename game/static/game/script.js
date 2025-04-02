@@ -616,7 +616,7 @@ function endGame(online_data, winner = null) {
     gameEnded = true;
 
     if (gameMode==='ai'){
-        opponentName = aiLevelSelect.options[aiLevelSelect.selectedIndex].text;
+        opponentName = aiLevelSelect.options[aiLevelSelect.selectedIndex].text + " AI";
     }
     if (winner === "won") {
         share_winner = "won";
@@ -1463,13 +1463,23 @@ function closeDialog(type) {
     document.getElementById(type+"-dialog-overlay").style.display = "none";
     localStorage.setItem("hide"+type+"Dialog", document.getElementById(type+"-not-checkbox").checked);
   }
-
+function preloadResultImages() {
+const images = [
+    'https://reversi.yuki-lab.com/static/game/images/win.png',
+    'https://reversi.yuki-lab.com/static/game/images/lose.png',
+    'https://reversi.yuki-lab.com/static/game/images/draw.png',
+];
+images.forEach((src) => {
+    const img = new Image();
+    img.src = src;
+});
+}
 function showResultPopup(victory, scoreBlack, scoreWhite) {
     const rPopup = document.getElementById('result-popup');
     const resultImg = document.getElementById('result-image');
     const scoreDiff = document.getElementById('score-difference');
     let imagePath = '';
-
+    
     if (victory) {
     imagePath = 'https://reversi.yuki-lab.com/static/game/images/win.png'; 
     } else if (scoreBlack === scoreWhite) {

@@ -212,6 +212,8 @@
                 script.nonce = "{{ request.csp_nonce }}"; // CSP対応
                 document.head.appendChild(script);
             }
+            //処理があらかた終わったら画像読み込み
+            preloadResultImages();
         }
         document.addEventListener("DOMContentLoaded", loadGoogleAnalytics);
     </script>
@@ -329,7 +331,7 @@
     {% endif %}
         <!-- 対戦結果ポップアップ -->
         <div id="result-popup">
-            <img id="result-image" src="" alt="result image">
+            <img id="result-image" src="" alt="result image"><br>
             {% trans "【得点】" %}<p id="r-score-container"><span id="score-difference">⚫️ 34 : 30 ⚪️</span></p>
             <div id="result-container">
                 <button id="r-share-btn" aria-label="{% trans 'オセロ盤の盤面を共有するURLをコピー' %}"></button>

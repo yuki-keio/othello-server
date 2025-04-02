@@ -465,12 +465,12 @@ width: 120px;
 }
 #r-score-container{
   margin-top: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 #result-image{
-  width: 120px;
+  width: 160px;
   height: auto;
-  margin: 10px auto;
+  margin: 0 auto 20px auto;
 }
 
 @keyframes flip {
