@@ -214,6 +214,7 @@
             }
             //処理があらかた終わったら画像読み込み
             preloadResultImages();
+            document.getElementById("r-overlay").style.backgroundImage = `url({% static 'game/images/laurel.webp' %})`;
         }
         document.addEventListener("DOMContentLoaded", loadGoogleAnalytics);
     </script>
@@ -331,6 +332,7 @@
     {% endif %}
         <!-- 対戦結果ポップアップ -->
         <div id="result-popup">
+            <div id="r-overlay"></div>
             <img id="result-image" src="" alt="result image"><div id="r-message"></div><p id="r-score-container"><span id="score-difference">⚫️ 34 : 30 ⚪️</span></p>
             <div id="result-container">
                 <button id="r-share-btn" aria-label="{% trans 'オセロ盤の盤面を共有するURLをコピー' %}"></button>

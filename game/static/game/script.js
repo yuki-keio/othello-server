@@ -1501,13 +1501,16 @@ function showResultPopup(victory, scoreBlack, scoreWhite) {
     const scoreDiff = document.getElementById('score-difference');
     let imagePath = '';
     const rMessage = document.getElementById('r-message');
+    const rOverlay = document.getElementById('r-overlay');
     
     if (victory) {
     imagePath = 'https://reversi.yuki-lab.com/static/game/images/win.png'; 
     } else if (scoreBlack === scoreWhite) {
     imagePath = 'https://reversi.yuki-lab.com/static/game/images/draw.png';
+    rOverlay.style.backgroundImage = "none";
     } else {
     imagePath = 'https://reversi.yuki-lab.com/static/game/images/lose.png';
+    rOverlay.style.backgroundImage = "none";
     }
     switch (langCode) {
         case "en":

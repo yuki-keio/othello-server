@@ -409,14 +409,30 @@ width: 120px;
   top:50%;
   left:50%;
   transform:translate(-50%, -50%);
-  z-index:9999;
-  background:white;
+  z-index:9997;
+  background-color:white;
   border-radius:8px;
   box-shadow:0 0 20px rgba(0,0,0,0.3);
   padding:10px;
   width:90%;
   max-width:400px;
   text-align:center;
+ 
+}
+#r-overlay{
+  background-size: 140%;
+  background-position: top;
+  background-repeat: no-repeat;
+  background-color: rgba(255, 255, 255, 0.5);
+  background-blend-mode: lighten;
+  z-index: -1;
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
 }
 #result-container{
   display: flex;
