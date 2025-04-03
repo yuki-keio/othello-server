@@ -942,9 +942,10 @@ function loadBoardFromURL() {
     }
 }
 
-function copyURLToClipboard(matchRoom = false) {
+function copyURLToClipboard(matchRoom = false, fromResult = false) {
     const url = new URL(window.location);
     let alertText = lang.copy_url;
+    let copyText =  url.toString();
     if (online) {
         if (onlineGameStarted) {
             alertText = lang.copy_spec;
@@ -955,7 +956,18 @@ function copyURLToClipboard(matchRoom = false) {
     if (!matchRoom) {
         url.searchParams.set('won', share_winner);
     }
-    navigator.clipboard.writeText(url.toString()).then(() => {
+    if (fromResult){
+        alertText = lang.copy_result;
+        switch (langCode) {
+            case "en":
+                copyText = `${ifVitory ? "Victory!" : "Defeated..."}\nI played against ${opponentName} and ${ifVitory ? "won" : "lost"} by ${Math.abs(scoreB.textContent - scoreW.textContent)} points.\n\n【Final Score】 ⚫️ ${scoreB.textContent} : ${scoreW.textContent} ⚪️\n\n#ReversiWeb #Othello\n\n👇 Game record:\n${copyText}`;
+                break;
+            default:
+                copyText = `${opponentName}に${Math.abs(scoreB.textContent - scoreW.textContent)}石差で【${ifVitory ? "勝利" : "敗北"}】\n\n結果 ▶ ⚫️ ${scoreB.textContent} vs ${scoreW.textContent} ⚪️\n\n#リバーシWeb #オセロ #ReversiWeb\n\n👇 棋譜はこちら！\n${copyText}`;
+                break;
+        }
+    }
+    navigator.clipboard.writeText(copyText).then(() => {
         alert(alertText);
     }).catch(err => {
         alert(lang.copy_failed);
@@ -1741,7 +1753,7 @@ function _DOMContenLoaded() {
     }
     const savedScrollY = sessionStorage.getItem("scrollY");
     console.log("scrollY", savedScrollY);
-    if (scrollY !== null) {
+    if (savedScrollY !== null) {
         window.scrollTo(0, parseInt(savedScrollY));
         sessionStorage.removeItem("scrollY");
     }
@@ -2143,7 +2155,7 @@ if (window.location.hostname !== "127.0.0.1") {
 
 // イベントリスナーを追加
 copyUrlBtn.addEventListener('click', copyURLToClipboard);
-document.getElementById('r-share-btn').addEventListener('click', copyURLToClipboard);
+document.getElementById('r-share-btn').addEventListener('click', () => {copyURLToClipboard(false,true)});
 document.getElementById('restart-btn').addEventListener('click', restart);
 document.getElementById('prev-move-btn').addEventListener('click', goToPreviousMove);
 document.getElementById('next-move-btn').addEventListener('click', goToNextMove);
@@ -2309,7 +2321,7 @@ document.getElementById('tweet-result').addEventListener('click', () => {
             tweetText = `${ifVitory ? "Victory!" : "Defeated..."}\nI played against ${opponentName} and ${ifVitory ? "won" : "lost"} by ${Math.abs(scoreB.textContent - scoreW.textContent)} points.\n\n【Final Score】 ⚫️ ${scoreB.textContent} : ${scoreW.textContent} ⚪️\n\n#ReversiWeb #Othello\n\n👇 Game record:\n${url}`;
             break;
         default:
-            tweetText = `${opponentName}に${Math.abs(scoreB.textContent - scoreW.textContent)}点差で【${ifVitory ? "勝利" : "敗北"}】\n\n結果 ▶ ⚫️ ${scoreB.textContent} vs ${scoreW.textContent} ⚪️\n\n#リバーシWeb #オセロ\n\n👇 棋譜はこちら！\n${url}`;
+            tweetText = `${opponentName}に${Math.abs(scoreB.textContent - scoreW.textContent)}石差で【${ifVitory ? "勝利" : "敗北"}】\n\n結果 ▶ ⚫️ ${scoreB.textContent} vs ${scoreW.textContent} ⚪️\n\n#リバーシWeb #オセロ #ReversiWeb\n\n👇 棋譜はこちら！\n${url}`;
             break;
     }
     const twitterIntentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
