@@ -420,6 +420,7 @@ width: 120px;
   left: 50%;
   transform: translate(-50%, -50%);
 }
+#result-popup,#r-overlay{border-radius: 8px}
 #result-container{
   display: flex;
   align-items: center;

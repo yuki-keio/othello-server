@@ -616,7 +616,7 @@ function endGame(online_data, winner = null) {
     gameEnded = true;
 
     if (gameMode === 'ai') {
-        opponentName = aiLevelSelect.options[aiLevelSelect.selectedIndex].text + " AI";
+        opponentName = aiLevelSelect.options[aiLevelSelect.selectedIndex].text + "AI";
     }
     if (winner === "won") {
         share_winner = "won";
@@ -772,8 +772,10 @@ function endGame(online_data, winner = null) {
 
     document.getElementById('score_display').innerHTML = `${result} | <span id="black_circle"></span> ${blackCount} : ${whiteCount} <span id="white_circle"></span>`;
 
+    const winner_final = share_winner === "won" ? (blackCount > whiteCount ? "black": "white") : share_winner;
+
     stopTimer();
-    showResultPopup(ifVitory, blackCount, whiteCount);
+    showResultPopup(ifVitory, blackCount, whiteCount,winner_final);
     setTimeout(() => {
         gameFinishedCount++;
         localStorage.setItem('gameFinishedCount', gameFinishedCount);
@@ -1507,7 +1509,7 @@ function preloadResultImages() {
         img.src = src;
     });
 }
-function showResultPopup(victory, scoreBlack, scoreWhite) {
+function showResultPopup(victory, scoreBlack, scoreWhite,f_winner) {
     const rPopup = document.getElementById('result-popup');
     const resultImg = document.getElementById('result-image');
     const scoreDiff = document.getElementById('score-difference');
@@ -1528,13 +1530,13 @@ function showResultPopup(victory, scoreBlack, scoreWhite) {
     switch (langCode) {
         case "en":
             if (_draw) {
-                rMessage.textContent = `🤝 You drew with ${opponentName}.`;
+                rMessage.textContent = `🤝 You drew with ${opponentName}`;
             }else{
-                rMessage.textContent = (victory ? "🏆️ " : "") + `You ${victory ? "won" : "lost"} against ${opponentName} by ${Math.abs(scoreB.textContent - scoreW.textContent)} points.`;
+                rMessage.textContent = (victory ? "🏆️ " : "") +  ((typeof opponentName === 'undefined') ? ((f_winner==="black")?"Black":"White"):"You") + (victory?" won":" lost") + ((typeof opponentName === 'undefined')?"":` against ${opponentName}`) +` by ${Math.abs(scoreB.textContent - scoreW.textContent)} points!`;
             }
             break;
         default:
-            rMessage.textContent = (victory ? "🏆️ " : "") + `${opponentName}に${Math.abs(scoreB.textContent - scoreW.textContent)}点差で${ifVitory ? "勝利！" : _draw?"引き分け": "敗北"}`;
+            rMessage.textContent = (victory ? "🏆️ " : "") + ((typeof opponentName === 'undefined') ? ((f_winner==="black")?"黒が":"白が"):`${opponentName}に`)+`${Math.abs(scoreB.textContent - scoreW.textContent)}点差で${ifVitory ? "勝利！" : _draw?"引き分け": "敗北"}`;
             break;
     }
     scoreDiff.textContent = `⚫️ ${scoreBlack} : ${scoreWhite} ⚪️`;
