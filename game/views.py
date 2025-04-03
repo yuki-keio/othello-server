@@ -8,7 +8,6 @@ from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
-
 def index(request):
     return render(request, "game/index.html", {"mode": 'player' })
 

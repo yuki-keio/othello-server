@@ -10,15 +10,14 @@ from django.utils.translation import activate
 import redis.asyncio as aioredis
 import os
 
-
 """ #todo
-AIを高速化
-統計・ランキングを追加
+1.AIを高速化
+統計・ランキングを追加,aiによるスコア計測と変化の可視化
 アカウント機能を追加
-有料プランを追加：広告削除、追加のAIを利用、英語以外のユーザー名も設定可能、優先マッチング、リバーシ検定の資格授与
+1.有料プランを追加：広告削除、追加のAIを利用、英語以外のユーザー名も設定可能、優先マッチング、リバーシ検定の資格授与
 オンラインマッチ機能の実装
 勝利 / 敗北の画面（再対戦のボタン、AI分析やハイライトの表示）。
-SNSへのシェアを実装（ogp画像：盤面・勝率予測、上位n%など）
+SNSへのシェアを実装（facebook,ogp画像：盤面・勝率予測、上位n%など）
 
 ボリューム層：AI、中〜上級、制限時間なし・有効手は表示する
 """
@@ -369,7 +368,7 @@ class OthelloConsumer(AsyncWebsocketConsumer):
             game_state["turn"] = "white" if player == "black" else "black"
             game_state["turn_start_time"] = asyncio.get_event_loop().time()
 
-            game_state["history"] += f"{player[0]}{row}{col},"
+            game_state["history"] += f"{player[0]}{row}{col}-"
             await self.channel_layer.group_send(
                 self.group_name,
                 {

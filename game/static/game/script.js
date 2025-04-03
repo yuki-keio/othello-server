@@ -615,7 +615,7 @@ function endGame(online_data, winner = null) {
 
     gameEnded = true;
 
-    if (gameMode==='ai'){
+    if (gameMode === 'ai') {
         opponentName = aiLevelSelect.options[aiLevelSelect.selectedIndex].text + " AI";
     }
     if (winner === "won") {
@@ -753,7 +753,6 @@ function endGame(online_data, winner = null) {
 
     }
 
-
     gtag('event', 'game_result', {
         'result': ifVitory,
         'gameMode': gameMode,
@@ -800,11 +799,11 @@ function endGame(online_data, winner = null) {
 
 function serializeMoveHistory() {
 
-    return moveHistory.map(move => `${move.player[0]}${move.row}${move.col}`).join(',');
+    return moveHistory.map(move => `${move.player[0]}${move.row}${move.col}`).join('-');
 }
 
 function deserializeMoveHistory(serialized) {
-    const moves_ = serialized.split(',');
+    const moves_ = serialized.split('-');
     if (moves_[moves_.length - 1] === "") {
         moves_.pop();
     }
@@ -945,7 +944,7 @@ function loadBoardFromURL() {
 function copyURLToClipboard(matchRoom = false, fromResult = false) {
     const url = new URL(window.location);
     let alertText = lang.copy_url;
-    let copyText =  url.toString();
+    let copyText = url.toString();
     if (online) {
         if (onlineGameStarted) {
             alertText = lang.copy_spec;
@@ -956,7 +955,7 @@ function copyURLToClipboard(matchRoom = false, fromResult = false) {
     if (!matchRoom) {
         url.searchParams.set('won', share_winner);
     }
-    if (fromResult){
+    if (fromResult) {
         alertText = lang.copy_result;
         switch (langCode) {
             case "en":
@@ -1025,24 +1024,24 @@ function goToPreviousMove() {
         return;
     }
     if (move_now.length > 3) {
-        url.searchParams.set('moves', move_now.slice(0, move_now.lastIndexOf(',')));
+        url.searchParams.set('moves', move_now.slice(0, move_now.lastIndexOf('-')));
     } else {
         url.searchParams.delete('moves');
     }
     if (localStorage.getItem('deleted_urls') === null) {
-        localStorage.setItem('deleted_urls', JSON.stringify([move_now.slice(move_now.lastIndexOf(',') + 1)]));
+        localStorage.setItem('deleted_urls', JSON.stringify([move_now.slice(move_now.lastIndexOf('-') + 1)]));
     } else {
         let deleted_urls = JSON.parse(localStorage.getItem('deleted_urls'));
-        deleted_urls.push(move_now.slice(move_now.lastIndexOf(',') + 1));
+        deleted_urls.push(move_now.slice(move_now.lastIndexOf('-') + 1));
         localStorage.setItem('deleted_urls', JSON.stringify(deleted_urls));
     }
     sessionStorage.setItem("scrollY", window.scrollY);
     if (window.gtag) {
         gtag('event', 'go_to_previous_move', {
             'event_category': 'navigation',
-            'event_label': move_now.slice(move_now.lastIndexOf(',') + 1),
+            'event_label': move_now.slice(move_now.lastIndexOf('-') + 1),
         });
-    }else{
+    } else {
         console.log("[goToPreviousMove] gtag not found");
     }
     window.location = url;
@@ -1051,7 +1050,7 @@ function goToPreviousMove() {
 function goToNextMove() {
     //change URL params
     const url = new URL(window.location);
-    const move_now = url.searchParams.get('moves') ? url.searchParams.get('moves') + ',' : '';
+    const move_now = url.searchParams.get('moves') ? url.searchParams.get('moves') + '-' : '';
     const deleted_urls = JSON.parse(localStorage.getItem('deleted_urls'));
     if (deleted_urls.length > 0) {
         url.searchParams.set('moves', move_now + deleted_urls.pop());
@@ -1063,7 +1062,7 @@ function goToNextMove() {
                 'event_category': 'navigation',
                 'event_label': deleted_urls.pop(),
             });
-        }else{
+        } else {
             console.log("[goToNextMove] gtag not found");
         }
         window.location = url;
@@ -1444,7 +1443,7 @@ function changeTitle() {
         document.getElementById('level_ai').style.display = 'none';
     }
 }
-function showLoading(after=1000) {
+function showLoading(after = 1000) {
     setTimeout(() => {
         // ローディング表示を追加
         const loadingOverlay = document.createElement('div');
@@ -1461,18 +1460,18 @@ function showLoading(after=1000) {
         document.body.appendChild(loadingOverlay);
     }, after);
 }
-function showDialog(type,value=null) {
-    const shouldHide = localStorage.getItem("hide"+type+"Dialog") === "true";
+function showDialog(type, value = null) {
+    const shouldHide = localStorage.getItem("hide" + type + "Dialog") === "true";
     if (!shouldHide) {
         if (type === "role") {
-            if (value==="black"){
+            if (value === "black") {
                 document.getElementById(type + "-dialog-content").textContent = lang.roleDialogB;
             } else {
                 document.getElementById(type + "-dialog-content").textContent = lang.roleDialogW;
             }
         }
-        document.getElementById(type+"-dialog").style.display = "block";
-        document.getElementById(type+"-dialog-overlay").style.display = "block";
+        document.getElementById(type + "-dialog").style.display = "block";
+        document.getElementById(type + "-dialog-overlay").style.display = "block";
         let okBtn = null;
         if (type === "role") {
             okBtn = document.getElementById("closeRoleDialog");
@@ -1492,20 +1491,21 @@ function showDialog(type,value=null) {
     }
 }
 function closeDialog(type) {
-    document.getElementById(type+"-dialog").style.display = "none";
-    document.getElementById(type+"-dialog-overlay").style.display = "none";
-    localStorage.setItem("hide"+type+"Dialog", document.getElementById(type+"-not-checkbox").checked);
-  }
+    document.getElementById(type + "-dialog").style.display = "none";
+    document.getElementById(type + "-dialog-overlay").style.display = "none";
+    localStorage.setItem("hide" + type + "Dialog", document.getElementById(type + "-not-checkbox").checked);
+}
 function preloadResultImages() {
-const images = [
-    'https://reversi.yuki-lab.com/static/game/images/win.png',
-    'https://reversi.yuki-lab.com/static/game/images/lose.png',
-    'https://reversi.yuki-lab.com/static/game/images/draw.png',
-];
-images.forEach((src) => {
-    const img = new Image();
-    img.src = src;
-});
+    const images = [
+        'https://reversi.yuki-lab.com/static/game/images/win.png',
+        'https://reversi.yuki-lab.com/static/game/images/lose.png',
+        'https://reversi.yuki-lab.com/static/game/images/draw.png',
+        'https://reversi.yuki-lab.com/static/game/images/laurel.webp'
+    ];
+    images.forEach((src) => {
+        const img = new Image();
+        img.src = src;
+    });
 }
 function showResultPopup(victory, scoreBlack, scoreWhite) {
     const rPopup = document.getElementById('result-popup');
@@ -1514,22 +1514,22 @@ function showResultPopup(victory, scoreBlack, scoreWhite) {
     let imagePath = '';
     const rMessage = document.getElementById('r-message');
     const rOverlay = document.getElementById('r-overlay');
-    
+
     if (victory) {
-    imagePath = 'https://reversi.yuki-lab.com/static/game/images/win.png'; 
+        imagePath = 'https://reversi.yuki-lab.com/static/game/images/win.png';
     } else if (scoreBlack === scoreWhite) {
-    imagePath = 'https://reversi.yuki-lab.com/static/game/images/draw.png';
-    rOverlay.style.backgroundImage = "none";
+        imagePath = 'https://reversi.yuki-lab.com/static/game/images/draw.png';
+        rOverlay.style.backgroundImage = "none";
     } else {
-    imagePath = 'https://reversi.yuki-lab.com/static/game/images/lose.png';
-    rOverlay.style.backgroundImage = "none";
+        imagePath = 'https://reversi.yuki-lab.com/static/game/images/lose.png';
+        rOverlay.style.backgroundImage = "none";
     }
     switch (langCode) {
         case "en":
-            rMessage.textContent = (victory ? "🏆️ ":"") + `You ${victory ? "won" : "lost"} against ${opponentName} by ${Math.abs(scoreBlack - scoreWhite)} points`;
+            rMessage.textContent = (victory ? "🏆️ " : "") + `You ${victory ? "won" : "lost"} against ${opponentName} by ${Math.abs(scoreBlack - scoreWhite)} points`;
             break;
         default:
-            rMessage.textContent = (victory ? "🏆️ ":"") + `${opponentName}に${Math.abs(scoreB.textContent - scoreW.textContent)}点差で${ifVitory ? "勝利！" : "敗北"}`;
+            rMessage.textContent = (victory ? "🏆️ " : "") + `${opponentName}に${Math.abs(scoreB.textContent - scoreW.textContent)}点差で${ifVitory ? "勝利！" : "敗北"}`;
             break;
     }
     scoreDiff.textContent = `⚫️ ${scoreBlack} : ${scoreWhite} ⚪️`;
@@ -1539,11 +1539,11 @@ function showResultPopup(victory, scoreBlack, scoreWhite) {
 
 function escapeHTML(str) {
     return str
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
 
 // インストールガイドを表示
@@ -1615,16 +1615,16 @@ function updatePlayerList(players) {
             display_player_name = lang.you + `（${name}）`;
         } else {
             display_player_name = name;
-            if (ws_role !== "spectator"){
+            if (ws_role !== "spectator") {
                 opponentName = name;
             }
         }
-        span.innerHTML = ((role !== lang.black) ?"　" :"") + `${(role===lang.black)?'<span id="black_circle"></span>':(role===lang.white)?'<span id="white_circle"></span>':role+":"} ${escapeHTML(display_player_name)}`;
+        span.innerHTML = ((role !== lang.black) ? "　" : "") + `${(role === lang.black) ? '<span id="black_circle"></span>' : (role === lang.white) ? '<span id="white_circle"></span>' : role + ":"} ${escapeHTML(display_player_name)}`;
         playerListElement.appendChild(span);
     });
     if (Object.keys(players).length === 1) {
         const span = document.createElement('span');
-        span.innerHTML = '　<span id="white_circle"></span> '+lang.opponent;
+        span.innerHTML = '　<span id="white_circle"></span> ' + lang.opponent;
         playerListElement.appendChild(span);
     }
 }
@@ -1873,7 +1873,6 @@ function initAIMode() {
         } else {
             option.style.display = 'none';
         }
-
     });
 
     // AIに勝った時のイベントハンドラ
@@ -1969,8 +1968,6 @@ function makeSocket() {
 
     socket = new WebSocket(`${ws_scheme}://${window.location.host}/ws/othello/${gameRoom}/?playerId=${playerId}&timeLimit=${timeLimit}&showValidMoves=${showValidMoves}&playerName=${encodeURIComponent(playerName)}&lang=${langCode}`);
 
-    console.log(`Connecting to WebSocket server...${ws_scheme}://${window.location.host}/ws/othello/${gameRoom}/?playerId=${playerId}&timeLimit=${timeLimit}&showValidMoves=${showValidMoves}&playerName=${encodeURIComponent(playerName)}`);
-
     // 接続成功時
     socket.onopen = function (e) {
         console.log("WebSocket connection established.", e);
@@ -1984,7 +1981,6 @@ function makeSocket() {
             alert(`⚠️ ${data.error}`);
             return;
         }
-
         if (data.action === "place_stone") {
             board.innerHTML = '';
             refreshBoard()
@@ -2065,14 +2061,6 @@ function makeSocket() {
         } else if (data.action === "game_start") {
             console.log(`Game started. ${data.time_limit},${data.show_valid_moves}.`);
             onlineGameStarted = true;
-            if (window.gtag) {
-                gtag('event', 'online_game_start', {
-                    'event_category': 'engagement',
-                    'event_label': '[Online] Game Start',
-                });
-            }else{
-                console.log("[gameStart] gtag not found");
-            }
             stopTimer();
             timeLimit = data.time_limit;
             localStorage.setItem('timeLimit', timeLimit);
@@ -2155,7 +2143,7 @@ if (window.location.hostname !== "127.0.0.1") {
 
 // イベントリスナーを追加
 copyUrlBtn.addEventListener('click', copyURLToClipboard);
-document.getElementById('r-share-btn').addEventListener('click', () => {copyURLToClipboard(false,true)});
+document.getElementById('r-share-btn').addEventListener('click', () => { copyURLToClipboard(false, true) });
 document.getElementById('restart-btn').addEventListener('click', restart);
 document.getElementById('prev-move-btn').addEventListener('click', goToPreviousMove);
 document.getElementById('next-move-btn').addEventListener('click', goToNextMove);
@@ -2328,9 +2316,10 @@ document.getElementById('tweet-result').addEventListener('click', () => {
     window.open(twitterIntentUrl, '_blank');
 });
 document.getElementById('restart-match').addEventListener('click', () => {
-    gtag('event', 'Next match', {
+    gtag('event', 'next_match', {
         'event_category': 'engagement',
-        'event_label': 'Next match',
+        'event_label': ifVitory ? 'NextMatch_afterVictory' : 'NextMatch_afterDefeated',
+        'gameEndSoundEnabled': gameEndSoundEnabled,
     });
     restart();
 });
