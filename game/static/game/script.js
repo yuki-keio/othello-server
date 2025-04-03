@@ -1514,10 +1514,11 @@ function showResultPopup(victory, scoreBlack, scoreWhite) {
     let imagePath = '';
     const rMessage = document.getElementById('r-message');
     const rOverlay = document.getElementById('r-overlay');
+    const _draw = (scoreBlack === scoreWhite) ? (share_winner==="won") : false;
 
     if (victory) {
         imagePath = 'https://reversi.yuki-lab.com/static/game/images/win.png';
-    } else if (scoreBlack === scoreWhite) {
+    } else if (_draw) {
         imagePath = 'https://reversi.yuki-lab.com/static/game/images/draw.png';
         rOverlay.style.backgroundImage = "none";
     } else {
@@ -1526,10 +1527,14 @@ function showResultPopup(victory, scoreBlack, scoreWhite) {
     }
     switch (langCode) {
         case "en":
-            rMessage.textContent = (victory ? "🏆️ " : "") + `You ${victory ? "won" : "lost"} against ${opponentName} by ${Math.abs(scoreBlack - scoreWhite)} points`;
+            if (_draw) {
+                rMessage.textContent = `🤝 You drew with ${opponentName}.`;
+            }else{
+                rMessage.textContent = (victory ? "🏆️ " : "") + `You ${victory ? "won" : "lost"} against ${opponentName} by ${Math.abs(scoreB.textContent - scoreW.textContent)} points.`;
+            }
             break;
         default:
-            rMessage.textContent = (victory ? "🏆️ " : "") + `${opponentName}に${Math.abs(scoreB.textContent - scoreW.textContent)}点差で${ifVitory ? "勝利！" : "敗北"}`;
+            rMessage.textContent = (victory ? "🏆️ " : "") + `${opponentName}に${Math.abs(scoreB.textContent - scoreW.textContent)}点差で${ifVitory ? "勝利！" : _draw?"引き分け": "敗北"}`;
             break;
     }
     scoreDiff.textContent = `⚫️ ${scoreBlack} : ${scoreWhite} ⚪️`;

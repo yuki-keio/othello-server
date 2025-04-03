@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-04 00:20+0900\n"
+"POT-Creation-Date: 2025-04-04 01:23+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -665,23 +665,24 @@ msgid "リバーシ（オセロ）で勝つためのコツ"
 msgstr "Tips for Winning in Reversi (Othello)"
 
 #: game/templates/game/index.html:509
-msgid "「ホーム画面に追加」すると、もっと快適に遊べます!"
-msgstr "Add to Home Screen for a Better Experience!"
+msgid "このサイトを「ホーム画面に追加」すると、更に快適に遊べます!"
+msgstr "Install this site for an even better experience!"
 
 #: game/templates/game/index.html:510
 msgid ""
-"<li>✅️ Webアプリだからアプリ容量はほぼ0！</li> <li>✅️ 高速に起動して時短！</"
-"li> <li>✅️ オフラインで遊べる！</li>"
+"<li>✅️ Webアプリだからアプリ容量はほぼ0！</li> <li>⏳️ 高速に起動して時短！</"
+"li> <li>✈️ オフラインで遊べる</li>"
 msgstr ""
-"<li>✅️ Almost zero storage usage!</li> <li>✅️ Fast startup for quick play!</"
-"li> <li>✅️ Some features will be available offline!</li>"
+"<li>✅️ Almost zero storage usage!</li> <li>⏳️ Fast startup for quick play!</"
+"li> <li>✈️ Some features available offline</li>"
 
 #: game/templates/game/index.html:516
-msgid "▼ 追加方法"
-msgstr "▼ How to Add"
+msgid "10秒で追加 👇"
+msgstr "Install in 10 seconds 👇"
 
 #: game/templates/game/index.html:518
-msgid "iOSでのインストール方法：共有ボタンを押し、次にホーム画面に追加を選択"
+msgid ""
+"iOSでのインストール方法：まず共有ボタンを押し、次に「ホーム画面に追加」を選択"
 msgstr ""
 "How to install on iOS: Press the share button, then select Add to Home Screen"
 
@@ -857,3 +858,4 @@ msgstr ""
 #: game/templates/game/strategy-reversi-othello.html:102
 msgid "🎮️ オセロで遊ぶ"
 msgstr "🎮️ Play Reversi"
+
