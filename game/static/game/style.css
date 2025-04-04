@@ -497,8 +497,7 @@ width: 120px;
   border-bottom: none;
 }
 #restart-match:hover{
-  background-image: linear-gradient(to bottom, #00980a, #006e07);
-  background-color: #00aa0b;
+  background-image: linear-gradient(to bottom, #00980a, #006e07);background-color: #00aa0b
 }
 #close-result{
   padding:5px 10px;
