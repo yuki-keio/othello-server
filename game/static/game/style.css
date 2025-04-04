@@ -103,7 +103,7 @@
   transform: translateX(-50%);
   width: 90%;
   max-width: 320px;
-  background: rgba(255, 255, 255, 0.98);
+  background: rgba(255, 255, 255);
   padding: 7px;
   border-radius: 8px;
   text-align: center;
@@ -412,13 +412,23 @@ width: 120px;
   background-repeat: no-repeat;
   background-color: rgba(255, 255, 255, 0.5);
   background-blend-mode: lighten;
-  z-index: -1;
+  z-index: -2;
   height: 100%;
   width: 100%;
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+#r-background-overlay{
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1999;
+  transition: background 0.3s ease;
 }
 #result-popup,#r-overlay{border-radius: 8px}
 #result-container{
@@ -432,6 +442,14 @@ width: 120px;
   width:31px;
   height:31px;
   border-radius:4px;
+  border-bottom: solid 0.7px #638db6;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+#r-share-btn:active {
+  -webkit-transform: translateY(2px);
+  transform: translateY(1px);
+  border-bottom: none;
 }
 #r-share-btn:hover,#copy-url-btn:hover{
   background-color:#a4d2ff;
@@ -442,11 +460,19 @@ width: 120px;
 #tweet-result{
   margin:5px;
   padding:7px 14px;
-  background:#000000; 
+  background:#1a1a1a; 
   color:white;
   border:none;
   border-radius:4px;
   cursor:pointer;
+  border-bottom: solid 0.5px rgb(0, 0, 0);
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+#tweet-result:active {
+  -webkit-transform: translateY(2px);
+  transform: translateY(1px);
+  border-bottom: none;
 }
 #tweet-result:hover{
   background-image: linear-gradient(to bottom, #404040, #000000);
@@ -454,8 +480,9 @@ width: 120px;
 }
 #restart-match{
   margin:5px;
+  margin-left: 10px;
   padding:6px 12px;
-  background:#007508;
+  background:#00980a;
   color:white;
   border:none;
   border-radius:4px;
@@ -470,8 +497,8 @@ width: 120px;
   border-bottom: none;
 }
 #restart-match:hover{
-  background-image: linear-gradient(to bottom, #007508, #005b06);
-  background-color: #005b06;
+  background-image: linear-gradient(to bottom, #00980a, #006e07);
+  background-color: #00aa0b;
 }
 #close-result{
   padding:5px 10px;
@@ -496,6 +523,42 @@ width: 120px;
   width: 160px;
   height: auto;
   margin: 0 auto;
+}
+
+.shine-button {
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+.shine-button:active {
+  transform: scale(0.95);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+.shine-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+}
+.shine-button::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: 0;
+  width: 30px;
+  height: 100%;
+  background-color: rgba(255,255,255,0.6);
+  animation: shine 1.8s ease-in-out infinite;
+  pointer-events: none;
+  transform: rotate(45deg);
+}
+.shine-button:hover::before {
+  animation: shine 1.3s ease-in-out infinite;
+}
+@keyframes shine {
+  0%   { transform: scale(0) rotate(45deg); opacity: 0; }
+  40%  { transform: scale(0) rotate(45deg); opacity: 0.3; }
+  41%  { transform: scale(3) rotate(45deg); opacity: 1; }
+  60% { transform: scale(30) rotate(45deg); opacity: 0; }
+  100% { transform: scale(30) rotate(45deg); opacity: 0; }
 }
 
 @keyframes flip {

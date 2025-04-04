@@ -33,6 +33,7 @@ CSP_CONNECT_SRC = (
     "https://www.clarity.ms",
     "https://b.clarity.ms",
     "https://c.clarity.ms",
+    "https://r.clarity.ms/",
 )
 
 CSP_SCRIPT_SRC = (
@@ -58,6 +59,7 @@ CSP_IMG_SRC = (
     "https://ep1.adtrafficquality.google",
     "https://b.clarity.ms",
     "https://c.clarity.ms",
+    "https://c.bing.com",
         )
 CSP_FRAME_SRC = (
     "'self'",

@@ -82,6 +82,7 @@ if (gameMode === "en") {
     gameMode = window.location.pathname.split('/').filter(Boolean)[1] || 'player';
     langCode = "en";
 }
+let langNextAIName = false;
 
 let aimove = false;
 
@@ -1430,12 +1431,7 @@ function getNearestCorner(row, col) {
 
 function changeTitle() {
     if (gameMode === 'ai') {
-        if (aiLevelSelect.selectedIndex === 1) {
-            document.getElementById('title').innerHTML = "<span id=\"ai-level-display\">" + lang.middle + " AI</span>";
-        } else {
-            document.getElementById('title').innerHTML = "<span id=\"ai-level-display\">" + document.getElementById('aiLevelSelect').options[aiLevelSelect.selectedIndex].text + " AI</span>";
-        }
-
+        document.getElementById('title').innerHTML = "<span id=\"ai-level-display\">" + document.getElementById('aiLevelSelect').options[aiLevelSelect.selectedIndex].text + " AI</span>";
         document.getElementById('level_ai').style.display = 'block';
     } else if (gameMode === 'player') {
         document.getElementById('title').textContent = player_h1;
@@ -1511,6 +1507,7 @@ function preloadResultImages() {
 }
 function showResultPopup(victory, scoreBlack, scoreWhite,f_winner) {
     const rPopup = document.getElementById('result-popup');
+    const rBoverlay = document.getElementById('r-background-overlay');
     const resultImg = document.getElementById('result-image');
     const scoreDiff = document.getElementById('score-difference');
     let imagePath = '';
@@ -1542,6 +1539,7 @@ function showResultPopup(victory, scoreBlack, scoreWhite,f_winner) {
     scoreDiff.textContent = `⚫️ ${scoreBlack} : ${scoreWhite} ⚪️`;
     resultImg.src = imagePath;
     rPopup.style.display = 'block';
+    rBoverlay.style.display = 'block';
 }
 
 function escapeHTML(str) {
@@ -1868,6 +1866,9 @@ function initAIMode() {
             option.style.display = '';
         } else if (unlockedLevels[unlockLevel]) {
             const level_before = document.querySelector('#aiLevelSelect option[value="' + unlockLevel + '"]');
+            if (option.getAttribute("data-level")){
+                langNextAIName = option.textContent;
+            }
             switch (langCode) {
                 case "en":
                     option.textContent = `Next Level: Defeat ${level_before.textContent} to unlock`;
@@ -1894,7 +1895,7 @@ function initAIMode() {
             localStorage.setItem('unlockedAiLevels', JSON.stringify(unlockedLevels));
 
             // 解放メッセージを表示
-            alert(lang.congrats_aiLevel_unlocked);
+            alert(lang.congrats_aiLevel_unlocked_b + langNextAIName + lang.congrats_aiLevel_unlocked_a);
 
             setTimeout(() => {
                 location.reload();
@@ -1941,6 +1942,14 @@ function initAIMode() {
 
             // ポップアップを閉じる
             document.getElementById('ai-level-popup').style.display = 'none';
+
+            const __url = new URL(window.location);
+            __url.searchParams.delete("moves");
+            __url.searchParams.delete("won");
+            __url.searchParams.set('aiLevel', level);
+
+            history.pushState(null, "", __url);
+            location.reload();
         });
     });
 
@@ -2188,6 +2197,9 @@ if (surrenderBtn) {
             socket.send(JSON.stringify({ action: "surrender" }));
         }
     });
+    document.getElementById("info-button").addEventListener("click", function() {
+        alert(`${lang.how2play_with_friend}`);
+    });
 }
 // 設定変更時に Local Storage に保存
 document.getElementById('showValidMovesCheckbox').addEventListener('change', () => {
@@ -2200,17 +2212,6 @@ document.getElementById('showValidMovesCheckbox').addEventListener('change', () 
 
 const timelimit_el = document.getElementById('time-limit');
 const highlightMoves_el = document.getElementById('highlight-moves');
-//time-limit要素が存在するかチェックし、存在する場合のみchangeイベントを確認
-if (timelimit_el) {
-    timelimit_el.addEventListener('change', () => {
-        //sendSettings();
-    });
-}
-if (highlightMoves_el) {
-    highlightMoves_el.addEventListener('change', () => {
-        //sendSettings();
-    });
-}
 const closeRoleDialog_el = document.getElementById("closeRoleDialog");
 if (closeRoleDialog_el) {
     closeRoleDialog_el.addEventListener("click", () => {
@@ -2261,7 +2262,6 @@ document.getElementById("close-install-guide").addEventListener("click", () => {
     }
 });
 
-document.getElementById('showValidMovesCheckbox').checked = showValidMoves;
 document.getElementById('timeLimitSelect').value = timeLimit;
 document.getElementById('timeLimitSelect').addEventListener('change', () => {
     timeLimit = parseInt(document.getElementById('timeLimitSelect').value);
@@ -2306,17 +2306,25 @@ document.getElementById('playerJoinSoundCheckbox').checked = playerJoinSoundEnab
 
 // 終了時のポップアップ関連
 document.getElementById('close-result').addEventListener('click', () => {
+    document.getElementById("restart-btn").classList.add("shine-button");
     document.getElementById('result-popup').style.display = 'none';
+    document.getElementById('r-background-overlay').style.display = 'none';
 });
 document.getElementById('tweet-result').addEventListener('click', () => {
     const url = window.location.href;
+    const _draw = (scoreB.textContent === scoreW.textContent) ? (share_winner==="won") : false;
+
     let tweetText = '';
     switch (langCode) {
         case "en":
-            tweetText = `${ifVitory ? "Victory!" : "Defeated..."}\nI played against ${opponentName} and ${ifVitory ? "won" : "lost"} by ${Math.abs(scoreB.textContent - scoreW.textContent)} points.\n\n【Final Score】 ⚫️ ${scoreB.textContent} : ${scoreW.textContent} ⚪️\n\n#ReversiWeb #Othello\n\n👇 Game record:\n${url}`;
+            if (_draw) {
+                tweetText = `🤝 I drew with ${opponentName}!\n\n【Final Score】 ⚫️ ${scoreB.textContent} : ${scoreW.textContent} ⚪️\n\n#ReversiWeb #Othello\n\n👇 Game record:\n${url}`;}
+            else{
+                tweetText = `${ifVitory ? "Victory!" : "Defeated..."}\nI ${((typeof opponentName === 'undefined')?"":` against ${opponentName} and`)} ${ifVitory ? "won" : "lost"} by ${Math.abs(scoreB.textContent - scoreW.textContent)} points.\n\n【Final Score】 ⚫️ ${scoreB.textContent} : ${scoreW.textContent} ⚪️\n\n#ReversiWeb #Othello\n\n👇 Game record:\n${url}`;
+                }
             break;
         default:
-            tweetText = `${opponentName}に${Math.abs(scoreB.textContent - scoreW.textContent)}石差で【${ifVitory ? "勝利" : "敗北"}】\n\n結果 ▶ ⚫️ ${scoreB.textContent} vs ${scoreW.textContent} ⚪️\n\n#リバーシWeb #オセロ #ReversiWeb\n\n👇 棋譜はこちら！\n${url}`;
+            tweetText = `${((typeof opponentName === 'undefined')?"":`${opponentName}に`)}${Math.abs(scoreB.textContent - scoreW.textContent)}石差で【${ifVitory ? "勝利" : "敗北"}】\n\n結果 ▶ ⚫️ ${scoreB.textContent} vs ${scoreW.textContent} ⚪️\n\n#リバーシWeb #オセロ #ReversiWeb\n\n👇 棋譜はこちら！\n${url}`;
             break;
     }
     const twitterIntentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;

@@ -7,11 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!--Critical CSS-->
     <style nonce="{{ request.csp_nonce }}">
-        body{font-family:"BIZ UDPMincho",serif;font-weight:400;display:flex;justify-content:center;align-items:center;margin:0;background-color:#f0f0f0;box-sizing:border-box;line-height:1}h1{font-family:"BIZ UDPGothic",Arial,sans-serif;cursor:pointer;font-size: 1.4em;height:22.4px;}#setting{position:absolute;right:-3px;top:85px;width:29px;height:29px;cursor:pointer}#prev-move-btn,#next-move-btn{margin:5px;padding:5px 10px;font-size:14px;color:#fff;border:none;border-radius:5px;cursor:pointer;display:inline-block;position:absolute;top:30px}#prev-move-btn{right:55px;background-color:#a34d4d}#next-move-btn{right:10px;background-color:#55b149}#black_circle{width:15px;height:15px;transform:translate(0,1px);border-radius:50%;background-color:#000;display:inline-block;margin-left:3px}#white_circle{width:15px;height:15px;transform:translate(0,1px);border-radius:50%;background-color:#fff;display:inline-block;border:0.2px solid black}#score_black{width:100px;text-align:right;font-weight:lighter}#score_white{width:100px;text-align:left;font-weight:lighter}#score_display{display:inline-block;padding:6px;padding-right:23px;padding-left:23px;background-color:#f0f0f0;border-left:1px solid black;border-right:1px solid black;white-space:nowrap}#turn_display{font-size:0.9em;display:inline-block;transform:translate(0,-1px);height:100%}.marker{width:10%;height:10%;border-radius:50%;background-color:#000;position:relative;top:52.3%;left:51.9%;z-index:10}#game-container{text-align:center;width:min(calc(90vh - 90px), 90vw);height:auto;max-width:600px;box-sizing:border-box;position:absolute;top:0;padding-bottom:150px}#settings{margin-top:18px;margin-bottom:40px;background-color:#fff;border:#ccc solid 1.3px;border-radius:5px}.container{text-align:left;margin:10px 10px 10px 10px}#board{display:grid;grid-template-columns:repeat(8,1fr);grid-gap:2px;background-color:green;padding:2%;margin:0;border-radius:5px 5px 0 0;aspect-ratio:1 / 1;height:96%;width:96%}.row{display:contents}.cell{width:100%;aspect-ratio:1 / 1;background-color:#00a000;border-radius:8%;display:flex;justify-content:center;align-items:center;cursor:pointer;position:relative}.valid-move{background-color:#00c000}.opponent-turn .valid-move{background-color:#00c000c0}.valid-move:hover{background-color:#00e000}.opponent-turn .valid-move:hover{background-color:#00c000c0}.opponent-turn .cell{cursor:default}.disc{width:80%;height:80%;border-radius:50%;position:absolute;box-shadow:0 4px 8px rgba(0,0,0,.3),inset 0 -2px 4px rgba(0,0,0,.2)}.last-move{box-shadow:0 0 10px 2px rgba(255,242,0,.7);border:2px solid rgb(255,64,0)}.faint-disc{opacity:.5;width:10%;height:10%;border-radius:50%;position:absolute}.black{background:radial-gradient(circle at 30% 30%,#333,#000)}.white{background:radial-gradient(circle at 30% 30%,#fff,#ccc)}.faint-black{background-color:#000}.faint-white{background-color:#fff;opacity:.7}#status{margin-top:0px;font-size:18px;background-color:#000;border-radius:0 0 5px 5px;font-weight:700;color:#000;border:0.5px solid #000}#move-history{margin-top:20px;text-align:left;max-height:200px;overflow-y:auto;background-color:#fff;padding:10px;border-radius:5px;border:1px solid #ccc;box-sizing:border-box;position:relative}#move-list{height:45px}.buttons_container{display:flex;align-items:center;justify-content:center;gap:13px;margin-top:19px}#copy-url-btn,#r-share-btn{position:relative;padding:10px 20px;margin-right:5px;width:40px;height:40px;background-color:#bedeff;background-image:url("{% static 'game/images/share.svg' %}");background-size:95%;background-position:center;background-repeat:no-repeat;color:#fff;border:none;border-radius:5px;display:inline-block;cursor:copy}#restart-btn{padding:8px 16px;font-size:15px;background-color:#007508;color:#fff;border:none;border-radius:5px;cursor:pointer;display:inline-block;transition:background-color 0.2s ease-in-out}#restart-btn:hover{background-color:#2e7d32}#board-container{position:relative;min-width:96%}#mode-selection-banner{position:relative;top:10px;left:50%;transform:translateX(-50%);background:rgba(25,25,25,.7);padding:7px;margin-bottom:30px;border-radius:5px;display:flex;justify-content:center;align-items:center;z-index:1000;width:auto}.mode-btn{background:rgb(250,250,250);color:#000;padding:10px 15px;font-size:16px;cursor:pointer;transition:background 0.3s ease-in-out;flex:1;border:#000 solid 1.3px;text-align:center;width:96%}.mode-btn:not(.active):hover{background:#009e00;color:#fff;transform:scale(1.05)}.mode-btn.active{background:#007508;color:#fff;font-weight:700;box-shadow:0 0 10px rgba(0,117,8,.5)}#ai-level-popup{display:none;}#ai-level-display{position:relative;top:-8px;display:inline-flex;align-items:center;cursor:pointer;background:linear-gradient(to bottom,transparent 0%,transparent 70%,#cfcfcf);border:1px solid #828282;color:#000;padding:9px 15px;border-radius:5px;transition:all 0.2s ease;margin:0;font-size:.7em;font-weight:400;width:108px;justify-content:center;white-space:nowrap}#ai-level-display:after{content:" ▼";font-size:.5em;margin-left:6px;transition:transform 0.3s ease}#result-popup{display:none}#r-overlay{background-image:url("{% static 'game/images/laurel.webp' %}")}
+        body{font-family:"BIZ UDPMincho",serif;font-weight:400;display:flex;justify-content:center;align-items:center;margin:0;background-color:#f0f0f0;box-sizing:border-box;line-height:1}h1{font-family:"BIZ UDPGothic",Arial,sans-serif;cursor:pointer;font-size: 1.4em;height:22.4px;}#setting{position:absolute;right:-3px;top:85px;width:29px;height:29px;cursor:pointer}#prev-move-btn,#next-move-btn{margin:5px;padding:5px 10px;font-size:14px;color:#fff;border:none;border-radius:5px;cursor:pointer;display:inline-block;position:absolute;top:30px}#prev-move-btn{right:55px;background-color:#a34d4d}#next-move-btn{right:10px;background-color:#55b149}#black_circle{width:15px;height:15px;transform:translate(0,1px);border-radius:50%;background-color:#000;display:inline-block;margin-left:3px}#white_circle{width:15px;height:15px;transform:translate(0,1px);border-radius:50%;background-color:#fff;display:inline-block;border:0.2px solid black}#score_black{width:100px;text-align:right;font-weight:lighter}#score_white{width:100px;text-align:left;font-weight:lighter}#score_display{display:inline-block;padding:6px;padding-right:23px;padding-left:23px;background-color:#f0f0f0;border-left:1px solid black;border-right:1px solid black;white-space:nowrap}#turn_display{font-size:0.9em;display:inline-block;transform:translate(0,-1px);height:100%}.marker{width:10%;height:10%;border-radius:50%;background-color:#000;position:relative;top:52.3%;left:51.9%;z-index:10}#game-container{text-align:center;width:min(calc(90vh - 90px), 90vw);height:auto;max-width:600px;box-sizing:border-box;position:absolute;top:0;padding-bottom:150px}#settings{margin-top:18px;margin-bottom:40px;background-color:#fff;border:#ccc solid 1.3px;border-radius:5px}.container{text-align:left;margin:10px 10px 10px 10px}#board{display:grid;grid-template-columns:repeat(8,1fr);grid-gap:2px;background-color:green;padding:2%;margin:0;border-radius:5px 5px 0 0;aspect-ratio:1 / 1;height:96%;width:96%}.row{display:contents}.cell{width:100%;aspect-ratio:1 / 1;background-color:#00a000;border-radius:8%;display:flex;justify-content:center;align-items:center;cursor:pointer;position:relative}.valid-move{background-color:#00c000}.opponent-turn .valid-move{background-color:#00c000c0}.valid-move:hover{background-color:#00e000}.opponent-turn .valid-move:hover{background-color:#00c000c0}.opponent-turn .cell{cursor:default}.disc{width:80%;height:80%;border-radius:50%;position:absolute;box-shadow:0 4px 8px rgba(0,0,0,.3),inset 0 -2px 4px rgba(0,0,0,.2)}.last-move{box-shadow:0 0 10px 2px rgba(255,242,0,.7);border:2px solid rgb(255,64,0)}.faint-disc{opacity:.5;width:10%;height:10%;border-radius:50%;position:absolute}.black{background:radial-gradient(circle at 30% 30%,#333,#000)}.white{background:radial-gradient(circle at 30% 30%,#fff,#ccc)}.faint-black{background-color:#000}.faint-white{background-color:#fff;opacity:.7}#status{margin-top:0px;font-size:18px;background-color:#000;border-radius:0 0 5px 5px;font-weight:700;color:#000;border:0.5px solid #000}#move-history{margin-top:20px;text-align:left;max-height:200px;overflow-y:auto;background-color:#fff;padding:10px;border-radius:5px;border:1px solid #ccc;box-sizing:border-box;position:relative}#move-list{height:45px}.buttons_container{display:flex;align-items:center;justify-content:center;gap:13px;margin-top:19px}#copy-url-btn,#r-share-btn{position:relative;padding:10px 20px;margin-right:5px;width:40px;height:40px;background-color:#bedeff;background-image:url("{% static 'game/images/share.svg' %}");background-size:95%;background-position:center;background-repeat:no-repeat;color:#fff;border:none;border-radius:5px;display:inline-block;cursor:copy}#restart-btn{padding:8px 16px;font-size:15px;background-color:#007508;color:#fff;border:none;border-radius:5px;cursor:pointer;display:inline-block;transition:background-color 0.2s ease-in-out}#restart-btn:hover{background-color:#2e7d32}#board-container{position:relative;min-width:96%}#mode-selection-banner{position:relative;top:10px;left:50%;transform:translateX(-50%);background:rgba(25,25,25,.7);padding:7px;margin-bottom:30px;border-radius:5px;display:flex;justify-content:center;align-items:center;z-index:1000;width:auto}.mode-btn{background:rgb(250,250,250);color:#000;padding:10px 15px;font-size:16px;cursor:pointer;transition:background 0.3s ease-in-out;flex:1;border:#000 solid 1.3px;text-align:center;width:96%}.mode-btn:not(.active):hover{background:#009e00;color:#fff;transform:scale(1.05)}.mode-btn.active{background:#007508;color:#fff;font-weight:700;box-shadow:0 0 10px rgba(0,117,8,.5)}#ai-level-popup{display:none;}#ai-level-display{position:relative;top:-8px;display:inline-flex;align-items:center;cursor:pointer;background:linear-gradient(to bottom,transparent 0%,transparent 70%,#cfcfcf);border:1px solid #828282;color:#000;padding:9px 15px;border-radius:5px;transition:all 0.2s ease;margin:0;font-size:.7em;font-weight:400;width:108px;justify-content:center;white-space:nowrap}#ai-level-display:after{content:" ▼";font-size:.5em;margin-left:6px;transition:transform 0.3s ease}#result-popup,#r-background-overlay{display:none}#r-overlay{background-image:url("{% static 'game/images/laurel.webp' %}")}
     </style>
     {% if mode == 'online' %}
     <style nonce="{{ request.csp_nonce }}">
-        h1{position: absolute;width: 1px;height: 1px;padding: 0;margin: -1px;overflow: hidden;clip: rect(0, 0, 0, 0);border: 0;}#player-info{margin-bottom:20px}#player-list{padding-inline-start: 0px;position: relative;top:7px;height:1em}#role-dialog{display:none;}#surrender-btn{padding:10px 20px;height:40px;font-size:16px;background-color:#d32f2f;color:#fff;border:none;border-radius:5px;cursor:pointer;display:inline-block;transition:background-color 0.2s ease-in-out}#surrender-btn:hover{background-color:#b71c1c}#surrender-btn[disabled],#restart-btn[disabled]{background-color:#d7d7d7;color:#666;cursor:not-allowed;opacity:0.6;}#game-settings-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);display:none;justify-content:center;align-items:center;z-index:10}#game-settings{background:#fff;padding-bottom:19px;padding-left:10px;padding-right:10px;border-radius:8px;text-align:center;box-shadow:0 4px 10px rgba(0,0,0,.3);width:80%;max-width:260px}#contents-overlay-setting{text-align:left;padding:13px}#time_overlay-label{font-size:14px;display:block}#time-limit{padding:6px;font-size:14px;border-radius:5px;border:1px solid #ccc}#highlight-moves{margin-right:5px}#start-match{padding:10px 20px;font-size:16px;background-color:#007408;color:#fff;border:none;border-radius:5px;cursor:copy;display:flex;align-items:center;justify-content:center;width:auto;height:40px;white-space:nowrap}#start-match:hover{background:#00ab0b}.qr-popup{display:none;position:absolute;z-index:1000;left:50%;top:50%;transform:translate(-50%,-50%);width:85%;aspect-ratio:1/1;max-width:285px;background:#fff;padding-bottom:15px;border-radius:8px;box-shadow:0 0 10px rgba(0,0,0,.5);align-items:center;justify-content:center}.qr-popup-content{position:relative}#qr{margin-left:5px;width:40px;height:40px;background:transparent;border:none;cursor:pointer;transition:background 0.2s;display:flex}#qr-icon{width:100%;height:100%}.invite-container{margin-top:10px;display:flex;align-items:center;justify-content:center}#qrcode{display:flex;justify-content:center;align-items:center;width:100%;aspect-ratio:1/1;margin:0 auto}</style>
+        h1{position: absolute;width: 1px;height: 1px;padding: 0;margin: -1px;overflow: hidden;clip: rect(0, 0, 0, 0);border: 0;}#player-info{margin-bottom:20px}#player-list{padding-inline-start: 0px;position: relative;top:7px;height:1em}#role-dialog{display:none;}#surrender-btn{padding:10px 20px;height:40px;font-size:16px;background-color:#d32f2f;color:#fff;border:none;border-radius:5px;cursor:pointer;display:inline-block;transition:background-color 0.2s ease-in-out}#surrender-btn:hover{background-color:#b71c1c}#surrender-btn[disabled],#restart-btn[disabled]{background-color:#d7d7d7;color:#666;cursor:not-allowed;opacity:0.6;}#game-settings-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);display:none;justify-content:center;align-items:center;z-index:10}#game-settings{background:#fff;padding-bottom:19px;padding-left:10px;padding-right:10px;border-radius:8px;text-align:center;box-shadow:0 4px 10px rgba(0,0,0,.3);width:80%;max-width:260px;position:relative}#contents-overlay-setting{text-align:left;padding:13px}#time_overlay-label{font-size:14px;display:block}#time-limit{padding:6px;font-size:14px;border-radius:5px;border:1px solid #ccc}#highlight-moves{margin-right:5px}#start-match{padding:10px 20px;font-size:16px;background-color:#007408;color:#fff;border:none;border-radius:5px;cursor:copy;display:flex;align-items:center;justify-content:center;width:auto;height:40px;white-space:nowrap}#start-match:hover{background:#00ab0b}.qr-popup{display:none;position:absolute;z-index:1000;left:50%;top:50%;transform:translate(-50%,-50%);width:85%;aspect-ratio:1/1;max-width:285px;background:#fff;padding-bottom:15px;border-radius:8px;box-shadow:0 0 10px rgba(0,0,0,.5);align-items:center;justify-content:center}.qr-popup-content{position:relative}#qr{margin-left:5px;width:40px;height:40px;background:transparent;border:none;cursor:pointer;transition:background 0.2s;display:flex}#qr-icon{width:100%;height:100%}.invite-container{margin-top:10px;display:flex;align-items:center;justify-content:center}#qrcode{display:flex;justify-content:center;align-items:center;width:100%;aspect-ratio:1/1;margin:0 auto}#info-button{position:absolute;top:19px;right:18px;width:18px;height:18px;cursor:pointer}</style>
     {% endif %}
     {% if request.LANGUAGE_CODE == "en" %}
         <style nonce="{{ request.csp_nonce }}">
@@ -35,8 +35,8 @@
             "ai_description": "{{ai_description|escapejs}}",
             "player_description" : "{{player_description|escapejs}}",
             "else_description" :"{{else_description|escapejs}}",
-            "middle": "{% trans '中級'|escapejs %}",
-            "congrats_aiLevel_unlocked":"{% trans '🎉 条件達成により、新しいAIが解放されました！' %}",
+            "congrats_aiLevel_unlocked_b":"{% trans '🎉 条件達成により、' %}",
+            "congrats_aiLevel_unlocked_a":"{% trans 'が解放されました！' %}",
             "black": "{% trans '黒'|escapejs %}",
             "white": "{% trans '白'|escapejs %}",
             "black_turn": "{% trans '（黒番）'|escapejs %}",
@@ -66,12 +66,12 @@
             "copy_result": "{% trans '✅️ 対戦結果をコピーしました！'|escapejs %}",
             "cant_go_more": "{% trans 'これ以上進めません'|escapejs %}","thanks_install": "{% trans '🎮️ インストールありがとうございます！（開発者より）'|escapejs %}",
             "surrender_right": "{% trans '本当に投了しますか？'|escapejs %}",
-            "thinking": "{% trans '考え中'|escapejs %}"
+            "thinking": "{% trans '考え中'|escapejs %}",
+            "how2play_with_friend":"{% trans '🎮️ 遊び方\n\n 1. 招待ボタンまたはQRコードボタンを押す\n\n 2. 表示される案内に従い、相手を対戦へ招待\n\n 3. 相手が招待に応じたら自動で対戦がスタート！' %}",
         };
     </script>
     {% endwith %}
-
-    {% with online_title=_("オセロ対戦（オンライン） - 無料Webゲーム") ai_title=_("オセロAI対戦 - 無料Webゲーム") player_title=_("オセロ（リバーシ） - 無料Webゲーム") else_title=_("オセロ（リバーシ） - 無料Webゲーム") %}
+    {% with online_title=_("オセロ対戦（オンライン） - 無料Webゲーム") ai_title=_("オセロAI対戦 - 無料Webゲーム") player_title=_("Webオセロ（リバーシ） - 無料ゲーム") else_title=_("Webオセロ（リバーシ） - 無料ゲーム") %}
     <title>
         {% if mode == 'online' %}
         {{online_title}}
@@ -82,7 +82,7 @@
         {% else %}
         {{else_title}}
         {% endif %}
-    </title> 
+    </title>
     <script nonce="{{ request.csp_nonce }}">
         const online_title = "{{online_title|escapejs}}";
         const ai_title = "{{ai_title|escapejs}}";
@@ -119,11 +119,12 @@
             "@type": "SoftwareApplication",
             "@additionalType": ["https://schema.org/VideoGame", "https://schema.org/WebApplication"],
             "name": "オセロ - 無料で遊べるWebゲーム",
+            "operatingSystem": "Web",
             "review": {
               "@type": "Review",
               "author": {
                 "@type": "Person",
-                "name": "Anonymous"
+                "name": "匿名ユーザー"
               },
               "datePublished": "2025-4-01",
               "reviewBody": "今までのWeb上のオセロの中でも特に優れていると感じました。過不足なく欲しい機能が付いておりオセロに集中できます。さすがsfcです。",
@@ -162,9 +163,8 @@
                 "name": "オンライン対戦",
                 "url": "https://reversi.yuki-lab.com/online"
               }]
-
-          }
-        </script>
+    }
+    </script>
     <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/favicon.ico' %}">
     <link rel="apple-touch-icon" sizes="180x180" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/apple-touch-icon.png' %}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/favicon-16x16.png' %}">
@@ -180,7 +180,6 @@
     {% endif %}
     <link rel="alternate" hreflang="ja" href="{% if mode == 'online' %}https://reversi.yuki-lab.com/online/{% elif mode == 'ai' %}https://reversi.yuki-lab.com/ai/{% elif mode == 'player' %}https://reversi.yuki-lab.com/{% else %}https://reversi.yuki-lab.com/{% endif %}" />
     <link rel="alternate" hreflang="en" href="{% if mode == 'online' %}https://reversi.yuki-lab.com/en/online/{% elif mode == 'ai' %}https://reversi.yuki-lab.com/en/ai/{% elif mode == 'player' %}https://reversi.yuki-lab.com/en/{% else %}https://reversi.yuki-lab.com/en/{% endif %}" />
-
     <link rel="alternate" hreflang="x-default" href="https://reversi.yuki-lab.com/" />
     <!-- Google Analytics 最適化 -->
     <script nonce="{{ request.csp_nonce }}">
@@ -188,12 +187,10 @@
             var script = document.createElement('script');
             script.src = "https://www.googletagmanager.com/gtag/js?id=G-4JKZC3VNE7";
             script.async = true;
-            script.nonce = "{{ request.csp_nonce }}"; // CSP対応
+            script.nonce = "{{ request.csp_nonce }}";
             document.head.appendChild(script);
-
             window.dataLayer = window.dataLayer || [];
             window.gtag = function() { dataLayer.push(arguments); };
-    
             script.onload = function () {
                 gtag('js', new Date());
                 gtag('config', 'G-4JKZC3VNE7', { 'cookie_domain': 'auto' });
@@ -215,6 +212,7 @@
             }
             // Microsoft Clarityも読み込み
             (function(c,l,a,r,i,t,y){
+                console.log("Clarity script loaded");
                 c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
                 t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;t.nonce = "{{ request.csp_nonce }}";
                 y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
@@ -233,7 +231,6 @@
             <button class="mode-btn" data-mode="ai">{% trans "AI対戦" %}</button>
             <button class="mode-btn" data-mode="online">{% trans "通信対戦" %}</button>
         </div>
-
         {% with online_h1=_("オセロ通信対戦") player_h1=_("オセロ盤") else_h1=_("リバーシWeb") %}
         <h1 id="title">
             {% if mode == 'online' %}
@@ -280,8 +277,8 @@
             {% if mode == 'online' %}
             <div id="game-settings-overlay">
                 <div id="game-settings">
-                    <h3>{% trans "オンライン対戦設定" %}</h3>
-
+                    <img src="{% static 'game/images/info.svg' %}" alt="{% trans 'オンライン対戦の遊び方' %}" id="info-button">
+                    <h3>{% trans "オンライン対戦" %}</h3>
                     <div id="contents-overlay-setting">
                         <div id="player-name-container">
                             <label for="player-name" id="label4name">{% trans "表示名：" %}</label>
@@ -336,14 +333,15 @@
     <button id="closeRoleDialog">OK</button>
     </div>
     {% endif %}
+        <div id="r-background-overlay"></div>
         <!-- 対戦結果ポップアップ -->
         <div id="result-popup">
             <div id="r-overlay"></div>
             <img id="result-image" src="" alt="result image"><div id="r-message"></div><p id="r-score-container"><span id="score-difference">⚫️ 34 : 30 ⚪️</span></p>
             <div id="result-container">
-                <button id="r-share-btn" aria-label="{% trans 'オセロ盤の盤面を共有するURLをコピー' %}"></button>
-                <button id="tweet-result">{% trans "𝕏 に投稿" %}</button>
-                <button id="restart-match">{% trans "🔥 もう1回！" %}</button>
+                <button id="r-share-btn" class="shine-button" aria-label="{% trans 'オセロ盤の盤面を共有するURLをコピー' %}"></button>
+                <button id="tweet-result" class="shine-button">{% trans "𝕏 に投稿" %}</button>
+                <button id="restart-match" class="shine-button">{% trans "もう一度プレイ！" %}</button>
             </div>
             <button id="close-result">{% trans "❌️ 閉じる" %}</button>
         </div>
@@ -425,7 +423,7 @@
                     {% endblocktrans %}
                 </div>
             </div>
-        </div>  
+        </div>
     <section class="notes">
         <h2>{% trans "当サイト「リバーシWeb」の機能" %}</h2>
         <p>{% blocktrans trimmed %}
