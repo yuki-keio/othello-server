@@ -90,6 +90,13 @@ let online = false;
 let role_online = "unknown";
 let opponentName = undefined;
 
+const rPopup = document.getElementById('result-popup');
+const rBoverlay = document.getElementById('r-background-overlay');
+const resultImg = document.getElementById('result-image');
+const scoreDiff = document.getElementById('score-difference');
+const rMessage = document.getElementById('r-message');
+const rOverlay = document.getElementById('r-overlay');
+
 function refreshBoard() {
     const fragment = document.createDocumentFragment();
 
@@ -945,9 +952,9 @@ function loadBoardFromURL() {
 }
 
 function copyURLToClipboard(matchRoom = false, fromResult = false) {
-    const url = new URL(window.location);
+    let url = new URL(window.location);
     let alertText = lang.copy_url;
-    let copyText = url.toString();
+    let copyText;
     if (online) {
         if (onlineGameStarted) {
             alertText = lang.copy_spec;
@@ -960,6 +967,13 @@ function copyURLToClipboard(matchRoom = false, fromResult = false) {
     }
     if (fromResult) {
         alertText = lang.copy_result;
+        url.searchParams.delete('timeLimit');
+        if (gameMode === 'online') {
+            url.searchParams.delete('room');
+            copyText = url.toString().replace(/\/online\//, '/');
+        }else{
+            copyText = url.toString();
+        }
         switch (langCode) {
             case "en":
                 copyText = `${ifVitory ? "Victory!" : "Defeated..."}\nI played against ${opponentName} and ${ifVitory ? "won" : "lost"} by ${Math.abs(scoreB.textContent - scoreW.textContent)} points.\n\n【Final Score】 ⚫️ ${scoreB.textContent} : ${scoreW.textContent} ⚪️\n\n#ReversiWeb #Othello\n\n👇 Game record:\n${copyText}`;
@@ -968,6 +982,8 @@ function copyURLToClipboard(matchRoom = false, fromResult = false) {
                 copyText = `${opponentName}に${Math.abs(scoreB.textContent - scoreW.textContent)}石差で【${ifVitory ? "勝利" : "敗北"}】\n\n結果 ▶ ⚫️ ${scoreB.textContent} vs ${scoreW.textContent} ⚪️\n\n#リバーシWeb #オセロ #ReversiWeb\n\n👇 棋譜はこちら！\n${copyText}`;
                 break;
         }
+    }else{
+        copyText = url.toString();
     }
     navigator.clipboard.writeText(copyText).then(() => {
         alert(alertText);
@@ -1506,14 +1522,8 @@ function preloadResultImages() {
     });
 }
 function showResultPopup(victory, scoreBlack, scoreWhite,f_winner) {
-    const rPopup = document.getElementById('result-popup');
-    const rBoverlay = document.getElementById('r-background-overlay');
-    const resultImg = document.getElementById('result-image');
-    const scoreDiff = document.getElementById('score-difference');
-    let imagePath = '';
-    const rMessage = document.getElementById('r-message');
-    const rOverlay = document.getElementById('r-overlay');
     const _draw = (scoreBlack === scoreWhite) ? (share_winner==="won") : false;
+    let imagePath = '';
 
     if (victory) {
         imagePath = 'https://reversi.yuki-lab.com/static/game/images/win.png';
@@ -2304,27 +2314,46 @@ document.getElementById('timeLimitSoundCheckbox').checked = timeLimitSoundEnable
 document.getElementById('gameEndSoundCheckbox').checked = gameEndSoundEnabled;
 document.getElementById('playerJoinSoundCheckbox').checked = playerJoinSoundEnabled;
 
-// 終了時のポップアップ関連
+// ポップアップを右側に少しだけ残した「折りたたみ状態」にする関数
+function collapseResultPopup() {
+    rBoverlay.style.display = 'none';
+    rPopup.classList.add('collapsed');
+}
+// ポップアップを完全表示にする関数
+function expandResultPopup() {
+    rBoverlay.style.display = 'block';
+    rPopup.classList.remove('collapsed');
+}
 document.getElementById('close-result').addEventListener('click', () => {
-    document.getElementById("restart-btn").classList.add("shine-button");
-    document.getElementById('result-popup').style.display = 'none';
-    document.getElementById('r-background-overlay').style.display = 'none';
+    document.getElementById('restart-btn').classList.add('shine-button');
+    collapseResultPopup();
+});
+rPopup.addEventListener('click', (event) => {
+    if (rPopup.classList.contains('collapsed') && event.target !== document.getElementById('close-result')) {
+        event.stopPropagation();
+        expandResultPopup();
+    }
 });
 document.getElementById('tweet-result').addEventListener('click', () => {
-    const url = window.location.href;
+    let t_url = new URL(window.location);
+    t_url.searchParams.delete("room");
+    t_url.searchParams.delete("timeLimit");
+    t_url = t_url.toString();
     const _draw = (scoreB.textContent === scoreW.textContent) ? (share_winner==="won") : false;
-
+    if (gameMode === 'online') {
+        t_url = t_url.replace(/\/online\//, '/');
+    }
     let tweetText = '';
     switch (langCode) {
         case "en":
             if (_draw) {
-                tweetText = `🤝 I drew with ${opponentName}!\n\n【Final Score】 ⚫️ ${scoreB.textContent} : ${scoreW.textContent} ⚪️\n\n#ReversiWeb #Othello\n\n👇 Game record:\n${url}`;}
+                tweetText = `🤝 I drew with ${opponentName}!\n\n【Final Score】 ⚫️ ${scoreB.textContent} : ${scoreW.textContent} ⚪️\n\n#ReversiWeb #Othello\n\n👇 Game record:\n${t_url}`;}
             else{
-                tweetText = `${ifVitory ? "Victory!" : "Defeated..."}\nI ${((typeof opponentName === 'undefined')?"":` against ${opponentName} and`)} ${ifVitory ? "won" : "lost"} by ${Math.abs(scoreB.textContent - scoreW.textContent)} points.\n\n【Final Score】 ⚫️ ${scoreB.textContent} : ${scoreW.textContent} ⚪️\n\n#ReversiWeb #Othello\n\n👇 Game record:\n${url}`;
+                tweetText = `${ifVitory ? "Victory!" : "Defeated..."}\nI ${((typeof opponentName === 'undefined')?"":` against ${opponentName} and`)} ${ifVitory ? "won" : "lost"} by ${Math.abs(scoreB.textContent - scoreW.textContent)} points.\n\n【Final Score】 ⚫️ ${scoreB.textContent} : ${scoreW.textContent} ⚪️\n\n#ReversiWeb #Othello\n\n👇 Game record:\n${t_url}`;
                 }
             break;
         default:
-            tweetText = `${((typeof opponentName === 'undefined')?"":`${opponentName}に`)}${Math.abs(scoreB.textContent - scoreW.textContent)}石差で【${ifVitory ? "勝利" : "敗北"}】\n\n結果 ▶ ⚫️ ${scoreB.textContent} vs ${scoreW.textContent} ⚪️\n\n#リバーシWeb #オセロ #ReversiWeb\n\n👇 棋譜はこちら！\n${url}`;
+            tweetText = `${((typeof opponentName === 'undefined')?"":`${opponentName}に`)}${Math.abs(scoreB.textContent - scoreW.textContent)}石差で【${ifVitory ? "勝利" : "敗北"}】\n\n結果 ▶ ⚫️ ${scoreB.textContent} vs ${scoreW.textContent} ⚪️\n\n#リバーシWeb #オセロ #ReversiWeb\n\n👇 棋譜はこちら！\n${t_url}`;
             break;
     }
     const twitterIntentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;

@@ -71,8 +71,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'channels',
-    'game',  
-    "csp", 
+    'game',
+    "csp",
     'two_factor',
     'django_otp',
     'django_otp.plugins.otp_totp',
@@ -91,7 +91,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'axes.middleware.AxesMiddleware', 
+    'axes.middleware.AxesMiddleware',
 ]
 
 # Axesの設定（10回失敗でロック）
