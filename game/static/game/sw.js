@@ -1,4 +1,4 @@
-const CACHE_NAME = "my-django-app-cache-v31";
+const CACHE_NAME = "my-django-app-cache-v32";
 const urlsToCache = [
     "/",  // ホーム
     "/ai/",
@@ -37,12 +37,7 @@ self.addEventListener("install", event => {
 // キャッシュを使ってリクエストを処理
 self.addEventListener("fetch", event => {
     const url = new URL(event.request.url);
-
-    // CDNからのフォントなどは毎回ネットワーク取得する。
-    if (((url.origin === "https://fonts.gstatic.com" || url.origin === "https://fonts.googleapis.com") && event.request.destination === "font") || url.origin === "https://cdn.jsdelivr.net" || url.origin === "https://cdnjs.cloudflare.com") {
-        event.respondWith(
-            fetch(event.request, { mode: "cors", credentials: "omit" })
-        );
+    if (url.origin !== self.location.origin) {
         return;
     }
 

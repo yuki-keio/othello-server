@@ -27,7 +27,7 @@
     </script>
     <script defer src="{% static 'game/script.js' %}?v={{ TIMESTAMP }}"></script>
     <!-- 翻訳後の文字列をmain.jsへ受け渡し-->
-    {% with online_description=_("オンライン対戦モードで遠くの友達と対戦！強力なAIモードも完備。スマホ・PC対応。今すぐプレイ！（旧スマートオセロ）") ai_description=_("初心者から上級者まで楽しめる、強力なオセロAIとWeb上で対戦！スマホ・PC・タブレット対応、オンラインで友達対戦も楽しめます。遊びやすいスマートなグラフィックも特徴。今すぐプレイ！（旧スマートオセロ）") player_description=_("Web上で遊べる無料オセロゲーム！友達とのオンライン対戦、強力なオセロAI対戦、そしてシンプルで遊びやすい電子オセロ盤機能を搭載。スマホ・PC対応ですぐにプレイ可能！（旧スマートオセロ）") else_description=_("Web上で遊べる無料オセロゲーム！友達とのオンライン対戦、強力なオセロAI対戦、シンプルで遊びやすい電子オセロ盤機能を搭載。スマホ・PC対応ですぐにプレイ可能！（旧スマートオセロ）") %}
+    {% with online_description=_("オンライン対戦モードで遠くの友達とオセロで対戦！強力なAIも完備。スマホ・PC対応。ダウンロード不要で今すぐ遊ぶ！") ai_description=_("初心者から上級者まで楽しめる、強力なオセロAIとWeb上で対戦！スマホ・PC両対応。オンラインで友達対戦も楽しめます。遊びやすいスマートなグラフィックも特徴。ダウンロード不要で今すぐ遊ぶ！") player_description=_("Web上で遊べる無料オセロゲーム（リバーシ）！友達や家族とのオンライン対戦、強力なAI対戦、そしてシンプルな電子オセロ盤の機能を搭載。スマホ・PC対応。ダウンロード不要で手軽にプレイ！") else_description=_("Web上で遊べる無料オセロゲーム（リバーシ）！友達とのオンライン対戦、強力なオセロAI対戦、シンプルで遊びやすい電子オセロ盤機能を搭載。スマホ・PC対応。ダウンロード不要で手軽にプレイ！") %}
     <meta name="description" content="{% if mode == 'online' %}{{online_description}}{% elif mode == 'ai' %}{{ai_description}}{% elif mode == 'player' %}{{player_description}}{% else %}{{else_description}}{% endif %}">
     <script nonce="{{ request.csp_nonce }}">
         const lang = {
@@ -71,7 +71,7 @@
         };
     </script>
     {% endwith %}
-    {% with online_title=_("オセロ対戦（オンライン） - 無料Webゲーム") ai_title=_("オセロAI対戦 - 無料Webゲーム") player_title=_("Webオセロ（リバーシ） - 無料ゲーム") else_title=_("Webオセロ（リバーシ） - 無料ゲーム") %}
+    {% with online_title=_("オンライン対戦 - 無料オセロのリバーシWeb") ai_title=_("AI対戦 - 無料オセロのリバーシWeb") player_title=_("リバーシ（オセロ） - 無料ゲームのリバーシWeb") else_title=_("リバーシ（オセロ） - 無料ゲームのリバーシWeb") %}
     <title>
         {% if mode == 'online' %}
         {{online_title}}
@@ -110,11 +110,63 @@
     {% else %}
     <meta property="og:locale" content="en_US">
     {% endif %}
-    <meta name="author" content="Yuki Lab">
-    <meta name="robots" content="index, follow">    
+    <meta name="author" content="リバーシWeb | 無料オセロゲーム">
+    <meta name="robots" content="index, follow">
     <meta name="keywords" content="{% trans 'オセロ, リバーシWeb, スマートオセロ, オセロweb,リバーシ, ゲーム, 無料, Web, おせろ, 電子オセロ盤, オセロAI, 友達対戦, ボードゲーム, オンライン, ブラウザゲー, 一人で遊べる' %}">
+    {% if request.LANGUAGE_CODE == "en" %}
     <script type="application/ld+json">
-        {
+    {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "@additionalType": ["https://schema.org/VideoGame", "https://schema.org/WebApplication"],
+    "name": "Reversi Web - Free Game",
+    "review": {
+      "@type": "Review",
+      "author": {
+        "@type": "Person",
+        "name": "marie"
+      },
+      "datePublished": "2025-4-06",
+      "reviewBody": "The game has all the features I wanted, and it was easy to play.",
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": 5,
+        "bestRating": 5,
+        "worstRating": 1
+      }
+    },
+    "applicationCategory": "GameApplication",
+    "alternateName": "Smart Othello | Free Web Game",
+    "description": "A free Othello game you can play right in your browser. Features AI vs. mode, online mode to battle with friends, and a convenient electronic Othello board. Quick to start on any device!",
+    "image": "https://reversi.yuki-lab.com/static/game/images/share-image.webp",
+    "url": "https://reversi.yuki-lab.com/en/",
+    "operatingSystem": "Web",
+    "genre": "Board game",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "hasPart": [
+      {
+        "@type": "WebPage",
+        "name": "Othello Board",
+        "url": "https://reversi.yuki-lab.com/en/"
+      },
+      {
+        "@type": "WebPage",
+        "name": "Play against an Othello AI",
+        "url": "https://reversi.yuki-lab.com/en/ai/"
+      },
+      {
+        "@type": "WebPage",
+        "name": "Online Mode",
+        "url": "https://reversi.yuki-lab.com/en/online/"
+      }
+    ]
+    }</script>
+    {% else %}<script type="application/ld+json">
+    {
             "@context": "https://schema.org",
             "@type": "SoftwareApplication",
             "@additionalType": ["https://schema.org/VideoGame", "https://schema.org/WebApplication"],
@@ -123,10 +175,10 @@
               "@type": "Review",
               "author": {
                 "@type": "Person",
-                "name": "匿名ユーザー"
+                "name": "marie"
               },
-              "datePublished": "2025-4-01",
-              "reviewBody": "今までのWeb上のオセロの中でも特に優れていると感じました。過不足なく欲しい機能が付いておりオセロに集中できます。さすがsfcです。",
+              "datePublished": "2025-4-06",
+              "reviewBody": "ほしい機能が過不足なく付いていてプレイしやすかったです。",
               "reviewRating": {
                 "@type": "Rating",
                 "ratingValue": 5,
@@ -138,7 +190,7 @@
             "alternateName": "無料オセロゲームのスマートオセロ",
             "description": "無料で遊べるオセロゲーム。一人で遊べるAI対戦モードや、友達とのオンライン対戦モードなどがあります。ブラウザで今すぐプレイ！",
             "image": "https://reversi.yuki-lab.com/static/game/images/share-image.webp",
-            "url": "https://reversi.yuki-lab.com",
+            "url": "https://reversi.yuki-lab.com/",
             "operatingSystem": "Web",
             "genre": "Board game",
             "offers": {
@@ -150,20 +202,19 @@
               {
                 "@type": "WebPage",
                 "name": "オセロ盤",
-                "url": "https://reversi.yuki-lab.com"
+                "url": "https://reversi.yuki-lab.com/"
               },
               {
                 "@type": "WebPage",
                 "name": "オセロAIと対戦",
-                "url": "https://reversi.yuki-lab.com/ai"
+                "url": "https://reversi.yuki-lab.com/ai/"
               },
               {
                 "@type": "WebPage",
                 "name": "オンライン対戦",
-                "url": "https://reversi.yuki-lab.com/online"
+                "url": "https://reversi.yuki-lab.com/online/"
               }]
-    }
-    </script>
+    }</script>{% endif %}
     <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/favicon.ico' %}">
     <link rel="apple-touch-icon" sizes="180x180" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/apple-touch-icon.png' %}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/favicon-16x16.png' %}">
@@ -230,7 +281,7 @@
             <button class="mode-btn" data-mode="ai">{% trans "AI対戦" %}</button>
             <button class="mode-btn" data-mode="online">{% trans "通信対戦" %}</button>
         </div>
-        {% with online_h1=_("オセロ通信対戦") player_h1=_("オセロ盤") else_h1=_("リバーシWeb") %}
+        {% with online_h1=_("オンライン対戦") player_h1=_("オセロ盤") else_h1=_("リバーシWeb") %}
         <h1 id="title">
             {% if mode == 'online' %}
                 {{online_h1}}
