@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-07 03:33+0900\n"
+"POT-Creation-Date: 2025-04-07 21:47+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,44 +17,44 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: game/consumers.py:61
+#: game/consumers.py:62
 msgid "プレイヤーIDが提供されていません"
 msgstr "Player ID has not been provided."
 
-#: game/consumers.py:66
+#: game/consumers.py:67
 msgid "プレイヤー名が提供されていません"
 msgstr "Player name has not been provided."
 
-#: game/consumers.py:269
+#: game/consumers.py:270
 msgid "対戦相手がまだ接続していません"
 msgstr "The opponent has not connected yet."
 
-#: game/consumers.py:292
+#: game/consumers.py:293
 msgid "観戦者は降参できません"
 msgstr "Spectators cannot forfeit."
 
-#: game/consumers.py:318
+#: game/consumers.py:319
 msgid "有効な手が存在するため、パスはできません"
 msgstr "A valid move exists, so you cannot pass."
 
-#: game/consumers.py:355
+#: game/consumers.py:356
 msgid "このマスには石を置けません："
 msgstr "You cannot place a stone here: "
 
 #: game/templates/game/index.html:30
 msgid ""
-"オンライン対戦モードで遠くの友達とオセロで対戦！強力なAIも完備。スマホ・PC対"
-"応。ダウンロード不要で今すぐ遊ぶ！"
+"オンライン対戦モードで遠くの相手とオセロ対戦！強力なAIも完備。スマホ・PC対"
+"応。ダウンロード無しで今すぐ遊ぶ！"
 msgstr ""
 "Play reversi (othello) against distant friends in online match mode! A "
-"powerful AI mode is also available. [PC, Smartphone, and iPad compatible] "
+"powerful othello AI is also available. [PC, Smartphone, and iPad compatible] "
 "Play now!"
 
 #: game/templates/game/index.html:30
 msgid ""
-"初心者から上級者まで楽しめる、強力なオセロAIとWeb上で対戦！スマホ・PC両対応。"
-"オンラインで友達対戦も楽しめます。遊びやすいスマートなグラフィックも特徴。ダ"
-"ウンロード不要で今すぐ遊ぶ！"
+"初心者から上級者まで楽しめる、強力なオセロAIとWeb上で対戦！スマホ・PC両対応の"
+"サイトです。オンライン対戦も楽しめます。遊びやすいスマートなグラフィックが特"
+"徴。ダウンロード無しで今すぐプレイ！"
 msgstr ""
 "Play against a powerful Reversi (othello) AI on the web, suitable for "
 "beginners to advanced players! [PC, Smartphone, and Tablet compatible] You "
@@ -62,22 +62,13 @@ msgstr ""
 
 #: game/templates/game/index.html:30
 msgid ""
-"Web上で遊べる無料オセロゲーム（リバーシ）！友達や家族とのオンライン対戦、強力"
-"なAI対戦、そしてシンプルな電子オセロ盤の機能を搭載。スマホ・PC対応。ダウン"
-"ロード不要で手軽にプレイ！"
+"Webサイト上で遊べる無料オセロゲーム（リバーシ）！友達や家族とのオンライン対"
+"戦、一人で遊べるAI対戦、そして電子オセロ盤の機能を搭載。スマホ・PC対応。ダウ"
+"ンロード無しで手軽にプレイ！"
 msgstr ""
-"Play Reversi (othello) for free! Play against friends online, battle a "
-"powerful Reversi AI, and enjoy digital Reversi board feature. Play now!"
-
-#: game/templates/game/index.html:30
-msgid ""
-"Web上で遊べる無料オセロゲーム（リバーシ）！友達とのオンライン対戦、強力なオセ"
-"ロAI対戦、シンプルで遊びやすい電子オセロ盤機能を搭載。スマホ・PC対応。ダウン"
-"ロード不要で手軽にプレイ！"
-msgstr ""
-"Play Reversi Web for free! Play against friends online, battle a powerful "
-"Reversi AI, and enjoy the simple and easy-to-play digital Reversi board "
-"feature. Play now!"
+"Play Reversi (othello) for free! Play against friends and family in online "
+"matches, against a powerful AI, or use the digital Reversi board. [PC, "
+"Smartphone, and iPad compatible] Play now without downloading anything!"
 
 #: game/templates/game/index.html:38
 msgid "🎉 条件達成により、"
@@ -234,7 +225,11 @@ msgid "AI対戦 - 無料オセロのリバーシWeb"
 msgstr "AI Match - Free Reversi (othello Game)"
 
 #: game/templates/game/index.html:74
-msgid "リバーシ（オセロ） - 無料ゲームのリバーシWeb"
+msgid "リバーシ（別名オセロ） - 無料Webゲーム"
+msgstr "Reversi (Othello) - Free Web Game"
+
+#: game/templates/game/index.html:74
+msgid "リバーシ（別名オセロ） - 無料ゲームのリバーシWeb"
 msgstr "Reversi (Othello) - Free Web Game"
 
 #: game/templates/game/index.html:94

@@ -21,6 +21,7 @@ import os
 勝利 / 敗北の画面（再対戦のボタン、AI分析やハイライトの表示、「圧勝」の時に表示を入れる）。
 1. SNSへのシェアを実装（facebook,ogp画像：盤面・勝率予測、上位n%など）
 1. 何も打っていない時：秒数は表示するがカウントダウンはしない
+相手の再接続では「あなたは先手です」を表示しない
 
 ボリューム層：AI、中〜上級、制限時間なし・有効手は表示する
 """
@@ -167,7 +168,8 @@ class OthelloConsumer(AsyncWebsocketConsumer):
                 {
                     "type": "update_players",
                     "players": players,
-                    "player_id": player_id
+                    "player_id": player_id,
+                    "by_reconnect": is_reconnect,
                 }
             )
 
@@ -181,7 +183,10 @@ class OthelloConsumer(AsyncWebsocketConsumer):
             "action": "update_players",
             "players": event["players"],
             "player_id": event["player_id"],
-            "setting": event.get("setting", False)
+            "setting": event.get("setting", False),
+            "by_reconnect": event.get("by_reconnect", False),
+            "time_limit": event.get("time_limit", 0),
+            "show_valid_moves": event.get("show_valid_moves", True),
         }))
 
     async def disconnect(self, close_code):
@@ -255,7 +260,9 @@ class OthelloConsumer(AsyncWebsocketConsumer):
                         "type": "update_players",
                         "players": game_state["players"],
                         "player_id": self.player_id,
-                        "setting": True
+                        "setting": True,
+                        "time_limit": time_limit,
+                        "show_valid_moves": show_valid_moves,
                     }
                 )
                 logger.info(f"[GAME SETTING] {self.group_name} の設定が更新されました：{game_state}")

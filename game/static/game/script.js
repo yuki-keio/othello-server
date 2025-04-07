@@ -499,11 +499,10 @@ function startTimer() {
     let remainingTime = timeLimit;
     const timerDisplay = document.getElementById('timer-display');
     timerDisplay.textContent = formatTime(remainingTime);
-
     // 既存のタイマーを停止
     stopTimer();
+    if (gameBoard.flat().filter(cell => cell !== '').length === 4) return;
     warningSound.currentTime = 0;
-
     currentPlayerTimer = setInterval(() => {
         remainingTime--;
         timerDisplay.textContent = formatTime(remainingTime);
@@ -540,7 +539,6 @@ function stopTimer() {
 
         // 警告音を停止
         warningSound.pause();
-
     }
 }
 function formatTime(seconds) {
@@ -1539,11 +1537,11 @@ function showResultPopup(victory, scoreBlack, scoreWhite,f_winner) {
             if (_draw) {
                 rMessage.textContent = `🤝 You drew with ${opponentName}`;
             }else{
-                rMessage.textContent = (victory ? "🏆️ " : "") +  ((typeof opponentName === 'undefined') ? ((f_winner==="black")?"Black":"White"):"You") + (victory?" won":" lost") + ((typeof opponentName === 'undefined')?"":` against ${opponentName}`) +` by ${Math.abs(scoreB.textContent - scoreW.textContent)} points!`;
+                rMessage.textContent = (victory ? "🏆️ " : "") +  ((typeof opponentName === 'undefined') ? ((f_winner==="black")?"Black":"White"):"You") + (victory?" won":" lost") + ((typeof opponentName === 'undefined')?"":` against ${opponentName}`) +` by ${Math.abs(scoreBlack - scoreWhite)} points!`;
             }
             break;
         default:
-            rMessage.textContent = (victory ? "🏆️ " : "") + ((typeof opponentName === 'undefined') ? ((f_winner==="black")?"黒が":"白が"):`${opponentName}に`)+`${Math.abs(scoreB.textContent - scoreW.textContent)}点差で${ifVitory ? "勝利！" : _draw?"引き分け": "敗北"}`;
+            rMessage.textContent = (victory ? "🏆️ " : "") + ((typeof opponentName === 'undefined') ? ((f_winner==="black")?"黒が":"白が"):`${opponentName}に`)+`${Math.abs(scoreBlack - scoreWhite)}点差で${ifVitory ? "勝利！" : _draw?"引き分け": "敗北"}`;
             break;
     }
     scoreDiff.textContent = `⚫️ ${scoreBlack} : ${scoreWhite} ⚪️`;
@@ -2062,7 +2060,7 @@ function makeSocket() {
                 if (role_online === 'black') {
                     sendSettings();
                 }
-                showDialog("role", role_online);
+                if(!data.by_reconnect) showDialog("role", role_online);
                 overlay.style.display = 'none';
                 const qrPopup = document.getElementById("qr-popup");
                 qrPopup.style.display = "none";
@@ -2078,6 +2076,24 @@ function makeSocket() {
                     });
                 }
             }
+            if (data.setting){
+                stopTimer();
+                timeLimit = data.time_limit;
+                localStorage.setItem('timeLimit', timeLimit);
+                document.getElementById('timeLimitSelect').value = timeLimit;
+                showValidMoves = data.show_valid_moves === "true";
+                localStorage.setItem('showValidMoves', showValidMoves);
+                document.getElementById('showValidMovesCheckbox').checked = showValidMoves;
+                const s_timerDisplay = document.getElementById('timer-display');
+                if (timeLimit === 0) {
+                    document.getElementById("timeLimitBox_").style.display = "none";
+                    s_timerDisplay.style.display = "none";
+                } else {
+                    document.getElementById("timeLimitBox_").style.display = "block";
+                    s_timerDisplay.style.display = "block";
+                    s_timerDisplay.textContent = formatTime(timeLimit);
+                }
+            }
         } else if (data.action === "pass") {
             processPassMessage(data);
             return;
@@ -2087,19 +2103,7 @@ function makeSocket() {
         } else if (data.action === "game_start") {
             console.log(`Game started. ${data.time_limit},${data.show_valid_moves}.`);
             onlineGameStarted = true;
-            stopTimer();
-            timeLimit = data.time_limit;
-            localStorage.setItem('timeLimit', timeLimit);
-            document.getElementById('timeLimitSelect').value = timeLimit;
-            console.log(`ゲームが開始されました。${data.show_valid_moves}`);
-            showValidMoves = data.show_valid_moves === "true";
-            localStorage.setItem('showValidMoves', showValidMoves);
-            document.getElementById('showValidMovesCheckbox').checked = showValidMoves;
-            if (timeLimit === 0) {
-                document.getElementById("timeLimitBox_").style.display = "none";
-            } else {
-                document.getElementById("timeLimitBox_").style.display = "block";
-            }
+          
             return;
         }
     };
@@ -2279,6 +2283,11 @@ document.getElementById('timeLimitSelect').addEventListener('change', () => {
     if (timeLimit === 0) {
         document.getElementById("timeLimitBox_").style.display = "none";
     } else {
+        const t_display = document.getElementById('timer-display')
+        stopTimer();
+        t_display.classList.remove('warning1', 'warning2');
+        t_display.style.display = 'inline-block';
+        t_display.textContent = formatTime(timeLimit);
         document.getElementById("timeLimitBox_").style.display = "block";
     }
 });
