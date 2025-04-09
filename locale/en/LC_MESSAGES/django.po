@@ -229,8 +229,6 @@ msgid "AI対戦 - 無料オセロのリバーシWeb"
 msgstr "AI Match - Free Reversi (othello Game)"
 
 #: game/templates/game/index.html:75
-#, fuzzy
-#| msgid "リバーシ（別名オセロ） - 無料Webゲーム"
 msgid "オセロ（リバーシ） - 無料Webゲーム"
 msgstr "Reversi (Othello) - Free Web Game"
 
