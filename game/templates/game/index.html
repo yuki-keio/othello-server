@@ -55,6 +55,7 @@
             "winner": "{% trans '👑 勝者：'|escapejs %}",
             "you_pass": "{% trans 'あなたには次に打てる場所がなかったのでもう一度、相手の番になります'|escapejs %}",
             "opponent_pass": "{% trans '相手には次に打てる場所がなかったのでもう一度、あなたの番になります'|escapejs %}",
+            "nextLevel":"{% trans '次のレベルへ'|escapejs %}",
             "warn_EnOnly": "{% trans '⚠️ 英数字のみ入力可能です'|escapejs %}",
             "warn_charLimit": "{% trans '⚠️ 文字数：1〜10文字'|escapejs %}",
             "connecting": "{% trans 'ネットワーク接続がありません。'|escapejs %}",
@@ -71,7 +72,7 @@
         };
     </script>
     {% endwith %}
-    {% with online_title=_("オンライン対戦 - 無料オセロのリバーシWeb") ai_title=_("AI対戦 - 無料オセロのリバーシWeb") player_title=_("リバーシ（別名オセロ） - 無料Webゲーム") else_title=_("リバーシ（別名オセロ） - 無料ゲームのリバーシWeb") %}
+    {% with online_title=_("オンライン対戦 - 無料オセロのリバーシWeb") ai_title=_("AI対戦 - 無料オセロのリバーシWeb") player_title=_("オセロ（リバーシ） - 無料Webゲーム") else_title=_("オセロ（リバーシ） - 無料Webゲーム") %}
     <title>
         {% if mode == 'online' %}
         {{online_title}}
@@ -322,8 +323,7 @@
         <div id="player-info"><ul id="player-list"></ul></div>
         <span id="timer-display"></span>
         <div id="board-container">
-            <div id="board" role="grid" >
-            </div>
+            <div id="board" role="grid" ></div>
             {% if mode == 'online' %}
             <div id="game-settings-overlay">
                 <div id="game-settings">
