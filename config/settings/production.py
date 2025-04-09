@@ -13,8 +13,7 @@ SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
-# CSPの設定_なおheroku側が優先される
-CSP_DEFAULT_SRC = ("'self'","https://*.clarity.ms","https://www.clarity.ms", "https://c.bing.com",)
+CSP_DEFAULT_SRC = ("'self'",)
 CSP_CONNECT_SRC = (
     "'self'",
     "https://www.google.com",
@@ -30,6 +29,8 @@ CSP_CONNECT_SRC = (
     "https://fonts.gstatic.com/",
     "https://cdn.jsdelivr.net/",
     "https://cdnjs.cloudflare.com/",
+    "https://*.clarity.ms",
+    "https://www.clarity.ms",
 )
 
 CSP_SCRIPT_SRC = (
@@ -43,6 +44,7 @@ CSP_SCRIPT_SRC = (
     "https://cdnjs.cloudflare.com",
     "https://cdn.jsdelivr.net",
     "blob:",
+    "https://www.clarity.ms",
     )
 CSP_IMG_SRC = (
     "'self'",
@@ -52,6 +54,8 @@ CSP_IMG_SRC = (
     "https://pagead2.googlesyndication.com",
     "https://tpc.googlesyndication.com",
     "https://ep1.adtrafficquality.google",
+    "https://*.clarity.ms",
+    "https://c.bing.com",
         )
 CSP_FRAME_SRC = (
     "'self'",
@@ -61,7 +65,6 @@ CSP_FRAME_SRC = (
     "https://securepubads.g.doubleclick.net", 
     "https://ep2.adtrafficquality.google",  
     "https://pagead2.googlesyndication.com",
- 
 )
 CSP_STYLE_SRC = (
     "'self'",

@@ -99,12 +99,10 @@ const rOverlay = document.getElementById('r-overlay');
 
 function refreshBoard() {
     const fragment = document.createDocumentFragment();
-
     for (let i = 0; i < 8; i++) {
         const rowElement = document.createElement('div');
         rowElement.className = 'row';
-        rowElement.setAttribute('role', 'row'); // ARIA対応
-
+        rowElement.setAttribute('role', 'row');
         for (let j = 0; j < 8; j++) {
             gameBoard[i][j] = '';
             const cell = document.createElement('div');
@@ -113,7 +111,6 @@ function refreshBoard() {
             cell.dataset.col = j;
             cell.setAttribute('aria-label', `abcdefgh`[j] + `${i + 1}：空`);
             cell.setAttribute('role', 'gridcell');
-
             rowElement.appendChild(cell);
         }
         fragment.appendChild(rowElement);
