@@ -157,7 +157,6 @@ function add4x4Markers() {
         { row: 5, col: 1 },
         { row: 5, col: 5 }
     ];
-
     markers.forEach(({ row, col }) => {
         const cell = board.children[row].children[col];
         const marker = document.createElement('div');
@@ -165,6 +164,7 @@ function add4x4Markers() {
         cell.classList.add('44');
         cell.appendChild(marker);
     });
+    document.getElementById('b_loader').style.display = 'none';
 }
 
 function setDisc(row, col, color) {
@@ -626,6 +626,9 @@ function loadBoardFromURL() {
 
         } else {
             document.getElementById('level_ai').style.display = 'none';
+            const tp_url = new URL(window.location);
+            tp_url.searchParams.delete('aiLevel');
+            history.replaceState(null, "", tp_url);
         }
         if (gameMode === "online") {
             console.log(`timelimit: ${timeLimit}`);
@@ -1624,7 +1627,11 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
         changeTitle();  // タイトルなどの更新
         updateURL();    // URLパラメータの更新など必要なら行う
         changeHead();
-
+        if (selectedMode !== 'ai'){
+            const tp__url = new URL(window.location);
+            tp__url.searchParams.delete('aiLevel');
+            history.replaceState(null, "", tp__url);
+        }
         if (selectedMode === 'online') {
             online = true;  // オンラインモードのフラグを立てる
             showLoading();
