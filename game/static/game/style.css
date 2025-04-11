@@ -1,41 +1,36 @@
 .credit{
-  font-size: 0.7em;
-  text-align: center;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  }
+  font-size:.7em;
+  text-align:center;
+  margin-top:20px;
+  margin-bottom:20px;
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  width:100%;
+}
 .caution{
   padding: 15px;
-  font-size: 0.8em;
+  font-size: 0.8em
 }
-
 .locked-level {
     color: #888;
-    font-style: italic;
+    font-style: italic
 }
 #mode-selection-banner{
-  white-space: nowrap;
+  white-space: nowrap
 }
 #ai-level-display:hover {
   background: rgb(243, 243, 243);
   box-shadow: 0 3px 6px rgba(0,0,0,0.2);
-  transform: translateY(-1px);
+  transform: translateY(-1px)
 }
-
 #ai-level-display:active {
   transform: translateY(1px);
-  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2)
 }
-
 #ai-level-display.active:after {
-  transform: rotate(180deg);
+  transform: rotate(180deg)
 }
-
-/* AI level popup styles */
 #ai-level-popup {
   display: none;
   position: absolute;
@@ -51,52 +46,39 @@
   padding-bottom: 5px;
   width: 80%;
   max-width: 300px;
-  animation: fadeIn 0.3s ease;
+  animation: fadeIn 0.3s ease
 }
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translate(-50%, -10px); }
-  to { opacity: 1; transform: translate(-50%, 0); }
-}
-
 #ai-level-popup h3 {
   margin-top: 0;
-  color: #000000;
+  color: #000;
   border-bottom: 2px solid #bbb;
-  padding-bottom: 8px;
+  padding-bottom: 8px
 }
-
 #weakest{
-  border-top: 2px solid #ddd;
+  border-top: 2px solid #ddd
 }
-
 #ai-level-list {
-  margin-top: 10px;
+  margin-top: 10px
 }
-
 .ai-level-item {
   padding: 12px 15px;
   cursor: pointer;
   border-radius: 5px;
   margin-bottom: 5px;
-  transition: all 0.2s ease;
+  transition: all .2s ease
 }
-
 .ai-level-item:hover {
-  background-color: #ebfbff;
+  background-color: #ebfbff
 }
 .ai-level-item.locked-level {
   color: #999;
   cursor: not-allowed;
-  background-color: #f8f8f8;
+  background-color: #f8f8f8
 }
-
 .ai-level-item.selected {
   background-color: #ceffce;
-  border-left: 3px solid #007508;
+  border-left: 3px solid #007508
 }
-
-/* ポップアップの基本デザイン */
 .install-guide {
   display: none;
   position: fixed;
@@ -109,21 +91,20 @@
   padding: 7px;
   border-radius: 8px;
   text-align: center;
-  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
-  z-index: 9999;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, .2);
+  z-index: 9999
 }
 .install-guide-content {
   font-size: 14px;
   color: #333;
   text-align: left;
-  padding: 0 20px;
+  padding: 0 20px
 }
 #install-recommend{
   list-style: none;
   padding-left: 0;
-  line-height: 1.3;
+  line-height: 1.3
 }
-
 .notes {
   text-align: left;
   margin: 20px auto;
@@ -133,95 +114,84 @@
   background-color: #f9f9f9;
   padding: 20px;
   border-radius: 5px;
-  box-shadow: 0 4px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 5px rgba(0, 0, 0, .1)
 }
-
 .notes h2 {
   text-align: center;
   font-size: 2em;
   color: #2c3e50;
-  margin-bottom: 20px;
+  margin-bottom: 20px
 }
-
 .notes h3 {
   font-size: 1.5em;
   color: #34495e;
   margin-top: 30px;
-  margin-bottom: 10px;
+  margin-bottom: 10px
 }
-
 .notes ul {
   list-style-type: disc;
-  margin-left: 0px;
+  margin-left: 0;
   margin-bottom: 20px;
-  padding-inline-start: 30px;
+  padding-inline-start: 30px
 }
-
 .notes ul li {
   margin-bottom: 10px;
-  font-size: 1.1em;
+  font-size: 1.1em
 }
-
 .notes strong {
-  color: #cb1400;
+  color: #cb1400
 }
 .notes strong a {
-  color: #cb1400;
+  color: #cb1400
 }
 .notes strong a:hover {
-  color: #ff3620;
+  color: #ff3620
 }
-
 .notes p {
   font-size: 1.1em;
-  margin-bottom: 20px;
+  margin-bottom: 20px
 }
-
 .thinking .cell{
-  cursor: progress;
+  cursor: progress
 }
-
 #level_ai{
-  margin-bottom: 15px;
+  margin-bottom: 15px
 }
 #aiLevelSelect{
-width: 120px;
+width: 120px
 }
 #timer-display {
   position: absolute;
-  top: 87px; /* 上からの位置 */
-  left: 0px; /* 左からの位置 */
+  top: 87px;
+  left: 0;
   font-size: 18px;
   background-color: #e0e0e0;
   color: black;
   padding: 5px 10px;
   border-radius: 5px;
   font-weight: bold;
-  display: none;
+  display: none
 }
 #timer-display.warning1{
   color: #db5f00;
   font-weight: bold;
-  font-size: 1.25em;
+  font-size: 1.25em
 }
 #timer-display.warning2{
   color: #ff0000;
   font-weight: bold;
-  font-size: 1.4em;
+  font-size: 1.4em
 }
-
 #ios-install-guide-img {
   width: 90%;
   max-width: 300px;
   margin: 0 auto;
-  display: block;
+  display: block
 }
 #how2install{
   position: relative;
-  top: 10px;
+  top: 10px
 }
-
-/* 閉じるボタン */
 #close-install-guide {
   color: rgb(38, 38, 38);
   border: none;
@@ -230,26 +200,21 @@ width: 120px;
   border-radius: 8px;
   cursor: pointer;
   margin-top: 10px;
-  background-color: transparent;
+  background-color: transparent
 }
-
 #close-install-guide:hover {
-  background: #cbcbcb;
+  background: #cbcbcb
 }
-
 #install-btn{
-  display: none;
+  display: none
 }
-
 #soundSettingContainer{
   margin-left: 20px; 
-  margin-top:5px;
+  margin-top:5px
 }
-
 #player-name-container {
-  margin-bottom: 15px;
+  margin-bottom: 15px
 }
-
 #player-name {
   width: auto;
   min-width: 120px;
@@ -258,18 +223,17 @@ width: 120px;
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  font-size: 14px;
+  font-size: 14px
 }
-
 #label4name{
   font-size: 14px;
-  width: 77px;
+  width: 77px
 }
 #warning{
   font-size: 12px;
   margin-top: 5px;
   margin-left: 5px;
-  color: red;
+  color: red
 }
 #loading-overlay {
   position: fixed;
@@ -277,25 +241,25 @@ width: 120px;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, .7);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999;
+  z-index: 9999
 }
 .loading-container {
   text-align: center;
   color: white;
-  font-size: 1.5em;
+  font-size: 1.5em
 }
 .loading-text {
-  margin-top: 20px;
+  margin-top: 20px
 }
 .loading-disc {
   width: 60px;
   height: 60px;
   margin: 0 auto;
-  perspective: 600px;
+  perspective: 600px
 }
 .disc-inner {
   width: 100%;
@@ -304,7 +268,7 @@ width: 120px;
   position: relative;
   transform-style: preserve-3d;
   animation: flip 2s ease-in-out infinite;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, .3)
 }
 .disc-inner::before,
 .disc-inner::after {
@@ -314,16 +278,16 @@ width: 120px;
   height: 100%;
   border-radius: 50%;
   backface-visibility: hidden;
-  transform: translateX(-50%);
+  transform: translateX(-50%)
 }
 .disc-inner::before {
   background-color: #fff;
-  border: 1px solid #ddd;
+  border: 1px solid #ddd
 }
 .disc-inner::after {
   background-color: #000;
   transform: rotateY(180deg) translateX(50%);
-  border: 1px solid #222;
+  border: 1px solid #222
 }
 #role-dialog {
   position: fixed;
@@ -332,12 +296,12 @@ width: 120px;
   width: 270px;
   max-width: 90%;
   transform: translate(-50%, -30%);
-  background: #ffffff;
+  background: #fff;
   padding: 20px 25px;
   border-radius: 12px;
   border: none;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  z-index: 9999;
+  box-shadow: 0 8px 20px rgba(0,0,0,.2);
+  z-index: 9999
 }
 #role-dialog-overlay {
   display: none;
@@ -345,29 +309,29 @@ width: 120px;
   top: 0; left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0,0,0,0.4);
+  background: rgba(0,0,0,.4);
   z-index: 9998;
-  transition: background 0.3s ease;
+  transition: background .3s ease
 }
 #closeRoleDialog {
-  margin-top: 0px;
-  padding: 7px 23px;
-  background-color: #007aff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 12px;
-  transition: background-color 0.3s ease;
+  margin-top:0;
+  padding:7px 23px;
+  background-color:#007aff;
+  color:white;
+  border:none;
+  border-radius:5px;
+  cursor:pointer;
+  font-size:12px;
+  transition:background-color .3s ease
 }
 #closeRoleDialog:hover {
-  background-color: #005ecb;
+  background-color: #005ecb
 }
 #span-role-not-show{
-  font-size: 0.8em;
+  font-size:.8em
 }
 #role-dialog-content{
-  font-weight: bold;
+  font-weight: bold
 }
 #result-popup{
   position:fixed;
@@ -377,15 +341,15 @@ width: 120px;
   z-index:9997;
   background-color:white;
   border-radius:8px;
-  box-shadow:0 0 20px rgba(0,0,0,0.3);
+  box-shadow:0 0 20px rgba(0,0,0,.3);
   padding:10px;
   width:90%;
   max-width:400px;
   text-align:center;
-  transition: transform 0.37s ease;
+  transition: transform .37s ease
 }
 #result-popup.collapsed {
-  transform: translateY(-50%) translateX(calc(50vw - 33px));
+  transform: translateY(-50%) translateX(calc(50vw - 33px))
 }
 .slideTab{
   position: absolute;
@@ -396,21 +360,21 @@ width: 120px;
   height: 100%;
   background-color: #acacac;
   border-radius: 5px 0 0 5px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 4px rgba(0,0,0,.2);
   display: flex;
-  cursor: pointer;
+  cursor: pointer
 }
 #result-popup:not(.collapsed) .slideTab {
-  display: none;
+  display: none
 }
 #result-popup.collapsed .slideTab {
-  display: block;
+  display: block
 }
 #r-overlay{
   background-size: 140%;
   background-position: top;
   background-repeat: no-repeat;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, .5);
   background-blend-mode: lighten;
   z-index: -2;
   height: 100%;
@@ -418,7 +382,7 @@ width: 120px;
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%)
 }
 #r-background-overlay{
   display: none;
@@ -426,15 +390,15 @@ width: 120px;
   top: 0; left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0,0,0,.7);
   z-index: 1999;
-  transition: background 0.3s ease;
+  transition: background .3s ease
 }
 #result-popup,#r-overlay{border-radius: 8px}
 #result-container{
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: center
 }
 #r-share-btn{
   padding:8px 16px;
@@ -442,20 +406,20 @@ width: 120px;
   width:31px;
   height:31px;
   border-radius:4px;
-  border-bottom: solid 0.7px #638db6;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  border-bottom: solid .7px #638db6;
+  transition: all .2s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,.2)
 }
 #r-share-btn:active {
   -webkit-transform: translateY(2px);
   transform: translateY(1px);
-  border-bottom: none;
+  border-bottom: none
 }
 #r-share-btn:hover,#copy-url-btn:hover{
-  background-color:#a4d2ff;
+  background-color:#a4d2ff
 }
 #r-message{
-  margin: 20px 0;
+  margin: 20px 0
 }
 #tweet-result{
   margin:5px;
@@ -467,16 +431,16 @@ width: 120px;
   cursor:pointer;
   border-bottom: solid 0.5px rgb(0, 0, 0);
   transition: all 0.2s ease;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2)
 }
 #tweet-result:active {
   -webkit-transform: translateY(2px);
   transform: translateY(1px);
-  border-bottom: none;
+  border-bottom: none
 }
 #tweet-result:hover{
-  background-image: linear-gradient(to bottom, #404040, #000000);
-  background-color: #373737;
+  background-image: linear-gradient(to bottom, #404040, #000);
+  background-color: #373737
 }
 #restart-match{
   margin:5px;
@@ -489,12 +453,12 @@ width: 120px;
   cursor:pointer;
   border-bottom: solid 2px rgb(0, 68, 5);
   transition: all 0.2s ease;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2)
 }
 #restart-match:active {
   -webkit-transform: translateY(2px);
   transform: translateY(2px);
-  border-bottom: none;
+  border-bottom: none
 }
 #restart-match:hover{
   background-image: linear-gradient(to bottom, #00980a, #006e07);background-color: #00aa0b
@@ -505,37 +469,36 @@ width: 120px;
   border:none;
   border-radius:5px;
   cursor:pointer;
-  background-color: transparent;
+  background-color: transparent
 }
 #close-result:hover{
-  background-color: #f0f0f0;
+  background-color: #f0f0f0
 }
 #score-difference{
   font-size: 1.5em;
-  font-weight: bold;
+  font-weight: bold
 }
 #r-score-container{
   margin-top: 10px;
-  margin-bottom: 30px;
+  margin-bottom: 30px
 }
 #result-image{
   width: 160px;
   height: auto;
-  margin: 0 auto;
+  margin: 0 auto
 }
-
 .shine-button {
   position: relative;
   overflow: hidden;
-  z-index: 1;
+  z-index: 1
 }
 .shine-button:active {
   transform: scale(0.95);
-  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2)
 }
 .shine-button:hover {
   transform: scale(1.05);
-  box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.2)
 }
 .shine-button::before {
   content: '';
@@ -547,10 +510,10 @@ width: 120px;
   background-color: rgba(255,255,255,0.6);
   animation: shine 1.8s ease-in-out infinite;
   pointer-events: none;
-  transform: rotate(45deg);
+  transform: rotate(45deg)
 }
 .shine-button:hover::before {
-  animation: shine 1.3s ease-in-out infinite;
+  animation: shine 1.3s ease-in-out infinite
 }
 @keyframes shine {
   0%   { transform: scale(0) rotate(45deg); opacity: 0; }
@@ -559,7 +522,6 @@ width: 120px;
   60% { transform: scale(30) rotate(45deg); opacity: 0; }
   100% { transform: scale(30) rotate(45deg); opacity: 0; }
 }
-
 @keyframes flip {
   0% {
     transform: rotateY(0) scaleX(1);
@@ -577,7 +539,10 @@ width: 120px;
     transform: rotateY(360deg) scaleX(1);
   }
 }
-
+@keyframes fadeIn {
+  from {opacity: 0; transform: translate(-50%, -10px);}
+  to {opacity: 1; transform: translate(-50%, 0);}
+}
 @media (max-width: 600px) {
   .mode-btn {
       text-align: center;

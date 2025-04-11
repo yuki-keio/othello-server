@@ -132,10 +132,8 @@ board.addEventListener('click', (event) => {
 
 function initializeBoard() {
     refreshBoard();
-
     if (!loadBoardFromURL()) {
         setInitialStones();
-
     }
     add4x4Markers();
     updateStatus();
@@ -149,7 +147,7 @@ function setInitialStones() {
 
 }
 
-// 盤面に黒ポチを追加
+// 盤面に黒ポチを追加+ローダー削除
 function add4x4Markers() {
     const markers = [
         { row: 1, col: 1 },
@@ -1173,6 +1171,13 @@ function endGame(online_data, winner = null) {
     }
     if (winner === "won") {
         share_winner = "won";
+        if (blackCount > whiteCount) {
+            result = lang.winner + lang.black;
+        }else if (whiteCount > blackCount) {
+            result = lang.winner + lang.white;
+        }else {
+            result = lang.draw;
+        }
     } else if (online_data !== "offline") {
 
         if (online_data.winner === role_online) {
@@ -1198,7 +1203,7 @@ function endGame(online_data, winner = null) {
             }
         } else if (online_data.reason === "timeout") {
             share_winner = online_data.winner;
-            result = lang.timeout_winner + (online_data.loser === 'black' ? lang.black : lang.white);
+            result = lang.timeout_winner + (online_data.loser === 'black' ? lang.white : lang.black);
             if (gameEndSoundEnabled) {
                 if (online_data.winner === role_online) {
                     victorySound.currentTime = 0;
@@ -1233,8 +1238,8 @@ function endGame(online_data, winner = null) {
         }
 
     } else if (winner) {
-        // 時間切れの場合は、相手のプレイヤーの勝ち
-        result = lang.timeout_winner + (winner === 'black' ? lang.white : lang.black);
+        // 時間切れまたは降伏
+        result = lang.timeout_winner + (winner === 'black' ? lang.black : lang.white);
 
         share_winner = winner; // 時間切れ勝ちなら、石の数で負けていても大丈夫なように明確に共有時に伝える必要があるので、winnerを明示する
 
@@ -1304,24 +1309,27 @@ function endGame(online_data, winner = null) {
             }
         }
     }
-    gtag('event', 'game_result', {
-        'result': ifVitory,
-        'gameMode': gameMode,
-        'player_id': playerId,
-        'timeLimit': timeLimit,
-        'showValidMoves': showValidMoves,
-        'aiLevel': aiLevel,
-        'gameEndSoundEnabled': gameEndSoundEnabled,
-        'placeStoneSoundEnabled': soundEffects,
-        'playerJoinSoundEnabled': playerJoinSoundEnabled,
-        'timeLimitSoundEnabled': timeLimitSoundEnabled,
-    });
-
+    document.getElementById('score_display').innerHTML = `${result} | <span id="black_circle"></span> ${blackCount} : ${whiteCount} <span id="white_circle"></span>`;
+    if (typeof gtag !== 'undefined') {
+        gtag('event', 'game_result', {
+            'result': ifVitory,
+            'gameMode': gameMode,
+            'player_id': playerId,
+            'timeLimit': timeLimit,
+            'showValidMoves': showValidMoves,
+            'aiLevel': aiLevel,
+            'gameEndSoundEnabled': gameEndSoundEnabled,
+            'placeStoneSoundEnabled': soundEffects,
+            'playerJoinSoundEnabled': playerJoinSoundEnabled,
+            'timeLimitSoundEnabled': timeLimitSoundEnabled,
+        });
+    }else{
+        console.log("[endGame] gtag not found");
+        return;
+    }
     url = new URL(window.location);
     url.searchParams.set('won', share_winner);
     history.pushState(null, '', url);
-
-    document.getElementById('score_display').innerHTML = `${result} | <span id="black_circle"></span> ${blackCount} : ${whiteCount} <span id="white_circle"></span>`;
 
     const winner_final = share_winner === "won" ? (blackCount > whiteCount ? "black": "white") : share_winner;
 
@@ -1355,7 +1363,7 @@ function launchConfetti() {
     const windowHeight = window.innerHeight;
     const originY = (rect.top + rect.height) / windowHeight;
     ifVitory = true;
-
+    if (typeof confetti === 'undefined') return;
     confetti({
         particleCount: 150,
         angle: 75,
@@ -1371,7 +1379,6 @@ function launchConfetti() {
         zIndex: 100
     });
     setTimeout(() => {
-
         confetti({
             particleCount: 150,
             angle: 105,

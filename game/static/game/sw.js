@@ -1,4 +1,4 @@
-const CACHE_NAME = "my-django-app-cache-v32";
+const CACHE_NAME = "my-django-app-cache-v33";
 const urlsToCache = [
     "/",  // ホーム
     "/ai/",
