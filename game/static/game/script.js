@@ -1858,24 +1858,17 @@ function initAIMode() {
             if (this.classList.contains('locked-level')) {
                 return;
             }
-
             const level = this.getAttribute('data-level');
             aiLevelSelect.value = level;
-
             // 既存のchangeイベントをトリガー
             const event = new Event('change');
             aiLevelSelect.dispatchEvent(event);
-
             updateAiLevelDisplay();
-
-            // ポップアップを閉じる
             document.getElementById('ai-level-popup').style.display = 'none';
-
             const __url = new URL(window.location);
             __url.searchParams.delete("moves");
             __url.searchParams.delete("won");
             __url.searchParams.set('aiLevel', level);
-
             history.pushState(null, "", __url);
             location.reload();
         });
@@ -1884,16 +1877,13 @@ function initAIMode() {
     // ポップアップ外クリックで閉じる
     document.addEventListener('click', function (e) {
         const popup = document.getElementById('ai-level-popup');
-
         if (popup.style.display === 'block' && !popup.contains(e.target) && e.target !== document.getElementById('ai-level-display')) {
             popup.style.display = 'none';
         }
     });
-
     aiLevelSelect.addEventListener('change', updateAiLevelDisplay);
     // 初期表示を設定
     setTimeout(updateAiLevelDisplay, 100);
-
 }
 function sendSettings() {
     let overlayTimeLimit = timelimit_el.value;
@@ -2055,7 +2045,7 @@ async function playStoneSound() {
     // バッファがすでにロード済みならawait不要
     if (!placeStoneBuffer) {
         try {
-            await placeStoneBufferPromise; // 初回のみawait（すでにロード済なら即時解決）
+            await placeStoneBufferPromise;
         } catch (e) {
             console.warn("Buffer failed to load:", e);
             return;
@@ -2184,7 +2174,7 @@ if (playerName_el) {
     });
 }
 document.getElementById("setting").addEventListener('click', () => {
-    document.getElementById('settings').scrollIntoView({ behavior: "smooth" });
+    document.getElementById('settings').scrollIntoView({behavior:'smooth'});
 });
 document.getElementById("close-install-guide").addEventListener("click", () => {
     document.getElementById("ios-install-guide").style.display = "none";

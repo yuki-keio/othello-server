@@ -8,10 +8,6 @@
   transform:translateX(-50%);
   width:100%;
 }
-.caution{
-  padding: 15px;
-  font-size: 0.8em
-}
 .locked-level {
     color: #888;
     font-style: italic
