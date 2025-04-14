@@ -239,9 +239,9 @@ width: 120px
   height: 100%;
   background-color: rgba(0, 0, 0, .7);
   display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999
+  justify-content:center;
+  align-items:center;
+  z-index:9999
 }
 .loading-container {
   text-align: center;
@@ -287,7 +287,7 @@ width: 120px
 }
 #role-dialog {
   position: fixed;
-  top: 30%;
+  top: 30vh;
   left: 50%;
   width: 270px;
   max-width: 90%;
@@ -297,12 +297,14 @@ width: 120px
   border-radius: 12px;
   border: none;
   box-shadow: 0 8px 20px rgba(0,0,0,.2);
-  z-index: 9999
+  z-index: 9999;
+  text-align:center
 }
-#role-dialog-overlay {
+#role-dialog-overlay{
   display: none;
   position: fixed;
-  top: 0; left: 0;
+  top:0;
+  left:0;
   width: 100vw;
   height: 100vh;
   background: rgba(0,0,0,.4);
@@ -331,7 +333,7 @@ width: 120px
 }
 #result-popup{
   position:fixed;
-  top:50%;
+  top:50vh;
   left:50%;
   transform:translate(-50%, -50%);
   z-index:9997;
