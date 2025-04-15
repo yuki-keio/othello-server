@@ -524,21 +524,6 @@
             {% endif %}
             </p>
     </section>
-    <!-- iOS専用のインストールガイド -->
-    <div id="ios-install-guide" class="install-guide">
-        <div class="install-guide-content">
-            <h5>{% trans "このサイトを「ホーム画面に追加」すると、更に快適に遊べます!" %}</h5>
-            <ul id="install-recommend">{% blocktrans trimmed %}
-                <li>✅️ Webアプリだからアプリ容量はほぼ0！</li>
-                <li>⏳️ 高速に起動して時短！</li>
-                <li>✈️ オフラインで遊べる</li>
-                {% endblocktrans %}
-            </ul>
-            <h5 id="how2install">{% trans "10秒で追加 👇" %}</h5>
-        </div>
-        <img src="{% static 'game/images/iOSinstall.webp' %}" alt="{% trans 'iOSでのインストール方法：まず共有ボタンを押し、次に「ホーム画面に追加」を選択' %}" id="ios-install-guide-img" loading="lazy">
-        <button id="close-install-guide">{% trans "❌️ 閉じる" %}</button>
-    </div>
     <!--フィードバック用フォームへのリンク-->
     <a href="https://docs.google.com/forms/d/e/1FAIpQLSeID_5fOJLDNPMJAz-kZbFmTLPxwdUUNVBsjXA36letgF7gow/viewform" id="feedback-link" target="_blank">
         {% trans "開発者へフィードバックを送る" %}
@@ -556,6 +541,21 @@
     <button id="closeRoleDialog">OK</button>
     </div>
 {% endif %}
+ <!-- iOS専用のインストールガイド -->
+ <div id="ios-install-guide" class="install-guide">
+    <div class="install-guide-content">
+        <h5>{% trans "このサイトを「ホーム画面に追加」すると、更に快適に遊べます!" %}</h5>
+        <ul id="install-recommend">{% blocktrans trimmed %}
+            <li>✅️ Webアプリだからアプリ容量はほぼ0！</li>
+            <li>⏳️ 高速に起動して時短！</li>
+            <li>✈️ オフラインで遊べる</li>
+            {% endblocktrans %}
+        </ul>
+        <h5 id="how2install">{% trans "10秒で追加 👇" %}</h5>
+    </div>
+    <img src="{% static 'game/images/iOSinstall.webp' %}" alt="{% trans 'iOSでのインストール方法：まず共有ボタンを押し、次に「ホーム画面に追加」を選択' %}" id="ios-install-guide-img" loading="lazy">
+    <button id="close-install-guide">{% trans "❌️ 閉じる" %}</button>
+</div>
 <div id="r-background-overlay"></div>
 <!-- 対戦結果ポップアップ -->
 <div id="result-popup">
