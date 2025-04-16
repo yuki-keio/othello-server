@@ -13,15 +13,15 @@ import os
 """ #todo
 2. AIを高速化, 弱体化
 統計・ランキング（自分の順位や上位N%、何段の強さかレート表示と上る時の快感を、連勝記録）を追加,aiによるスコア計測と変化の可視化
-1. アカウント機能、美しいアイコンを追加
-1. 有料プランを追加：広告削除 + 対戦相手の広告削除、追加のAIを利用、英語以外のユーザー名も設定可能、優先マッチング、リバーシ検定の資格授与、オンライン対戦のルール決定の優先？課金の動機。他のサービス
+1. アカウント機能、美しいアイコンを追加：postgtrsql
+0. 有料プランを追加完了させる：広告削除 + 対戦相手の広告削除、追加のAIを利用、英語以外のユーザー名も設定可能、優先マッチング、リバーシ検定の資格授与、オンライン対戦のルール決定の優先？課金の動機。他のサービス。アカウントとの連携と復元
 1. オンラインマッチ機能（レート別）の実装 + 誰もいない時のためのAIボット +  負けそうになると接続を切る人がいるので通信切れに罰則を + ブラックリスト実装/ 制限時間を調整して6分対局と3分対局をつくる + レート計算に「挑戦ポイント」や「接戦ポイント」をつけて負けをフォロー
 パスの吹き出しを最適化。アラートもカスタムモーダルにして残り時間カウントダウンを止めないようにする
 勝利 / 敗北の画面（再対戦のボタン、AI分析やハイライトの表示、「圧勝」の時に表示を入れる）。
 2. SNSへのシェアを実装（facebook,ogp画像：盤面・勝率予測、上位n%など）
 5. オンラインで投了した時の棋譜シェアで結果表示が「時間切れ」になってしまう
 ボリューム層：AI、中〜上級、制限時間なし・有効手は表示する。
-広告3万は割と多い方。ほかがしょぼいから
+広告利益が月3万は割と多い方。webオセロは他がしょぼい
 """
 
 logger = logging.getLogger(__name__)
@@ -387,7 +387,7 @@ class OthelloConsumer(AsyncWebsocketConsumer):
                     }
                 }
             )
-
+            await self.redis.set(f"game_rooms:{self.group_name}", json.dumps(game_state))
             # 盤面満杯 or 両者に有効手がない場合
             if self.check_board_full(board) or (
                 not self.get_valid_moves(board, "black") and not self.get_valid_moves(board, "white")
@@ -398,9 +398,6 @@ class OthelloConsumer(AsyncWebsocketConsumer):
             # タイマー再設定
             if game_state["time_limit"] > 0:
                 asyncio.create_task(self.schedule_turn_timeout())
-
-            # ★★★ 最後にRedisへ書き戻し
-            await self.redis.set(f"game_rooms:{self.group_name}", json.dumps(game_state))
 
         except json.JSONDecodeError:
             logger.error("[ERROR] Invalid JSON received （ルーム名：{self.group_name}）")
