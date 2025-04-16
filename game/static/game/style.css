@@ -76,7 +76,6 @@
   border-left: 3px solid #007508
 }
 .install-guide {
-  display: none;
   position: fixed;
   bottom: 4%;
   left: 50%;
