@@ -54,7 +54,8 @@ CSP_SCRIPT_SRC = (
     "https://cdn.jsdelivr.net",
     "blob:",
     "https://www.clarity.ms",
-    )
+    "https://js.stripe.com/",
+)
 CSP_IMG_SRC = (
     "'self'",
     "https://img.moppy.jp",
@@ -65,7 +66,7 @@ CSP_IMG_SRC = (
     "https://ep1.adtrafficquality.google",
     "https://*.clarity.ms",
     "https://c.bing.com",
-        )
+)
 CSP_FRAME_SRC = (
     "'self'",
     "https://www.google.com",
