@@ -35,9 +35,8 @@ web_othello/
 │   ├── templates/               # HTMLテンプレート（フロントエンド）
 │   │   ├── game/
 │   │   │   ├── index.html
-│   │   │   ├── room.html
-│   │   │   ├── result.html
-│   │   ├── base.html             # 共通テンプレート
+│   │   │   ├── offline.html
+│   │   │   ├── strategy-reversi-othello.html
 │   ├── static/                   # 静的ファイル（CSS, JS, 画像）
 │   │   ├── game/
 │   │   │   ├── style.css

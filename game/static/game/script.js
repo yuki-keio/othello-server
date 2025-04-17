@@ -469,6 +469,8 @@ function startTimer() {
     let remainingTime = timeLimit;
     const timerDisplay = document.getElementById('timer-display');
     timerDisplay.textContent = formatTime(remainingTime);
+    timerDisplay.classList.remove('warning1');
+    timerDisplay.classList.remove('warning2');
     // 既存のタイマーを停止
     stopTimer();
     if (gameBoard.flat().filter(cell => cell !== '').length === 4) return;

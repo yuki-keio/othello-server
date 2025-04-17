@@ -5,13 +5,11 @@ from datetime import datetime
 from django.conf import settings
 
 class StaticViewSitemap(Sitemap):
-    priority = 0.5        
+    priority = 0.5
     changefreq = 'monthly'
 
     i18n = True
     alternates = True
-
-    
 
     def items(self):
         """各URLをリストとして返す"""

@@ -1,6 +1,6 @@
-const CACHE_NAME = "my-django-app-cache-v33";
+const CACHE_NAME = "reversi-web-v34";
 const urlsToCache = [
-    "/",  // ホーム
+    "/",
     "/ai/",
     "/en/",  // 英語版ホーム
     "/en/ai/",
@@ -9,20 +9,31 @@ const urlsToCache = [
     "/strategy-reversi-othello.html",
     "/en/strategy-reversi-othello.html",
     "/static/game/images/favicon/favicon.ico",
+    "/static/game/images/favicon/favicon-16x16.png",
+    "/static/game/images/favicon/favicon-32x32.png",
+    "/static/game/images/favicon/favicon-48x48.png",
+    "/static/game/images/favicon/favicon-96x96.png",
     "/static/game/images/favicon/favicon-192x192.png",
     "/static/game/images/favicon/favicon-512x512.png",
     "/static/game/images/favicon/apple-touch-icon.png",
-    "/static/game/script.js",
-    "/static/game/confetti.browser.min.js",
+    "/static/game/images/favicon/android-chrome-192x192.png",
+    "/static/game/images/favicon/android-chrome-512x512.png",
     "/static/game/images/setting.svg",
     "/static/game/images/qr.svg",
     "/static/game/images/share.svg",
+    "/static/game/images/draw.png",
+    "/static/game/images/win.png",
+    "/static/game/images/lose.png",
+    "/static/game/images/info.svg",
+    "/static/game/images/laurel.webp",
     "/static/game/sounds/defeat.mp3",
     "/static/game/sounds/victory.mp3",
     "/static/game/sounds/place-stone.mp3",
     "/static/game/sounds/warning.mp3",
     "/static/game/style.css",
     "/static/game/strategy.css",
+    "/static/game/script.js",
+    "/static/game/confetti.browser.min.js",
 ];
 
 // インストール時にキャッシュする
