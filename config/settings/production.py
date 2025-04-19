@@ -75,7 +75,7 @@ CSP_FRAME_SRC = (
     "https://securepubads.g.doubleclick.net", 
     "https://ep2.adtrafficquality.google",  
     "https://pagead2.googlesyndication.com",
-    "https://js.stripe.com/",
+    "https://js.stripe.com",
 )
 CSP_STYLE_SRC = (
     "'self'",

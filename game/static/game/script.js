@@ -97,6 +97,13 @@ const scoreDiff = document.getElementById('score-difference');
 const rMessage = document.getElementById('r-message');
 const rOverlay = document.getElementById('r-overlay');
 
+// 方向ベクトルを再利用するための定数定義
+const DIRECTIONS = [
+    [-1, -1], [-1, 0], [-1, 1],
+    [0, -1], [0, 1],
+    [1, -1], [1, 0], [1, 1]
+];
+
 function refreshBoard() {
     const fragment = document.createDocumentFragment();
     for (let i = 0; i < 8; i++) {
@@ -330,8 +337,7 @@ function isValidMove(row, col, playerColor = currentPlayer) {
     if (gameBoard[row][col] !== '') {
         return false;
     }
-    const directions = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
-    for (const [dx, dy] of directions) {
+    for (const [dx, dy] of DIRECTIONS) {
         if (wouldFlip(row, col, dx, dy, playerColor)) return [row, col];
     }
     return false;
@@ -349,15 +355,11 @@ function wouldFlip(row, col, dx, dy, playerColor = currentPlayer) {
 }
 
 function flipDiscs(row, col, playerColor = currentPlayer) {
-    const directions = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
-
-    for (const [dx, dy] of directions) {
+    for (const [dx, dy] of DIRECTIONS) {
         if (wouldFlip(row, col, dx, dy, playerColor)) {
             let x = row + dx;
             let y = col + dy;
-            let flip_count = 1;
             while (gameBoard[x][y] === getOpponentColor(playerColor)) {
-                flip_count++;
                 setDisc(x, y, playerColor);
                 x += dx;
                 y += dy;
@@ -707,7 +709,7 @@ function copyURLToClipboard(matchRoom = false, fromResult = false) {
         if (gameMode === 'online') {
             url.searchParams.delete('room');
             copyText = url.toString().replace(/\/online\//, '/');
-        }else{
+        } else {
             copyText = url.toString();
         }
         switch (langCode) {
@@ -718,7 +720,7 @@ function copyURLToClipboard(matchRoom = false, fromResult = false) {
                 copyText = `${opponentName}に${Math.abs(scoreB.textContent - scoreW.textContent)}石差で【${ifVitory ? "勝利" : "敗北"}】\n\n結果 ▶ ⚫️ ${scoreB.textContent} vs ${scoreW.textContent} ⚪️\n\n#リバーシWeb #オセロ #ReversiWeb\n\n👇 棋譜はこちら！\n${copyText}`;
                 break;
         }
-    }else{
+    } else {
         copyText = url.toString();
     }
     navigator.clipboard.writeText(copyText).then(() => {
@@ -839,13 +841,12 @@ function aiMakeMove() {
 
     let bestMove = null;
     let bestScore = -Infinity;
-    const directions = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
     const initialBoard = gameBoard.map(row => [...row]);
     const validMoves = hasValidMove();
     // 全ての有効な手を探索
     for (let i = 0; i < validMoves.length; i++) {
         const [row, col] = validMoves[i];
-        const tempBoard = applyMoveToBoard(initialBoard, row, col, currentPlayer, directions);
+        const tempBoard = applyMoveToBoard(initialBoard, row, col, currentPlayer);
         // ミニマックス法で評価値を計算
         const score = minimax(tempBoard, minimax_depth, false, -Infinity, Infinity);
 
@@ -872,12 +873,12 @@ function aiMakeMove() {
         endMove(bestMove, timeLimit, gameEnded, aimove);
     }
 }
-function applyMoveToBoard(board, row, col, player, directions) {
-    const newBoard = board.map(row => [...row]);
+function applyMoveToBoard(board, row, col, player) {
+    const newBoard = board.map(r => [...r]);
     newBoard[row][col] = player;
-    for (const [dx, dy] of directions) {
-        const flippedStones = getFlippedStones(newBoard, row, col, dx, dy, player);
-        for (const [x, y] of flippedStones) {
+    for (const [dx, dy] of DIRECTIONS) {
+        const flipped = getFlippedStones(newBoard, row, col, dx, dy, player);
+        for (const [x, y] of flipped) {
             newBoard[x][y] = player;
         }
     }
@@ -904,11 +905,11 @@ function getFlippedStones(board, row, col, dx, dy, player) {
 }
 // 探索深度を動的に調整する関数
 function adjustSearchDepth(estimatedTime, aiLevel) {
-    if (estimatedTime < (aiLevel * 400)) {
+    if (estimatedTime < (aiLevel * 300)) {
         minimax_depth++;
-    } else if (estimatedTime > aiLevel * 700) {
+    } else if (estimatedTime > aiLevel * 400) {
         minimax_depth--;
-        if (estimatedTime > aiLevel * 1000) {
+        if (estimatedTime > aiLevel * 700) {
             minimax_depth--;
         }
 
@@ -947,6 +948,48 @@ function minimax(board, depth, isMaximizing, alpha = -Infinity, beta = Infinity)
     const opponent = isMaximizing ? "black" : "white";
     // 有効な手を取得
     const validMoves = getValidMovesForBoard(board, player);
+
+    // ムーブオーダリングの実装
+    const moveWeight = ([r, c]) => {
+        // 隅 (A1, A8, H1, H8)
+        if ((r === 0 && c === 0) || (r === 7 && c === 0) || (r === 0 && c === 7) || (r === 7 && c === 7)) return 1000;
+        // B打ち (A3, A6, C1, C8, F1, F8, H3, F6)
+        if ((r === 2 && c === 0) || (r === 5 && c === 0) ||
+            (r === 0 && c === 2) || (r === 7 && c === 2) ||
+            (r === 0 && c === 5) || (r === 7 && c === 5) ||
+            (r === 2 && c === 7) || (r === 5 && c === 7)) return 900;
+        // A打ち (A4, A5, D1, D8, E1, E8, H4, H5)
+        if ((r === 3 && c === 0) || (r === 4 && c === 0) ||
+            (r === 0 && c === 3) || (r === 7 && c === 3) ||
+            (r === 0 && c === 4) || (r === 7 && c === 4) ||
+            (r === 3 && c === 7) || (r === 4 && c === 7)) return 800;
+        // ボックス隅 (C3, C6, F3, F6)
+        if ((r === 2 && c === 2) || (r === 2 && c === 5) ||
+            (r === 5 && c === 2) || (r === 5 && c === 5)) return 700;
+        // ボックス辺 (C4, C5, D3, D6, E3, E6, F4, F5)
+        if ((r === 2 && c === 3) || (r === 2 && c === 4) ||
+            (r === 3 && c === 2) || (r === 4 && c === 2) ||
+            (r === 5 && c === 3) || (r === 5 && c === 4) ||
+            (r === 3 && c === 5) || (r === 4 && c === 5)) return 600;
+        // 中辺 (B3, B4, B5, B6, C2, C7, D2, D7, E2, E7, F2, F7, G3, G4, G5, G6)
+        if ((r === 2 && c === 1) || (r === 3 && c === 1) || (r === 4 && c === 1) || (r === 5 && c === 1) ||
+            (r === 1 && c === 2) || (r === 6 && c === 2) ||
+            (r === 1 && c === 3) || (r === 6 && c === 3) ||
+            (r === 1 && c === 4) || (r === 6 && c === 4) ||
+            (r === 1 && c === 5) || (r === 6 && c === 5) ||
+            (r === 2 && c === 6) || (r === 3 && c === 6) || (r === 4 && c === 6) || (r === 5 && c === 6)) return 500;
+        // C打ち (A2, A7, B1, B8, G1, G8, H2, H7)
+        if ((r === 1 && c === 0) || (r === 6 && c === 0) ||
+            (r === 0 && c === 1) || (r === 7 && c === 1) ||
+            (r === 0 && c === 6) || (r === 7 && c === 6) ||
+            (r === 1 && c === 7) || (r === 6 && c === 7)) return 400;
+        // X打ち (B2, B7, G2, G7)
+        if ((r === 1 && c === 1) || (r === 6 && c === 1) ||
+            (r === 1 && c === 6) || (r === 6 && c === 6)) return 300;
+        return 0;
+    };
+    validMoves.sort((a, b) => moveWeight(b) - moveWeight(a));
+
     // パスの処理
     if (validMoves.length === 0) {
         // 相手も打てない場合はゲーム終了
@@ -959,12 +1002,11 @@ function minimax(board, depth, isMaximizing, alpha = -Infinity, beta = Infinity)
         return minimax(board, depth - 1, !isMaximizing, alpha, beta);
     }
     // 子ノードの探索
-    const directions = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
     if (isMaximizing) {
         let maxEval = -Infinity;
         for (const [row, col] of validMoves) {
             // 試行的に手を適用
-            const newBoard = applyMoveToBoard(board, row, col, player, directions);
+            const newBoard = applyMoveToBoard(board, row, col, player);
             // 再帰的に評価
             const eval = minimax(newBoard, depth - 1, false, alpha, beta);
             maxEval = Math.max(maxEval, eval);
@@ -980,7 +1022,7 @@ function minimax(board, depth, isMaximizing, alpha = -Infinity, beta = Infinity)
 
         for (const [row, col] of validMoves) {
             // 試行的に手を適用
-            const newBoard = applyMoveToBoard(board, row, col, player, directions);
+            const newBoard = applyMoveToBoard(board, row, col, player);
             // 再帰的に評価
             const eval = minimax(newBoard, depth - 1, true, alpha, beta);
             minEval = Math.min(minEval, eval);
@@ -997,12 +1039,11 @@ function minimax(board, depth, isMaximizing, alpha = -Infinity, beta = Infinity)
 function getValidMovesForBoard(board, player) {
     const validMoves = [];
     const opponent = player === "black" ? "white" : "black";
-    const directions = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
     for (let row = 0; row < 8; row++) {
         for (let col = 0; col < 8; col++) {
-            if (board[row][col] !== "") continue;
+            if (board[row][col] !== '') continue;
             // この位置に石を置いたときに、相手の石を裏返せるか確認
-            for (const [dx, dy] of directions) {
+            for (const [dx, dy] of DIRECTIONS) {
                 let x = row + dx;
                 let y = col + dy;
                 let hasOpponent = false;
@@ -1175,9 +1216,9 @@ function endGame(online_data, winner = null) {
         share_winner = "won";
         if (blackCount > whiteCount) {
             result = lang.winner + lang.black;
-        }else if (whiteCount > blackCount) {
+        } else if (whiteCount > blackCount) {
             result = lang.winner + lang.white;
-        }else {
+        } else {
             result = lang.draw;
         }
     } else if (online_data !== "offline") {
@@ -1325,7 +1366,7 @@ function endGame(online_data, winner = null) {
             'playerJoinSoundEnabled': playerJoinSoundEnabled,
             'timeLimitSoundEnabled': timeLimitSoundEnabled,
         });
-    }else{
+    } else {
         console.log("[endGame] gtag not found");
         return;
     }
@@ -1333,10 +1374,10 @@ function endGame(online_data, winner = null) {
     url.searchParams.set('won', share_winner);
     history.pushState(null, '', url);
 
-    const winner_final = share_winner === "won" ? (blackCount > whiteCount ? "black": "white") : share_winner;
+    const winner_final = share_winner === "won" ? (blackCount > whiteCount ? "black" : "white") : share_winner;
 
     stopTimer();
-    showResultPopup(ifVitory, blackCount, whiteCount,winner_final);
+    showResultPopup(ifVitory, blackCount, whiteCount, winner_final);
     setTimeout(() => {
         gameFinishedCount++;
         localStorage.setItem('gameFinishedCount', gameFinishedCount);
@@ -1444,8 +1485,8 @@ function preloadResultImages() {
         img.src = src;
     });
 }
-function showResultPopup(victory, scoreBlack, scoreWhite,f_winner) {
-    const _draw = (scoreBlack === scoreWhite) ? (share_winner==="won") : false;
+function showResultPopup(victory, scoreBlack, scoreWhite, f_winner) {
+    const _draw = (scoreBlack === scoreWhite) ? (share_winner === "won") : false;
     let imagePath = '';
 
     if (victory) {
@@ -1461,12 +1502,12 @@ function showResultPopup(victory, scoreBlack, scoreWhite,f_winner) {
         case "en":
             if (_draw) {
                 rMessage.textContent = `🤝 You drew with ${opponentName}`;
-            }else{
-                rMessage.textContent = (victory ? "🏆️ " : "") +  ((typeof opponentName === 'undefined') ? ((f_winner==="black")?"Black":"White"):"You") + (victory?" won":" lost") + ((typeof opponentName === 'undefined')?"":` against ${opponentName}`) +` by ${Math.abs(scoreBlack - scoreWhite)} points!`;
+            } else {
+                rMessage.textContent = (victory ? "🏆️ " : "") + ((typeof opponentName === 'undefined') ? ((f_winner === "black") ? "Black" : "White") : "You") + (victory ? " won" : " lost") + ((typeof opponentName === 'undefined') ? "" : ` against ${opponentName}`) + ` by ${Math.abs(scoreBlack - scoreWhite)} points!`;
             }
             break;
         default:
-            rMessage.textContent = (victory ? "🏆️ " : "") + ((typeof opponentName === 'undefined') ? ((f_winner==="black")?"黒が":"白が"):`${opponentName}に`)+`${Math.abs(scoreBlack - scoreWhite)}点差で${ifVitory ? "勝利！" : _draw?"引き分け": "敗北"}`;
+            rMessage.textContent = (victory ? "🏆️ " : "") + ((typeof opponentName === 'undefined') ? ((f_winner === "black") ? "黒が" : "白が") : `${opponentName}に`) + `${Math.abs(scoreBlack - scoreWhite)}点差で${ifVitory ? "勝利！" : _draw ? "引き分け" : "敗北"}`;
             break;
     }
     scoreDiff.textContent = `⚫️ ${scoreBlack} : ${scoreWhite} ⚪️`;
@@ -1636,7 +1677,7 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
         changeTitle();  // タイトルなどの更新
         updateURL();    // URLパラメータの更新など必要なら行う
         changeHead();
-        if (selectedMode !== 'ai'){
+        if (selectedMode !== 'ai') {
             const tp__url = new URL(window.location);
             tp__url.searchParams.delete('aiLevel');
             history.replaceState(null, "", tp__url);
@@ -1700,7 +1741,7 @@ function _DOMContenLoaded() {
         sessionStorage.removeItem("scrollY");
     }
     placeStoneBufferPromise = getAudioBuffer(PLACE_STONE_SOUND).then(buffer => {
-            console.log("Audio preloaded");
+        console.log("Audio preloaded");
     }).catch(e => console.error("Failed to preload audio:", e));
 
     if (inviteBtn && qrPopup && qrcodeContainer) {
@@ -1801,7 +1842,7 @@ function initAIMode() {
             option.style.display = '';
         } else if (unlockedLevels[unlockLevel]) {
             const level_before = document.querySelector('#aiLevelSelect option[value="' + unlockLevel + '"]');
-            if (option.getAttribute("data-level")){
+            if (option.getAttribute("data-level")) {
                 langNextAIName = option.textContent;
             }
             switch (langCode) {
@@ -1959,16 +2000,16 @@ function makeSocket() {
                     document.getElementById("surrender-btn").disabled = false;
                 }
                 console.log("reconnect", data);
-            }else{
-            //タイマーを止める
-            timeLimit = 0;
-            localStorage.setItem('timeLimit', timeLimit);
-            stopTimer();
-            document.getElementById("timeLimitBox_").style.display = "none";
+            } else {
+                //タイマーを止める
+                timeLimit = 0;
+                localStorage.setItem('timeLimit', timeLimit);
+                stopTimer();
+                document.getElementById("timeLimitBox_").style.display = "none";
             }
         } else if (data.action === "update_players") {
             updatePlayerList(data.players);
-            if(data.by_reconnect) return;
+            if (data.by_reconnect) return;
             if (Object.keys(data.players).length === 2 && !data.setting) {
                 if (role_online === 'black') {
                     sendSettings();
@@ -1989,7 +2030,7 @@ function makeSocket() {
                     });
                 }
             }
-            if (data.setting){
+            if (data.setting) {
                 stopTimer();
                 timeLimit = data.time_limit;
                 localStorage.setItem('timeLimit', timeLimit);
@@ -2123,7 +2164,7 @@ if (surrenderBtn) {
             socket.send(JSON.stringify({ action: "surrender" }));
         }
     });
-    document.getElementById("info-button").addEventListener("click", function() {
+    document.getElementById("info-button").addEventListener("click", function () {
         alert(`${lang.how2play_with_friend}`);
     });
 }
@@ -2176,7 +2217,7 @@ if (playerName_el) {
     });
 }
 document.getElementById("setting").addEventListener('click', () => {
-    document.getElementById('settings').scrollIntoView({behavior:'smooth'});
+    document.getElementById('settings').scrollIntoView({ behavior: 'smooth' });
 });
 document.getElementById("close-install-guide").addEventListener("click", () => {
     document.getElementById("ios-install-guide").style.display = "none";
@@ -2260,7 +2301,7 @@ document.getElementById('tweet-result').addEventListener('click', () => {
     t_url.searchParams.delete("room");
     t_url.searchParams.delete("timeLimit");
     t_url = t_url.toString();
-    const _draw = (scoreB.textContent === scoreW.textContent) ? (share_winner==="won") : false;
+    const _draw = (scoreB.textContent === scoreW.textContent) ? (share_winner === "won") : false;
     if (gameMode === 'online') {
         t_url = t_url.replace(/\/online\//, '/');
     }
@@ -2268,13 +2309,14 @@ document.getElementById('tweet-result').addEventListener('click', () => {
     switch (langCode) {
         case "en":
             if (_draw) {
-                tweetText = `🤝 I drew with ${opponentName}!\n\n【Final Score】 ⚫️ ${scoreB.textContent} : ${scoreW.textContent} ⚪️\n\n#ReversiWeb #Othello\n\n👇 Game record:\n${t_url}`;}
-            else{
-                tweetText = `${ifVitory ? "Victory!" : "Defeated..."}\nI ${((typeof opponentName === 'undefined')?"":` against ${opponentName} and`)} ${ifVitory ? "won" : "lost"} by ${Math.abs(scoreB.textContent - scoreW.textContent)} points.\n\n【Final Score】 ⚫️ ${scoreB.textContent} : ${scoreW.textContent} ⚪️\n\n#ReversiWeb #Othello\n\n👇 Game record:\n${t_url}`;
-                }
+                tweetText = `🤝 I drew with ${opponentName}!\n\n【Final Score】 ⚫️ ${scoreB.textContent} : ${scoreW.textContent} ⚪️\n\n#ReversiWeb #Othello\n\n👇 Game record:\n${t_url}`;
+            }
+            else {
+                tweetText = `${ifVitory ? "Victory!" : "Defeated..."}\nI ${((typeof opponentName === 'undefined') ? "" : ` against ${opponentName} and`)} ${ifVitory ? "won" : "lost"} by ${Math.abs(scoreB.textContent - scoreW.textContent)} points.\n\n【Final Score】 ⚫️ ${scoreB.textContent} : ${scoreW.textContent} ⚪️\n\n#ReversiWeb #Othello\n\n👇 Game record:\n${t_url}`;
+            }
             break;
         default:
-            tweetText = `${((typeof opponentName === 'undefined')?"":`${opponentName}に`)}${Math.abs(scoreB.textContent - scoreW.textContent)}石差で【${ifVitory ? "勝利" : "敗北"}】\n\n結果 ▶ ⚫️ ${scoreB.textContent} vs ${scoreW.textContent} ⚪️\n\n#リバーシWeb #オセロ #ReversiWeb\n\n👇 棋譜はこちら！\n${t_url}`;
+            tweetText = `${((typeof opponentName === 'undefined') ? "" : `${opponentName}に`)}${Math.abs(scoreB.textContent - scoreW.textContent)}石差で【${ifVitory ? "勝利" : "敗北"}】\n\n結果 ▶ ⚫️ ${scoreB.textContent} vs ${scoreW.textContent} ⚪️\n\n#リバーシWeb #オセロ #ReversiWeb\n\n👇 棋譜はこちら！\n${t_url}`;
             break;
     }
     const twitterIntentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
