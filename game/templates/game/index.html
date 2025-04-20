@@ -20,12 +20,11 @@
     {% endif %}
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'game/style.css' %}?v={{ TIMESTAMP }}" media="print" id="dynamic-css">
+    <link rel="stylesheet" href="{% static 'game/style.min.css' %}?v={{ TIMESTAMP }}" media="print" id="dynamic-css">
     <link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic&family=BIZ+UDPMincho:wght@400&display=swap" rel="stylesheet" media="print" id="dynamic-fonts" crossorigin="anonymous">
-    <script nonce="{{ request.csp_nonce }}">
-        const PLACE_STONE_SOUND = "{% static 'game/sounds/place-stone.mp3' %}";
+    <script nonce="{{ request.csp_nonce }}">const PLACE_STONE_SOUND="{% static 'game/sounds/place-stone.mp3' %}";
     </script>
-    <script defer src="{% static 'game/script.js' %}?v={{ TIMESTAMP }}"></script>
+    <script defer src="{% static 'game/script.min.js' %}?v={{ TIMESTAMP }}"></script>
     <!-- 翻訳後の文字列をmain.jsへ受け渡し-->
     {% with online_description=_("オンライン対戦モードで遠くの相手とオセロ対戦！強力なAIも完備。スマホ・PC対応。ダウンロード無しで今すぐ遊ぶ！") ai_description=_("初心者から上級者まで楽しめる、強力なオセロAIとWeb上で対戦！スマホ・PC両対応のサイトです。オンライン対戦も楽しめます。遊びやすいスマートなグラフィックが特徴。ダウンロード無しで今すぐプレイ！") player_description=_("Webサイト上で遊べる無料オセロゲーム（リバーシ）！友達や家族とのオンライン対戦、一人で遊べるAI対戦、そして電子オセロ盤の機能を搭載。スマホ・PC対応。ダウンロード無しで手軽にプレイ！") else_description=_("Webサイト上で遊べる無料オセロゲーム（リバーシ）！友達や家族とのオンライン対戦、一人で遊べるAI対戦、そして電子オセロ盤の機能を搭載。スマホ・PC対応。ダウンロード無しで手軽にプレイ！") %}
     <meta name="description" content="{% if mode == 'online' %}{{online_description}}{% elif mode == 'ai' %}{{ai_description}}{% elif mode == 'player' %}{{player_description}}{% else %}{{else_description}}{% endif %}">
@@ -232,46 +231,6 @@
     <link rel="alternate" hreflang="ja" href="{% if mode == 'online' %}https://reversi.yuki-lab.com/online/{% elif mode == 'ai' %}https://reversi.yuki-lab.com/ai/{% elif mode == 'player' %}https://reversi.yuki-lab.com/{% else %}https://reversi.yuki-lab.com/{% endif %}" />
     <link rel="alternate" hreflang="en" href="{% if mode == 'online' %}https://reversi.yuki-lab.com/en/online/{% elif mode == 'ai' %}https://reversi.yuki-lab.com/en/ai/{% elif mode == 'player' %}https://reversi.yuki-lab.com/en/{% else %}https://reversi.yuki-lab.com/en/{% endif %}" />
     <link rel="alternate" hreflang="x-default" href="https://reversi.yuki-lab.com/" />
-    <script nonce="{{ request.csp_nonce }}">
-        function loadGoogleAnalytics() {
-            var script = document.createElement('script');
-            script.src = "https://www.googletagmanager.com/gtag/js?id=G-4JKZC3VNE7";
-            script.async = true;
-            script.nonce = "{{ request.csp_nonce }}";
-            document.head.appendChild(script);
-            window.dataLayer = window.dataLayer || [];
-            window.gtag = function() { dataLayer.push(arguments); };
-            script.onload = function () {
-                gtag('js', new Date());
-                gtag('config', 'G-4JKZC3VNE7', { 'cookie_domain': 'auto' });
-            };
-            if ('requestIdleCallback' in window) {
-               requestIdleCallback(loadAdSense);
-            } else {
-               setTimeout(loadAdSense, 1000);
-            }
-        }
-        function loadAdSense() {
-            // まずMicrosoft Clarityを読み込み
-            (function(c,l,a,r,i,t,y){
-                console.log("Clarity script loaded");
-                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;t.nonce = "{{ request.csp_nonce }}";
-                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-            })(window, document, "clarity", "script", "qy90xxylfc");
-            if (!window.adsLoaded) {
-                window.adsLoaded = true;
-                var script = document.createElement('script');
-                script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1918692579240633";
-                script.defer = true;
-                script.nonce = "{{ request.csp_nonce }}";
-                document.head.appendChild(script);
-            }
-            //処理があらかた終わったら画像読み込み
-            preloadResultImages();
-        }
-        document.addEventListener("DOMContentLoaded", loadGoogleAnalytics);
-    </script>
 </head>
 <body>
 <div id="game-container">
@@ -570,12 +529,12 @@
     </div>
     <button id="close-result">{% trans "❌️ 閉じる" %}</button>
 </div>
-<script async src="https://js.stripe.com/v3/buy-button.js"></script>
-<stripe-buy-button buy-button-id="buy_btn_1RECBFDcG3TZKm81wruQ3l6a" publishable-key="pk_live_51R2tA2DcG3TZKm81EI5ZOMhRTf3wo5jDUPnFjdiJlN5kbzTlMRtCZz8JA5t9QHlpCGZvr45iF8Eg5LDh1Kvx9Giy00OUACb7Wh" id="buy-btn"></stripe-buy-button>
     <audio id="victorySound" src="{% static 'game/sounds/victory.mp3' %}" preload="none"></audio>
     <audio id="defeatSound" src="{% static 'game/sounds/defeat.mp3' %}" preload="none"></audio>
     <audio id="warningSound" src="{% static 'game/sounds/warning.mp3' %}" preload="auto"></audio>
     <audio id="playerJoin" src="{% static 'game/sounds/playerJoin.mp3' %}" preload="none"></audio>
+    <script async src="https://js.stripe.com/v3/buy-button.js"></script>
+    <stripe-buy-button buy-button-id="buy_btn_1RECBFDcG3TZKm81wruQ3l6a" publishable-key="pk_live_51R2tA2DcG3TZKm81EI5ZOMhRTf3wo5jDUPnFjdiJlN5kbzTlMRtCZz8JA5t9QHlpCGZvr45iF8Eg5LDh1Kvx9Giy00OUACb7Wh" id="buy-btn"></stripe-buy-button>
 </body>
 <script nonce="{{ request.csp_nonce }}" >
     if ('serviceWorker' in navigator) {

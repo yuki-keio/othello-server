@@ -30,9 +30,9 @@ const urlsToCache = [
     "/static/game/sounds/victory.mp3",
     "/static/game/sounds/place-stone.mp3",
     "/static/game/sounds/warning.mp3",
-    "/static/game/style.css",
+    "/static/game/style.min.css",
     "/static/game/strategy.css",
-    "/static/game/script.js",
+    "/static/game/script.min.js",
     "/static/game/confetti.browser.min.js",
 ];
 

@@ -40,8 +40,10 @@ web_othello/
 │   ├── static/                   # 静的ファイル（CSS, JS, 画像）
 │   │   ├── game/
 │   │   │   ├── style.css
+│   │   │   ├── style.min.css
 │   │   │   ├── sw.js
 │   │   │   ├── script.js
+│   │   │   ├── script.min.js
 │   │   │   ├── sounds/
 │   │   │   │   ├── place-stone.mp3
 │   │   │   │   ├── victory.mp3

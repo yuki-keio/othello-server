@@ -6,16 +6,11 @@ const turnDisplay = document.getElementById('turn_display');
 const moveListElement = document.getElementById('move-list');
 const copyUrlBtn = document.getElementById("copy-url-btn");
 
-const startMatchBtn = document.getElementById("start-match");
-const overlay = document.getElementById("game-settings-overlay");
-
-const surrenderBtn = document.getElementById('surrender-btn');
-
 //音関係----
+const playerJoin = document.getElementById('playerJoin');
 const warningSound = document.getElementById('warningSound');
 const victorySound = document.getElementById('victorySound');
 const defeatSound = document.getElementById('defeatSound');
-const playerJoin = document.getElementById('playerJoin');
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 let placeStoneBuffer = null;
 let placeStoneBufferPromise = null;
@@ -30,22 +25,25 @@ let onlineGameStarted = false;
 
 let deferredPrompt;
 
-// プレイヤーの一意なIDを取得・保存（なければ新規作成）
-let playerId = localStorage.getItem("playerId");
-if (!playerId) {
-    playerId = crypto.randomUUID();
-    localStorage.setItem("playerId", playerId);
-}
+const startMatchBtn = document.getElementById("start-match");
+const overlay = document.getElementById("game-settings-overlay");
+const surrenderBtn = document.getElementById('surrender-btn');
+const ws_scheme = window.location.protocol === "https:" ? "wss" : "ws";
 // プレイヤー名を取得・保存（なければ新規作成）
 let playerName = localStorage.getItem("playerName");
 if (!playerName) {
     playerName = "player" + Math.floor(Math.random() * 1000); // デフォルトの名前を設定
     localStorage.setItem("playerName", playerName);
 }
+// プレイヤーの一意なIDを取得・保存（なければ新規作成）
+let playerId = localStorage.getItem("playerId");
+if (!playerId) {
+    playerId = crypto.randomUUID();
+    localStorage.setItem("playerId", playerId);
+}
 
 const gUrlParams = new URLSearchParams(window.location.search);
 let gameRoom = gUrlParams.get('room');
-const ws_scheme = window.location.protocol === "https:" ? "wss" : "ws";
 
 let socket = null;
 
@@ -655,7 +653,7 @@ function loadBoardFromURL() {
             };
             const url = new URL(window.location);
             url.searchParams.delete("room");
-            history.pushState(null, "", url);
+            history.replaceState(null, "", url);
             online = false;
             if (socket) {
                 socket.close();
@@ -1537,77 +1535,6 @@ function showInstallPrompt() {
     });
 }
 
-// サーバーから受信したパスメッセージに基づいて、ターン更新と表示を行う
-function processPassMessage(data) {
-    console.log(`[processPassMessage] Received pass message: ${JSON.stringify(data)}, old currentPlayer: ${currentPlayer}`);
-    // data.new_turn がサーバーから送信された新しい手番
-    currentPlayer = data.new_turn;
-
-    if (currentPlayer === role_online) {
-        alert(lang.opponent_pass);
-    } else {
-        alert(lang.you_pass);
-
-    }
-
-    // 状態更新（タイマーの再設定や手番表示更新）
-    updateStatus();
-}
-
-// 石を置いたときにサーバーに送信
-function sendMove(row, col) {
-
-    const message = {
-        action: "place_stone",
-        row: row,
-        col: col,
-        player: currentPlayer
-    };
-    console.log("Sending WebSocket move:", message);
-    console.log("online?:", online);
-    socket.send(JSON.stringify(message));
-}
-
-function onlineUI() {
-    // 通信対戦モードの場合のUI調整
-    if (gameMode === 'online') {
-
-        //設定から時間やハイライトを変更できないように消す
-        document.getElementById('timeLimitContainer').style.display = 'none';
-        document.getElementById('validContainer').style.display = 'none';
-
-    } else {
-        console.log("エラー：offline");
-    }
-}
-
-function updatePlayerList(players) {
-    console.log(`[updatePlayerList] Updating player list: ${JSON.stringify(players)}`);
-    const playerListElement = document.getElementById('player-list');
-    playerListElement.innerHTML = ''; // クリア
-
-    Object.entries(players).forEach(([id, [ws_role, name]]) => {
-        const role = (ws_role === "black") ? lang.black : (ws_role === "white") ? lang.white : lang.spec;
-        const span = document.createElement('span');
-        if (id === playerId) {
-            span.style.fontWeight = 'bold';
-            display_player_name = lang.you + `（${name}）`;
-        } else {
-            display_player_name = name;
-            if (ws_role !== "spectator") {
-                opponentName = name;
-            }
-        }
-        span.innerHTML = ((role !== lang.black) ? "　" : "") + `${(role === lang.black) ? '<span id="black_circle"></span>' : (role === lang.white) ? '<span id="white_circle"></span>' : role + ":"} ${escapeHTML(display_player_name)}`;
-        playerListElement.appendChild(span);
-    });
-    if (Object.keys(players).length === 1) {
-        const span = document.createElement('span');
-        span.innerHTML = '　<span id="white_circle"></span> ' + lang.opponent;
-        playerListElement.appendChild(span);
-    }
-}
-
 function changeHead() {
     let titleText, metaDescription, canonicalUrl;
 
@@ -1649,6 +1576,43 @@ function changeHead() {
     }
     canonicalTag.setAttribute("href", canonicalUrl);
 }
+function loadGoogleAnalytics() {
+    var script = document.createElement('script');
+    script.src = "https://www.googletagmanager.com/gtag/js?id=G-4JKZC3VNE7";
+    script.async = true;
+    script.nonce = "{{ request.csp_nonce }}";
+    document.head.appendChild(script);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function() { dataLayer.push(arguments); };
+    script.onload = function () {
+        gtag('js', new Date());
+        gtag('config', 'G-4JKZC3VNE7', { 'cookie_domain': 'auto' });
+    };
+    if ('requestIdleCallback' in window) {
+       requestIdleCallback(loadAdSense);
+    } else {
+       setTimeout(loadAdSense, 1000);
+    }
+}
+function loadAdSense() {
+    // まずMicrosoft Clarityを読み込み
+    (function(c,l,a,r,i,t,y){
+        console.log("Clarity script loaded");
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;t.nonce = "{{ request.csp_nonce }}";
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "qy90xxylfc");
+    if (!window.adsLoaded) {
+        window.adsLoaded = true;
+        var script = document.createElement('script');
+        script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1918692579240633";
+        script.defer = true;
+        script.nonce = "{{ request.csp_nonce }}";
+        document.head.appendChild(script);
+    }
+    //処理があらかた終わったら画像読み込み
+    preloadResultImages();
+}
 
 //音量調整
 victorySound.volume = 0.013;
@@ -1662,7 +1626,12 @@ if (timeLimit === 0) {
 } else {
     document.getElementById("timeLimitBox_").style.display = "block";
 };
-
+if (document.readyState !== "loading") {
+    document.removeEventListener("DOMContentLoaded", _DOMContenLoaded);
+    _DOMContenLoaded();
+} else {
+    window.addEventListener('DOMContentLoaded', _DOMContenLoaded);
+}
 //画面トップに表示されるモード切り替えバナー
 document.querySelectorAll('.mode-btn').forEach(btn => {
     btn.addEventListener('click', function () {
@@ -1715,218 +1684,64 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
     });
 });
 
-if (document.readyState !== "loading") {
-    document.removeEventListener("DOMContentLoaded", _DOMContenLoaded);
-    _DOMContenLoaded();
-} else {
-    window.addEventListener('DOMContentLoaded', _DOMContenLoaded);
-}
+// サーバーから受信したパスメッセージに基づいて、ターン更新と表示を行う
+function processPassMessage(data) {
+    console.log(`[processPassMessage] Received pass message: ${JSON.stringify(data)}, old currentPlayer: ${currentPlayer}`);
+    // data.new_turn がサーバーから送信された新しい手番
+    currentPlayer = data.new_turn;
 
-function _DOMContenLoaded() {
-    const inviteBtn = document.getElementById("qr");
-    const qrPopup = document.getElementById("qr-popup");
-    const qrcodeContainer = document.getElementById("qrcode");
-    var link = document.getElementById("dynamic-fonts");
-    var dcss = document.getElementById("dynamic-css");
-    if (link) {
-        link.media = "all";
-    }
-    if (dcss) {
-        dcss.media = "all";
-    }
-    const savedScrollY = sessionStorage.getItem("scrollY");
-    console.log("scrollY", savedScrollY);
-    if (savedScrollY !== null) {
-        window.scrollTo(0, parseInt(savedScrollY));
-        sessionStorage.removeItem("scrollY");
-    }
-    placeStoneBufferPromise = getAudioBuffer(PLACE_STONE_SOUND).then(buffer => {
-        console.log("Audio preloaded");
-    }).catch(e => console.error("Failed to preload audio:", e));
-
-    if (inviteBtn && qrPopup && qrcodeContainer) {
-
-        inviteBtn.addEventListener("click", function () {
-            const inviteUrl = window.location.href;  // 現在のURLを取得
-            qrcodeContainer.innerHTML = "";  // QRコードをクリア
-            console.log("qr")
-            new QRCode(qrcodeContainer, {
-                text: inviteUrl,
-                width: 200,
-                height: 200
-            });
-
-            qrPopup.style.display = "flex";  // ポップアップを表示
-
-            document.addEventListener("click", (e) => {
-                // closest() で親要素をたどって .popup-content が見つかるかどうかを確認
-                if (!e.target.closest(".qr-popup") && e.target.id !== "qr-icon") {
-                    // 外側をクリックしたらポップアップを非表示
-                    console.log("close" + e.target);
-                    qrPopup.style.display = "none";
-                }
-            });
-        });
-    }
-
-    document.getElementById("title").addEventListener("click", function () {
-        if (gameMode === "ai") {
-        } else {
-            location.reload(); // ページをリロード
-        }
-
-    });
-    if (startMatchBtn && overlay) {
-        startMatchBtn.addEventListener("click", function () {
-
-            copyURLToClipboard(true);
-
-        });
-    }
-
-    document.querySelectorAll('.mode-btn').forEach(btn => {
-        if (btn.getAttribute('data-mode') === gameMode) {
-            btn.classList.add('active');
-        }
-    });
-
-    if (gameMode === 'online') {
-        onlineUI();
-        online = true;
-        if (gameRoom === null) {
-            restart(false); //リロードはfalse
-        }
-        document.getElementById("playerJoinSoundBox").style.display = "block";
+    if (currentPlayer === role_online) {
+        alert(lang.opponent_pass);
     } else {
-        online = false;
-        const url = new URL(window.location);
-        url.searchParams.delete("room");
-        history.replaceState(null, "", url);
-
-        if (socket) {
-            socket.close();
-            socket = null;
-        }
-        document.getElementById("playerJoinSoundBox").style.display = "none";
-        if (gameMode === 'ai') {
-            document.getElementById('level_ai').style.display = 'block';
-        } else {
-            document.getElementById('level_ai').style.display = 'none';
-        }
+        alert(lang.you_pass);
     }
-
-    if (gameMode === 'ai') {
-        initAIMode()
-    }
+    // 状態更新（タイマーの再設定や手番表示更新）
+    updateStatus();
 }
-function initAIMode() {
-    const aiLevelSelect = document.getElementById('aiLevelSelect');
+// 石を置いたときにサーバーに送信
+function sendMove(row, col) {
 
-    document.getElementById("ai-level-display").addEventListener("click", function () {
-        const popup = document.getElementById('ai-level-popup');
-        popup.style.display = popup.style.display !== 'block' ? 'block' : 'none';
-        updateAiLevelDisplay();
-    });
-    // 保存されたAIレベル解放状況を確認
-    const unlockedLevels = JSON.parse(localStorage.getItem('unlockedAiLevels') || '{"0":true,"1":true,"2":true,"6":true}');
-    console.log(`[aiLevelSelect] Unlocked levels: ${JSON.stringify(unlockedLevels)}`);
-    // ロックされたレベルを処理
-    const lockedOptions = document.querySelectorAll('.locked-level');
-    lockedOptions.forEach(option => {
-        const unlockLevel = option.getAttribute('data-unlock-level')
-        console.log(`[aiLevelSelect] Locking level v ${option.getAttribute("data-level")}`);
-        console.log(`[aiLevelSelect] Locking level t ${option.textContent}`);
-        if (unlockedLevels[option.getAttribute("data-level") || option.value]) {
-            option.classList.remove('locked-level');
-            option.disabled = false;
-            option.style.display = '';
-        } else if (unlockedLevels[unlockLevel]) {
-            const level_before = document.querySelector('#aiLevelSelect option[value="' + unlockLevel + '"]');
-            if (option.getAttribute("data-level")) {
-                langNextAIName = option.textContent;
-            }
-            switch (langCode) {
-                case "en":
-                    option.textContent = `Next Level: Defeat ${level_before.textContent} to unlock`;
-                    break;
-                default:
-                    option.textContent = `次のレベル : ${level_before.textContent}AIに勝利で解放`;
-                    break;
-            }
-            option.disabled = true;
-        } else {
-            option.style.display = 'none';
-        }
-    });
-    // AIに勝った時のイベントハンドラ
-    window.unlockNextAiLevel = function (currentLevel) {
-        const nextLevelOption = Array.from(aiLevelSelect.querySelectorAll('.locked-level')).find(
-            option => option.getAttribute('data-unlock-level') == currentLevel
-        );
-
-        if (nextLevelOption) {
-            const nextLevel = nextLevelOption.value;
-            unlockedLevels[nextLevel] = true;
-            localStorage.setItem('unlockedAiLevels', JSON.stringify(unlockedLevels));
-            // 解放メッセージを表示
-            alert(lang.congrats_aiLevel_unlocked_b + langNextAIName + lang.congrats_aiLevel_unlocked_a);
-            document.getElementById('restart-match').textContent = lang.nextLevel;
-            localStorage.setItem('aiLevel', nextLevel);
-        }
+    const message = {
+        action: "place_stone",
+        row: row,
+        col: col,
+        player: currentPlayer
     };
+    console.log("Sending WebSocket move:", message);
+    console.log("online?:", online);
+    socket.send(JSON.stringify(message));
+}
+function onlineUI() {
 
-    // AIレベル表示の更新関数
-    function updateAiLevelDisplay() {
-        const currentLevel = aiLevelSelect.options[aiLevelSelect.selectedIndex].text;
-        const displayEl = document.getElementById('ai-level-display');
-        displayEl.textContent = `${currentLevel} AI`;
+    //設定から時間やハイライトを変更できないように消す
+    document.getElementById('timeLimitContainer').style.display = 'none';
+    document.getElementById('validContainer').style.display = 'none';
+}
+function updatePlayerList(players) {
+    console.log(`[updatePlayerList] Updating player list: ${JSON.stringify(players)}`);
+    const playerListElement = document.getElementById('player-list');
+    playerListElement.innerHTML = ''; // クリア
 
-        // ポップアップ内の選択状態も更新
-        const levelItems = document.querySelectorAll('.ai-level-item');
-        levelItems.forEach(item => {
-            if (item.getAttribute('data-level') === aiLevelSelect.value) {
-                item.classList.add('selected');
-            } else {
-                item.classList.remove('selected');
+    Object.entries(players).forEach(([id, [ws_role, name]]) => {
+        const role = (ws_role === "black") ? lang.black : (ws_role === "white") ? lang.white : lang.spec;
+        const span = document.createElement('span');
+        if (id === playerId) {
+            span.style.fontWeight = 'bold';
+            display_player_name = lang.you + `（${name}）`;
+        } else {
+            display_player_name = name;
+            if (ws_role !== "spectator") {
+                opponentName = name;
             }
-        });
-
-    }
-
-    // AIレベル選択時の処理
-    const levelItems = document.querySelectorAll('.ai-level-item');
-    levelItems.forEach(item => {
-        item.addEventListener('click', function () {
-            // ロックされたレベルは選択不可
-            if (this.classList.contains('locked-level')) {
-                return;
-            }
-            const level = this.getAttribute('data-level');
-            aiLevelSelect.value = level;
-            // 既存のchangeイベントをトリガー
-            const event = new Event('change');
-            aiLevelSelect.dispatchEvent(event);
-            updateAiLevelDisplay();
-            document.getElementById('ai-level-popup').style.display = 'none';
-            const __url = new URL(window.location);
-            __url.searchParams.delete("moves");
-            __url.searchParams.delete("won");
-            __url.searchParams.set('aiLevel', level);
-            history.pushState(null, "", __url);
-            location.reload();
-        });
-    });
-
-    // ポップアップ外クリックで閉じる
-    document.addEventListener('click', function (e) {
-        const popup = document.getElementById('ai-level-popup');
-        if (popup.style.display === 'block' && !popup.contains(e.target) && e.target !== document.getElementById('ai-level-display')) {
-            popup.style.display = 'none';
         }
+        span.innerHTML = ((role !== lang.black) ? "　" : "") + `${(role === lang.black) ? '<span id="black_circle"></span>' : (role === lang.white) ? '<span id="white_circle"></span>' : role + ":"} ${escapeHTML(display_player_name)}`;
+        playerListElement.appendChild(span);
     });
-    aiLevelSelect.addEventListener('change', updateAiLevelDisplay);
-    // 初期表示を設定
-    setTimeout(updateAiLevelDisplay, 100);
+    if (Object.keys(players).length === 1) {
+        const span = document.createElement('span');
+        span.innerHTML = '　<span id="white_circle"></span> ' + lang.opponent;
+        playerListElement.appendChild(span);
+    }
 }
 function sendSettings() {
     let overlayTimeLimit = timelimit_el.value;
@@ -1940,7 +1755,6 @@ function sendSettings() {
     socket.send(JSON.stringify({ action: "game_setting", time_limit: timeLimit, show_valid_moves: showValidMoves, player_name: playerName }));
 
 }
-
 function makeSocket() {
 
     socket = new WebSocket(`${ws_scheme}://${window.location.host}/ws/othello/${gameRoom}/?playerId=${playerId}&timeLimit=${timeLimit}&showValidMoves=${showValidMoves}&playerName=${encodeURIComponent(playerName)}&lang=${langCode}`);
@@ -2066,6 +1880,202 @@ function toHalfWidth(str) {
         return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
     });
 }
+
+function _DOMContenLoaded() {
+    const inviteBtn = document.getElementById("qr");
+    const qrPopup = document.getElementById("qr-popup");
+    const qrcodeContainer = document.getElementById("qrcode");
+    var link = document.getElementById("dynamic-fonts");
+    var dcss = document.getElementById("dynamic-css");
+    if (link) {
+        link.media = "all";
+    }
+    if (dcss) {
+        dcss.media = "all";
+    }
+    const savedScrollY = sessionStorage.getItem("scrollY");
+    console.log("scrollY", savedScrollY);
+    if (savedScrollY !== null) {
+        window.scrollTo(0, parseInt(savedScrollY));
+        sessionStorage.removeItem("scrollY");
+    }
+    placeStoneBufferPromise = getAudioBuffer(PLACE_STONE_SOUND).then(buffer => {
+        console.log("Audio preloaded");
+    }).catch(e => console.error("Failed to preload audio:", e));
+
+    document.getElementById("title").addEventListener("click", function () {
+        if (gameMode === "ai") {
+        } else {
+            location.reload(); // ページをリロード
+        }
+    });
+
+    document.querySelectorAll('.mode-btn').forEach(btn => {
+        if (btn.getAttribute('data-mode') === gameMode) {
+            btn.classList.add('active');
+        }
+    });
+    if (gameMode === 'online') {
+        inviteBtn.addEventListener("click", function () {
+            const inviteUrl = window.location.href;  // 現在のURLを取得
+            qrcodeContainer.innerHTML = "";  // QRコードをクリア
+            console.log("qr")
+            new QRCode(qrcodeContainer, {
+                text: inviteUrl,
+                width: 200,
+                height: 200
+            });
+    
+            qrPopup.style.display = "flex";  // ポップアップを表示
+    
+            document.addEventListener("click", (e) => {
+                // closest() で親要素をたどって .popup-content が見つかるかどうかを確認
+                if (!e.target.closest(".qr-popup") && e.target.id !== "qr-icon") {
+                    // 外側をクリックしたらポップアップを非表示
+                    console.log("close" + e.target);
+                    qrPopup.style.display = "none";
+                }
+            });
+        });
+        startMatchBtn.addEventListener("click", function () {
+            copyURLToClipboard(true);
+        });
+        onlineUI();
+        online = true;
+        document.getElementById("playerJoinSoundBox").style.display = "block";
+        if (gameRoom === null) {
+            restart(false); //リロードはfalse
+        }
+    }else{
+        online = false;
+        const url = new URL(window.location);
+        url.searchParams.delete("room");
+        history.replaceState(null, "", url);
+
+        if (socket) {
+            socket.close();
+            socket = null;
+        }
+        document.getElementById("playerJoinSoundBox").style.display = "none";
+        if (gameMode === 'ai') {
+            document.getElementById('level_ai').style.display = 'block';
+        } else {
+            document.getElementById('level_ai').style.display = 'none';
+        }
+    }
+    if (gameMode === 'ai') {
+        initAIMode()
+    }
+    loadGoogleAnalytics();
+}
+function initAIMode() {
+    const aiLevelSelect = document.getElementById('aiLevelSelect');
+
+    document.getElementById("ai-level-display").addEventListener("click", function () {
+        const popup = document.getElementById('ai-level-popup');
+        popup.style.display = popup.style.display !== 'block' ? 'block' : 'none';
+        updateAiLevelDisplay();
+    });
+    // 保存されたAIレベル解放状況を確認
+    const unlockedLevels = JSON.parse(localStorage.getItem('unlockedAiLevels') || '{"0":true,"1":true,"2":true,"6":true}');
+    console.log(`[aiLevelSelect] Unlocked levels: ${JSON.stringify(unlockedLevels)}`);
+    // ロックされたレベルを処理
+    const lockedOptions = document.querySelectorAll('.locked-level');
+    lockedOptions.forEach(option => {
+        const unlockLevel = option.getAttribute('data-unlock-level')
+        console.log(`[aiLevelSelect] Locking level v ${option.getAttribute("data-level")}`);
+        console.log(`[aiLevelSelect] Locking level t ${option.textContent}`);
+        if (unlockedLevels[option.getAttribute("data-level") || option.value]) {
+            option.classList.remove('locked-level');
+            option.disabled = false;
+            option.style.display = '';
+        } else if (unlockedLevels[unlockLevel]) {
+            const level_before = document.querySelector('#aiLevelSelect option[value="' + unlockLevel + '"]');
+            if (option.getAttribute("data-level")) {
+                langNextAIName = option.textContent;
+            }
+            switch (langCode) {
+                case "en":
+                    option.textContent = `Next Level: Defeat ${level_before.textContent} to unlock`;
+                    break;
+                default:
+                    option.textContent = `次のレベル : ${level_before.textContent}AIに勝利で解放`;
+                    break;
+            }
+            option.disabled = true;
+        } else {
+            option.style.display = 'none';
+        }
+    });
+    // AIに勝った時のイベントハンドラ
+    window.unlockNextAiLevel = function (currentLevel) {
+        const nextLevelOption = Array.from(aiLevelSelect.querySelectorAll('.locked-level')).find(
+            option => option.getAttribute('data-unlock-level') == currentLevel
+        );
+
+        if (nextLevelOption) {
+            const nextLevel = nextLevelOption.value;
+            unlockedLevels[nextLevel] = true;
+            localStorage.setItem('unlockedAiLevels', JSON.stringify(unlockedLevels));
+            // 解放メッセージを表示
+            alert(lang.congrats_aiLevel_unlocked_b + langNextAIName + lang.congrats_aiLevel_unlocked_a);
+            document.getElementById('restart-match').textContent = lang.nextLevel;
+            localStorage.setItem('aiLevel', nextLevel);
+        }
+    };
+
+    // AIレベル表示の更新関数
+    function updateAiLevelDisplay() {
+        const currentLevel = aiLevelSelect.options[aiLevelSelect.selectedIndex].text;
+        const displayEl = document.getElementById('ai-level-display');
+        displayEl.textContent = `${currentLevel} AI`;
+
+        // ポップアップ内の選択状態も更新
+        const levelItems = document.querySelectorAll('.ai-level-item');
+        levelItems.forEach(item => {
+            if (item.getAttribute('data-level') === aiLevelSelect.value) {
+                item.classList.add('selected');
+            } else {
+                item.classList.remove('selected');
+            }
+        });
+
+    }
+    // AIレベル選択時の処理
+    const levelItems = document.querySelectorAll('.ai-level-item');
+    levelItems.forEach(item => {
+        item.addEventListener('click', function () {
+            // ロックされたレベルは選択不可
+            if (this.classList.contains('locked-level')) {
+                return;
+            }
+            const level = this.getAttribute('data-level');
+            aiLevelSelect.value = level;
+            // 既存のchangeイベントをトリガー
+            const event = new Event('change');
+            aiLevelSelect.dispatchEvent(event);
+            updateAiLevelDisplay();
+            document.getElementById('ai-level-popup').style.display = 'none';
+            const __url = new URL(window.location);
+            __url.searchParams.delete("moves");
+            __url.searchParams.delete("won");
+            __url.searchParams.set('aiLevel', level);
+            history.pushState(null, "", __url);
+            location.reload();
+        });
+    });
+
+    // ポップアップ外クリックで閉じる
+    document.addEventListener('click', function (e) {
+        const popup = document.getElementById('ai-level-popup');
+        if (popup.style.display === 'block' && !popup.contains(e.target) && e.target !== document.getElementById('ai-level-display')) {
+            popup.style.display = 'none';
+        }
+    });
+    aiLevelSelect.addEventListener('change', updateAiLevelDisplay);
+    // 初期表示を設定
+    setTimeout(updateAiLevelDisplay, 100);
+}
 // 音声をロード（すでにロード済みなら再利用）
 async function getAudioBuffer(url) {
     if (placeStoneBuffer) return placeStoneBuffer;
@@ -2157,17 +2167,6 @@ window.addEventListener("appinstalled", () => {
         "Won": ifVitory,
     });
 });
-// 降伏ボタンをクリックしたとき、確認後にサーバーへ降伏メッセージを送信
-if (surrenderBtn) {
-    surrenderBtn.addEventListener('click', () => {
-        if (confirm(lang.surrender_right)) {
-            socket.send(JSON.stringify({ action: "surrender" }));
-        }
-    });
-    document.getElementById("info-button").addEventListener("click", function () {
-        alert(`${lang.how2play_with_friend}`);
-    });
-}
 // 設定変更時に Local Storage に保存
 document.getElementById('showValidMovesCheckbox').addEventListener('change', () => {
     showValidMoves = document.getElementById('showValidMovesCheckbox').checked;
@@ -2189,6 +2188,17 @@ if (closeRoleDialog_el) {
     }
     );
 
+}
+// 降伏ボタンをクリックしたとき、確認後にサーバーへ降伏メッセージを送信
+if (surrenderBtn) {
+    surrenderBtn.addEventListener('click', () => {
+        if (confirm(lang.surrender_right)) {
+            socket.send(JSON.stringify({ action: "surrender" }));
+        }
+    });
+    document.getElementById("info-button").addEventListener("click", function () {
+        alert(`${lang.how2play_with_friend}`);
+    });
 }
 const playerName_el = document.getElementById('player-name');
 if (playerName_el) {
@@ -2213,7 +2223,6 @@ if (playerName_el) {
         } else {
             warning.textContent = lang.warn_charLimit;
         }
-
     });
 }
 document.getElementById("setting").addEventListener('click', () => {

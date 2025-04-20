@@ -1,0 +1,13 @@
+{
+    "private": true,
+    "scripts": {
+      "build:js": "esbuild game/static/game/script.js --bundle --minify --target=es2018 --outfile=game/static/game/script.min.js",
+      "build:css": "esbuild game/static/game/style.css --bundle --minify --outfile=game/static/game/style.min.css",
+      "build": "npm run build:js && npm run build:css",
+      "heroku-postbuild": "npm run build"
+    },
+    "devDependencies": {
+      "esbuild": "^0.23.0"
+    }
+  }
+  

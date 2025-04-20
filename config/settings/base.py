@@ -77,6 +77,7 @@ INSTALLED_APPS = [
     'django_otp',
     'django_otp.plugins.otp_totp',
     'axes',
+    'htmlmin',
 ]
 
 MIDDLEWARE = [
@@ -92,7 +93,14 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'axes.middleware.AxesMiddleware',
+    'htmlmin.middleware.HtmlMinifyMiddleware',
+    'htmlmin.middleware.MarkRequestMiddleware',
 ]
+
+HTML_MINIFY = True
+KEEP_COMMENTS_ON_MINIFYING = False
+EXCLUDE_FROM_MINIFYING = ('^admin/', '^api/')  # 例: 管理画面とAPI系のURLを除外
+
 
 # Axesの設定（10回失敗でロック）
 AXES_FAILURE_LIMIT = 10  # 失敗回数
