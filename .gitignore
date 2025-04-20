@@ -121,5 +121,8 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
+
+node_modules/
+
 # my personal notes
 notes.md
