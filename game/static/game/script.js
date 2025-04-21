@@ -71,7 +71,7 @@ let currentPlayerTimer;
 
 let gameEnded = false;
 let share_winner = "";
-let ifVitory = false;
+let ifVictory = false;
 
 //言語設定
 let langCode = "ja";
@@ -236,7 +236,9 @@ async function applyServerMove(row, col, player, status, final = false) {
     flipDiscs(row, col, player);
     recordMove(row, col, status);
     if (!online && isBoardFull()) {
-        endGame("offline");
+        if (status !== 1) {
+            endGame("offline");
+        }
     } else {
         currentPlayer = (player === 'black') ? 'white' : 'black';
 
@@ -610,7 +612,6 @@ function loadBoardFromURL() {
         timeLimit = 0;
         stopTimer();
     }
-
     if (modeFromPath) {
         gameMode = modeFromPath;
         localStorage.setItem('gameMode', gameMode);
@@ -623,7 +624,6 @@ function loadBoardFromURL() {
 
         if (gameMode === "ai") {
             document.getElementById('level_ai').style.display = 'block';
-
         } else {
             document.getElementById('level_ai').style.display = 'none';
             const tp_url = new URL(window.location);
@@ -675,7 +675,17 @@ function loadBoardFromURL() {
 
             replayMovesUpToIndex(moveHistory.length - 1);
             if (won) {
-                endGame("offline", won);
+                switch (urlParams.get('w')) {
+                    case "y":
+                        endGame("offline", won, 1);// 勝利
+                        break;
+                    case "n":
+                        endGame("offline", won, 0);// 敗北
+                        break;
+                    default:
+                        endGame("offline", won);
+                        break;
+                }
                 timeLimit = 0;
             }
         }
@@ -712,10 +722,10 @@ function copyURLToClipboard(matchRoom = false, fromResult = false) {
         }
         switch (langCode) {
             case "en":
-                copyText = `${ifVitory ? "Victory!" : "Defeated..."}\nI played against ${opponentName} and ${ifVitory ? "won" : "lost"} by ${Math.abs(scoreB.textContent - scoreW.textContent)} points.\n\n【Final Score】 ⚫️ ${scoreB.textContent} : ${scoreW.textContent} ⚪️\n\n#ReversiWeb #Othello\n\n👇 Game record:\n${copyText}`;
+                copyText = `${ifVictory ? "Victory!" : "Defeated..."}\nI played against ${opponentName} and ${ifVictory ? "won" : "lost"} by ${Math.abs(scoreB.textContent - scoreW.textContent)} points.\n\n【Final Score】 ⚫️ ${scoreB.textContent} : ${scoreW.textContent} ⚪️\n\n#ReversiWeb #Othello\n\n👇 Game record:\n${copyText}`;
                 break;
             default:
-                copyText = `${opponentName}に${Math.abs(scoreB.textContent - scoreW.textContent)}石差で【${ifVitory ? "勝利" : "敗北"}】\n\n結果 ▶ ⚫️ ${scoreB.textContent} vs ${scoreW.textContent} ⚪️\n\n#リバーシWeb #オセロ #ReversiWeb\n\n👇 棋譜はこちら！\n${copyText}`;
+                copyText = `${opponentName}に${Math.abs(scoreB.textContent - scoreW.textContent)}石差で【${ifVictory ? "勝利" : "敗北"}】\n\n結果 ▶ ⚫️ ${scoreB.textContent} vs ${scoreW.textContent} ⚪️\n\n#リバーシWeb #オセロ #ReversiWeb\n\n👇 棋譜はこちら！\n${copyText}`;
                 break;
         }
     } else {
@@ -1149,7 +1159,7 @@ function evaluateBoard(board) {
     // AIレベルに応じた評価戦略
     if (aiLevel > 1) {
         if (aiLevel === 6) {
-            //! 「最弱級」指定のAI。評価関数は敢えて反転させる
+            // 「最弱級」指定のAI。評価関数は敢えて反転させる
             return blackScore - whiteScore;
         }
         return whiteScore - blackScore;
@@ -1198,8 +1208,12 @@ function showLoading(after = 1000) {
         document.body.appendChild(loadingOverlay);
     }, after);
 }
-function endGame(online_data, winner = null) {
-    ifVitory = false;
+function endGame(online_data, winner = null, y = -1) {
+    if (y) {
+        ifVictory = true;
+    } else {
+        ifVictory = false;
+    }
     console.log(`[endGame] Game ended. Winner: ${winner}` + "gameMode:" + gameMode);
     const blackCount = gameBoard.flat().filter(cell => cell === 'black').length;
     const whiteCount = gameBoard.flat().filter(cell => cell === 'white').length;
@@ -1294,9 +1308,7 @@ function endGame(online_data, winner = null) {
                 });;
             }
             launchConfetti();
-
         }
-
     } else {
         share_winner = "won";
 
@@ -1353,7 +1365,7 @@ function endGame(online_data, winner = null) {
     document.getElementById('score_display').innerHTML = `${result} | <span id="black_circle"></span> ${blackCount} : ${whiteCount} <span id="white_circle"></span>`;
     if (typeof gtag !== 'undefined') {
         gtag('event', 'game_result', {
-            'result': ifVitory,
+            'result': ifVictory,
             'gameMode': gameMode,
             'player_id': playerId,
             'timeLimit': timeLimit,
@@ -1370,12 +1382,21 @@ function endGame(online_data, winner = null) {
     }
     url = new URL(window.location);
     url.searchParams.set('won', share_winner);
+    if (ifVictory) {
+        url.searchParams.set('w', "y");
+    }
     history.pushState(null, '', url);
 
     const winner_final = share_winner === "won" ? (blackCount > whiteCount ? "black" : "white") : share_winner;
 
     stopTimer();
-    showResultPopup(ifVitory, blackCount, whiteCount, winner_final);
+    if (winner !== "won") {
+        showResultPopup(ifVictory, blackCount, whiteCount, winner_final);
+    } else if (y === 1) {
+        showResultPopup(true, blackCount, whiteCount, winner_final);
+    } else if (y === 0) {
+        showResultPopup(false, blackCount, whiteCount, winner_final);
+    }
     setTimeout(() => {
         gameFinishedCount++;
         localStorage.setItem('gameFinishedCount', gameFinishedCount);
@@ -1389,7 +1410,7 @@ function endGame(online_data, winner = null) {
         } else if (isIOS() && !window.navigator.standalone && gameFinishedCount === 3) {
             iOSinstallGuide();
         } else {
-            if (gameMode === "ai" && ifVitory) {
+            if (gameMode === "ai" && ifVictory) {
                 const currentAiLevel = document.getElementById('aiLevelSelect').value;
                 if (window.unlockNextAiLevel) {
                     window.unlockNextAiLevel(currentAiLevel);
@@ -1403,7 +1424,7 @@ function launchConfetti() {
     const rect = board.getBoundingClientRect()
     const windowHeight = window.innerHeight;
     const originY = (rect.top + rect.height) / windowHeight;
-    ifVitory = true;
+    ifVictory = true;
     if (typeof confetti === 'undefined') return;
     confetti({
         particleCount: 150,
@@ -1505,7 +1526,7 @@ function showResultPopup(victory, scoreBlack, scoreWhite, f_winner) {
             }
             break;
         default:
-            rMessage.textContent = (victory ? "🏆️ " : "") + ((typeof opponentName === 'undefined') ? ((f_winner === "black") ? "黒が" : "白が") : `${opponentName}に`) + `${Math.abs(scoreBlack - scoreWhite)}点差で${ifVitory ? "勝利！" : _draw ? "引き分け" : "敗北"}`;
+            rMessage.textContent = (victory ? "🏆️ " : "") + ((typeof opponentName === 'undefined') ? ((f_winner === "black") ? "黒が" : "白が") : `${opponentName}に`) + `${Math.abs(scoreBlack - scoreWhite)}点差で${ifVictory ? "勝利！" : _draw ? "引き分け" : "敗北"}`;
             break;
     }
     scoreDiff.textContent = `⚫️ ${scoreBlack} : ${scoreWhite} ⚪️`;
@@ -1583,24 +1604,24 @@ function loadGoogleAnalytics() {
     script.nonce = "{{ request.csp_nonce }}";
     document.head.appendChild(script);
     window.dataLayer = window.dataLayer || [];
-    window.gtag = function() { dataLayer.push(arguments); };
+    window.gtag = function () { dataLayer.push(arguments); };
     script.onload = function () {
         gtag('js', new Date());
         gtag('config', 'G-4JKZC3VNE7', { 'cookie_domain': 'auto' });
     };
     if ('requestIdleCallback' in window) {
-       requestIdleCallback(loadAdSense);
+        requestIdleCallback(loadAdSense);
     } else {
-       setTimeout(loadAdSense, 1000);
+        setTimeout(loadAdSense, 1000);
     }
 }
 function loadAdSense() {
     // まずMicrosoft Clarityを読み込み
-    (function(c,l,a,r,i,t,y){
+    (function (c, l, a, r, i, t, y) {
         console.log("Clarity script loaded");
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;t.nonce = "{{ request.csp_nonce }}";
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+        t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i; t.nonce = "{{ request.csp_nonce }}";
+        y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
     })(window, document, "clarity", "script", "qy90xxylfc");
     if (!window.adsLoaded) {
         window.adsLoaded = true;
@@ -1925,9 +1946,9 @@ function _DOMContenLoaded() {
                 width: 200,
                 height: 200
             });
-    
+
             qrPopup.style.display = "flex";  // ポップアップを表示
-    
+
             document.addEventListener("click", (e) => {
                 // closest() で親要素をたどって .popup-content が見つかるかどうかを確認
                 if (!e.target.closest(".qr-popup") && e.target.id !== "qr-icon") {
@@ -1946,7 +1967,7 @@ function _DOMContenLoaded() {
         if (gameRoom === null) {
             restart(false); //リロードはfalse
         }
-    }else{
+    } else {
         online = false;
         const url = new URL(window.location);
         url.searchParams.delete("room");
@@ -2164,7 +2185,7 @@ window.addEventListener("appinstalled", () => {
         "id": playerId,
         'game_mode': gameMode,
         "gameFinishedCount": gameFinishedCount,
-        "Won": ifVitory,
+        "Won": ifVictory,
     });
 });
 // 設定変更時に Local Storage に保存
@@ -2230,7 +2251,7 @@ document.getElementById("setting").addEventListener('click', () => {
 });
 document.getElementById("close-install-guide").addEventListener("click", () => {
     document.getElementById("ios-install-guide").style.display = "none";
-    if (gameMode === "ai" && ifVitory) {
+    if (gameMode === "ai" && ifVictory) {
         const currentAiLevel = document.getElementById('aiLevelSelect').value;
         if (window.unlockNextAiLevel) {
             window.unlockNextAiLevel(currentAiLevel);
@@ -2321,11 +2342,11 @@ document.getElementById('tweet-result').addEventListener('click', () => {
                 tweetText = `🤝 I drew with ${opponentName}!\n\n【Final Score】 ⚫️ ${scoreB.textContent} : ${scoreW.textContent} ⚪️\n\n#ReversiWeb #Othello\n\n👇 Game record:\n${t_url}`;
             }
             else {
-                tweetText = `${ifVitory ? "Victory!" : "Defeated..."}\nI ${((typeof opponentName === 'undefined') ? "" : ` against ${opponentName} and`)} ${ifVitory ? "won" : "lost"} by ${Math.abs(scoreB.textContent - scoreW.textContent)} points.\n\n【Final Score】 ⚫️ ${scoreB.textContent} : ${scoreW.textContent} ⚪️\n\n#ReversiWeb #Othello\n\n👇 Game record:\n${t_url}`;
+                tweetText = `${ifVictory ? "Victory!" : "Defeated..."}\nI ${((typeof opponentName === 'undefined') ? "" : ` against ${opponentName} and`)} ${ifVictory ? "won" : "lost"} by ${Math.abs(scoreB.textContent - scoreW.textContent)} points.\n\n【Final Score】 ⚫️ ${scoreB.textContent} : ${scoreW.textContent} ⚪️\n\n#ReversiWeb #Othello\n\n👇 Game record:\n${t_url}`;
             }
             break;
         default:
-            tweetText = `${((typeof opponentName === 'undefined') ? "" : `${opponentName}に`)}${Math.abs(scoreB.textContent - scoreW.textContent)}石差で【${ifVitory ? "勝利" : "敗北"}】\n\n結果 ▶ ⚫️ ${scoreB.textContent} vs ${scoreW.textContent} ⚪️\n\n#リバーシWeb #オセロ #ReversiWeb\n\n👇 棋譜はこちら！\n${t_url}`;
+            tweetText = `${((typeof opponentName === 'undefined') ? "" : `${opponentName}に`)}${Math.abs(scoreB.textContent - scoreW.textContent)}石差で【${ifVictory ? "勝利" : "敗北"}】\n\n結果 ▶ ⚫️ ${scoreB.textContent} vs ${scoreW.textContent} ⚪️\n\n#リバーシWeb #オセロ #ReversiWeb\n\n👇 棋譜はこちら！\n${t_url}`;
             break;
     }
     const twitterIntentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
@@ -2334,7 +2355,7 @@ document.getElementById('tweet-result').addEventListener('click', () => {
 document.getElementById('restart-match').addEventListener('click', () => {
     gtag('event', 'next_match', {
         'event_category': 'engagement',
-        'event_label': ifVitory ? 'NextMatch_afterVictory' : 'NextMatch_afterDefeated',
+        'event_label': ifVictory ? 'NextMatch_afterVictory' : 'NextMatch_afterDefeated',
         'gameEndSoundEnabled': gameEndSoundEnabled,
     });
     restart();

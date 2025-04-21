@@ -11,3 +11,6 @@ def timestamp_processor(request):
         timestamp = "0"
 
     return {"TIMESTAMP": timestamp}
+
+def debug_processor(request):
+    return {"DEBUG": settings.DEBUG}
