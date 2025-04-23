@@ -679,9 +679,6 @@ function loadBoardFromURL() {
                     case "y":
                         endGame("offline", won, 1);// 勝利
                         break;
-                    case "n":
-                        endGame("offline", won, 0);// 敗北
-                        break;
                     default:
                         endGame("offline", won);
                         break;
@@ -1187,7 +1184,7 @@ function changeTitle() {
         document.getElementById('title').textContent = player_h1;
         document.getElementById('level_ai').style.display = 'none';
     } else if (gameMode === 'online') {
-        document.getElementById('title').textContent = online_h1;
+        document.getElementById('title').textContent = "Loading...";
         document.getElementById('level_ai').style.display = 'none';
     }
 }
@@ -1209,12 +1206,11 @@ function showLoading(after = 1000) {
     }, after);
 }
 function endGame(online_data, winner = null, y = -1) {
-    if (y) {
+    if (y === 1) {
         ifVictory = true;
     } else {
         ifVictory = false;
     }
-    console.log(`[endGame] Game ended. Winner: ${winner}` + "gameMode:" + gameMode);
     const blackCount = gameBoard.flat().filter(cell => cell === 'black').length;
     const whiteCount = gameBoard.flat().filter(cell => cell === 'white').length;
     let result;
@@ -1376,9 +1372,6 @@ function endGame(online_data, winner = null, y = -1) {
             'playerJoinSoundEnabled': playerJoinSoundEnabled,
             'timeLimitSoundEnabled': timeLimitSoundEnabled,
         });
-    } else {
-        console.log("[endGame] gtag not found");
-        return;
     }
     url = new URL(window.location);
     url.searchParams.set('won', share_winner);
@@ -1390,12 +1383,8 @@ function endGame(online_data, winner = null, y = -1) {
     const winner_final = share_winner === "won" ? (blackCount > whiteCount ? "black" : "white") : share_winner;
 
     stopTimer();
-    if (winner !== "won") {
+    if (winner !== "won" || y !== -1) {
         showResultPopup(ifVictory, blackCount, whiteCount, winner_final);
-    } else if (y === 1) {
-        showResultPopup(true, blackCount, whiteCount, winner_final);
-    } else if (y === 0) {
-        showResultPopup(false, blackCount, whiteCount, winner_final);
     }
     setTimeout(() => {
         gameFinishedCount++;
