@@ -1386,27 +1386,29 @@ function endGame(online_data, winner = null, y = -1) {
     if (winner !== "won" || y !== -1) {
         showResultPopup(ifVictory, blackCount, whiteCount, winner_final);
     }
-    setTimeout(() => {
-        gameFinishedCount++;
-        localStorage.setItem('gameFinishedCount', gameFinishedCount);
-        if (gameFinishedCount === 1 && deferredPrompt) {
-            showInstallPrompt();
-        } else if (gameFinishedCount === 3 && deferredPrompt) {
-            showInstallPrompt();
-        }
-        if (isIOS() && !window.navigator.standalone && gameFinishedCount === 1) {
-            iOSinstallGuide();
-        } else if (isIOS() && !window.navigator.standalone && gameFinishedCount === 3) {
-            iOSinstallGuide();
-        } else {
-            if (gameMode === "ai" && ifVictory) {
-                const currentAiLevel = document.getElementById('aiLevelSelect').value;
-                if (window.unlockNextAiLevel) {
-                    window.unlockNextAiLevel(currentAiLevel);
+    if (winner !== "won") {
+        setTimeout(() => {
+            gameFinishedCount++;
+            localStorage.setItem('gameFinishedCount', gameFinishedCount);
+            if (gameFinishedCount === 1 && deferredPrompt) {
+                showInstallPrompt();
+            } else if (gameFinishedCount === 3 && deferredPrompt) {
+                showInstallPrompt();
+            }
+            if (isIOS() && !window.navigator.standalone && gameFinishedCount === 1) {
+                iOSinstallGuide();
+            } else if (isIOS() && !window.navigator.standalone && gameFinishedCount === 3) {
+                iOSinstallGuide();
+            } else {
+                if (gameMode === "ai" && ifVictory) {
+                    const currentAiLevel = document.getElementById('aiLevelSelect').value;
+                    if (window.unlockNextAiLevel) {
+                        window.unlockNextAiLevel(currentAiLevel);
+                    }
                 }
             }
-        }
-    }, 2000);
+        }, 2000);
+    }
 }
 
 function launchConfetti() {
@@ -2235,7 +2237,7 @@ if (playerName_el) {
         }
     });
 }
-document.getElementById("setting").addEventListener('click', () => {
+document.getElementById("toSetting").addEventListener('click', () => {
     document.getElementById('settings').scrollIntoView({ behavior: 'smooth' });
 });
 document.getElementById("close-install-guide").addEventListener("click", () => {

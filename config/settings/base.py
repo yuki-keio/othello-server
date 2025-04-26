@@ -11,10 +11,12 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 import os
 from pathlib import Path
-from dotenv import load_dotenv
+from datetime import timedelta
+from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent.parent 
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 LOCALE_PATHS = [
     os.path.join(BASE_DIR, 'locale'),  
@@ -63,21 +65,22 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sitemaps',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'channels',
-    'game',
     "csp",
-    'two_factor',
     'django_otp',
     'django_otp.plugins.otp_totp',
+    'django_otp.plugins.otp_static',
+    'two_factor',
     'axes',
+    'django.contrib.admin',
+    'django.contrib.auth',
     'htmlmin',
+    'game',
 ]
 
 MIDDLEWARE = [
@@ -90,6 +93,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django_otp.middleware.OTPMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'axes.middleware.AxesMiddleware',
@@ -102,14 +106,19 @@ KEEP_COMMENTS_ON_MINIFYING = False
 EXCLUDE_FROM_MINIFYING = ('^admin/', '^api/')  # 例: 管理画面とAPI系のURLを除外
 
 
-# Axesの設定（10回失敗でロック）
-AXES_FAILURE_LIMIT = 10  # 失敗回数
+# Axesの設定
+AXES_FAILURE_LIMIT = 7  # 失敗回数
 AXES_LOCK_OUT_AT_FAILURE = True  # 失敗回数超過でロック
 AXES_RESET_ON_SUCCESS = True  # 成功したらリセット
+AXES_COOLOFF_TIME = timedelta(minutes=10)
+AXES_COOLOFF_MESSAGE = _("誤ったログイン情報が7連続で入力されたため、アカウントが10分間ロックされました。しばらくしてから再試行してください。")
 
-LOGIN_URL = 'two_factor:login'
-LOGIN_REDIRECT_URL = '/admin-site/'  # デバッグ用の管理画面にリダイレクト
-TWO_FACTOR_LOGIN_REDIRECT_URL = '/admin-site/'  # 2FA ログイン後のリダイレクト
+LOGIN_URL = reverse_lazy('user_login')
+LOGIN_REDIRECT_URL = reverse_lazy('index')
+LOGOUT_REDIRECT_URL = reverse_lazy('index')
+
+TWO_FACTOR_CALLABLE_REDIRECT = lambda request: '/admin/' if request.user.is_staff else '/'
+
 AUTH_USER_MODEL = 'game.CustomUser'
 
 ROOT_URLCONF = 'config.urls'
@@ -151,16 +160,11 @@ X_FRAME_OPTIONS = 'DENY'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {'min_length': 6},
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
 
@@ -185,6 +189,9 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
+SESSION_COOKIE_AGE = 1209600
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
@@ -208,8 +215,12 @@ ASGI_APPLICATION = "config.asgi.application"
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [os.environ.get("REDIS_URL", "redis://127.0.0.1:6379")],
-        },
+        "LOCATION": os.environ.get("REDIS_URL", "redis://127.0.0.1:6379"),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "CONNECTION_POOL_KWARGS": {
+                "ssl_cert_reqs": None
+            },
+        }
     },
 }

@@ -1,0 +1,118 @@
+body {
+    font-family:"BIZ UDPMincho", serif;
+    font-weight:400;
+    background-color:#f0f0f0;
+    line-height: 1.6;
+}
+h1 {
+    font-family:"BIZ UDPGothic", Arial,sans-serif;
+    font-size: 1.4em;
+    height:22.4px;
+}
+
+.signup-wrapper {
+    max-width: 720px;
+    margin: 4rem auto;
+    padding: 2.5rem 2rem;
+    background: #fff;
+    border: 1px solid #e4e4e4;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgb(0 0 0 / .08);
+}
+
+/* 見出し */
+.signup-wrapper h1 {
+    font-size: 1.6rem;
+    margin-top: 0;
+    margin-bottom: 1.6rem;
+    text-align: center;
+}
+
+/* ラベル */
+.signup-wrapper label {
+    display: block;
+    margin-bottom: .4rem;
+    font-weight: 700;
+    font-size: .93rem;
+}
+
+/* テキスト入力・パスワード入力 */
+.signup-wrapper input[type="text"],
+.signup-wrapper input[type="email"],
+.signup-wrapper input[type="password"] {
+    width: 90%;
+    padding: .6rem .8rem;
+    margin-bottom: 0.3em;
+    border: 1px solid #c3c3c3;
+    border-radius: 4px;
+    font-size: .95rem;
+    font-family: inherit;
+    transition: border-color .2s ease;
+}
+.signup-wrapper input:focus {
+    outline: none;
+    border-color: #007508;
+    box-shadow: 0 0 0 2px rgb(0 117 8 / .15);
+}
+
+/* エラーメッセージ */
+.errorlist {
+    margin: 0 0 1rem 0;
+    padding: .8rem 1rem;
+    list-style: none;
+    background: #ffecec;
+    border: 1px solid #f5c2c2;
+    color: #cc0000;
+    border-radius: 4px;
+    font-size: .85rem;
+}
+
+/* 送信ボタン */
+.signup-wrapper button[type="submit"] {
+    margin: .5rem auto 0 auto;
+    padding: .6rem 2rem;
+    font-size: 0.8rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background: #007508;
+    color: #fff;
+    transition: background .2s ease, transform .1s ease;
+    display: block;
+    font-weight: bold;
+}
+.signup-wrapper button:hover {
+    background: #006306;
+}
+.signup-wrapper button:active {
+    transform: translateY(1px);
+}
+
+.signup-wrapper .helptext{
+    color: #555;
+    font-size: .75rem;
+    line-height: 1.45;
+}
+.signup-wrapper ul{
+    margin: 0;
+    color: #555;
+    font-size: .65rem;
+    line-height: 1.45;
+    padding-inline-start:1rem;
+}
+
+.with-gap {
+    margin-top: 20px; /* メール入力欄とパスワードの間 */
+}
+.form-group {
+    margin-bottom: 13px;
+}
+
+/* ---------- レスポンシブ対応（スマホ） ---------- */
+@media (max-width: 480px) {
+    .signup-wrapper {
+        margin: 2.5rem 1rem;
+        padding: 2rem 1.2rem;
+    }
+    .signup-wrapper h1 { font-size: 1.2rem; }
+}

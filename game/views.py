@@ -5,6 +5,9 @@ import logging
 from django.utils.translation import get_language
 import os
 from django.conf import settings
+from .forms import CustomUserCreationForm
+from two_factor.views import LoginView as TwoFactorLoginView
+from django.contrib.auth.views import LoginView
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +23,7 @@ def game_view(request, mode=None):
     # `/player/` へのアクセスを `/` へリダイレクト
     if request.path == "/player/":
         return redirect("/", permanent=True)
-    
+
     # query_mode が指定されている場合のみリダイレクト
     if query_mode in ["online", "ai", "player"]:
         query_params = request.GET.dict()  # QueryDict → 辞書に変換
@@ -48,6 +51,16 @@ def othello_view(request):
 def offline_view(request):
     return render(request, "game/offline.html")
 
+def signup(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('user_login')
+    else:
+        form = CustomUserCreationForm()
+    return render(request, 'game/signup.html', {'form': form})
+
 def service_worker(request):
     """Service Worker ファイルを提供"""
     sw_path = os.path.join(settings.BASE_DIR, "game/static/game/sw.js")
@@ -63,3 +76,18 @@ Disallow:
 Sitemap: https://reversi.yuki-lab.com/sitemap.xml
 """
     return HttpResponse(content, content_type="text/plain")
+
+class CustomTwoFactorLoginView(TwoFactorLoginView):
+    def get_success_url(self):
+        if self.request.user.is_staff:
+            return '/admin/'
+        else:
+            return '/'
+class UserLoginView(LoginView):
+
+    def form_valid(self, form):
+        user = form.get_user()
+        if user.is_staff:
+            print("[Login] Staff user attempted to log in without 2FA.")
+            return redirect('/login/')  # リダイレクトでログインを拒否
+        return super().form_valid(form)

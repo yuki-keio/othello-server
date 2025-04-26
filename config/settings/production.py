@@ -16,6 +16,8 @@ DEBUG = False
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost,reversi.yuki-lab.com').split(',')
 
+DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
+
 # セキュリティ強化
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_SSL_REDIRECT = True

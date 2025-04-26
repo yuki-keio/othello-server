@@ -12,9 +12,6 @@ from django.core.asgi import get_asgi_application
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
 import game.routing 
-from whitenoise.middleware import WhiteNoiseMiddleware
-
-application = WhiteNoiseMiddleware(get_asgi_application())
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.local')
 

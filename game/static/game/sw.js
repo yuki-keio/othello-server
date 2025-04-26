@@ -18,7 +18,6 @@ const urlsToCache = [
     "/static/game/images/favicon/apple-touch-icon.png",
     "/static/game/images/favicon/android-chrome-192x192.png",
     "/static/game/images/favicon/android-chrome-512x512.png",
-    "/static/game/images/setting.svg",
     "/static/game/images/qr.svg",
     "/static/game/images/share.svg",
     "/static/game/images/draw.png",

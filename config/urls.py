@@ -18,26 +18,30 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from two_factor.urls import urlpatterns as tf_urls
 from axes.decorators import axes_dispatch
-from django.contrib.auth.views import LoginView
-
+from django.contrib.auth.views import LogoutView,PasswordChangeView, PasswordChangeDoneView
 from django.views.static import serve
-import os
 from django.conf import settings
 from django.contrib.sitemaps.views import sitemap
 from game.sitemaps import StaticViewSitemap
 from django.views.generic.base import RedirectView
-from django.conf.urls.i18n import i18n_patterns  
-from game.views import game_view, service_worker
+from django.conf.urls.i18n import i18n_patterns
+from game.views import service_worker, signup
+import os
+from game.views import CustomTwoFactorLoginView 
+from game.views import UserLoginView
+
+
+
 
 sitemaps = {  # ← ここで sitemaps を定義
     'static': StaticViewSitemap(),
 }
 
 urlpatterns = [
-    path('admin/', include(tf_urls)),  # 2FA付きの管理画面
-    path('admin/account/login/', axes_dispatch(LoginView.as_view()), name='login'),  
+    path('admin/account/login/', CustomTwoFactorLoginView.as_view(), name='login'),
+    path('admin/account/', include(tf_urls, namespace='two_factor')),
+    path('admin/', admin.site.urls),
     path("sw.js", service_worker, name="service_worker"),
-    path('', include('game.urls')),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path('i18n/', include('django.conf.urls.i18n')),
     path(
@@ -52,12 +56,11 @@ urlpatterns = [
 ]
 
 urlpatterns += i18n_patterns(
-
+    path('login/', axes_dispatch(UserLoginView.as_view()), name='user_login'),
+    path('logout/', LogoutView.as_view(), name='user_logout'),
+    path('signup/', signup, name='user_signup'),
+    path('password_change/', PasswordChangeView.as_view(), name='password_change'),
+    path('password_change/done/', PasswordChangeDoneView.as_view(), name='password_change_done'),
     path('', include('game.urls')),
     prefix_default_language=False
 )
-
-if settings.DEBUG:  # デバッグモードのときだけ admin-site を有効化
-    urlpatterns += [
-        path('admin-site/', admin.site.urls),  # 2FAなしの管理画面（デバッグ用）
-    ]

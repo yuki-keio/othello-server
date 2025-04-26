@@ -51,7 +51,6 @@ web_othello/
 │   │   │   ├── images/
 │   │   │   │   ├── share.svg
 │   │   │   │   ├── share-image.webp
-│   │   │   │   ├── setting.svg
 │   │   │   │   ├── favicon/
 │
 ├── staticfiles/                 # `collectstatic` で集めた静的ファイル（本番環境用）

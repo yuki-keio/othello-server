@@ -512,6 +512,49 @@ width: 120px
 .shine-button:hover::before {
   animation: shine 1.3s ease-in-out infinite
 }
+#menu-toggle:checked+.menu-icon span:nth-child(1){
+  transform:rotate(45deg) scale(.8);
+  top:8px;
+}
+#menu-toggle:checked+.menu-icon span:nth-child(2){
+  opacity:0
+}
+#menu-toggle:checked+.menu-icon span:nth-child(3){
+  transform:rotate(-45deg) scale(.8);
+  top:-8px;
+}
+#menu-toggle:checked+.menu-icon span:nth-child(1),#menu-toggle:checked+.menu-icon span:nth-child(3){
+  position:relative;
+  background: rgb(194, 0, 0);
+}
+#menu-toggle:checked+.menu-icon{
+  z-index: 101;
+}
+.menu{
+  position:absolute;
+  top:-7px;
+  right:-5px;
+  background:#f9f9f9;
+  padding:5px;
+  padding-top: 36px;
+  border:1px solid #ddd;
+  border-radius: 5px;
+  z-index:100;
+  width: 185px;
+  text-align: right;
+}
+#menu-toggle:checked~.menu{
+  display:block
+}
+.menu a{
+  display:block;
+  padding:8px 12px;
+  text-decoration:none;
+  color:#000;
+}
+.menu a:hover{
+  background:#eee
+}
 @keyframes shine {
   0%   { transform: scale(0) rotate(45deg); opacity: 0; }
   40%  { transform: scale(0) rotate(45deg); opacity: 0.3; }
