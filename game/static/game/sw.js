@@ -50,14 +50,7 @@ self.addEventListener("fetch", event => {
     if (url.origin !== self.location.origin) {
         return;
     }
-    // **POSTリクエストはスルー**
     if (event.request.method !== "GET") {
-        return;
-    }
-
-    // **ログイン・サインアップなどもスルー**
-    const excludedPaths = ["/login/", "/signup/", "/logout/"];
-    if (excludedPaths.includes(url.pathname)) {
         return;
     }
 
