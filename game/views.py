@@ -56,13 +56,11 @@ def signup(request):
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            print(f"[Signup] {form.cleaned_data['email']} signup success. related data: {form.cleaned_data}, {form.errors}, redirect('user-login'): {redirect('user_login')}")
             return redirect('user_login')
         else:
             logger.warning(f"Form not valid: {form.errors}")
     else:
         form = CustomUserCreationForm()
-        print(f"[Signup] GET request. not post. Form: {form}")
     return render(request, 'game/signup.html', {'form': form})
 
 def service_worker(request):
@@ -91,10 +89,6 @@ class UserLoginView(LoginView):
 
     def form_valid(self, form):
         user = form.get_user()
-        print(f"[Login] {user.email} login success.")
         if user.is_staff:
-            print("[Login] Staff user attempted to log in without 2FA.")
             return redirect('/login/') # リダイレクトでログインを拒否
-        response = super().form_valid(form)
-        print(f"[Login] Redirecting to: {response['Location']}, response: {response}")
-        return response
+        return super().form_valid(form)

@@ -469,11 +469,11 @@
         </p>
         <div class="small">{% trans "※ ただし通信対戦モードが選択された場合は、通信対戦における設定に合わせてハイライト表示設定が変更されます。" %}</div>
         <h3>{% trans "アプリ版で遊ぶ" %}</h3>
-        <p>{% trans "本サイトはブラウザゲームですが、Webアプリ（PWA）としてホーム画面に追加することもできます。Webアプリの特徴として、デバイスの容量はほぼ消費せず、さらに起動も高速になります。アプリ版では主な機能をオフラインでも利用できます。アプリ設置の所要時間は数秒です。ぜひお試しください" %}</p>
-        <button id="install-btn">{% trans "Webアプリとしてホーム画面に追加" %}</button>
+        <p>{% trans "本サイトはブラウザゲームですが、Webアプリとしてホーム画面に追加することもできます。アプリ設置の所要時間は数秒で、デバイスの容量もほぼ消費しません。一方でゲームの起動はさらに高速になり、主な機能をオフラインでも利用できるメリットがあります。ぜひお試しください" %}</p>
+        <button id="install-btn">{% trans "ホーム画面に追加" %}</button>
     </section>
     <section class ="notes" id="rules">
-        <h2>{% trans "リバーシ（オセロ）のルール" %}</h2>
+        <h2>{% trans "オセロのルール" %}</h2>
         <h3>{% trans "基本ルール" %}</h3>
         <p>{% trans "リバーシは 8×8 の盤面で行うボードゲームです。「オセロ」という名前でも親しまれています。本ゲームの対戦は、以下のルールで進行します。" %}</p>
         <ul>
@@ -501,14 +501,23 @@
         </ul>
     </section>
     <section class ="notes" id="blog">
-        <h2>{% trans "リバーシ（オセロ）で勝つためのコツ" %}</h2>
+        <h2>{% trans "オセロで勝つための秘訣" %}</h2>
         <p>
             {% if request.LANGUAGE_CODE == 'en' %}
-            <a href="/en/strategy-reversi-othello.html">This article</a>, written by the developer of this site, Reversi Web, offers free strategies for intermediate and advanced players of the reversi game. Be sure to check it out!
+            <a href="/en/strategy-reversi-othello.html">This article</a>, written by the developer of this site, Reversi Web, offers free strategies for intermediate and advanced players of the reversi game.
             {% else %}
-            本サイト・リバーシWebの開発者が執筆した<a href="/strategy-reversi-othello.html">こちらの記事</a> では、オセロゲームの中・上級者向け攻略法を無料で紹介しています。ぜひご覧ください
+            本サイト・リバーシWebの開発者が執筆した<a href="/strategy-reversi-othello.html">こちらの記事</a> では、オセロゲームの中・上級者向け攻略法を無料で紹介しています
             {% endif %}
             </p>
+    </section>
+    <section class ="notes" id="other_games">
+        <h2>{% trans "提供ゲーム一覧" %}</h2>
+        <p>{% trans "オセロ以外にも、当サイト（Yuki-Lab）では様々なミニゲームを個人開発しています。" %}</p>
+        <ul>
+            <li><a href="https://shogi.yuki-lab.com/">{% trans "将棋" %}</a></li>
+            <li><a href="https://jumping.yuki-lab.com/">{% trans "柴犬が主人公の2Dアクション" %}</a></li>
+            <li><a href="https://puzzle.yuki-lab.com/">{% trans "シンプルなパズルゲーム" %}</a></li>
+        </ul>
     </section>
     <!--フィードバック用フォームへのリンク-->
     <a href="https://docs.google.com/forms/d/e/1FAIpQLSeID_5fOJLDNPMJAz-kZbFmTLPxwdUUNVBsjXA36letgF7gow/viewform" id="feedback-link" target="_blank">

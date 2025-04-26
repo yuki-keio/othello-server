@@ -53,6 +53,10 @@ self.addEventListener("fetch", event => {
     if (event.request.method !== "GET") {
         return;
     }
+    const excludedPaths = ["/login/", "/signup/", "/logout/"];
+    if (excludedPaths.includes(url.pathname)) {
+        return;
+    }
 
     // Stale-While-Revalidate 戦略
     event.respondWith(
