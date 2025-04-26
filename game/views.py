@@ -57,6 +57,8 @@ def signup(request):
         if form.is_valid():
             form.save()
             return redirect('user_login')
+        else:
+            logger.warning(f"Form not valid: {form.errors}")
     else:
         form = CustomUserCreationForm()
     return render(request, 'game/signup.html', {'form': form})
