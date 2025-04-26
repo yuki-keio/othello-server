@@ -9,7 +9,6 @@ from django.utils.translation import gettext as _
 from django.utils.translation import activate
 import redis.asyncio as aioredis
 import os
-import ssl
 
 logger = logging.getLogger(__name__)
 
@@ -18,20 +17,10 @@ logger = logging.getLogger(__name__)
 try:
     # 環境変数からRedis URLを取得、なければデフォルトを使用
     redis_url = os.environ.get("REDIS_URL", "redis://127.0.0.1:6379")
-    if redis_url.startswith("rediss://"):
-        ssl_context = ssl.create_default_context()
-        ssl_context.check_hostname = False
-        ssl_context.verify_mode = ssl.CERT_NONE
-        redis_instance = aioredis.from_url(
-            redis_url,
-            decode_responses=True,
-            ssl=ssl_context
-        )
-    else:
-        redis_instance = aioredis.from_url(
-            redis_url,
-            decode_responses=True
-        )
+    redis_instance = aioredis.from_url(
+        redis_url,
+        decode_responses=True,
+    )
     logger.info(f"Successfully created shared Redis connection pool for {redis_url}.")
 except Exception as e:
     logger.error(f"Failed to create shared Redis connection pool for {redis_url}: {e}")
