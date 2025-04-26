@@ -31,8 +31,6 @@ from game.views import CustomTwoFactorLoginView
 from game.views import UserLoginView
 
 
-
-
 sitemaps = {  # ← ここで sitemaps を定義
     'static': StaticViewSitemap(),
 }

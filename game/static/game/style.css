@@ -541,7 +541,7 @@ width: 120px
   border-radius: 5px;
   z-index:100;
   width: 185px;
-  text-align: right;
+  text-align: left;
 }
 #menu-toggle:checked~.menu{
   display:block
@@ -555,6 +555,7 @@ width: 120px
 .menu a:hover{
   background:#eee
 }
+
 @keyframes shine {
   0%   { transform: scale(0) rotate(45deg); opacity: 0; }
   40%  { transform: scale(0) rotate(45deg); opacity: 0.3; }
