@@ -25,7 +25,7 @@ from django.contrib.sitemaps.views import sitemap
 from game.sitemaps import StaticViewSitemap
 from django.views.generic.base import RedirectView
 from django.conf.urls.i18n import i18n_patterns
-from game.views import service_worker, signup
+from game.views import service_worker, signup,auth_status
 import os
 from game.views import CustomTwoFactorLoginView 
 from game.views import UserLoginView
@@ -39,6 +39,7 @@ urlpatterns = [
     path('admin/account/login/', CustomTwoFactorLoginView.as_view(), name='login'),
     path('admin/account/', include(tf_urls, namespace='two_factor')),
     path('admin/', admin.site.urls),
+    path('api/auth-status/', auth_status, name='auth_status'),
     path("sw.js", service_worker, name="service_worker"),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path('i18n/', include('django.conf.urls.i18n')),

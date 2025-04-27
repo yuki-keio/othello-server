@@ -8,6 +8,7 @@ from django.conf import settings
 from .forms import CustomUserCreationForm
 from two_factor.views import LoginView as TwoFactorLoginView
 from django.contrib.auth.views import LoginView
+from django.http import JsonResponse
 
 logger = logging.getLogger(__name__)
 
@@ -62,7 +63,8 @@ def signup(request):
     else:
         form = CustomUserCreationForm()
     return render(request, 'game/signup.html', {'form': form})
-
+def auth_status(request):
+    return JsonResponse({'is_authenticated': request.user.is_authenticated})
 def service_worker(request):
     """Service Worker ファイルを提供"""
     sw_path = os.path.join(settings.BASE_DIR, "game/static/game/sw.js")

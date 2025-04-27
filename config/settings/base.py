@@ -55,6 +55,23 @@ LOGGING = {
         'handlers': ['console'],
         'level': LOGGING_LEVEL,
     },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': LOGGING_LEVEL,
+            'propagate': False,
+        },
+        'django.channels': {
+            'handlers': ['console'],
+            'level': LOGGING_LEVEL,
+            'propagate': False,
+        },
+        'django.channels.session': {
+            'handlers': ['console'],
+            'level': LOGGING_LEVEL,
+            'propagate': False,
+        },
+    },
 }
 
 CSP_USE_NONCE = True

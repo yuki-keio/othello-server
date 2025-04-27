@@ -1978,6 +1978,20 @@ function _DOMContenLoaded() {
     if (gameMode === 'ai') {
         initAIMode()
     }
+    fetch('/api/auth-status/')
+        .then(response => response.json())
+        .then(data => {
+            const authenticatedElements = document.querySelectorAll('.authenticated');
+            const unauthenticatedElements = document.querySelectorAll('.guest');
+            if (data.is_authenticated) {
+                // ログイン中の要素を表示
+                authenticatedElements.forEach(el => el.style.display = 'block');
+            } else {
+                // 未ログイン時の要素を表示
+                unauthenticatedElements.forEach(el => el.style.display = 'block');
+            }
+        });
+
     loadGoogleAnalytics();
 }
 function initAIMode() {
