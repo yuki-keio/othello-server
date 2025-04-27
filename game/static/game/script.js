@@ -1983,6 +1983,7 @@ function _DOMContenLoaded() {
         .then(data => {
             const authenticatedElements = document.querySelectorAll('.authenticated');
             const unauthenticatedElements = document.querySelectorAll('.guest');
+            console.log(`[Auth] ${data}, ${data.is_authenticated}`);
             if (data.is_authenticated) {
                 // ログイン中の要素を表示
                 authenticatedElements.forEach(el => el.style.display = 'block');
