@@ -2189,7 +2189,7 @@ function buyPremium(event) {
         window.location.href = l_prefix + "/premium-intent/";
     } else {
         if (loggedInBefore) {
-            window.location.href = l_prefix + "/login/?next=/" + l_prefix + "/premium-intent/"
+            window.location.href = l_prefix + "/login/?next=" + l_prefix + "/premium-intent/"
         } else {
             window.location.href = l_prefix + "/signup/?next=" + l_prefix + "/premium-intent/"
         }
