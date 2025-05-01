@@ -80,6 +80,7 @@ if (gameMode === "en") {
     gameMode = window.location.pathname.split('/').filter(Boolean)[1] || 'player';
     langCode = "en";
 }
+const l_prefix = langCode === "ja" ? "" : "/" + langCode;
 let langNextAIName = false;
 
 let aimove = false;
@@ -94,6 +95,9 @@ const resultImg = document.getElementById('result-image');
 const scoreDiff = document.getElementById('score-difference');
 const rMessage = document.getElementById('r-message');
 const rOverlay = document.getElementById('r-overlay');
+
+let authenticated = false;
+let loggedInBefore = localStorage.getItem('loggedInBefore') === "true";
 
 // 方向ベクトルを再利用するための定数定義
 const DIRECTIONS = [
@@ -1013,9 +1017,9 @@ function minimax(board, depth, isMaximizing, alpha = -Infinity, beta = Infinity)
             // 試行的に手を適用
             const newBoard = applyMoveToBoard(board, row, col, player);
             // 再帰的に評価
-            const eval = minimax(newBoard, depth - 1, false, alpha, beta);
-            maxEval = Math.max(maxEval, eval);
-            alpha = Math.max(alpha, eval);
+            const score = minimax(newBoard, depth - 1, false, alpha, beta);
+            maxEval = Math.max(maxEval, score);
+            alpha = Math.max(alpha, score);
             // アルファベータ枝刈り
             if (beta <= alpha) {
                 break;
@@ -1029,9 +1033,9 @@ function minimax(board, depth, isMaximizing, alpha = -Infinity, beta = Infinity)
             // 試行的に手を適用
             const newBoard = applyMoveToBoard(board, row, col, player);
             // 再帰的に評価
-            const eval = minimax(newBoard, depth - 1, true, alpha, beta);
-            minEval = Math.min(minEval, eval);
-            beta = Math.min(beta, eval);
+            const score = minimax(newBoard, depth - 1, true, alpha, beta);
+            minEval = Math.min(minEval, score);
+            beta = Math.min(beta, score);
             // アルファベータ枝刈り
             if (beta <= alpha) {
                 break;
@@ -1592,7 +1596,7 @@ function loadGoogleAnalytics() {
     var script = document.createElement('script');
     script.src = "https://www.googletagmanager.com/gtag/js?id=G-4JKZC3VNE7";
     script.async = true;
-    script.nonce = "{{ request.csp_nonce }}";
+    script.nonce = cspNonce;
     document.head.appendChild(script);
     window.dataLayer = window.dataLayer || [];
     window.gtag = function () { dataLayer.push(arguments); };
@@ -1601,27 +1605,19 @@ function loadGoogleAnalytics() {
         gtag('config', 'G-4JKZC3VNE7', { 'cookie_domain': 'auto' });
     };
     if ('requestIdleCallback' in window) {
-        requestIdleCallback(loadAdSense);
+        requestIdleCallback(loadLater);
     } else {
-        setTimeout(loadAdSense, 1000);
+        setTimeout(loadLater, 1000);
     }
 }
-function loadAdSense() {
+function loadLater() {
     // まずMicrosoft Clarityを読み込み
     (function (c, l, a, r, i, t, y) {
         console.log("Clarity script loaded");
         c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
-        t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i; t.nonce = "{{ request.csp_nonce }}";
+        t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i; t.nonce = cspNonce;
         y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
     })(window, document, "clarity", "script", "qy90xxylfc");
-    if (!window.adsLoaded) {
-        window.adsLoaded = true;
-        var script = document.createElement('script');
-        script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1918692579240633";
-        script.defer = true;
-        script.nonce = "{{ request.csp_nonce }}";
-        document.head.appendChild(script);
-    }
     //処理があらかた終わったら画像読み込み
     preloadResultImages();
 }
@@ -1737,6 +1733,7 @@ function updatePlayerList(players) {
     Object.entries(players).forEach(([id, [ws_role, name]]) => {
         const role = (ws_role === "black") ? lang.black : (ws_role === "white") ? lang.white : lang.spec;
         const span = document.createElement('span');
+        let display_player_name;
         if (id === playerId) {
             span.style.fontWeight = 'bold';
             display_player_name = lang.you + `（${name}）`;
@@ -1987,12 +1984,52 @@ function _DOMContenLoaded() {
             if (data.is_authenticated) {
                 // ログイン中の要素を表示
                 authenticatedElements.forEach(el => el.style.display = 'block');
+                authenticated = true;
+                localStorage.setItem('loggedInBefore', true);
+                loggedInBefore = true;
             } else {
                 // 未ログイン時の要素を表示
                 unauthenticatedElements.forEach(el => el.style.display = 'block');
+                authenticated = false;
             }
         });
-
+    fetch('/api/premium-status/')
+        .then(response => response.json())
+        .then(data => {
+            const premiumElements = document.querySelectorAll('.premium');
+            const nonPremiumElements = document.querySelectorAll('.free');
+            console.log(`[Premium] ${data}, ${data.is_premium}`);
+            if (data.is_premium) {
+                if (!window.adsLoaded) {
+                    window.adsLoaded = true;
+                    var script = document.createElement('script');
+                    script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1918692579240633";
+                    script.defer = true;
+                    script.nonce = cspNonce;
+                    document.head.appendChild(script);
+                }
+                // プレミアムユーザーの要素を表示
+                premiumElements.forEach(el => el.style.display = 'block');
+                document.getElementById('open-portal').addEventListener('click', function (event) {
+                    event.preventDefault();
+                    fetch(l_prefix + "/api/create-customer-portal-session/", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrf_token
+                        }
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            window.location.href = data.url;  // Stripeポータルにリダイレクト
+                        });
+                });
+            } else {
+                // プレミアムでないユーザーの要素を表示
+                nonPremiumElements.forEach(el => el.style.display = 'block');
+                document.getElementById('buy-premium-btn').addEventListener('click', buyPremium);
+            }
+        });
     loadGoogleAnalytics();
 }
 function initAIMode() {
@@ -2145,6 +2182,20 @@ async function playStoneSound() {
     source.connect(gainNode);
     source.start(0);
 }
+
+function buyPremium(event) {
+    event.preventDefault();
+    if (authenticated) {
+        window.location.href = l_prefix + "/premium-intent/";
+    } else {
+        if (loggedInBefore) {
+            window.location.href = l_prefix + "/login/?next=/" + l_prefix + "/premium-intent/"
+        } else {
+            window.location.href = l_prefix + "/signup/?next=" + l_prefix + "/premium-intent/"
+        }
+    }
+}
+
 // ページ離脱時に AudioContext を解放
 window.addEventListener("beforeunload", async () => {
     if (audioContext.state !== "closed") {

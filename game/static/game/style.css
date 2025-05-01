@@ -555,7 +555,7 @@ width: 120px
 .menu a:hover{
   background:#eee
 }
-.authenticated,.guest{display:none}
+.authenticated,.guest,.free,.premium{display:none}
 
 @keyframes shine {
   0%   { transform: scale(0) rotate(45deg); opacity: 0; }

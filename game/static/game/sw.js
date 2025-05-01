@@ -47,10 +47,11 @@ self.addEventListener("install", event => {
 // キャッシュを使ってリクエストを処理
 self.addEventListener("fetch", event => {
     const url = new URL(event.request.url);
-    const excludedPaths = ["/login/", "/signup/", "/logout/"];
+    const excludedPaths = ["/login/", "/signup/", "/logout/","/premium-intent/"];
+    const isApiPath = /^\/([a-z]{2}\/)?api\//.test(url.pathname);
     if (
         excludedPaths.includes(url.pathname) ||
-        url.pathname.startsWith("/api/") ||
+        isApiPath ||
         event.request.method !== "GET" ||
         url.origin !== self.location.origin
     ) {

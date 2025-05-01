@@ -1,0 +1,62 @@
+/* 共通トークン */
+:root {
+    --brand-color: #007508;      /* ボタンなど通常アクション用 */
+    --error-color: #d32f2f;      /* キャンセル／エラー用 */
+    --error-color-dark: #a52828; /* hover 用 */
+    --bg-color: #fef7f7;         /* わずかに赤みを帯びた背景 */
+    --text-color: #333;
+}
+
+/* 全体レイアウト */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue",
+                 Arial, "Noto Sans JP", sans-serif;
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-color);
+    color: var(--text-color);
+    text-align: center;
+    line-height: 1.5;
+}
+
+/* 見出し */
+h1 {
+    margin: 0 0 1rem;
+    font-size: 2rem;
+    color: var(--error-color);
+}
+
+/* 説明文 */
+p {
+    margin: 0 0 2rem;
+    font-size: 1.1rem;
+}
+
+/* 通常リンク（お問い合わせフォームなど） */
+p a {
+    color: var(--error-color);
+    text-decoration: underline;
+}
+p a:hover,
+p a:focus-visible {
+    text-decoration: none;
+}
+
+/* ボタン風リンク（ゲームへ戻る） */
+a[href$="{% url 'index' %}"] {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background: var(--brand-color);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+}
+a.btn-return:hover,
+a.btn-return:focus-visible {
+    background: var(--error-color-dark); /* わずかに暗い赤でフィードバック */
+}

@@ -14,3 +14,8 @@ def timestamp_processor(request):
 
 def debug_processor(request):
     return {"DEBUG": settings.DEBUG}
+
+def stripe_processor(request):
+    return {
+        'STRIPE_PUBLIC_KEY': settings.STRIPE_PUBLIC_KEY
+    }

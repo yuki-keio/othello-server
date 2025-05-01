@@ -29,7 +29,7 @@ LOCALE_PATHS = [
 SECRET_KEY = os.environ.get("SECRET_KEY")  # 環境変数から取得
 DEBUG = os.getenv("DEBUG", "True") == "True"
 
-LOGGING_LEVEL = 'DEBUG' if DEBUG else 'WARNING'
+LOGGING_LEVEL = 'INFO' if DEBUG else 'WARNING'
 
 LOGGING = {
     'version': 1,
@@ -106,8 +106,8 @@ MIDDLEWARE = [
     'django.middleware.gzip.GZipMiddleware',  
     'django.contrib.sessions.middleware.SessionMiddleware',
     'csp.middleware.CSPMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django_otp.middleware.OTPMiddleware',
@@ -140,6 +140,12 @@ AUTH_USER_MODEL = 'game.CustomUser'
 
 ROOT_URLCONF = 'config.urls'
 
+STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
+STRIPE_PUBLIC_KEY = os.getenv('STRIPE_PUBLIC_KEY')
+STRIPE_PRICE_ID = os.getenv('STRIPE_PRICE_ID')
+STRIPE_WEBHOOK_SECRET = os.getenv('STRIPE_WEBHOOK_SECRET')
+
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -153,6 +159,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'config.settings.context_processors.timestamp_processor',
                 'config.settings.context_processors.debug_processor',
+                'config.settings.context_processors.stripe_processor',
             ],
         },
     },

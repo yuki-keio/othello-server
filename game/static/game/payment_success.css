@@ -1,0 +1,50 @@
+:root {
+    --brand-color: #007508;
+    --brand-color-dark: #005d06;
+    --bg-color: #f5f8f6;
+    --text-color: #333;
+}
+
+/* 全体レイアウト */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue",
+                 Arial, "Noto Sans JP", sans-serif;
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-color);
+    color: var(--text-color);
+    text-align: center;
+    line-height: 1.5;
+}
+
+/* 見出し */
+h1 {
+    margin: 0 0 1rem;
+    font-size: 2rem;
+    color: var(--brand-color);
+}
+
+/* 説明文 */
+p {
+    margin: 0 0 2rem;
+    font-size: 1.1rem;
+}
+
+/* ボタン風リンク */
+a {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background: var(--brand-color);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+}
+a:hover,
+a:focus-visible {
+    background: var(--brand-color-dark);
+}

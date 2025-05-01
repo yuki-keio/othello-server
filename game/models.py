@@ -46,7 +46,6 @@ class CustomUser(AbstractUser):
     email = models.EmailField(_('メールアドレス'), unique=True)
 
     # 課金関連
-    subscription_expiry = models.DateField(null=True, blank=True)
     subscription_type = models.CharField(
         max_length=10,
         choices=SUBSCRIPTION_CHOICES,
@@ -65,6 +64,9 @@ class CustomUser(AbstractUser):
 
     # BAN 状態
     ban_status = models.IntegerField(default=0)  # 0:正常, 1〜:警告, 999:永久BAN
+    
+    stripe_customer_id = models.CharField(max_length=255, blank=True, null=True)
+
     reserved1 = models.CharField(max_length=100, blank=True, null=True, db_index=True)
     reserved2 = models.CharField(max_length=100, blank=True, null=True)
     reserved3 = models.CharField(max_length=100, blank=True, null=True)

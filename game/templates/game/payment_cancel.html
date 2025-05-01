@@ -1,0 +1,21 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="{{ request.LANGUAGE_CODE }}">
+<head>
+    <meta charset="UTF-8">
+    <title>{% trans "決済キャンセル" %}</title>
+    <link rel="stylesheet" href="{% static 'game/payment_cancel.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{% trans 'このページは決済キャンセルを示しています。' %}">
+</head>
+<body>
+    <h1>{% trans "決済がキャンセルされました" %}</h1>
+    <p>{% trans "再度お試しいただくか、問題があればサポートまでご連絡ください。" %}</p>
+    <p>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSeID_5fOJLDNPMJAz-kZbFmTLPxwdUUNVBsjXA36letgF7gow/viewform" target="_blank" rel="noopener noreferrer">
+            {% trans "お問い合わせフォームはこちら" %}
+        </a>
+    </p>
+    <a href="{% url 'index' %}" class="btn-return">{% trans "ゲームへ戻る" %}</a>
+</body>
+</html>

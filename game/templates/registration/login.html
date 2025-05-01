@@ -34,6 +34,10 @@
         <button type="submit">{% trans "ログイン" %}</button>
         <input type="hidden" name="next" value="{{ next }}">
     </form>
+    <br>
+    <div>
+        <a href="{% url 'user_signup' %}" class="signup">{% trans "まだアカウントを作成していない場合はこちら" %}</a>
+    </div>
     </div>
 </body>
 </html>

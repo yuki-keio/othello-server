@@ -107,6 +107,14 @@ h1 {
 .form-group {
     margin-bottom: 13px;
 }
+.login{
+    color:#404040;
+    text-decoration: none;
+    font-size: 0.8rem;
+}
+.login:hover {
+    text-decoration: underline;
+}
 
 /* ---------- レスポンシブ対応（スマホ） ---------- */
 @media (max-width: 480px) {

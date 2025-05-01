@@ -1,0 +1,17 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="{{ request.LANGUAGE_CODE }}">
+<head>
+    <meta charset="UTF-8">
+    <title>{% trans "決済成功" %}</title>
+    <link rel="stylesheet" href="{% static 'game/payment_success.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{% trans 'このページは決済成功を示しています。' %}">
+
+</head>
+<body>
+    <h1>{% trans "ご購入ありがとうございます！" %}</h1>
+    <p>{% trans "プレミアム機能が有効になりました。" %}</p>
+    <a href="{% url 'index' %}">{% trans "ゲームへ戻る" %}</a>
+</body>
+</html>

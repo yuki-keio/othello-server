@@ -126,3 +126,5 @@ node_modules/
 # my personal notes
 notes.md
 todo.md
+style.dev.css
+script.dev.js
