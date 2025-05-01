@@ -87,6 +87,7 @@ CSP_STYLE_SRC = (
     "https://pagead2.googlesyndication.com",
     "https://reversi.yuki-lab.com/static/",  
     "http://127.0.0.1:8000/static/",  
+    "https://cdnjs.cloudflare.com",
 )
 CSP_STYLE_SRC_ATTR = ("'unsafe-inline'",) 
 CSP_FONT_SRC = ("'self'", "https://fonts.gstatic.com")
