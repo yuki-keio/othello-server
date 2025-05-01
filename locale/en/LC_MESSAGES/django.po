@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-01 16:37+0900\n"
+"POT-Creation-Date: 2025-05-01 19:42+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -835,7 +835,7 @@ msgstr "Create an Account"
 msgid "作成"
 msgstr "Create"
 
-#: game/templates/game/signup.html:51
+#: game/templates/game/signup.html:52
 msgid "ログインはこちら"
 msgstr "If you already have an account, log in here"
 
