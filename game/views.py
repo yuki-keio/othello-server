@@ -131,7 +131,7 @@ class CreateCustomerPortalSessionView(View):
     def post(self, request, *args, **kwargs):
         stripe.api_key = settings.STRIPE_SECRET_KEY
         l_prefix = get_language()
-        l_prefix = "" if l_prefix == 'ja' else l_prefix
+        l_prefix = "" if l_prefix == 'ja' else (l_prefix + "/")
         # Stripe Customer IDを取得（必要ならDBに保存しておくと良い）
         customer_id = request.user.stripe_customer_id
 
