@@ -1999,15 +1999,7 @@ function _DOMContenLoaded() {
             const premiumElements = document.querySelectorAll('.premium');
             const nonPremiumElements = document.querySelectorAll('.free');
             console.log(`[Premium] ${data}, ${data.is_premium}`);
-            if (!data.is_premium) {
-                if (!window.adsLoaded) {
-                    window.adsLoaded = true;
-                    var script = document.createElement('script');
-                    script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1918692579240633";
-                    script.defer = true;
-                    script.nonce = cspNonce;
-                    document.head.appendChild(script);
-                }
+            if (data.is_premium) {
                 // プレミアムユーザーの要素を表示
                 premiumElements.forEach(el => el.style.display = 'block');
                 document.getElementById('open-portal').addEventListener('click', function (event) {
@@ -2025,6 +2017,14 @@ function _DOMContenLoaded() {
                         });
                 });
             } else {
+                if (!window.adsLoaded) {
+                    window.adsLoaded = true;
+                    var script = document.createElement('script');
+                    script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1918692579240633";
+                    script.defer = true;
+                    script.nonce = cspNonce;
+                    document.head.appendChild(script);
+                }
                 // プレミアムでないユーザーの要素を表示
                 nonPremiumElements.forEach(el => el.style.display = 'block');
                 document.getElementById('buy-premium-btn').addEventListener('click', buyPremium);
