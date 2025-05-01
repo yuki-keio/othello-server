@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-01 19:42+0900\n"
+"POT-Creation-Date: 2025-05-01 21:53+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -377,27 +377,27 @@ msgstr "Only alphanumeric characters allowed"
 msgid "持ち時間："
 msgstr "Time Limit:"
 
-#: game/templates/game/index.html:335 game/templates/game/index.html:414
+#: game/templates/game/index.html:335 game/templates/game/index.html:433
 msgid "制限なし"
 msgstr "No Limit"
 
-#: game/templates/game/index.html:336 game/templates/game/index.html:419
+#: game/templates/game/index.html:336
 msgid "10秒"
 msgstr "10 seconds"
 
-#: game/templates/game/index.html:337 game/templates/game/index.html:418
+#: game/templates/game/index.html:337
 msgid "30秒"
 msgstr "30 seconds"
 
-#: game/templates/game/index.html:338 game/templates/game/index.html:417
+#: game/templates/game/index.html:338
 msgid "1分"
 msgstr "1 minute"
 
-#: game/templates/game/index.html:339 game/templates/game/index.html:416
+#: game/templates/game/index.html:339
 msgid "3分"
 msgstr "3 minutes"
 
-#: game/templates/game/index.html:340 game/templates/game/index.html:415
+#: game/templates/game/index.html:340
 msgid "5分"
 msgstr "5 minutes"
 
@@ -441,69 +441,89 @@ msgstr "Game Record"
 msgid "　棋譜はまだありません"
 msgstr "No game record available yet."
 
-#: game/templates/game/index.html:391
-msgid "🔈 効果音："
-msgstr "🔈 Sound Effects:"
-
-#: game/templates/game/index.html:394
-msgid "勝利 / 敗北 BGM"
-msgstr "Victory / Defeat BGM"
-
-#: game/templates/game/index.html:397
-msgid "石を置く音"
-msgstr "Stone Placement Sound"
-
-#: game/templates/game/index.html:401
-msgid "残り時間あと少し"
-msgstr "Time Running Out"
-
-#: game/templates/game/index.html:406
-msgid "プレイヤー参加"
-msgstr "Player Participation"
-
-#: game/templates/game/index.html:412
-msgid "⏱ 一手あたりの持ち時間："
-msgstr "⏱ Time per Move:"
-
-#: game/templates/game/index.html:425
+#: game/templates/game/index.html:392
 msgid "🤖 AIの強さ："
 msgstr "🤖 AI Level:"
 
-#: game/templates/game/index.html:427
+#: game/templates/game/index.html:394
 msgid "初級"
 msgstr "Beginner"
 
-#: game/templates/game/index.html:428
+#: game/templates/game/index.html:395
 msgid "中級"
 msgstr "Intermediate"
 
-#: game/templates/game/index.html:429
+#: game/templates/game/index.html:396
 msgid "上級"
 msgstr "Advanced"
 
-#: game/templates/game/index.html:430
+#: game/templates/game/index.html:397
 msgid "達人級"
 msgstr "Master"
 
-#: game/templates/game/index.html:431
+#: game/templates/game/index.html:398
 msgid "名人級"
 msgstr "Grandmaster"
 
-#: game/templates/game/index.html:432
+#: game/templates/game/index.html:399
 msgid "🔆 偉人級"
 msgstr "🔆 Legendary"
 
-#: game/templates/game/index.html:433
+#: game/templates/game/index.html:400
 msgid "👺 超越級"
 msgstr "👺 Transcendent"
 
-#: game/templates/game/index.html:434
+#: game/templates/game/index.html:401
 msgid "🐤 最弱"
 msgstr "🐤 Weakest"
 
-#: game/templates/game/index.html:439
+#: game/templates/game/index.html:406
 msgid "有効な手をハイライト"
 msgstr "Highlight Valid Moves"
+
+#: game/templates/game/index.html:410
+msgid "🔈 効果音："
+msgstr "🔈 Sound Effects:"
+
+#: game/templates/game/index.html:413
+msgid "勝利 / 敗北 BGM"
+msgstr "Victory / Defeat BGM"
+
+#: game/templates/game/index.html:416
+msgid "石を置く音"
+msgstr "Stone Placement Sound"
+
+#: game/templates/game/index.html:420
+msgid "残り時間あと少し"
+msgstr "Time Running Out"
+
+#: game/templates/game/index.html:425
+msgid "プレイヤー参加"
+msgstr "Player Participation"
+
+#: game/templates/game/index.html:431
+msgid "⏱ 持ち時間："
+msgstr "⏱ Time Limit:"
+
+#: game/templates/game/index.html:434
+msgid "1手あたり5分"
+msgstr "5 minutes per move"
+
+#: game/templates/game/index.html:435
+msgid "1手あたり3分"
+msgstr "3 minutes per move"
+
+#: game/templates/game/index.html:436
+msgid "1手あたり1分"
+msgstr "1 minute per move"
+
+#: game/templates/game/index.html:437
+msgid "1手あたり30秒"
+msgstr "30 seconds per move"
+
+#: game/templates/game/index.html:438
+msgid "1手あたり10秒"
+msgstr "10 seconds per move"
 
 #: game/templates/game/index.html:446
 msgid "当サイト「リバーシWeb」の機能"
@@ -1003,3 +1023,6 @@ msgstr "If you don't have an account, register here"
 #: game/views.py:110
 msgid "ご契約済みのサブスクリプションが適用されました"
 msgstr "Your active subscription has been applied."
+
+#~ msgid "⏱ 一手あたりの持ち時間："
+#~ msgstr "⏱ Time per Move:"

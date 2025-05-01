@@ -207,6 +207,14 @@ width: 120px
   margin-left: 20px;
   margin-top:5px
 }
+.SE{
+  padding-top: 5px;
+  display: inline-block;
+}
+#showValidMovesCheckbox{
+  margin-right: 7px;
+  margin-left: 1px;
+}
 #player-name-container {
   margin-bottom: 15px
 }

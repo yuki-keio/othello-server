@@ -388,39 +388,6 @@
         <div id="settings">
             <h3>{% trans "設定" %}</h3>
             <div class="container">
-               {% trans "🔈 効果音：" %} <br>
-                <div id="soundSettingContainer">
-                <label>
-                    <input type="checkbox" id="gameEndSoundCheckbox" checked> {% trans "勝利 / 敗北 BGM" %}
-                </label> <br><br>
-                <label>
-                    <input type="checkbox" id="soundEffectsCheckbox" checked> {% trans "石を置く音" %}
-                </label> <br><br>
-                <div id="timeLimitBox_">
-                    <label>
-                        <input type="checkbox" id="timeLimitSoundCheckbox" checked> {% trans "残り時間あと少し" %}
-                    </label> <br><br>
-                </div>
-                <div id="playerJoinSoundBox">
-                    <label>
-                        <input type="checkbox" id="playerJoinSoundCheckbox" checked> {% trans "プレイヤー参加" %}
-                    </label> <br><br>
-                </div>
-                </div>
-                <div id="timeLimitContainer">
-                <label>
-                    {% trans "⏱ 一手あたりの持ち時間：" %}
-                    <select id="timeLimitSelect">
-                        <option value="0">{% trans "制限なし" %}</option>
-                        <option value="300">{% trans "5分" %}</option>
-                        <option value="180">{% trans "3分" %}</option>
-                        <option value="60">{% trans "1分" %}</option>
-                        <option value="30">{% trans "30秒" %}</option>
-                        <option value="10">{% trans "10秒" %}</option>
-                    </select>
-                </label>
-                </div>
-                <br>
                 <label id="level_ai">
                     {% trans "🤖 AIの強さ：" %}
                     <select id="aiLevelSelect">
@@ -435,9 +402,42 @@
                     </select>
                 </label>
                 <div id="validContainer">
-                    <label>💡
+                    <label>
                         <input type="checkbox" id="showValidMovesCheckbox" checked> {% trans "有効な手をハイライト" %}
                     </label>
+                </div>
+                <br>
+                {% trans "🔈 効果音：" %} <br>
+                <div id="soundSettingContainer">
+                    <label class="SE">
+                        <input type="checkbox" id="gameEndSoundCheckbox" checked> {% trans "勝利 / 敗北 BGM" %}
+                    </label><br>
+                    <label class="SE">
+                        <input type="checkbox" id="soundEffectsCheckbox" checked> {% trans "石を置く音" %}
+                    </label><br>
+                <div id="timeLimitBox_">
+                    <label class="SE">
+                        <input type="checkbox" id="timeLimitSoundCheckbox" checked> {% trans "残り時間あと少し" %}
+                    </label><br>
+                </div>
+                <div id="playerJoinSoundBox">
+                    <label class="SE">
+                        <input type="checkbox" id="playerJoinSoundCheckbox" checked> {% trans "プレイヤー参加" %}
+                    </label><br>
+                </div>
+                </div><br>
+                <div id="timeLimitContainer">
+                <label>
+                    {% trans "⏱ 持ち時間：" %}
+                    <select id="timeLimitSelect">
+                        <option value="0">{% trans "制限なし" %}</option>
+                        <option value="300">{% trans "1手あたり5分" %}</option>
+                        <option value="180">{% trans "1手あたり3分" %}</option>
+                        <option value="60">{% trans "1手あたり1分" %}</option>
+                        <option value="30">{% trans "1手あたり30秒" %}</option>
+                        <option value="10">{% trans "1手あたり10秒" %}</option>
+                    </select>
+                </label>
                 </div>
                 <br>
             </div>
