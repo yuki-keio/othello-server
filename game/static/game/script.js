@@ -1999,7 +1999,7 @@ function _DOMContenLoaded() {
             const premiumElements = document.querySelectorAll('.premium');
             const nonPremiumElements = document.querySelectorAll('.free');
             console.log(`[Premium] ${data}, ${data.is_premium}`);
-            if (data.is_premium) {
+            if (!data.is_premium) {
                 if (!window.adsLoaded) {
                     window.adsLoaded = true;
                     var script = document.createElement('script');
