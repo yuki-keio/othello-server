@@ -109,7 +109,7 @@ class CreateCheckoutSessionView(View):
         if request.user.subscription_type != 'none':
             return JsonResponse({'error': _('ご契約済みのサブスクリプションが適用されました')}, status=400)
         l_prefix = get_language()
-        l_prefix = "" if l_prefix == 'ja' else l_prefix
+        l_prefix = "" if l_prefix == 'ja' else ("/"+l_prefix)
         checkout_params = {
             'payment_method_types': ['card'],
             'line_items': [{
@@ -117,8 +117,8 @@ class CreateCheckoutSessionView(View):
                 'quantity': 1,
             }],
             'mode': 'subscription',
-            'success_url': request.build_absolute_uri(f"/{l_prefix}/success/"),
-            'cancel_url': request.build_absolute_uri(f"/{l_prefix}/cancel/"),
+            'success_url': request.build_absolute_uri(f"{l_prefix}/success/"),
+            'cancel_url': request.build_absolute_uri(f"{l_prefix}/cancel/"),
         }
         if request.user.stripe_customer_id:
             checkout_params['customer'] = request.user.stripe_customer_id
