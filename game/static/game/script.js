@@ -1,4 +1,4 @@
-const board = document.getElementById('board');
+window.board = document.getElementById('board');
 const statusB = document.getElementById('status');
 const scoreB = document.getElementById('score_black');
 const scoreW = document.getElementById('score_white');
@@ -7,7 +7,7 @@ const moveListElement = document.getElementById('move-list');
 const copyUrlBtn = document.getElementById("copy-url-btn");
 
 //音関係----
-const playerJoin = document.getElementById('playerJoin');
+window.playerJoin = document.getElementById('playerJoin');
 const warningSound = document.getElementById('warningSound');
 const victorySound = document.getElementById('victorySound');
 const defeatSound = document.getElementById('defeatSound');
@@ -21,30 +21,29 @@ gainNode.connect(audioContext.destination); // 出力先に接続
 gainNode.gain.value = 0.09;
 
 let resumed = null;
-let onlineGameStarted = false;
+window.onlineGameStarted = false;
 
 let deferredPrompt;
 
 const startMatchBtn = document.getElementById("start-match");
-const overlay = document.getElementById("game-settings-overlay");
+window.overlay = document.getElementById("game-settings-overlay");
 window.surrenderBtn = document.getElementById('surrender-btn');
 window.OnlineHandlers = {};
-const ws_scheme = window.location.protocol === "https:" ? "wss" : "ws";
 // プレイヤー名を取得・保存（なければ新規作成）
-let playerName = localStorage.getItem("playerName");
+window.playerName = localStorage.getItem("playerName");
 if (!playerName) {
     playerName = "player" + Math.floor(Math.random() * 1000); // デフォルトの名前を設定
     localStorage.setItem("playerName", playerName);
 }
 // プレイヤーの一意なIDを取得・保存（なければ新規作成）
-let playerId = localStorage.getItem("playerId");
+window.playerId = localStorage.getItem("playerId");
 if (!playerId) {
     playerId = crypto.randomUUID();
     localStorage.setItem("playerId", playerId);
 }
 
 const gUrlParams = new URLSearchParams(window.location.search);
-let gameRoom = gUrlParams.get('room');
+window.gameRoom = gUrlParams.get('room');
 
 window.socket = null;
 
@@ -52,10 +51,10 @@ window.socket = null;
 let soundEffects = !(localStorage.getItem('soundEffects') === "false");
 let timeLimitSoundEnabled = !(localStorage.getItem('timeLimitSoundEnabled') === "false");
 let gameEndSoundEnabled = localStorage.getItem('gameEndSoundEnabled') !== "false";
-let playerJoinSoundEnabled = !(localStorage.getItem('playerJoinSoundEnabled') === "false");
+window.playerJoinSoundEnabled = !(localStorage.getItem('playerJoinSoundEnabled') === "false");
 
-let showValidMoves = !(localStorage.getItem('showValidMoves') === "false");
-let timeLimit = parseInt(localStorage.getItem('timeLimit') || 0);
+window.showValidMoves = !(localStorage.getItem('showValidMoves') === "false");
+window.timeLimit = parseInt(localStorage.getItem('timeLimit') || 0);
 let aiLevel = parseInt(localStorage.getItem('aiLevel') || 1);
 
 window.currentPlayer = 'black';
@@ -75,7 +74,7 @@ let share_winner = "";
 let ifVictory = false;
 
 //言語設定
-let langCode = "ja";
+window.langCode = "ja";
 let gameMode = window.location.pathname.split('/').filter(Boolean)[0] || 'player';
 if (gameMode === "en") {
     gameMode = window.location.pathname.split('/').filter(Boolean)[1] || 'player';
@@ -88,7 +87,7 @@ let aimove = false;
 
 let online = false;
 window.role_online = "unknown";
-let opponentName = undefined;
+window.opponentName = undefined;
 
 const rPopup = document.getElementById('result-popup');
 const rBoverlay = document.getElementById('r-background-overlay');
@@ -107,7 +106,7 @@ const DIRECTIONS = [
     [1, -1], [1, 0], [1, 1]
 ];
 
-function refreshBoard() {
+window.refreshBoard = function() {
     const fragment = document.createDocumentFragment();
     for (let i = 0; i < 8; i++) {
         const rowElement = document.createElement('div');
@@ -158,7 +157,7 @@ function setInitialStones() {
 }
 
 // 盤面に黒ポチを追加+ローダー削除
-function add4x4Markers() {
+window.add4x4Markers = function() {
     const markers = [
         { row: 1, col: 1 },
         { row: 1, col: 5 },
@@ -509,14 +508,14 @@ function startTimer() {
         }
     }, 1000);
 }
-function stopTimer() {
+window.stopTimer = function() {
     if (currentPlayerTimer) {
         clearInterval(currentPlayerTimer);
         currentPlayerTimer = null;
         warningSound.pause();
     }
 }
-function formatTime(seconds) {
+window.formatTime = function(seconds) {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
@@ -554,7 +553,7 @@ function serializeMoveHistory() {
     return moveHistory.map(move => `${move.player[0]}${move.row}${move.col}`).join('-');
 }
 
-function deserializeMoveHistory(serialized) {
+window.deserializeMoveHistory = function(serialized) {
     const moves_ = serialized.split('-');
     if (moves_[moves_.length - 1] === "") {
         moves_.pop();
@@ -842,7 +841,7 @@ function goToNextMove() {
     }
 }
 
-function replayMovesUpToIndex(index, fromServer = false) {
+window.replayMovesUpToIndex = function(index, fromServer = false) {
     gameBoard = gameBoard.map(row => row.map(() => ''));
     setInitialStones();
     console.log("replayMovesUpToIndex", moveHistory);
@@ -1220,7 +1219,7 @@ function showLoading(after = 1000) {
         document.body.appendChild(loadingOverlay);
     }, after);
 }
-function endGame(online_data, winner = null, y = -1) {
+window.endGame = function(online_data, winner = null, y = -1) {
     if (y === 1) {
         ifVictory = true;
     } else {
@@ -1463,36 +1462,6 @@ function launchConfetti() {
         });
     }, 800);
 }
-function showDialog(type, value = null) {
-    const shouldHide = localStorage.getItem("hide" + type + "Dialog") === "true";
-    if (!shouldHide) {
-        if (type === "role") {
-            if (value === "black") {
-                document.getElementById(type + "-dialog-content").textContent = lang.roleDialogB;
-            } else {
-                document.getElementById(type + "-dialog-content").textContent = lang.roleDialogW;
-            }
-        }
-        document.getElementById(type + "-dialog").style.display = "block";
-        document.getElementById(type + "-dialog-overlay").style.display = "block";
-        let okBtn = null;
-        if (type === "role") {
-            okBtn = document.getElementById("closeRoleDialog");
-        }
-        if (okBtn) {
-            const keyHandler = (event) => {
-                if (event.key === "Enter") {
-                    okBtn.click();
-                }
-            };
-            document.addEventListener("keydown", keyHandler);
-            // 一度だけ実行するように、OKボタンでリスナー解除
-            okBtn.addEventListener("click", () => {
-                document.removeEventListener("keydown", keyHandler);
-            });
-        }
-    }
-}
 function closeDialog(type) {
     document.getElementById(type + "-dialog").style.display = "none";
     document.getElementById(type + "-dialog-overlay").style.display = "none";
@@ -1539,15 +1508,6 @@ function showResultPopup(victory, scoreBlack, scoreWhite, f_winner) {
     resultImg.src = imagePath;
     rPopup.style.display = 'block';
     rBoverlay.style.display = 'block';
-}
-
-function escapeHTML(str) {
-    return str
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
 }
 
 // インストールガイドを表示
@@ -1701,11 +1661,6 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
         document.getElementById('game-container').scrollIntoView({ behavior: "smooth" });
     });
 });
-function toHalfWidth(str) {
-    return str.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function (s) {
-        return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
-    });
-}
 
 function _DOMContenLoaded() {
     const inviteBtn = document.getElementById("qr");

@@ -1,3 +1,34 @@
+const ws_scheme = window.location.protocol === "https:" ? "wss" : "ws";
+window.showDialog = function(type, value = null) {
+    const shouldHide = localStorage.getItem("hide" + type + "Dialog") === "true";
+    if (!shouldHide) {
+        if (type === "role") {
+            if (value === "black") {
+                document.getElementById(type + "-dialog-content").textContent = lang.roleDialogB;
+            } else {
+                document.getElementById(type + "-dialog-content").textContent = lang.roleDialogW;
+            }
+        }
+        document.getElementById(type + "-dialog").style.display = "block";
+        document.getElementById(type + "-dialog-overlay").style.display = "block";
+        let okBtn = null;
+        if (type === "role") {
+            okBtn = document.getElementById("closeRoleDialog");
+        }
+        if (okBtn) {
+            const keyHandler = (event) => {
+                if (event.key === "Enter") {
+                    okBtn.click();
+                }
+            };
+            document.addEventListener("keydown", keyHandler);
+            // 一度だけ実行するように、OKボタンでリスナー解除
+            okBtn.addEventListener("click", () => {
+                document.removeEventListener("keydown", keyHandler);
+            });
+        }
+    }
+}
 // サーバーから受信したパスメッセージに基づいて、ターン更新と表示を行う
 function processPassMessage(data) {
     console.log(`[processPassMessage] Received pass message: ${JSON.stringify(data)}, old currentPlayer: ${currentPlayer}`);
@@ -61,7 +92,19 @@ function sendSettings() {
     localStorage.setItem('showValidMoves', showValidMoves);
 
     window.socket.send(JSON.stringify({ action: "game_setting", time_limit: timeLimit, show_valid_moves: showValidMoves, player_name: playerName }));
-
+}
+function toHalfWidth(str) {
+    return str.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function (s) {
+        return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
+    });
+}
+function escapeHTML(str) {
+    return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
 window.OnlineHandlers.makeSocket = function () {
     window.socket = new WebSocket(`${ws_scheme}://${window.location.host}/ws/othello/${gameRoom}/?playerId=${playerId}&timeLimit=${timeLimit}&showValidMoves=${showValidMoves}&playerName=${encodeURIComponent(playerName)}&lang=${langCode}`);
@@ -118,7 +161,7 @@ window.OnlineHandlers.makeSocket = function () {
 
                 if (data.n_players !== 1) {
                     document.getElementById("restart-btn").disabled = false;
-                    window.surrenderBtn.disabled = false;
+                    surrenderBtn.disabled = false;
                 }
                 console.log("reconnect", data);
             } else {
@@ -183,10 +226,10 @@ window.OnlineHandlers.makeSocket = function () {
     };
 }
 // 降伏ボタンをクリックしたとき、確認後にサーバーへ降伏メッセージを送信
-if (window.surrenderBtn) {
-    window.surrenderBtn.addEventListener('click', () => {
+if (surrenderBtn) {
+    surrenderBtn.addEventListener('click', () => {
         if (confirm(lang.surrender_right)) {
-            window.socket.send(JSON.stringify({ action: "surrender" }));
+            socket.send(JSON.stringify({ action: "surrender" }));
         }
     });
     document.getElementById("info-button").addEventListener("click", function () {
