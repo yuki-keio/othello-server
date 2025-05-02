@@ -59,7 +59,7 @@ let aiLevel = parseInt(localStorage.getItem('aiLevel') || 1);
 
 window.currentPlayer = 'black';
 let gameBoard = Array.from({ length: 8 }, () => Array(8).fill(''));
-let moveHistory = [];
+window.moveHistory = [];
 let currentMoveIndex = -1; // Track the current move index
 let lastMoveCell = null;
 
