@@ -26,8 +26,6 @@ window.onlineGameStarted = false;
 let deferredPrompt;
 
 const startMatchBtn = document.getElementById("start-match");
-window.overlay = document.getElementById("game-settings-overlay");
-window.surrenderBtn = document.getElementById('surrender-btn');
 // プレイヤー名を取得・保存（なければ新規作成）
 window.playerName = localStorage.getItem("playerName");
 if (!playerName) {
@@ -1630,8 +1628,6 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
             restart();
         } else {
             document.getElementById("playerJoinSoundBox").style.display = "none";
-            //もしあれば overlay を非表示
-            if (overlay) overlay.style.display = "none";
             if (previousMode === 'online') {
                 online = false; // オンラインモードのフラグを下げる
                 mode_url.searchParams.delete("room");

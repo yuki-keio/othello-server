@@ -1,4 +1,7 @@
 const ws_scheme = window.location.protocol === "https:" ? "wss" : "ws";
+const timelimit__el = document.getElementById('time-limit');
+const surrenderBtn = document.getElementById('surrender-btn');
+const overlay = document.getElementById("game-settings-overlay");
 window.showDialog = function(type, value = null) {
     const shouldHide = localStorage.getItem("hide" + type + "Dialog") === "true";
     if (!shouldHide) {
@@ -86,7 +89,7 @@ function updatePlayerList(players) {
     }
 }
 function sendSettings() {
-    let overlayTimeLimit = timelimit_el.value;
+    let overlayTimeLimit = timelimit__el.value;
     let overlayHighlightMoves = highlightMoves_el.checked;
     timeLimit = overlayTimeLimit;
     showValidMoves = overlayHighlightMoves ? "true" : "false";
