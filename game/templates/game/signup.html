@@ -8,9 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic&family=BIZ+UDPMincho:wght@400&display=swap" rel="stylesheet" crossorigin="anonymous" media="all">
     <link rel="stylesheet" href="{% static 'game/signup.css' %}">
-    <meta name="description" content="">
-    <title>{% trans 'アカウント作成 | リバーシWeb' %}
-    </title>
+    <title>{% trans 'アカウント作成 | リバーシWeb' %}</title>
     <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/favicon.ico' %}">
     <link rel="apple-touch-icon" sizes="180x180" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/apple-touch-icon.png' %}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/favicon-16x16.png' %}">
@@ -45,12 +43,31 @@
                 </div>
             {% endfor %}
 
-            <button type="submit">{% trans "作成" %}</button>
+            <button id="signup-btn" type="submit">{% trans "作成" %}</button>
         </form>
         <br>
         <div >
             <a href="{% url 'user_login' %}" class="login">{% trans "ログインはこちら" %}</a>
         </div>
     </div>
+    <script nonce="{{ request.csp_nonce }}">
+        var script = document.createElement('script');
+        script.src = "https://www.googletagmanager.com/gtag/js?id=G-4JKZC3VNE7";
+        script.async = true;
+        script.nonce = "{{ request.csp_nonce }}";
+        document.head.appendChild(script);
+        script.onload = function () {
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-4JKZC3VNE7', { 'cookie_domain': 'auto' });
+            document.getElementById('signup-btn').addEventListener('click', function() {
+                gtag('event', 'signup', {
+                    'event_category': 'engagement',
+                    'event_label': 'signup_button_click',
+                });
+            });
+        };
+    </script>
 </body>
 </html>

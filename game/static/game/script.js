@@ -212,7 +212,7 @@ async function applyServerMove(row, col, player, status, final = false) {
     // statusが0の場合は、サーバーからの手?か友達対戦です
     // statusが1の場合は、リプレイ時の手
     // statusが2の場合は、これはAIendMoveによる手であり、serverからの手ではないです
-    //console.log(`[applyServerMove] row: ${row}, col: ${col}, player: ${player}, status: ${status}, currentPlayer: ${currentPlayer}`);
+    console.log(`[applyServerMove] row: ${row}, col: ${col}, player: ${player}, status: ${status}, currentPlayer: ${currentPlayer}`);
     if (gameBoard[row][col] !== '' || !isValidMove(row, col, player)) {
         console.warn(`[applyServerMove] Invalid move: (${row},${col}), gameBoard[${row}][${col}]: ${gameBoard[row][col]}, isValidMove: ${isValidMove(row, col, player)}`);
         return;
@@ -228,10 +228,8 @@ async function applyServerMove(row, col, player, status, final = false) {
         if (status !== 1) {
             await playStoneSound();
         } else if (final) {
-            console.log("[applyServerMove]final" + final);
             playStoneSound();
         }
-
     }
     // 現在の手にハイライトを追加
     const currentCell = board.children[row].children[col];
@@ -535,6 +533,9 @@ function recordMove(row, col, status) {
     if (status !== 1) {
         moveHistory.push({ row, col, player: currentPlayer, moveNotation, token: "recordMove" });
         localStorage.setItem("deleted_urls", JSON.stringify([]));
+        document.getElementById('prev-move-btn').style.display = 'inline-block';
+        console.log("[recordMove] prev-display", document.getElementById('prev-move-btn').style.display);
+        document.getElementById('next-move-btn').style.display = 'none';
     }
     currentMoveIndex = moveHistory.length - 1;
     updateMoveList();
@@ -608,7 +609,14 @@ function loadBoardFromURL() {
         window.location.href = offlinePath;
         return;
     }
-
+    if (urlParams.get('moves') === null) {
+        document.getElementById('prev-move-btn').style.display = 'none';
+    }
+    if (localStorage.getItem('deleted_urls') === null || JSON.parse(localStorage.getItem('deleted_urls')).length === 0) {
+        document.getElementById('next-move-btn').style.display = 'none';
+    } else {
+        document.getElementById('next-move-btn').style.display = 'inline-block';
+    }
     const won = urlParams.get('won');
     const aiLevelFromURL = urlParams.get('aiLevel');
 
@@ -636,8 +644,14 @@ function loadBoardFromURL() {
         }
         if (gameMode === "online") {
             console.log(`timelimit: ${timeLimit}`);
-            makeSocket()
             online = true;
+            if (typeof makeSocket === "function") {
+                makeSocket();
+            } else {
+                setTimeout(() => {
+                    makeSocket();
+                }, 50);
+            }
             onlineUI();
             document.getElementById("playerJoinSoundBox").style.display = "block";
         } else {
@@ -697,7 +711,11 @@ function loadBoardFromURL() {
 
     }
 }
-
+function onlineUI() {
+    //設定から時間やハイライトを変更できないように消す
+    document.getElementById('timeLimitContainer').style.display = 'none';
+    document.getElementById('validContainer').style.display = 'none';
+}
 function copyURLToClipboard(matchRoom = false, fromResult = false) {
     let url = new URL(window.location);
     let alertText = lang.copy_url;
@@ -778,10 +796,6 @@ function restart(reload = true) {
 function goToPreviousMove() {
     const url = new URL(window.location);
     const move_now = url.searchParams.get('moves');
-    if (!move_now) {
-        alert(lang.cant_go_more);
-        return;
-    }
     if (move_now.length > 3) {
         url.searchParams.set('moves', move_now.slice(0, move_now.lastIndexOf('-')));
     } else {
@@ -803,6 +817,7 @@ function goToPreviousMove() {
     } else {
         console.log("[goToPreviousMove] gtag not found");
     }
+    url.searchParams.delete('w');
     window.location = url;
 }
 
@@ -812,7 +827,6 @@ function goToNextMove() {
     const deleted_urls = JSON.parse(localStorage.getItem('deleted_urls'));
     if (deleted_urls.length > 0) {
         url.searchParams.set('moves', move_now + deleted_urls.pop());
-
         localStorage.setItem('deleted_urls', JSON.stringify(deleted_urls));
         sessionStorage.setItem("scrollY", window.scrollY);
         if (window.gtag) {
@@ -824,11 +838,7 @@ function goToNextMove() {
             console.log("[goToNextMove] gtag not found");
         }
         window.location = url;
-
-    } else {
-        alert(lang.cant_go_more);
     }
-
 }
 
 function replayMovesUpToIndex(index, fromServer = false) {
@@ -1642,22 +1652,24 @@ if (document.readyState !== "loading") {
 }
 //画面トップに表示されるモード切り替えバナー
 document.querySelectorAll('.mode-btn').forEach(btn => {
+    const modeButtons = document.querySelectorAll('.mode-btn');
     btn.addEventListener('click', function () {
         const selectedMode = this.getAttribute('data-mode');
         const previousMode = gameMode;
-        gameMode = selectedMode;
         if (selectedMode === previousMode) return;
+        gameMode = selectedMode;
         localStorage.setItem('gameMode', selectedMode);
         // ボタンのactiveクラスを更新
-        document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
+        modeButtons.forEach(b => {
+            b.classList[b === this ? 'add' : 'remove']('active');
+        });
         changeTitle();  // タイトルなどの更新
         updateURL();    // URLパラメータの更新など必要なら行う
         changeHead();
+        const mode_url = new URL(window.location);
         if (selectedMode !== 'ai') {
-            const tp__url = new URL(window.location);
-            tp__url.searchParams.delete('aiLevel');
-            history.replaceState(null, "", tp__url);
+            mode_url.searchParams.delete('aiLevel');
+            history.replaceState(null, "", mode_url);
         }
         if (selectedMode === 'online') {
             online = true;  // オンラインモードのフラグを立てる
@@ -1666,14 +1678,11 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
         } else {
             document.getElementById("playerJoinSoundBox").style.display = "none";
             //もしあれば overlay を非表示
-            if (overlay) {
-                overlay.style.display = "none";
-            }
+            if (overlay) overlay.style.display = "none";
             if (previousMode === 'online') {
                 online = false; // オンラインモードのフラグを下げる
-                const url = new URL(window.location);
-                url.searchParams.delete("room");
-                history.pushState(null, "", url);
+                mode_url.searchParams.delete("room");
+                history.pushState(null, "", mode_url);
 
                 if (socket) {
                     socket.close();
@@ -1683,207 +1692,14 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
                 restart();
 
             } else if (selectedMode === 'ai') {
-                if (gameMode === 'ai' && currentPlayer === 'white' && !gameEnded) { startAIMove(); }
                 initAIMode();
+                if (gameMode === 'ai' && currentPlayer === 'white' && !gameEnded) { startAIMove(); }
             }
         }
         //トップにスクロール
         document.getElementById('game-container').scrollIntoView({ behavior: "smooth" });
     });
 });
-
-// サーバーから受信したパスメッセージに基づいて、ターン更新と表示を行う
-function processPassMessage(data) {
-    console.log(`[processPassMessage] Received pass message: ${JSON.stringify(data)}, old currentPlayer: ${currentPlayer}`);
-    // data.new_turn がサーバーから送信された新しい手番
-    currentPlayer = data.new_turn;
-
-    if (currentPlayer === role_online) {
-        alert(lang.opponent_pass);
-    } else {
-        alert(lang.you_pass);
-    }
-    // 状態更新（タイマーの再設定や手番表示更新）
-    updateStatus();
-}
-// 石を置いたときにサーバーに送信
-function sendMove(row, col) {
-
-    const message = {
-        action: "place_stone",
-        row: row,
-        col: col,
-        player: currentPlayer
-    };
-    console.log("Sending WebSocket move:", message);
-    console.log("online?:", online);
-    socket.send(JSON.stringify(message));
-}
-function onlineUI() {
-
-    //設定から時間やハイライトを変更できないように消す
-    document.getElementById('timeLimitContainer').style.display = 'none';
-    document.getElementById('validContainer').style.display = 'none';
-}
-function updatePlayerList(players) {
-    console.log(`[updatePlayerList] Updating player list: ${JSON.stringify(players)}`);
-    const playerListElement = document.getElementById('player-list');
-    playerListElement.innerHTML = ''; // クリア
-
-    Object.entries(players).forEach(([id, [ws_role, name]]) => {
-        const role = (ws_role === "black") ? lang.black : (ws_role === "white") ? lang.white : lang.spec;
-        const span = document.createElement('span');
-        let display_player_name;
-        if (id === playerId) {
-            span.style.fontWeight = 'bold';
-            display_player_name = lang.you + `（${name}）`;
-        } else {
-            display_player_name = name;
-            if (ws_role !== "spectator") {
-                opponentName = name;
-            }
-        }
-        span.innerHTML = ((role !== lang.black) ? "　" : "") + `${(role === lang.black) ? '<span id="black_circle"></span>' : (role === lang.white) ? '<span id="white_circle"></span>' : role + ":"} ${escapeHTML(display_player_name)}`;
-        playerListElement.appendChild(span);
-    });
-    if (Object.keys(players).length === 1) {
-        const span = document.createElement('span');
-        span.innerHTML = '　<span id="white_circle"></span> ' + lang.opponent;
-        playerListElement.appendChild(span);
-    }
-}
-function sendSettings() {
-    let overlayTimeLimit = timelimit_el.value;
-    let overlayHighlightMoves = highlightMoves_el.checked;
-    timeLimit = overlayTimeLimit;
-    showValidMoves = overlayHighlightMoves ? "true" : "false";
-
-    localStorage.setItem('timeLimit', timeLimit);
-    localStorage.setItem('showValidMoves', showValidMoves);
-
-    socket.send(JSON.stringify({ action: "game_setting", time_limit: timeLimit, show_valid_moves: showValidMoves, player_name: playerName }));
-
-}
-function makeSocket() {
-
-    socket = new WebSocket(`${ws_scheme}://${window.location.host}/ws/othello/${gameRoom}/?playerId=${playerId}&timeLimit=${timeLimit}&showValidMoves=${showValidMoves}&playerName=${encodeURIComponent(playerName)}&lang=${langCode}`);
-
-    // 接続成功時
-    socket.onopen = function (e) {
-        console.log("WebSocket connection established.", e);
-    };
-    // メッセージ受信時（盤面を更新）
-    socket.onmessage = function (e) {
-        console.log("WebSocket message received:", e.data);
-        const data = JSON.parse(e.data);
-
-        if (data.error) {
-            alert(`⚠️ ${data.error}`);
-            return;
-        }
-        if (data.action === "place_stone") {
-            board.innerHTML = '';
-            refreshBoard()
-            add4x4Markers();
-
-            deserializeMoveHistory(data.history);
-            console.log("moveHistory", moveHistory);
-            replayMovesUpToIndex(moveHistory.length - 1, 1);
-
-        } else if (data.action === "assign_role") {
-            role_online = data.role; // サーバーから受け取った役割
-            console.log(`あなたの役割: ${role_online}, データ${data}, (ID: ${playerId}), 再接続${data.reconnect}, ロール${role_online}`);
-            if (data.n_players === 1) {
-                overlay.style.display = 'flex';
-            }
-            if (data.reconnect === true) {
-                board.innerHTML = '';
-                refreshBoard()
-                add4x4Markers();
-                deserializeMoveHistory(data.history);
-                console.log("moveHistory", moveHistory);
-                replayMovesUpToIndex(moveHistory.length - 1, 2);
-                stopTimer();
-                document.getElementById("timer-display").textContent = "- : --";
-                timeLimit = data.time_limit;
-                localStorage.setItem('timeLimit', timeLimit);
-                document.getElementById('timeLimitSelect').value = timeLimit;
-                console.log(`ゲームが再開されました。${data.show_valid_moves}`);
-                showValidMoves = data.show_valid_moves === "true";
-                localStorage.setItem('showValidMoves', showValidMoves);
-                document.getElementById('showValidMovesCheckbox').checked = showValidMoves;
-                if (timeLimit === 0) {
-                    document.getElementById("timeLimitBox_").style.display = "none";
-                } else {
-                    document.getElementById("timeLimitBox_").style.display = "block";
-                }
-
-                if (data.n_players !== 1) {
-                    document.getElementById("restart-btn").disabled = false;
-                    document.getElementById("surrender-btn").disabled = false;
-                }
-                console.log("reconnect", data);
-            } else {
-                //タイマーを止める
-                timeLimit = 0;
-                localStorage.setItem('timeLimit', timeLimit);
-                stopTimer();
-                document.getElementById("timeLimitBox_").style.display = "none";
-            }
-        } else if (data.action === "update_players") {
-            updatePlayerList(data.players);
-            if (data.by_reconnect) return;
-            if (Object.keys(data.players).length === 2 && !data.setting) {
-                if (role_online === 'black') {
-                    sendSettings();
-                }
-                showDialog("role", role_online);
-                overlay.style.display = 'none';
-                const qrPopup = document.getElementById("qr-popup");
-                qrPopup.style.display = "none";
-                highlightValidMoves();
-                document.getElementById("restart-btn").disabled = false;
-                document.getElementById("surrender-btn").disabled = false;
-            }
-            if (playerJoinSoundEnabled) {
-                if (data.player_id !== playerId) {
-                    playerJoin.currentTime = 0;
-                    playerJoin.play().catch(error => {
-                        console.warn("audio was blocked:", error);
-                    });
-                }
-            }
-            if (data.setting) {
-                stopTimer();
-                timeLimit = data.time_limit;
-                localStorage.setItem('timeLimit', timeLimit);
-                document.getElementById('timeLimitSelect').value = timeLimit;
-                showValidMoves = data.show_valid_moves === "true";
-                localStorage.setItem('showValidMoves', showValidMoves);
-                document.getElementById('showValidMovesCheckbox').checked = showValidMoves;
-                const s_timerDisplay = document.getElementById('timer-display');
-                if (timeLimit === 0) {
-                    document.getElementById("timeLimitBox_").style.display = "none";
-                    s_timerDisplay.style.display = "none";
-                } else {
-                    document.getElementById("timeLimitBox_").style.display = "block";
-                    s_timerDisplay.style.display = "block";
-                    s_timerDisplay.textContent = formatTime(timeLimit);
-                }
-            }
-        } else if (data.action === "pass") {
-            processPassMessage(data);
-            return;
-        } else if (data.action === "game_over") {
-            endGame(data, data.winner);
-            return;
-        } else if (data.action === "game_start") {
-            console.log(`Game started. ${data.time_limit},${data.show_valid_moves}.`);
-            onlineGameStarted = true;
-            return;
-        }
-    };
-}
 function toHalfWidth(str) {
     return str.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function (s) {
         return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
@@ -2002,8 +1818,11 @@ function _DOMContenLoaded() {
             if (data.is_premium) {
                 // プレミアムユーザーの要素を表示
                 premiumElements.forEach(el => el.style.display = 'block');
-                document.getElementById('open-portal').addEventListener('click', function (event) {
+                const portalEl = document.getElementById('open-portal');
+                portalEl.addEventListener('click', function (event) {
                     event.preventDefault();
+                    const portalText = portalEl.textContent;
+                    portalEl.textContent = "⌛️ Loading...";
                     fetch(l_prefix + "/api/create-customer-portal-session/", {
                         method: 'POST',
                         headers: {
@@ -2013,6 +1832,10 @@ function _DOMContenLoaded() {
                     })
                         .then(response => response.json())
                         .then(data => {
+                            setTimeout(() => {
+                                portalEl.textContent = portalText;
+                            }
+                                , 3000);
                             window.location.href = data.url;  // Stripeポータルにリダイレクト
                         });
                 });
@@ -2186,6 +2009,10 @@ async function playStoneSound() {
 function buyPremium(event) {
     event.preventDefault();
     if (authenticated) {
+        gtag('event', 'premium_intent', {
+            'event_category': 'engagement',
+            'event_label': 'Premium Clicked',
+        });
         window.location.href = l_prefix + "/premium-intent/";
     } else {
         if (loggedInBefore) {
@@ -2265,46 +2092,10 @@ if (closeRoleDialog_el) {
         closeDialog("role");
     }
     );
-
-}
-// 降伏ボタンをクリックしたとき、確認後にサーバーへ降伏メッセージを送信
-if (surrenderBtn) {
-    surrenderBtn.addEventListener('click', () => {
-        if (confirm(lang.surrender_right)) {
-            socket.send(JSON.stringify({ action: "surrender" }));
-        }
-    });
-    document.getElementById("info-button").addEventListener("click", function () {
-        alert(`${lang.how2play_with_friend}`);
-    });
-}
-const playerName_el = document.getElementById('player-name');
-if (playerName_el) {
-    playerName_el.value = playerName;
-    const warning = document.getElementById("warning");
-    // プレイヤー名の保存ボタンの処理
-    playerName_el.addEventListener("change", () => {
-        const nameInput = toHalfWidth(playerName_el.value.trim());
-        if (nameInput.length > 0) {
-            playerName_el.value = nameInput;
-            if (/^[a-zA-Z0-9]+$/.test(nameInput)) {
-                playerName = profanityCleaner.clean(nameInput);
-                document.getElementById("player-list").children[0].innerHTML = '<span id="black_circle"></span> ' + lang.you + "(" + escapeHTML(playerName) + ")";
-                playerName_el.value = playerName;
-                localStorage.setItem("playerName", playerName);
-                //sendSettings();
-                warning.textContent = "";
-
-            } else {
-                warning.textContent = lang.warn_EnOnly;
-            }
-        } else {
-            warning.textContent = lang.warn_charLimit;
-        }
-    });
 }
 document.getElementById("toSetting").addEventListener('click', () => {
     document.getElementById('settings').scrollIntoView({ behavior: 'smooth' });
+    document.getElementById('menu-toggle').checked = false;
 });
 document.getElementById("close-install-guide").addEventListener("click", () => {
     document.getElementById("ios-install-guide").style.display = "none";
@@ -2315,7 +2106,11 @@ document.getElementById("close-install-guide").addEventListener("click", () => {
         }
     }
 });
-
+document.addEventListener('click', function (e) {
+    if (document.getElementById('menu-toggle').checked && !document.getElementById('hamburger-menu').contains(e.target)) {
+        document.getElementById('menu-toggle').checked = false;
+    }
+});
 document.getElementById('timeLimitSelect').value = timeLimit;
 document.getElementById('timeLimitSelect').addEventListener('change', () => {
     timeLimit = parseInt(document.getElementById('timeLimitSelect').value);

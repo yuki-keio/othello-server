@@ -219,9 +219,8 @@ width: 120px
   margin-bottom: 15px
 }
 #player-name {
-  width: auto;
   min-width: 120px;
-  width: 70%;
+  width: 67%;
   max-width: 160px;
   padding: 8px;
   border: 1px solid #ccc;
@@ -230,7 +229,7 @@ width: 120px
 }
 #label4name{
   font-size: 14px;
-  width: 77px
+  width: 77px;
 }
 #warning{
   font-size: 12px;
