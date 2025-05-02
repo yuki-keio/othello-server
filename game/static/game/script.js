@@ -27,7 +27,8 @@ let deferredPrompt;
 
 const startMatchBtn = document.getElementById("start-match");
 const overlay = document.getElementById("game-settings-overlay");
-const surrenderBtn = document.getElementById('surrender-btn');
+window.surrenderBtn = document.getElementById('surrender-btn');
+window.OnlineHandlers = {};
 const ws_scheme = window.location.protocol === "https:" ? "wss" : "ws";
 // プレイヤー名を取得・保存（なければ新規作成）
 let playerName = localStorage.getItem("playerName");
@@ -45,7 +46,7 @@ if (!playerId) {
 const gUrlParams = new URLSearchParams(window.location.search);
 let gameRoom = gUrlParams.get('room');
 
-let socket = null;
+window.socket = null;
 
 // 設定関係
 let soundEffects = !(localStorage.getItem('soundEffects') === "false");
@@ -57,7 +58,7 @@ let showValidMoves = !(localStorage.getItem('showValidMoves') === "false");
 let timeLimit = parseInt(localStorage.getItem('timeLimit') || 0);
 let aiLevel = parseInt(localStorage.getItem('aiLevel') || 1);
 
-let currentPlayer = 'black';
+window.currentPlayer = 'black';
 let gameBoard = Array.from({ length: 8 }, () => Array(8).fill(''));
 let moveHistory = [];
 let currentMoveIndex = -1; // Track the current move index
@@ -86,7 +87,7 @@ let langNextAIName = false;
 let aimove = false;
 
 let online = false;
-let role_online = "unknown";
+window.role_online = "unknown";
 let opponentName = undefined;
 
 const rPopup = document.getElementById('result-popup');
@@ -248,7 +249,7 @@ async function applyServerMove(row, col, player, status, final = false) {
 
             if (online) {
                 if (role_online === currentPlayer && final === 1) {
-                    socket.send(JSON.stringify({ action: "pass" }));
+                    window.socket.send(JSON.stringify({ action: "pass" }));
                 }
             } else {
                 if (status !== 1) {
@@ -323,7 +324,7 @@ function makeMove(row, col, status = 0) {
             alert(lang.spec_cant_play);
             return;
         } else if (role_online === currentPlayer) {
-            sendMove(row, col);
+            window.OnlineHandlers.sendMove(row, col);
         } else {
             const roleDisplay = role_online === "black" ? lang.black : role_online === "white" ? lang.white : lang.spec;
             alert(`${lang.not_your_turn}${currentPlayer === 'black' ? lang.black : lang.white}, ${lang.you}：${roleDisplay}`);
@@ -645,11 +646,11 @@ function loadBoardFromURL() {
         if (gameMode === "online") {
             console.log(`timelimit: ${timeLimit}`);
             online = true;
-            if (typeof makeSocket === "function") {
-                makeSocket();
+            if (typeof window.OnlineHandlers.makeSocket === "function") {
+                window.OnlineHandlers.makeSocket();
             } else {
                 setTimeout(() => {
-                    makeSocket();
+                    window.OnlineHandlers.makeSocket();
                 }, 50);
             }
             onlineUI();
@@ -673,9 +674,9 @@ function loadBoardFromURL() {
             url.searchParams.delete("room");
             history.replaceState(null, "", url);
             online = false;
-            if (socket) {
-                socket.close();
-                socket = null;
+            if (window.socket) {
+                window.socket.close();
+                window.socket = null;
             }
             document.getElementById("playerJoinSoundBox").style.display = "none";
         }
@@ -1684,9 +1685,9 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
                 mode_url.searchParams.delete("room");
                 history.pushState(null, "", mode_url);
 
-                if (socket) {
-                    socket.close();
-                    socket = null;
+                if (window.socket) {
+                    window.socket.close();
+                    window.socket = null;
                 }
                 showLoading();
                 restart();
@@ -1777,9 +1778,9 @@ function _DOMContenLoaded() {
         url.searchParams.delete("room");
         history.replaceState(null, "", url);
 
-        if (socket) {
-            socket.close();
-            socket = null;
+        if (window.socket) {
+            window.socket.close();
+            window.socket = null;
         }
         document.getElementById("playerJoinSoundBox").style.display = "none";
         if (gameMode === 'ai') {

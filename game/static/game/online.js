@@ -13,7 +13,7 @@ function processPassMessage(data) {
     updateStatus();
 }
 // 石を置いたときにサーバーに送信
-function sendMove(row, col) {
+window.OnlineHandlers.sendMove = function (row, col) {
     const message = {
         action: "place_stone",
         row: row,
@@ -22,7 +22,7 @@ function sendMove(row, col) {
     };
     console.log("Sending WebSocket move:", message);
     console.log("online?:", online);
-    socket.send(JSON.stringify(message));
+    window.socket.send(JSON.stringify(message));
 }
 function updatePlayerList(players) {
     console.log(`[updatePlayerList] Updating player list: ${JSON.stringify(players)}`);
@@ -60,19 +60,18 @@ function sendSettings() {
     localStorage.setItem('timeLimit', timeLimit);
     localStorage.setItem('showValidMoves', showValidMoves);
 
-    socket.send(JSON.stringify({ action: "game_setting", time_limit: timeLimit, show_valid_moves: showValidMoves, player_name: playerName }));
+    window.socket.send(JSON.stringify({ action: "game_setting", time_limit: timeLimit, show_valid_moves: showValidMoves, player_name: playerName }));
 
 }
-function makeSocket() {
-
-    socket = new WebSocket(`${ws_scheme}://${window.location.host}/ws/othello/${gameRoom}/?playerId=${playerId}&timeLimit=${timeLimit}&showValidMoves=${showValidMoves}&playerName=${encodeURIComponent(playerName)}&lang=${langCode}`);
+window.OnlineHandlers.makeSocket = function () {
+    window.socket = new WebSocket(`${ws_scheme}://${window.location.host}/ws/othello/${gameRoom}/?playerId=${playerId}&timeLimit=${timeLimit}&showValidMoves=${showValidMoves}&playerName=${encodeURIComponent(playerName)}&lang=${langCode}`);
 
     // 接続成功時
-    socket.onopen = function (e) {
+    window.socket.onopen = function (e) {
         console.log("WebSocket connection established.", e);
     };
     // メッセージ受信時（盤面を更新）
-    socket.onmessage = function (e) {
+    window.socket.onmessage = function (e) {
         console.log("WebSocket message received:", e.data);
         const data = JSON.parse(e.data);
 
@@ -119,7 +118,7 @@ function makeSocket() {
 
                 if (data.n_players !== 1) {
                     document.getElementById("restart-btn").disabled = false;
-                    document.getElementById("surrender-btn").disabled = false;
+                    window.surrenderBtn.disabled = false;
                 }
                 console.log("reconnect", data);
             } else {
@@ -142,7 +141,7 @@ function makeSocket() {
                 qrPopup.style.display = "none";
                 highlightValidMoves();
                 document.getElementById("restart-btn").disabled = false;
-                document.getElementById("surrender-btn").disabled = false;
+                window.surrenderBtn.disabled = false;
             }
             if (playerJoinSoundEnabled) {
                 if (data.player_id !== playerId) {
@@ -184,10 +183,10 @@ function makeSocket() {
     };
 }
 // 降伏ボタンをクリックしたとき、確認後にサーバーへ降伏メッセージを送信
-if (surrenderBtn) {
-    surrenderBtn.addEventListener('click', () => {
+if (window.surrenderBtn) {
+    window.surrenderBtn.addEventListener('click', () => {
         if (confirm(lang.surrender_right)) {
-            socket.send(JSON.stringify({ action: "surrender" }));
+            window.socket.send(JSON.stringify({ action: "surrender" }));
         }
     });
     document.getElementById("info-button").addEventListener("click", function () {
