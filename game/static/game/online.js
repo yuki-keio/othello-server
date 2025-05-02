@@ -189,7 +189,7 @@ window.makeSocket = function () {
                 qrPopup.style.display = "none";
                 highlightValidMoves();
                 document.getElementById("restart-btn").disabled = false;
-                window.surrenderBtn.disabled = false;
+                surrenderBtn.disabled = false;
             }
             if (playerJoinSoundEnabled) {
                 if (data.player_id !== playerId) {
