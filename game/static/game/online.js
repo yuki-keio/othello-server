@@ -29,6 +29,9 @@ window.showDialog = function(type, value = null) {
         }
     }
 }
+function __DOMContentLoaded() {
+    makeSocket();
+}
 // サーバーから受信したパスメッセージに基づいて、ターン更新と表示を行う
 function processPassMessage(data) {
     console.log(`[processPassMessage] Received pass message: ${JSON.stringify(data)}, old currentPlayer: ${currentPlayer}`);
@@ -262,11 +265,8 @@ if (playerName_el) {
     });
 }
 if (document.readyState !== "loading") {
-    document.removeEventListener("DOMContentLoaded", __DOMContenLoaded);
-    __DOMContenLoaded();
+    document.removeEventListener("DOMContentLoaded", __DOMContentLoaded);
+    __DOMContentLoaded();
 } else {
     window.addEventListener('DOMContentLoaded', __DOMContentLoaded);
-}
-function __DOMContentLoaded() {
-    makeSocket();
 }
