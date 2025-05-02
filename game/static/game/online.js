@@ -1,8 +1,11 @@
 const ws_scheme = window.location.protocol === "https:" ? "wss" : "ws";
-const timelimit__el = document.getElementById('time-limit');
+const timelimit_el = document.getElementById('time-limit');
 const surrenderBtn = document.getElementById('surrender-btn');
 const overlay = document.getElementById("game-settings-overlay");
-window.showDialog = function(type, value = null) {
+const highlightMoves_el = document.getElementById('highlight-moves');
+const closeRoleDialog_el = document.getElementById("closeRoleDialog");
+
+window.showDialog = function (type, value = null) {
     const shouldHide = localStorage.getItem("hide" + type + "Dialog") === "true";
     if (!shouldHide) {
         if (type === "role") {
@@ -31,6 +34,11 @@ window.showDialog = function(type, value = null) {
             });
         }
     }
+}
+window.closeDialog = function (type) {
+    document.getElementById(type + "-dialog").style.display = "none";
+    document.getElementById(type + "-dialog-overlay").style.display = "none";
+    localStorage.setItem("hide" + type + "Dialog", document.getElementById(type + "-not-checkbox").checked);
 }
 function __DOMContentLoaded() {
     makeSocket();
@@ -88,7 +96,7 @@ function updatePlayerList(players) {
     }
 }
 function sendSettings() {
-    let overlayTimeLimit = timelimit__el.value;
+    let overlayTimeLimit = timelimit_el.value;
     let overlayHighlightMoves = highlightMoves_el.checked;
     timeLimit = overlayTimeLimit;
     showValidMoves = overlayHighlightMoves ? "true" : "false";
@@ -271,4 +279,12 @@ if (document.readyState !== "loading") {
     __DOMContentLoaded();
 } else {
     window.addEventListener('DOMContentLoaded', __DOMContentLoaded);
+}
+if (closeRoleDialog_el) {
+    closeRoleDialog_el.addEventListener("click", () => {
+        closeDialog("role");
+    });
+    document.getElementById("role-dialog-overlay").addEventListener("click", () => {
+        closeDialog("role");
+    });
 }

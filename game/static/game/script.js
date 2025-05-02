@@ -1452,11 +1452,7 @@ function launchConfetti() {
         });
     }, 800);
 }
-function closeDialog(type) {
-    document.getElementById(type + "-dialog").style.display = "none";
-    document.getElementById(type + "-dialog-overlay").style.display = "none";
-    localStorage.setItem("hide" + type + "Dialog", document.getElementById(type + "-not-checkbox").checked);
-}
+
 function preloadResultImages() {
     const images = [
         'https://reversi.yuki-lab.com/static/game/images/win.png',
@@ -2025,18 +2021,6 @@ document.getElementById('showValidMovesCheckbox').addEventListener('change', () 
     updateURL(); // URL を更新
 });
 
-const timelimit_el = document.getElementById('time-limit');
-const highlightMoves_el = document.getElementById('highlight-moves');
-const closeRoleDialog_el = document.getElementById("closeRoleDialog");
-if (closeRoleDialog_el) {
-    closeRoleDialog_el.addEventListener("click", () => {
-        closeDialog("role");
-    });
-    document.getElementById("role-dialog-overlay").addEventListener("click", () => {
-        closeDialog("role");
-    }
-    );
-}
 document.getElementById("toSetting").addEventListener('click', () => {
     document.getElementById('settings').scrollIntoView({ behavior: 'smooth' });
     document.getElementById('menu-toggle').checked = false;
