@@ -261,3 +261,12 @@ if (playerName_el) {
         }
     });
 }
+if (document.readyState !== "loading") {
+    document.removeEventListener("DOMContentLoaded", __DOMContenLoaded);
+    __DOMContenLoaded();
+} else {
+    window.addEventListener('DOMContentLoaded', __DOMContentLoaded);
+}
+function __DOMContentLoaded() {
+    makeSocket();
+}

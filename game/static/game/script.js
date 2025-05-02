@@ -105,7 +105,7 @@ const DIRECTIONS = [
     [1, -1], [1, 0], [1, 1]
 ];
 
-window.refreshBoard = function() {
+window.refreshBoard = function () {
     const fragment = document.createDocumentFragment();
     for (let i = 0; i < 8; i++) {
         const rowElement = document.createElement('div');
@@ -156,7 +156,7 @@ function setInitialStones() {
 }
 
 // 盤面に黒ポチを追加+ローダー削除
-window.add4x4Markers = function() {
+window.add4x4Markers = function () {
     const markers = [
         { row: 1, col: 1 },
         { row: 1, col: 5 },
@@ -507,14 +507,14 @@ function startTimer() {
         }
     }, 1000);
 }
-window.stopTimer = function() {
+window.stopTimer = function () {
     if (currentPlayerTimer) {
         clearInterval(currentPlayerTimer);
         currentPlayerTimer = null;
         warningSound.pause();
     }
 }
-window.formatTime = function(seconds) {
+window.formatTime = function (seconds) {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
@@ -552,7 +552,7 @@ function serializeMoveHistory() {
     return moveHistory.map(move => `${move.player[0]}${move.row}${move.col}`).join('-');
 }
 
-window.deserializeMoveHistory = function(serialized) {
+window.deserializeMoveHistory = function (serialized) {
     const moves_ = serialized.split('-');
     if (moves_[moves_.length - 1] === "") {
         moves_.pop();
@@ -644,13 +644,6 @@ function loadBoardFromURL() {
         if (gameMode === "online") {
             console.log(`timelimit: ${timeLimit}`);
             online = true;
-            if (typeof window.makeSocket === "function") {
-                window.makeSocket();
-            } else {
-                setTimeout(() => {
-                    window.makeSocket();
-                }, 100);
-            }
             onlineUI();
             document.getElementById("playerJoinSoundBox").style.display = "block";
         } else {
@@ -840,7 +833,7 @@ function goToNextMove() {
     }
 }
 
-window.replayMovesUpToIndex = function(index, fromServer = false) {
+window.replayMovesUpToIndex = function (index, fromServer = false) {
     gameBoard = gameBoard.map(row => row.map(() => ''));
     setInitialStones();
     console.log("replayMovesUpToIndex", moveHistory);
@@ -1218,7 +1211,7 @@ function showLoading(after = 1000) {
         document.body.appendChild(loadingOverlay);
     }, after);
 }
-window.endGame = function(online_data, winner = null, y = -1) {
+window.endGame = function (online_data, winner = null, y = -1) {
     if (y === 1) {
         ifVictory = true;
     } else {
