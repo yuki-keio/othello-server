@@ -58,7 +58,6 @@ window.sendMove = function (row, col) {
         player: currentPlayer
     };
     console.log("Sending WebSocket move:", message);
-    console.log("online?:", online);
     socket.send(JSON.stringify(message));
 }
 function updatePlayerList(players) {
