@@ -38,7 +38,9 @@
         {% endif %}
     {% else %}
         <script defer src="{% static 'game/script.min.js' %}?v={{ TIMESTAMP }}"></script>
+        {% if mode == 'online' %}
         <script defer src="{% static 'game/online.min.js' %}?v={{ TIMESTAMP }}"></script>
+        {% endif %}
     {% endif %}
 
     <!-- 翻訳後の文字列をmain.jsへ受け渡し-->
