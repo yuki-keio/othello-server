@@ -393,7 +393,7 @@ function hasValidMove(playerColor = currentPlayer) {
     }
     return validMoves.length > 0 ? validMoves : false;
 }
-function highlightValidMoves() {
+window.highlightValidMoves = function() {
     removeHighlight();
     const validMoves = hasValidMove();
     if (validMoves) {
