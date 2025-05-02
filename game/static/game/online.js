@@ -44,7 +44,7 @@ function processPassMessage(data) {
     updateStatus();
 }
 // 石を置いたときにサーバーに送信
-window.OnlineHandlers.sendMove = function (row, col) {
+window.sendMove = function (row, col) {
     const message = {
         action: "place_stone",
         row: row,
@@ -106,8 +106,8 @@ function escapeHTML(str) {
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
 }
-window.OnlineHandlers.makeSocket = function () {
-    window.socket = new WebSocket(`${ws_scheme}://${window.location.host}/ws/othello/${gameRoom}/?playerId=${playerId}&timeLimit=${timeLimit}&showValidMoves=${showValidMoves}&playerName=${encodeURIComponent(playerName)}&lang=${langCode}`);
+window.makeSocket = function () {
+    socket = new WebSocket(`${ws_scheme}://${window.location.host}/ws/othello/${gameRoom}/?playerId=${playerId}&timeLimit=${timeLimit}&showValidMoves=${showValidMoves}&playerName=${encodeURIComponent(playerName)}&lang=${langCode}`);
 
     // 接続成功時
     window.socket.onopen = function (e) {

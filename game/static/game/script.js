@@ -28,7 +28,6 @@ let deferredPrompt;
 const startMatchBtn = document.getElementById("start-match");
 window.overlay = document.getElementById("game-settings-overlay");
 window.surrenderBtn = document.getElementById('surrender-btn');
-window.OnlineHandlers = {};
 // プレイヤー名を取得・保存（なければ新規作成）
 window.playerName = localStorage.getItem("playerName");
 if (!playerName) {
@@ -323,7 +322,7 @@ function makeMove(row, col, status = 0) {
             alert(lang.spec_cant_play);
             return;
         } else if (role_online === currentPlayer) {
-            window.OnlineHandlers.sendMove(row, col);
+            window.sendMove(row, col);
         } else {
             const roleDisplay = role_online === "black" ? lang.black : role_online === "white" ? lang.white : lang.spec;
             alert(`${lang.not_your_turn}${currentPlayer === 'black' ? lang.black : lang.white}, ${lang.you}：${roleDisplay}`);
@@ -645,12 +644,12 @@ function loadBoardFromURL() {
         if (gameMode === "online") {
             console.log(`timelimit: ${timeLimit}`);
             online = true;
-            if (typeof window.OnlineHandlers.makeSocket === "function") {
-                window.OnlineHandlers.makeSocket();
+            if (typeof window.makeSocket === "function") {
+                window.makeSocket();
             } else {
                 setTimeout(() => {
-                    window.OnlineHandlers.makeSocket();
-                }, 50);
+                    window.makeSocket();
+                }, 100);
             }
             onlineUI();
             document.getElementById("playerJoinSoundBox").style.display = "block";
