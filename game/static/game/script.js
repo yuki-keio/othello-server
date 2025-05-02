@@ -248,7 +248,7 @@ async function applyServerMove(row, col, player, status, final = false) {
 
             if (online) {
                 if (role_online === currentPlayer && final === 1) {
-                    window.socket.send(JSON.stringify({ action: "pass" }));
+                    socket.send(JSON.stringify({ action: "pass" }));
                 }
             } else {
                 if (status !== 1) {
@@ -673,9 +673,9 @@ function loadBoardFromURL() {
             url.searchParams.delete("room");
             history.replaceState(null, "", url);
             online = false;
-            if (window.socket) {
-                window.socket.close();
-                window.socket = null;
+            if (socket) {
+                socket.close();
+                socket = null;
             }
             document.getElementById("playerJoinSoundBox").style.display = "none";
         }
@@ -1645,9 +1645,9 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
                 mode_url.searchParams.delete("room");
                 history.pushState(null, "", mode_url);
 
-                if (window.socket) {
-                    window.socket.close();
-                    window.socket = null;
+                if (socket) {
+                    socket.close();
+                    socket = null;
                 }
                 showLoading();
                 restart();
@@ -1733,9 +1733,9 @@ function _DOMContenLoaded() {
         url.searchParams.delete("room");
         history.replaceState(null, "", url);
 
-        if (window.socket) {
-            window.socket.close();
-            window.socket = null;
+        if (socket) {
+            socket.close();
+            socket = null;
         }
         document.getElementById("playerJoinSoundBox").style.display = "none";
         if (gameMode === 'ai') {

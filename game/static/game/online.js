@@ -53,7 +53,7 @@ window.OnlineHandlers.sendMove = function (row, col) {
     };
     console.log("Sending WebSocket move:", message);
     console.log("online?:", online);
-    window.socket.send(JSON.stringify(message));
+    socket.send(JSON.stringify(message));
 }
 function updatePlayerList(players) {
     console.log(`[updatePlayerList] Updating player list: ${JSON.stringify(players)}`);
