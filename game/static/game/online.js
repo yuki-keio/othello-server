@@ -42,6 +42,8 @@ window.closeDialog = function (type) {
 }
 function __DOMContentLoaded() {
     makeSocket();
+    localStorage.setItem("deleted_urls", JSON.stringify([]));
+    document.getElementById('next-move-btn').style.display = 'none';
 }
 // サーバーから受信したパスメッセージに基づいて、ターン更新と表示を行う
 function processPassMessage(data) {

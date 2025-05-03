@@ -30,6 +30,8 @@
     <script nonce="{{ request.csp_nonce }}">
         const PLACE_STONE_SOUND="{% static 'game/sounds/place-stone.mp3' %}";
         const csrf_token="{{ csrf_token }}"
+        const wasmURL = "{% static 'game/othello_wasm.js' %}";
+        const DEBUG_MODE = {{ DEBUG|yesno:"true,false" }};
     </script>
     {% if DEBUG %}
         <script defer src="{% static 'game/script.js' %}?v={{ TIMESTAMP }}"></script>
