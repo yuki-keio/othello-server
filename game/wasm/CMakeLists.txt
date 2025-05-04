@@ -12,7 +12,7 @@ add_executable(othello_wasm ${SOURCE_FILES})
 
 # WebAssembly出力設定
 set_target_properties(othello_wasm PROPERTIES
-    LINK_FLAGS "-O3 --bind -s WASM=1 -s MODULARIZE=1 -s EXPORT_NAME='OthelloModule' -s EXPORTED_RUNTIME_METHODS=['ccall','cwrap'] -s ALLOW_MEMORY_GROWTH=1 -s ENVIRONMENT=web,worker"
+    LINK_FLAGS "-O3 --bind -s WASM=1 -s MODULARIZE=1 -s EXPORT_NAME='OthelloModule' -s EXPORTED_RUNTIME_METHODS=['ccall','cwrap'] -s ALLOW_MEMORY_GROWTH=1 -s ENVIRONMENT=web,worker -s DYNAMIC_EXECUTION=0 -s EMBIND_AOT=1 -s SINGLE_FILE=1"
 )
 
 # 出力ファイルの場所を設定

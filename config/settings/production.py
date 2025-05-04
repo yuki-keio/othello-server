@@ -46,6 +46,7 @@ CSP_CONNECT_SRC = (
 
 CSP_SCRIPT_SRC = (
     "'self'",
+    "'wasm-unsafe-eval'",
     "https://www.google.com",
     "https://www.gstatic.com",
     "https://ep2.adtrafficquality.google",
