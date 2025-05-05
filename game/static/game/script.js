@@ -65,7 +65,7 @@ let lastMoveCell = null;
 
 let gameFinishedCount = parseInt(localStorage.getItem('gameFinishedCount') || 0);
 
-let minimax_depth = aiLevel - 5;
+let minimax_depth = aiLevel - 4;
 if (minimax_depth < 0) {
     minimax_depth = 0;
 }
@@ -135,7 +135,6 @@ board.addEventListener('click', (event) => {
     if (!aimove) {
         const cell = event.target.closest('.cell');
         if (!cell) return;
-
         const row = parseInt(cell.dataset.row, 10);
         const col = parseInt(cell.dataset.col, 10);
         makeMove(row, col);
@@ -215,7 +214,6 @@ async function applyServerMove(row, col, player, status, final = false) {
     // statusが0の場合は、サーバーからの手?か友達対戦です
     // statusが1の場合は、リプレイ時の手
     // statusが2の場合は、これはAIendMoveによる手であり、serverからの手ではないです
-    console.log(`[applyServerMove] row: ${row}, col: ${col}, player: ${player}, status: ${status}, currentPlayer: ${currentPlayer}`);
     if (gameBoard[row][col] !== '' || !isValidMove(row, col, player)) {
         console.warn(`[applyServerMove] Invalid move: (${row},${col}), gameBoard[${row}][${col}]: ${gameBoard[row][col]}, isValidMove: ${isValidMove(row, col, player)}`);
         return;
@@ -229,7 +227,7 @@ async function applyServerMove(row, col, player, status, final = false) {
 
     if (soundEffects) {
         if (status !== 1) {
-            await playStoneSound();
+            playStoneSound();
         } else if (final) {
             playStoneSound();
         }
@@ -647,7 +645,7 @@ function loadBoardFromURL() {
             if (aiLevelFromURL) {
                 aiLevel = parseInt(aiLevelFromURL);
                 localStorage.setItem('aiLevel', aiLevel);
-                minimax_depth = aiLevel - 5;
+                minimax_depth = aiLevel - 4;
                 if (minimax_depth < 0) {
                     minimax_depth = 0;
                 }

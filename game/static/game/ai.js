@@ -430,7 +430,7 @@ export function initAIMode() {
         popup.style.display = popup.style.display !== 'block' ? 'block' : 'none';
         localStorage.setItem('aiLevel', aiLevelSelect.value);
         aiLevel = aiLevelSelect.value;
-        minimax_depth = aiLevel - 5;
+        minimax_depth = aiLevel - 4;
         if (minimax_depth < 0) {
             minimax_depth = 0;
         }

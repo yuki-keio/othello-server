@@ -333,7 +333,7 @@ onmessage = (e) => {
             const score = minimaxBitboard(newBitboard.black, newBitboard.white, minimax_depth, false, -Infinity, Infinity);
             if (i === Math.floor(validMoves.length / 2)) {
                 const midTime = performance.now();
-                adjustSearchDepth((midTime - startTime) * 2, aiLevel);
+                adjustSearchDepth((midTime - startTime) * validMoves.length, aiLevel);
             }
             if (score > bestScore) {
                 bestScore = score;
