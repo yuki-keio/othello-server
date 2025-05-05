@@ -967,6 +967,12 @@ window.endGame = function (online_data, winner = null, y = -1) {
         share_winner = winner; // 時間切れ勝ちなら、石の数で負けていても大丈夫なように明確に共有時に伝える必要があるので、winnerを明示する
 
         if (winner === "white" && gameMode === "ai") {
+            if (gameEndSoundEnabled) {
+                defeatSound.currentTime = 0;
+                defeatSound.play().catch(error => {
+                    console.warn("audio was blocked:", error);
+                });
+            }
         } else {
             if (gameEndSoundEnabled) {
                 victorySound.currentTime = 0;

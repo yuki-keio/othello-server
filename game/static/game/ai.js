@@ -17,6 +17,20 @@ export function startAIMove() {
         aiMakeMove();
         updateURL();
     }, 10);
+    const aiThinkingTimer =setInterval(() => {
+        if (!aimove) {
+            clearInterval(aiThinkingTimer);
+            return;
+        } else if (timerDisplay_.textContent === timerPrefix + lang.thinking) {
+            timerDisplay_.textContent = timerPrefix + lang.thinking + ".";
+        } else if (timerDisplay_.textContent === timerPrefix + lang.thinking + ".") {
+            timerDisplay_.textContent = timerPrefix + lang.thinking + "..";
+        } else if (timerDisplay_.textContent === timerPrefix + lang.thinking + "..") {
+            timerDisplay_.textContent = timerPrefix + lang.thinking + "...";
+        } else if (timerDisplay_.textContent === timerPrefix + lang.thinking + "...") {
+            timerDisplay_.textContent = timerPrefix + lang.thinking;
+        }
+    }, 700);
 }
 
 // 位置をビットボード表現に変換
