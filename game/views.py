@@ -108,6 +108,7 @@ def manifest(request):
         'lang': user_lang
     })
     return HttpResponse(content, content_type='application/manifest+json')
+
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 @method_decorator(login_required, name='dispatch')

@@ -42,6 +42,7 @@ web_othello/
 │   │   │   ├── style.css
 │   │   │   ├── style.min.css
 │   │   │   ├── sw.js
+│   │   │   ├── manifest.json
 │   │   │   ├── script.js
 │   │   │   ├── script.min.js
 │   │   │   ├── sounds/
