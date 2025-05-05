@@ -8,6 +8,7 @@ const copyUrlBtn = document.getElementById("copy-url-btn");
 let aiModulePromise = null;
 let aiModule = null;
 const aiPath = DEBUG_MODE ? './ai.js' : './ai.min.js';
+const workerPath = DEBUG_MODE ? '/static/game/worker.js' : '/static/game/worker.min.js';
 //音関係----
 window.playerJoin = document.getElementById('playerJoin');
 const warningSound = document.getElementById('warningSound');
@@ -64,7 +65,7 @@ let lastMoveCell = null;
 
 let gameFinishedCount = parseInt(localStorage.getItem('gameFinishedCount') || 0);
 
-let minimax_depth = aiLevel - 4;
+let minimax_depth = aiLevel - 5;
 if (minimax_depth < 0) {
     minimax_depth = 0;
 }
@@ -646,7 +647,7 @@ function loadBoardFromURL() {
             if (aiLevelFromURL) {
                 aiLevel = parseInt(aiLevelFromURL);
                 localStorage.setItem('aiLevel', aiLevel);
-                minimax_depth = aiLevel - 4;
+                minimax_depth = aiLevel - 5;
                 if (minimax_depth < 0) {
                     minimax_depth = 0;
                 }
@@ -842,7 +843,11 @@ window.replayMovesUpToIndex = function (index, fromServer = false) {
 
 function changeTitle() {
     if (gameMode === 'ai') {
-        document.getElementById('title').innerHTML = "<span id=\"ai-level-display\">" + document.getElementById('aiLevelSelect').options[aiLevelSelect.selectedIndex].text + " AI</span>";
+        try {
+            document.getElementById('title').innerHTML = "<span id=\"ai-level-display\">" + document.getElementById('aiLevelSelect').options[aiLevelSelect.selectedIndex].text + " AI</span>";
+        } catch (e) {
+            document.getElementById('title').innerHTML = "<span id=\"ai-level-display\">😎 Level " + aiLevel + " AI</span>";
+        }
         document.getElementById('level_ai').style.display = 'block';
     } else if (gameMode === 'player') {
         document.getElementById('title').textContent = player_h1;
@@ -882,7 +887,12 @@ window.endGame = function (online_data, winner = null, y = -1) {
     gameEnded = true;
 
     if (gameMode === 'ai') {
-        opponentName = aiLevelSelect.options[aiLevelSelect.selectedIndex].text + "AI";
+        try {
+            opponentName = aiLevelSelect.options[aiLevelSelect.selectedIndex].text + "AI";
+        }
+        catch (e) {
+            opponentName = `😎 Level ${aiLevel} AI`;
+        }
     }
     if (winner === "won") {
         share_winner = "won";

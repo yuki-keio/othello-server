@@ -1,48 +1,3 @@
-const aiworker = new Worker(workerPath);
-
-export function startAIMove() {
-    aimove = true;
-    stopTimer();
-    // 「考え中」のログを表示
-    const timerDisplay_ = document.getElementById('timer-display');
-
-    timerDisplay_.classList.remove('warning1', 'warning2');
-
-    timerDisplay_.style.display = 'inline-block'; // 表示
-    const timerPrefix = aiLevel === 6 ? "🐤 " : aiLevel === 9 ? "👺 " : aiLevel === 7 ? "🔆 " : "🤔 ";
-    timerDisplay_.textContent = timerPrefix + lang.thinking;
-    board.classList.add('thinking');
-    setTimeout(() => {
-        updateStatus();
-        aiMakeMove();
-        updateURL();
-    }, 10);
-}
-
-// 位置をビットボード表現に変換
-function positionToBit(row, col) {
-    return 1n << BigInt(row * 8 + col);
-}
-
-// 通常の盤面表現をビットボードに変換
-function boardToBitboard(board) {
-    let blackBitboard = 0n;
-    let whiteBitboard = 0n;
-
-    for (let row = 0; row < 8; row++) {
-        for (let col = 0; col < 8; col++) {
-            const bit = positionToBit(row, col);
-            if (board[row][col] === 'black') {
-                blackBitboard |= bit;
-            } else if (board[row][col] === 'white') {
-                whiteBitboard |= bit;
-            }
-        }
-    }
-
-    return { black: blackBitboard, white: whiteBitboard };
-}
-
 const DIRECTION_VECTORS = [
     { dRow: 0, dCol: -1 },  // 左
     { dRow: -1, dCol: -1 },  // 左上
@@ -53,7 +8,10 @@ const DIRECTION_VECTORS = [
     { dRow: 1, dCol: 0 },  // 下
     { dRow: 1, dCol: -1 }   // 左下
 ];
-
+// 位置をビットボード表現に変換
+function positionToBit(row, col) {
+    return 1n << BigInt(row * 8 + col);
+}
 function getFlippedDisks(blackBitboard, whiteBitboard, pos, isBlack) {
     const myBoard = isBlack ? blackBitboard : whiteBitboard;
     const opponentBoard = isBlack ? whiteBitboard : blackBitboard;
@@ -134,70 +92,6 @@ function applyMoveBitboard(blackBitboard, whiteBitboard, pos, flipped, isBlackTu
             white: whiteBitboard | positionBit | flipped
         };
     }
-}
-
-function aiMakeMove() {
-    let bestMove = { row: null, col: null };
-    const initialBoard = gameBoard.map(row => [...row]);
-    const bitboard = boardToBitboard(initialBoard);
-    if (window.Worker) {
-        aiworker.postMessage([
-            bitboard,
-            minimax_depth,
-            aiLevel
-        ]);
-        aiworker.onmessage = function (workerBestMove) {
-            let e1;
-            let e2;
-            [bestMove.row, bestMove.col,e1,e2] = workerBestMove.data;
-            if (bestMove.row ==="Error") {
-                console.log(e1);
-                console.warn('Error from AI worker:', bestMove.col);
-                console.log(e2);
-            }
-        };
-        aiworker.onerror = function (error) {
-            console.error('Error in AI worker:', error.message);
-        }
-    } else {
-        const startTime = performance.now();
-        let bestScore = -Infinity;
-        const aiWhiteTurn = true;
-        const validMoves = getValidMovesBitboard(bitboard.black, bitboard.white, !aiWhiteTurn);
-        for (let i = 0; i < validMoves.length; i++) {
-            const move = validMoves[i];
-            const newBitboard = applyMoveBitboard(bitboard.black, bitboard.white, move, move.flipped, !aiWhiteTurn);
-            const score = minimaxBitboard(newBitboard.black, newBitboard.white, minimax_depth, false, -Infinity, Infinity);
-            if (score > bestScore) {
-                bestScore = score;
-                bestMove = { row: move.row, col: move.col };
-            }
-            if (i === Math.floor(validMoves.length / 2)) {
-                const midTime = performance.now();
-                adjustSearchDepth((midTime - startTime) * 2, aiLevel);
-            }
-        }
-    }
-    if (aiLevel <= 3) {
-        setTimeout(() => endMove(bestMove, timeLimit, gameEnded, aimove), 600);
-    } else {
-        endMove(bestMove, timeLimit, gameEnded, aimove);
-    }
-}
-
-function endMove(bestMove, timeLimit, gameEnded, fromAI) {
-    if (bestMove) {
-        makeMove(bestMove.row, bestMove.col, 2);
-    }
-    if (timeLimit > 0 && !gameEnded) {
-        startTimer();
-    } else {
-        document.getElementById('timer-display').style.display = 'none';
-    }
-    if (fromAI) {
-        board.classList.remove('thinking');
-    }
-    aimove = false;
 }
 
 // ミニマックス法+アルファベータ枝刈り（ビットボード版）
@@ -333,18 +227,6 @@ function finalEvaluationBitboard(blackBitboard, whiteBitboard) {
     return (whiteCount - blackCount) * 1000;
 }
 
-// 角のビットマスク
-const CORNER_MASK = 0x8100000000000081n;
-// 辺のビットマスク
-const EDGE_MASK = 0x7E8181818181817En;
-
-// 角・辺・XCセル用の重み定数
-const cornerWeight = 30;
-const edgeWeight = 5;
-const xcCellPenalty = 7;
-const mobilityWeight = aiLevel > 5 ? 0.3 : 0.1;
-
-
 // 盤面の評価関数（ビットボード版）
 function evaluateBitboard(blackBitboard, whiteBitboard) {
     let blackScore = 0;
@@ -421,119 +303,45 @@ function evaluateBitboard(blackBitboard, whiteBitboard) {
     }
 }
 
-export function initAIMode() {
-    const aiLevelSelect = document.getElementById('aiLevelSelect');
+// 角のビットマスク
+const CORNER_MASK = 0x8100000000000081n;
+// 辺のビットマスク
+const EDGE_MASK = 0x7E8181818181817En;
 
-    document.getElementById("ai-level-display").addEventListener("click", function () {
-        const popup = document.getElementById('ai-level-popup');
-        popup.style.display = popup.style.display !== 'block' ? 'block' : 'none';
-        localStorage.setItem('aiLevel', aiLevelSelect.value);
-        aiLevel = aiLevelSelect.value;
-        minimax_depth = aiLevel - 5;
-        if (minimax_depth < 0) {
-            minimax_depth = 0;
-        }
-        updateAiLevelDisplay();
-    });
-    // 保存されたAIレベル解放状況を確認
-    const unlockedLevels = JSON.parse(localStorage.getItem('unlockedAiLevels') || '{"0":true,"1":true,"2":true,"6":true}');
-    console.log(`[aiLevelSelect] Unlocked levels: ${JSON.stringify(unlockedLevels)}`);
-    // ロックされたレベルを処理
-    const lockedOptions = document.querySelectorAll('.locked-level');
-    lockedOptions.forEach(option => {
-        const unlockLevel = option.getAttribute('data-unlock-level')
-        if (unlockedLevels[option.getAttribute("data-level") || option.value]) {
-            option.classList.remove('locked-level');
-            option.disabled = false;
-            option.style.display = '';
-        } else if (unlockedLevels[unlockLevel]) {
-            const level_before = document.querySelector('#aiLevelSelect option[value="' + unlockLevel + '"]');
-            if (option.getAttribute("data-level")) {
-                langNextAIName = option.textContent;
+// 角・辺・XCセル用の重み定数
+const cornerWeight = 30;
+const edgeWeight = 5;
+const xcCellPenalty = 7;
+
+let aiLevel = 5; //仮の値
+let minimax_depth = 3; //仮の値
+let mobilityWeight = 0.1; //仮の値
+
+onmessage = (e) => {
+    let message = [];
+    try {
+        const [_bitboard, _minimax_depth, _aiLevel ] = e.data;
+        aiLevel = _aiLevel;
+        mobilityWeight = aiLevel > 5 ? 0.3 : 0.1;
+        minimax_depth = _minimax_depth;
+        const validMoves = getValidMovesBitboard(_bitboard.black, _bitboard.white, false);
+        const startTime = performance.now();
+        let bestScore = -Infinity;
+        for (let i = 0; i < validMoves.length; i++) {
+            const move = validMoves[i];
+            const newBitboard = applyMoveBitboard(_bitboard.black, _bitboard.white, move, move.flipped, false);
+            const score = minimaxBitboard(newBitboard.black, newBitboard.white, minimax_depth, false, -Infinity, Infinity);
+            if (score > bestScore) {
+                bestScore = score;
+                message = [move.row, move.col];
             }
-            switch (langCode) {
-                case "en":
-                    option.textContent = `Next Level: Defeat ${level_before.textContent} to unlock`;
-                    break;
-                default:
-                    option.textContent = `次のレベル : ${level_before.textContent}AIに勝利で解放`;
-                    break;
+            if (i === Math.floor(validMoves.length / 2)) {
+                const midTime = performance.now();
+                adjustSearchDepth((midTime - startTime) * 2, aiLevel);
             }
-            option.disabled = true;
-        } else {
-            option.style.display = 'none';
         }
-    });
-    // AIに勝った時のイベントハンドラ
-    window.unlockNextAiLevel = function (currentLevel) {
-        const nextLevelOption = Array.from(aiLevelSelect.querySelectorAll('.locked-level')).find(
-            option => option.getAttribute('data-unlock-level') == currentLevel
-        );
-
-        if (nextLevelOption) {
-            const nextLevel = nextLevelOption.value;
-            unlockedLevels[nextLevel] = true;
-            localStorage.setItem('unlockedAiLevels', JSON.stringify(unlockedLevels));
-            // 解放メッセージを表示
-            alert(lang.congrats_aiLevel_unlocked_b + langNextAIName + lang.congrats_aiLevel_unlocked_a);
-            document.getElementById('restart-match').textContent = lang.nextLevel;
-            localStorage.setItem('aiLevel', nextLevel);
-        }
-    };
-
-    // AIレベル表示の更新関数
-    function updateAiLevelDisplay() {
-        const displayEl = document.getElementById('ai-level-display');
-        try{
-        displayEl.textContent = `${aiLevelSelect.options[aiLevelSelect.selectedIndex].text} AI`;
-        }
-        catch(e){
-            displayEl.textContent = `😎 Level ${aiLevel} AI`;
-        }
-
-        // ポップアップ内の選択状態も更新
-        const levelItems = document.querySelectorAll('.ai-level-item');
-        levelItems.forEach(item => {
-            if (item.getAttribute('data-level') === aiLevelSelect.value) {
-                item.classList.add('selected');
-            } else {
-                item.classList.remove('selected');
-            }
-        });
-
+    } catch (error) {
+        message = ["Error", error.message, error.stack, e.data];
     }
-    // AIレベル選択時の処理
-    const levelItems = document.querySelectorAll('.ai-level-item');
-    levelItems.forEach(item => {
-        item.addEventListener('click', function () {
-            // ロックされたレベルは選択不可
-            if (this.classList.contains('locked-level')) {
-                return;
-            }
-            const level = this.getAttribute('data-level');
-            aiLevelSelect.value = level;
-            // 既存のchangeイベントをトリガー
-            const event = new Event('change');
-            aiLevelSelect.dispatchEvent(event);
-            updateAiLevelDisplay();
-            document.getElementById('ai-level-popup').style.display = 'none';
-            const __url = new URL(window.location);
-            __url.searchParams.delete("moves");
-            __url.searchParams.delete("won");
-            __url.searchParams.set('aiLevel', level);
-            history.pushState(null, "", __url);
-            location.reload();
-        });
-    });
-
-    // ポップアップ外クリックで閉じる
-    document.addEventListener('click', function (e) {
-        const popup = document.getElementById('ai-level-popup');
-        if (popup.style.display === 'block' && !popup.contains(e.target) && e.target !== document.getElementById('ai-level-display')) {
-            popup.style.display = 'none';
-        }
-    });
-    aiLevelSelect.addEventListener('change', updateAiLevelDisplay);
-    // 初期表示を設定
-    setTimeout(updateAiLevelDisplay, 100);
-}
+    postMessage(message);
+};

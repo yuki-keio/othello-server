@@ -9,7 +9,8 @@
         "build:online": "esbuild game/static/game/online.js --minify --target=es2020 --outfile=game/static/game/online.min.js",
         "build:ai": "esbuild game/static/game/ai.js --minify --target=es2020 --outfile=game/static/game/ai.min.js",
         "build:css": "esbuild game/static/game/style.css --minify --outfile=game/static/game/style.min.css",
-        "build": "npm run build:js && npm run build:online && npm run build:ai && npm run build:css",
+        "build:worker": "esbuild game/static/game/worker.js --minify --target=es2020 --outfile=game/static/game/worker.min.js",
+        "build": "npm run build:js && npm run build:online && npm run build:ai && npm run build:css && npm run build:worker",
         "heroku-postbuild": "npm run build"
     },
     "dependencies": {
