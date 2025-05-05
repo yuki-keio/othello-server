@@ -147,7 +147,9 @@ function aiMakeMove() {
             aiLevel
         ]);
         aiworker.onmessage = function (workerBestMove) {
-            [bestMove.row, bestMove.col] = workerBestMove.data;
+            let updatedDepth;
+            [bestMove.row, bestMove.col, updatedDepth] = workerBestMove.data;
+            minimax_depth = updatedDepth;
             console.log("AI Move:", bestMove);
             if (aiLevel <= 3) {
                 setTimeout(() => endMove(bestMove, timeLimit, gameEnded, aimove), 600);

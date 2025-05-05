@@ -16,6 +16,7 @@ from game.models import CustomUser
 from django.contrib.auth.decorators import login_required
 from django.utils.translation import gettext as _
 from django.utils.decorators import method_decorator
+from django.template.loader import render_to_string
 
 logger = logging.getLogger(__name__)
 
@@ -101,6 +102,12 @@ Sitemap: https://reversi.yuki-lab.com/sitemap.xml
 """
     return HttpResponse(content, content_type="text/plain")
 
+def manifest(request):
+    user_lang = request.LANGUAGE_CODE  # i18nのミドルウェアが有効ならこれでOK
+    content = render_to_string('game/manifest.json', {
+        'lang': user_lang
+    })
+    return HttpResponse(content, content_type='application/manifest+json')
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 @method_decorator(login_required, name='dispatch')

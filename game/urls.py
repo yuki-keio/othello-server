@@ -9,4 +9,5 @@ urlpatterns = [
     path('robots.txt', views.robots_txt, name='robots-txt'),
     path("strategy-reversi-othello.html", views.othello_view, name="blog-strategy"),
     path("offline.html", views.offline_view, name="offline"),
+    path('manifest.json', views.manifest, name='manifest'),
 ]

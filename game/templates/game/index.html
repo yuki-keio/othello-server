@@ -31,7 +31,7 @@
         const PLACE_STONE_SOUND="{% static 'game/sounds/place-stone.mp3' %}";
         const csrf_token="{{ csrf_token }}"
         const DEBUG_MODE = {{ DEBUG|yesno:"true,false" }};
-        
+
     </script>
     {% if DEBUG %}
         <script defer src="{% static 'game/script.js' %}?v={{ TIMESTAMP }}"></script>
@@ -242,7 +242,7 @@
     <link rel="icon" type="image/png" sizes="48x48" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/favicon-48x48.png' %}">
     <link rel="icon" type="image/png" sizes="96x96" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/favicon-96x96.png' %}">
     <link rel="icon" type="image/png" sizes="192x192" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/favicon-192x192.png' %}">
-    <link rel="manifest" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/manifest.json' %}">
+    <link rel="manifest" href="{% url 'manifest' %}">
     {% if request.LANGUAGE_CODE == "ja" %}
     <link rel="canonical" href="{% if mode == 'online' %}https://reversi.yuki-lab.com/online/{% elif mode == 'ai' %}https://reversi.yuki-lab.com/ai/{% elif mode == 'player' %}https://reversi.yuki-lab.com/{% else %}https://reversi.yuki-lab.com/{% endif %}">
     {% else %}

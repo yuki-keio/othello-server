@@ -1,7 +1,7 @@
 {
-	"name": "リバーシWeb | yuki-lab",
-	"short_name": "リバーシ",
-	"description": "誰もが楽しめるオセロゲーム。アプリ版は動作が軽く、オフラインにも対応。強力なAIと対戦したり、オンラインで友達や家族と遊んだりできます。",
+	"name": "{% if lang == 'ja' %}リバーシWeb (オセロ) | yuki-lab{% else %}Reversi Web (Othello) | yuki-lab{% endif %}",
+	"short_name": "{% if lang == 'ja' %}リバーシ{% else %}Reversi{% endif %}",
+	"description": "{% if lang == 'ja' %}誰もが楽しめるオセロゲーム。アプリ版は動作が軽く、オフラインにも対応。強力なAIと対戦したり、オンラインで友達や家族と遊んだりできます。{% else %}A fun, lightweight Othello game with offline support. Play against strong AI or with friends and family online.{% endif %}",
 	"icons": [
 	  {
 		"src": "https://reversi.yuki-lab.com/static/game/images/icons/reversi_icon-min.png",

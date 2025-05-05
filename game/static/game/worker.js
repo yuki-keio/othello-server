@@ -331,17 +331,18 @@ onmessage = (e) => {
             const move = validMoves[i];
             const newBitboard = applyMoveBitboard(_bitboard.black, _bitboard.white, move, move.flipped, false);
             const score = minimaxBitboard(newBitboard.black, newBitboard.white, minimax_depth, false, -Infinity, Infinity);
-            if (score > bestScore) {
-                bestScore = score;
-                message = [move.row, move.col];
-            }
             if (i === Math.floor(validMoves.length / 2)) {
                 const midTime = performance.now();
                 adjustSearchDepth((midTime - startTime) * 2, aiLevel);
+            }
+            if (score > bestScore) {
+                bestScore = score;
+                message = [move.row, move.col];
             }
         }
     } catch (error) {
         message = [error, e.data];
     }
+    message[2]=minimax_depth;
     postMessage(message);
 };
