@@ -147,13 +147,11 @@ function aiMakeMove() {
             aiLevel
         ]);
         aiworker.onmessage = function (workerBestMove) {
-            let e1;
-            let e2;
-            [bestMove.row, bestMove.col,e1,e2] = workerBestMove.data;
-            if (bestMove.row ==="Error") {
-                console.log(e1);
-                console.warn('Error from AI worker:', bestMove.col);
-                console.log(e2);
+            [bestMove.row, bestMove.col] = workerBestMove.data;
+            if (aiLevel <= 3) {
+                setTimeout(() => endMove(bestMove, timeLimit, gameEnded, aimove), 600);
+            } else {
+                endMove(bestMove, timeLimit, gameEnded, aimove);
             }
         };
         aiworker.onerror = function (error) {
@@ -177,16 +175,16 @@ function aiMakeMove() {
                 adjustSearchDepth((midTime - startTime) * 2, aiLevel);
             }
         }
-    }
-    if (aiLevel <= 3) {
-        setTimeout(() => endMove(bestMove, timeLimit, gameEnded, aimove), 600);
-    } else {
-        endMove(bestMove, timeLimit, gameEnded, aimove);
+        if (aiLevel <= 3) {
+            setTimeout(() => endMove(bestMove, timeLimit, gameEnded, aimove), 600);
+        } else {
+            endMove(bestMove, timeLimit, gameEnded, aimove);
+        }
     }
 }
 
 function endMove(bestMove, timeLimit, gameEnded, fromAI) {
-    if (bestMove) {
+    if (bestMove.row) {
         makeMove(bestMove.row, bestMove.col, 2);
     }
     if (timeLimit > 0 && !gameEnded) {
