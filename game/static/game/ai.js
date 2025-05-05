@@ -1,25 +1,3 @@
-
-let wasmEvaluate = null;
-let wasmReady = false;
-function loadWasmModule() {
-    return new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-        script.src = '/static/game/othello_wasm.js';
-        script.onload = () => resolve();
-        script.onerror = () => reject(new Error('Wasm script load failed'));
-        document.head.appendChild(script);
-    });
-}
-
-async function initWasm() {
-    await loadWasmModule();
-    const Module = await OthelloModule();
-    wasmEvaluate = Module.evaluateBoard;
-    wasmReady = true;
-}
-
-initWasm().catch(err => console.error(err));
-
 export function startAIMove() {
     aimove = true;
     stopTimer();
@@ -38,45 +16,195 @@ export function startAIMove() {
         updateURL();
     }, 10);
 }
-// AIの手を決定する関数
+
+// ビットボードを可視化して盤面表示する関数（デバッグ用）
+function visualizeBitboard(blackBitboard, whiteBitboard) {
+    console.log("Visualizing bitboard:");
+    let boardStr = "";
+
+    for (let row = 0; row < 8; row++) {
+        let rowStr = "";
+        for (let col = 0; col < 8; col++) {
+            const bit = 1n << BigInt(row * 8 + col);
+            if (blackBitboard & bit) {
+                rowStr += "B ";
+            } else if (whiteBitboard & bit) {
+                rowStr += "W ";
+            } else {
+                rowStr += ". ";
+            }
+        }
+        boardStr += rowStr + "\n";
+    }
+
+    return boardStr;
+}
+
+// 位置をビットボード表現に変換
+function positionToBit(row, col) {
+    return 1n << BigInt(row * 8 + col);
+}
+
+// 通常の盤面表現をビットボードに変換
+function boardToBitboard(board) {
+    let blackBitboard = 0n;
+    let whiteBitboard = 0n;
+
+    for (let row = 0; row < 8; row++) {
+        for (let col = 0; col < 8; col++) {
+            const bit = positionToBit(row, col);
+            if (board[row][col] === 'black') {
+                blackBitboard |= bit;
+            } else if (board[row][col] === 'white') {
+                whiteBitboard |= bit;
+            }
+        }
+    }
+
+    return { black: blackBitboard, white: whiteBitboard };
+}
+
+const DIRECTION_VECTORS = [
+    { dRow: 0,  dCol: -1 },  // 左
+    { dRow: -1, dCol: -1 },  // 左上
+    { dRow: -1, dCol: 0  },  // 上
+    { dRow: -1, dCol: 1  },  // 右上
+    { dRow: 0,  dCol: 1  },  // 右
+    { dRow: 1,  dCol: 1  },  // 右下
+    { dRow: 1,  dCol: 0  },  // 下
+    { dRow: 1,  dCol: -1 }   // 左下
+];
+
+function getFlippedDisks(blackBitboard, whiteBitboard, pos, isBlack) {
+    const myBoard = isBlack ? blackBitboard : whiteBitboard;
+    const opponentBoard = isBlack ? whiteBitboard : blackBitboard;
+    const positionBit = positionToBit(pos.row, pos.col);
+
+    // 既に石がある場所には置けない
+    if ((myBoard | opponentBoard) & positionBit) {
+        return 0n;
+    }
+
+    let flipped = 0n;
+
+    for (const { dRow, dCol } of DIRECTION_VECTORS) {
+        let r = pos.row + dRow;
+        let c = pos.col + dCol;
+
+        let flippedInDir = 0n;
+
+        let foundOpponent = false;
+
+        while (r >= 0 && r < 8 && c >= 0 && c < 8) {
+            const currentBit = positionToBit(r, c);
+
+            if ((currentBit & opponentBoard) !== 0n) {
+                flippedInDir |= currentBit;
+                foundOpponent = true;
+            } else if ((currentBit & myBoard) !== 0n) {
+                if (foundOpponent) {
+                    flipped |= flippedInDir;
+                }
+                break;
+            } else {
+                break;
+            }
+
+            r += dRow;
+            c += dCol;
+        }
+    }
+
+    return flipped;
+}
+
+// 有効な手の一覧を取得
+function getValidMovesBitboard(blackBitboard, whiteBitboard, isBlackTurn) {
+    try {
+        // デバッグ情報ログ出力
+        const debugOutput = false; // 詳細なログが必要な場合はtrueに設定
+        if (debugOutput) {
+            console.log(`[getValidMovesBitboard] isBlackTurn=${isBlackTurn}`);
+            console.log(`[getValidMovesBitboard] black=${blackBitboard.toString(16)}, white=${whiteBitboard.toString(16)}`);
+        }
+        const myBoard = isBlackTurn ? blackBitboard : whiteBitboard;
+        const opponentBoard = isBlackTurn ? whiteBitboard : blackBitboard;
+        const emptyBoard = ~(myBoard | opponentBoard) & 0xFFFFFFFFFFFFFFFFn;
+        let validMoves = [];
+
+        for (let row = 0; row < 8; row++) {
+            for (let col = 0; col < 8; col++) {
+                const posBit = positionToBit(row, col);
+                if (emptyBoard & posBit) {
+                    const flipped = getFlippedDisks(blackBitboard, whiteBitboard, { row, col }, isBlackTurn);
+                    if (flipped !== 0n) {
+                        validMoves.push({ row, col, flipped });
+                    }
+                }
+            }
+        }
+
+        return validMoves;
+    } catch (error) {
+        console.error(`[getValidMovesBitboard] Error: isBlackTurn=${isBlackTurn}`, error);
+        // エラー時には空の配列を返して処理を継続できるようにする
+        return [];
+    }
+}
+
+// 手を適用した後の新しいビットボードを返す
+function applyMoveBitboard(blackBitboard, whiteBitboard, pos, flipped, isBlackTurn) {
+    const positionBit = positionToBit(pos.row, pos.col);
+
+    if (isBlackTurn) {
+        return {
+            black: blackBitboard | positionBit | flipped,
+            white: whiteBitboard & ~flipped
+        };
+    } else {
+        return {
+            black: blackBitboard & ~flipped,
+            white: whiteBitboard | positionBit | flipped
+        };
+    }
+}
+
 function aiMakeMove() {
     const startTime = performance.now();
-
     let bestMove = null;
     let bestScore = -Infinity;
     const initialBoard = gameBoard.map(row => [...row]);
-    const validMoves = hasValidMove();
-    // 全ての有効な手を探索
+    const bitboard = boardToBitboard(initialBoard);
+    const aiWhiteTurn = true;
+    const validMoves = getValidMovesBitboard(bitboard.black, bitboard.white, !aiWhiteTurn);
+    const validMovesString = validMoves.map(move => `(${move.row}, ${move.col}, ${move.flipped.toString(16)})`).join(', ');
+    console.log(`[aiMakeMove] Valid moves: ${validMovesString}`);
     for (let i = 0; i < validMoves.length; i++) {
-        const [row, col] = validMoves[i];
-        const tempBoard = applyMoveToBoard(initialBoard, row, col, currentPlayer);
-        // ミニマックス法で評価値を計算
-        const score = minimax(tempBoard, minimax_depth, false, -Infinity, Infinity);
-
-        console.log(`[aiMakeMove] Move (${row},${col}) has score: ${score}`);
-
+        const move = validMoves[i];
+        const newBitboard = applyMoveBitboard(bitboard.black, bitboard.white, move, move.flipped, !aiWhiteTurn);
+        const score = minimaxBitboard(newBitboard.black, newBitboard.white, minimax_depth, false, -Infinity, Infinity);
         if (score > bestScore) {
             bestScore = score;
-            bestMove = { row, col };
+            bestMove = { row: move.row, col: move.col };
         }
-
         if (i === Math.floor(validMoves.length / 2)) {
             const midTime = performance.now();
-            const estimatedFullTime = (midTime - startTime) * 2;
-            // 動的に探索深度を調整
-            adjustSearchDepth(estimatedFullTime, aiLevel);
+            adjustSearchDepth((midTime - startTime) * 2, aiLevel);
         }
     }
-    // 低難易度のAIは爆速なので、敢えて少し遅らせる。
     if (aiLevel <= 3) {
-        setTimeout(() => endMove(bestMove, timeLimit, gameEnded, aimove), 800);
+        setTimeout(() => endMove(bestMove, timeLimit, gameEnded, aimove, bitboard), 800);
     } else if (aiLevel <= 5) {
-        setTimeout(() => endMove(bestMove, timeLimit, gameEnded, aimove), 400);
+        setTimeout(() => endMove(bestMove, timeLimit, gameEnded, aimove, bitboard), 400);
     } else {
-        endMove(bestMove, timeLimit, gameEnded, aimove);
+        endMove(bestMove, timeLimit, gameEnded, aimove, bitboard);
     }
 }
-function endMove(bestMove, timeLimit, gameEnded, fromAI) {
+
+function endMove(bestMove, timeLimit, gameEnded, fromAI, bitboard) {
+    console.log(`[endMove] Best move: ${bestMove ? `(${bestMove.row}, ${bestMove.col})` : 'None'}`);
+    console.log(`[endMove] gameBoard: ${gameBoard.map(row => row.join(' ')).join('\n')}`);
+    console.log(`[endMove] bitBoard: ${visualizeBitboard(bitboard.black, bitboard.white)}`);
     if (bestMove) {
         makeMove(bestMove.row, bestMove.col, 2);
     }
@@ -90,113 +218,118 @@ function endMove(bestMove, timeLimit, gameEnded, fromAI) {
     }
     aimove = false;
 }
-// ミニマックス法+アルファベータ枝刈り
-function minimax(board, depth, isMaximizing, alpha = -Infinity, beta = Infinity) {
+
+// ミニマックス法+アルファベータ枝刈り（ビットボード版）
+function minimaxBitboard(blackBitboard, whiteBitboard, depth, isMaximizing, alpha = -Infinity, beta = Infinity) {
+    if (depth === minimax_depth) {
+        console.log(`[minimaxBitboard] Starting: depth=${depth}, isMaximizing=${isMaximizing}`);
+        console.log(`[minimaxBitboard] Bitboards: black=${blackBitboard.toString(16)}, white=${whiteBitboard.toString(16)}`);
+    }
     // 終了条件：深さ0または終局
     if (depth <= 0) {
-        return evaluateBoard(board);
+        return evaluateBitboard(blackBitboard, whiteBitboard);
     }
-    const player = isMaximizing ? "white" : "black";
-    const opponent = isMaximizing ? "black" : "white";
-    // 有効な手を取得
-    const validMoves = getValidMovesForBoard(board, player);
 
-    // ムーブオーダリングの実装
-    const moveWeight = ([r, c]) => {
-        // 隅 (A1, A8, H1, H8)
-        if ((r === 0 && c === 0) || (r === 7 && c === 0) || (r === 0 && c === 7) || (r === 7 && c === 7)) return 1000;
-        // B打ち (A3, A6, C1, C8, F1, F8, H3, F6)
-        if ((r === 2 && c === 0) || (r === 5 && c === 0) ||
-            (r === 0 && c === 2) || (r === 7 && c === 2) ||
-            (r === 0 && c === 5) || (r === 7 && c === 5) ||
-            (r === 2 && c === 7) || (r === 5 && c === 7)) return 900;
-        // A打ち (A4, A5, D1, D8, E1, E8, H4, H5)
-        if ((r === 3 && c === 0) || (r === 4 && c === 0) ||
-            (r === 0 && c === 3) || (r === 7 && c === 3) ||
-            (r === 0 && c === 4) || (r === 7 && c === 4) ||
-            (r === 3 && c === 7) || (r === 4 && c === 7)) return 800;
-        // ボックス隅 (C3, C6, F3, F6)
-        if ((r === 2 && c === 2) || (r === 2 && c === 5) ||
-            (r === 5 && c === 2) || (r === 5 && c === 5)) return 700;
-        // ボックス辺 (C4, C5, D3, D6, E3, E6, F4, F5)
-        if ((r === 2 && c === 3) || (r === 2 && c === 4) ||
-            (r === 3 && c === 2) || (r === 4 && c === 2) ||
-            (r === 5 && c === 3) || (r === 5 && c === 4) ||
-            (r === 3 && c === 5) || (r === 4 && c === 5)) return 600;
-        // 中辺 (B3, B4, B5, B6, C2, C7, D2, D7, E2, E7, F2, F7, G3, G4, G5, G6)
-        if ((r === 2 && c === 1) || (r === 3 && c === 1) || (r === 4 && c === 1) || (r === 5 && c === 1) ||
-            (r === 1 && c === 2) || (r === 6 && c === 2) ||
-            (r === 1 && c === 3) || (r === 6 && c === 3) ||
-            (r === 1 && c === 4) || (r === 6 && c === 4) ||
-            (r === 1 && c === 5) || (r === 6 && c === 5) ||
-            (r === 2 && c === 6) || (r === 3 && c === 6) || (r === 4 && c === 6) || (r === 5 && c === 6)) return 500;
-        // C打ち (A2, A7, B1, B8, G1, G8, H2, H7)
-        if ((r === 1 && c === 0) || (r === 6 && c === 0) ||
-            (r === 0 && c === 1) || (r === 7 && c === 1) ||
-            (r === 0 && c === 6) || (r === 7 && c === 6) ||
-            (r === 1 && c === 7) || (r === 6 && c === 7)) return 400;
-        // X打ち (B2, B7, G2, G7)
-        if ((r === 1 && c === 1) || (r === 6 && c === 1) ||
-            (r === 1 && c === 6) || (r === 6 && c === 6)) return 300;
-        return 0;
-    };
-    validMoves.sort((a, b) => moveWeight(b) - moveWeight(a));
+    const isBlackTurn = isMaximizing ? false : true; // AIは白=Maximizing
+    const moves = getValidMovesBitboard(blackBitboard, whiteBitboard, isBlackTurn);
+
+    // ムーブオーダリング（評価値の高い順に並べ替え）
+    moves.sort((a, b) => moveWeightBitboard(b) - moveWeightBitboard(a));
 
     // パスの処理
-    if (validMoves.length === 0) {
+    if (moves.length === 0) {
         // 相手も打てない場合はゲーム終了
-        const opponentMoves = getValidMovesForBoard(board, opponent);
+        const opponentMoves = getValidMovesBitboard(blackBitboard, whiteBitboard, !isBlackTurn);
         if (opponentMoves.length === 0) {
-            console.log("[aiMakeMove] Game ended");
-            return finalEvaluation(board); // 終局時の評価
+            console.log("[aiMakeMove] Game ended (bitboard)");
+            return finalEvaluationBitboard(blackBitboard, whiteBitboard); // 終局時の評価
         }
         // パスして相手の番
-        return minimax(board, depth - 1, !isMaximizing, alpha, beta);
+        return minimaxBitboard(blackBitboard, whiteBitboard, depth - 1, !isMaximizing, alpha, beta);
     }
-    // 子ノードの探索
+
     if (isMaximizing) {
         let maxEval = -Infinity;
-        for (const [row, col] of validMoves) {
-            // 試行的に手を適用
-            const newBoard = applyMoveToBoard(board, row, col, player);
-            // 再帰的に評価
-            const score = minimax(newBoard, depth - 1, false, alpha, beta);
+        for (const move of moves) {
+            const newBitboard = applyMoveBitboard(blackBitboard, whiteBitboard, move, move.flipped, isBlackTurn);
+            const score = minimaxBitboard(newBitboard.black, newBitboard.white, depth - 1, false, alpha, beta);
             maxEval = Math.max(maxEval, score);
             alpha = Math.max(alpha, score);
-            // アルファベータ枝刈り
             if (beta <= alpha) {
-                break;
+                break; // アルファベータ枝刈り
             }
         }
         return maxEval;
     } else {
         let minEval = Infinity;
-
-        for (const [row, col] of validMoves) {
-            // 試行的に手を適用
-            const newBoard = applyMoveToBoard(board, row, col, player);
-            // 再帰的に評価
-            const score = minimax(newBoard, depth - 1, true, alpha, beta);
+        for (const move of moves) {
+            const newBitboard = applyMoveBitboard(blackBitboard, whiteBitboard, move, move.flipped, isBlackTurn);
+            const score = minimaxBitboard(newBitboard.black, newBitboard.white, depth - 1, true, alpha, beta);
             minEval = Math.min(minEval, score);
             beta = Math.min(beta, score);
-            // アルファベータ枝刈り
             if (beta <= alpha) {
-                break;
+                break; // アルファベータ枝刈り
             }
         }
         return minEval;
     }
 }
+
+// ムーブオーダリング用の重み付け関数（ビットボード版）
+function moveWeightBitboard(move) {
+    const r = move.row;
+    const c = move.col;
+
+    // 隅 (A1, A8, H1, H8)
+    if ((r === 0 && c === 0) || (r === 7 && c === 0) || (r === 0 && c === 7) || (r === 7 && c === 7)) return 1000;
+    // B打ち (A3, A6, C1, C8, F1, F8, H3, F6)
+    if ((r === 2 && c === 0) || (r === 5 && c === 0) ||
+        (r === 0 && c === 2) || (r === 7 && c === 2) ||
+        (r === 0 && c === 5) || (r === 7 && c === 5) ||
+        (r === 2 && c === 7) || (r === 5 && c === 7)) return 900;
+    // A打ち (A4, A5, D1, D8, E1, E8, H4, H5)
+    if ((r === 3 && c === 0) || (r === 4 && c === 0) ||
+        (r === 0 && c === 3) || (r === 7 && c === 3) ||
+        (r === 0 && c === 4) || (r === 7 && c === 4) ||
+        (r === 3 && c === 7) || (r === 4 && c === 7)) return 800;
+    // ボックス隅 (C3, C6, F3, F6)
+    if ((r === 2 && c === 2) || (r === 2 && c === 5) ||
+        (r === 5 && c === 2) || (r === 5 && c === 5)) return 700;
+    // ボックス辺 (C4, C5, D3, D6, E3, E6, F4, F5)
+    if ((r === 2 && c === 3) || (r === 2 && c === 4) ||
+        (r === 3 && c === 2) || (r === 4 && c === 2) ||
+        (r === 5 && c === 3) || (r === 5 && c === 4) ||
+        (r === 3 && c === 5) || (r === 4 && c === 5)) return 600;
+    // 中辺 (B3, B4, B5, B6, C2, C7, D2, D7, E2, E7, F2, F7, G3, G4, G5, G6)
+    if ((r === 2 && c === 1) || (r === 3 && c === 1) || (r === 4 && c === 1) || (r === 5 && c === 1) ||
+        (r === 1 && c === 2) || (r === 6 && c === 2) ||
+        (r === 1 && c === 3) || (r === 6 && c === 3) ||
+        (r === 1 && c === 4) || (r === 6 && c === 4) ||
+        (r === 1 && c === 5) || (r === 6 && c === 5) ||
+        (r === 2 && c === 6) || (r === 3 && c === 6) || (r === 4 && c === 6) || (r === 5 && c === 6)) return 500;
+    // C打ち (A2, A7, B1, B8, G1, G8, H2, H7)
+    if ((r === 1 && c === 0) || (r === 6 && c === 0) ||
+        (r === 0 && c === 1) || (r === 7 && c === 1) ||
+        (r === 0 && c === 6) || (r === 7 && c === 6) ||
+        (r === 1 && c === 7) || (r === 6 && c === 7)) return 400;
+    // X打ち (B2, B7, G2, G7)
+    if ((r === 1 && c === 1) || (r === 6 && c === 1) ||
+        (r === 1 && c === 6) || (r === 6 && c === 6)) return 300;
+    return 0;
+}
+
 // 探索深度を動的に調整する関数
 function adjustSearchDepth(estimatedTime, aiLevel) {
     if (estimatedTime < (aiLevel * 300)) {
         minimax_depth++;
+        console.log(`[aiMakeMove] +Adjusted minimax depth to ${minimax_depth}`);
     } else if (estimatedTime > aiLevel * 400) {
         minimax_depth--;
+        console.log(`[aiMakeMove] -Adjusted minimax depth to ${minimax_depth}`);
         if (estimatedTime > aiLevel * 700) {
+            console.log(`[aiMakeMove] --Adjusted minimax depth to ${minimax_depth}`);
             minimax_depth--;
         }
-
     }
     if (minimax_depth < 0) {
         minimax_depth = 0;
@@ -206,189 +339,141 @@ function adjustSearchDepth(estimatedTime, aiLevel) {
     }
     console.log(`[aiMakeMove] Adjusted search depth to ${minimax_depth}`);
 }
-// 終局時の評価
-function finalEvaluation(board) {
-    const blackCount = board.flat().filter(cell => cell === 'black').length;
-    const whiteCount = board.flat().filter(cell => cell === 'white').length;
+
+// 石の数をカウント
+function countBits(bits) {
+    let count = 0n;
+    let value = bits;
+
+    while (value) {
+        count++;
+        value &= value - 1n; // 最下位の1ビットをクリア
+    }
+
+    return Number(count);
+}
+
+// 終局時の評価（ビットボード版）
+function finalEvaluationBitboard(blackBitboard, whiteBitboard) {
+    const blackCount = countBits(blackBitboard);
+    const whiteCount = countBits(whiteBitboard);
 
     return (whiteCount - blackCount) * 1000;
 }
-// 盤面の評価関数
-function evaluateBoard(board) {
-    if (wasmReady) {
-        const result = wasmEvaluate(board, aiLevel);
-        console.log("WASM result:", result);
-        return result;
-    }
-    if (window.OthelloWasmModule) {
-        try {
-            return window.OthelloWasmModule.evaluateBoard(board, aiLevel);
-        } catch (e) {
-            console.warn("Error in WASM evaluation:", e);
-        }
-    }
-    // 重み定数
-    const cornerWeight = 30;     // 角の重み
-    const edgeWeight = 5;        // 辺の重み
-    const mobilityWeight = 0.2;  // 機動力の重み
-    const xcCellPenalty = 7;    // XCセルのペナルティ
 
-    let blackScore = 0;
-    let whiteScore = 0;
+// 角のビットマスク
+const CORNER_MASK = 0x8100000000000081n;
+// 辺のビットマスク
+const EDGE_MASK = 0x7E8181818181817En;
 
-    // 石の数をカウント
-    const blackCount = board.flat().filter(cell => cell === 'black').length;
-    const whiteCount = board.flat().filter(cell => cell === 'white').length;
-    const totalStones = blackCount + whiteCount;
+// 角・辺・XCセル用の重み定数
+const cornerWeight = 30;
+const edgeWeight = 5;
+const xcCellPenalty = 7;
+const mobilityWeight = aiLevel > 5 ? 0.3 : 0.1;
 
-    // 終局状態の特別処理
-    if (totalStones === 64) {
-        return (whiteCount - blackCount) * 1000;
-    }
 
-    // ゲームフェーズに応じて戦略を変更
-    const gamePhase = totalStones / 64; // 0～1の範囲
+// 盤面の評価関数（ビットボード版）
+function evaluateBitboard(blackBitboard, whiteBitboard) {
+    try {
+        let blackScore = 0;
+        let whiteScore = 0;
 
-    // 石の数の重み（終盤ほど重要に）
-    const stoneCountWeight = gamePhase * 2 + 0.1;
-    blackScore += blackCount * stoneCountWeight;
-    whiteScore += whiteCount * stoneCountWeight;
+        // 石の数をカウント
+        const blackCount = countBits(blackBitboard);
+        const whiteCount = countBits(whiteBitboard);
+        const totalStones = blackCount + whiteCount;
 
-    // 角の制御
-    const corners = [[0, 0], [0, 7], [7, 0], [7, 7]];
-    for (const [row, col] of corners) {
-        if (board[row][col] === 'black') blackScore += cornerWeight;
-        else if (board[row][col] === 'white') whiteScore += cornerWeight;
-    }
-    // 辺の評価
-    const edges = [];
-    for (let i = 2; i <= 5; i++) {
-        edges.push([0, i], [7, i], [i, 0], [i, 7]); // 上下左右の辺
-    }
-    for (const [row, col] of edges) {
-        if (board[row][col] === 'black') blackScore += edgeWeight;
-        else if (board[row][col] === 'white') whiteScore += edgeWeight;
-    }
+        // ゲームフェーズに応じて戦略を変更
+        const gamePhase = totalStones / 64; // 0～1の範囲
 
-    // 危険な位置（XCセル）のペナルティ
-    const dangerPositions = [[1, 1], [1, 6], [6, 1], [6, 6]];
-    for (const [row, col] of dangerPositions) {
-        const nearCorner = getNearestCorner(row, col);
-        const cornerState = board[nearCorner[0]][nearCorner[1]];
+        // 石の数の重み（終盤ほど重要に）
+        const stoneCountWeight = gamePhase * 2 + 0.1;
+        blackScore += blackCount * stoneCountWeight;
+        whiteScore += whiteCount * stoneCountWeight;
 
+        // 角の制御（ビットマスクを使用して高速化）
+        const blackCorners = countBits(blackBitboard & CORNER_MASK);
+        const whiteCorners = countBits(whiteBitboard & CORNER_MASK);
+        blackScore += blackCorners * cornerWeight;
+        whiteScore += whiteCorners * cornerWeight;
+
+        // 辺の評価（ビットマスクを使用して高速化）
+        const blackEdges = countBits(blackBitboard & EDGE_MASK);
+        const whiteEdges = countBits(whiteBitboard & EDGE_MASK);
+        blackScore += blackEdges * edgeWeight;
+        whiteScore += whiteEdges * edgeWeight;
+
+        // 危険な位置（XCセル）のペナルティ
         // XCセルのペナルティはゲームの初期〜中盤で特に重要
         const xcPenaltyMultiplier = Math.max(0, 1 - gamePhase * 1.1); // ゲーム終盤に向けて減少
 
-        // 角が空の場合は最大のペナルティ
-        if (cornerState === '') {
-            if (board[row][col] === 'black') blackScore -= xcCellPenalty * xcPenaltyMultiplier;
-            if (board[row][col] === 'white') whiteScore -= xcCellPenalty * xcPenaltyMultiplier;
-        }
-        // 角が相手の石の場合も高いペナルティ
-        else if ((cornerState === 'white' && board[row][col] === 'black') ||
-            (cornerState === 'black' && board[row][col] === 'white')) {
-            if (board[row][col] === 'black') blackScore -= xcCellPenalty * 0.8 * xcPenaltyMultiplier;
-            if (board[row][col] === 'white') whiteScore -= xcCellPenalty * 0.8 * xcPenaltyMultiplier;
-        }
-        // 角が自分の石なら、XCセルは比較的安全
-        // この場合はペナルティなし
-    }
+        // 各角に対するXCセルとその角の状態を評価
+        const corners = [
+            { corner: 0x0000000000000001n, xc: 0x0000000000000202n },
+            { corner: 0x0000000000000080n, xc: 0x0000000000004000n },
+            { corner: 0x0100000000000000n, xc: 0x0200000000000000n },
+            { corner: 0x8000000000000000n, xc: 0x4040000000000000n }
+        ];
 
-    // 機動力（有効手の数）の評価（序盤〜中盤で重要）
-    if (gamePhase < 0.7) {
-        const mobilityMultiplier = (1 - gamePhase) * mobilityWeight;
-        const blackMobility = getValidMovesForBoard(board, 'black').length;
-        const whiteMobility = getValidMovesForBoard(board, 'white').length;
-
-        blackScore += blackMobility * mobilityMultiplier;
-        whiteScore += whiteMobility * mobilityMultiplier;
-    }
-
-    // AIレベルに応じた評価戦略
-    if (aiLevel > 1) {
-        if (aiLevel === 6) {
-            // 「最弱級」指定のAI。評価関数は敢えて反転させる
-            return blackScore - whiteScore;
+        for (const { corner, xc } of corners) {
+            // 角が空いている場合
+            if ((blackBitboard & corner) === 0n && (whiteBitboard & corner) === 0n) {
+                blackScore -= countBits(blackBitboard & xc) * xcCellPenalty * xcPenaltyMultiplier;
+                whiteScore -= countBits(whiteBitboard & xc) * xcCellPenalty * xcPenaltyMultiplier;
+            } else if (blackBitboard & corner) {
+                whiteScore -= countBits(whiteBitboard & xc) * xcCellPenalty * 0.8 * xcPenaltyMultiplier;
+            } else if (whiteBitboard & corner) {
+                blackScore -= countBits(blackBitboard & xc) * xcCellPenalty * 0.8 * xcPenaltyMultiplier;
+            }
         }
-        return whiteScore - blackScore;
-    } else {
+
+        // 機動力（有効手の数）の評価（序盤〜中盤で重要）
+        if (gamePhase < 0.7) {
+            const mobilityMultiplier = (1 - gamePhase) * mobilityWeight;
+
+            try {
+                const blackMobility = getValidMovesBitboard(blackBitboard, whiteBitboard, true).length;
+                const whiteMobility = getValidMovesBitboard(blackBitboard, whiteBitboard, false).length;
+                blackScore += blackMobility * mobilityMultiplier;
+                whiteScore += whiteMobility * mobilityMultiplier;
+            } catch (mobilityError) {
+                console.error("[evaluateBitboard] Mobility calculation error:", mobilityError);
+                // エラー時は機動力評価をスキップ
+            }
+        }
+
+        // AIレベルに応じた評価戦略
+        if (aiLevel > 1) {
+            if (aiLevel === 6) {
+                // 「最弱級」指定のAI。評価関数は敢えて反転させる
+                return blackScore - whiteScore;
+            }
+            return whiteScore - blackScore;
+        } else {
+            return whiteCount - blackCount;
+        }
+    } catch (error) {
+        console.error("[evaluateBitboard] Error:", error);
+        // エラー時には単純な石差を返す
+        const blackCount = countBits(blackBitboard);
+        const whiteCount = countBits(whiteBitboard);
         return whiteCount - blackCount;
     }
 }
-// 最も近い角の座標を返す
-function getNearestCorner(row, col) {
-    if (row <= 3) {
-        if (col <= 3) return [0, 0];
-        return [0, 7];
-    } else {
-        if (col <= 3) return [7, 0];
-        return [7, 7];
-    }
-}
-// 特定の盤面に対する有効な手を取得する関数
-function getValidMovesForBoard(board, player) {
-    const validMoves = [];
-    const opponent = player === "black" ? "white" : "black";
-    for (let row = 0; row < 8; row++) {
-        for (let col = 0; col < 8; col++) {
-            if (board[row][col] !== '') continue;
-            // この位置に石を置いたときに、相手の石を裏返せるか確認
-            for (const [dx, dy] of DIRECTIONS) {
-                let x = row + dx;
-                let y = col + dy;
-                let hasOpponent = false;
 
-                while (isValidPosition(x, y) && board[x][y] === opponent) {
-                    hasOpponent = true;
-                    x += dx;
-                    y += dy;
-                }
-                if (hasOpponent && isValidPosition(x, y) && board[x][y] === player) {
-                    validMoves.push([row, col]);
-                    break;
-                }
-            }
-        }
-    }
-    return validMoves;
-}
-
-function applyMoveToBoard(board, row, col, player) {
-    const newBoard = board.map(r => [...r]);
-    newBoard[row][col] = player;
-    for (const [dx, dy] of DIRECTIONS) {
-        const flipped = getFlippedStones(newBoard, row, col, dx, dy, player);
-        for (const [x, y] of flipped) {
-            newBoard[x][y] = player;
-        }
-    }
-    return newBoard;
-}
-// 指定方向に裏返せる石の座標を配列で返す
-function getFlippedStones(board, row, col, dx, dy, player) {
-    const flippedStones = [];
-    let x = row + dx;
-    let y = col + dy;
-
-    const opponent = player === 'black' ? 'white' : 'black';
-
-    while (isValidPosition(x, y) && board[x][y] === opponent) {
-        flippedStones.push([x, y]);
-        x += dx;
-        y += dy;
-    }
-    // 最後に自分の石があれば、収集した石はすべて裏返せる
-    if (isValidPosition(x, y) && board[x][y] === player && flippedStones.length > 0) {
-        return flippedStones;
-    }
-    return [];
-}
 export function initAIMode() {
     const aiLevelSelect = document.getElementById('aiLevelSelect');
 
     document.getElementById("ai-level-display").addEventListener("click", function () {
         const popup = document.getElementById('ai-level-popup');
         popup.style.display = popup.style.display !== 'block' ? 'block' : 'none';
+        localStorage.setItem('aiLevel', aiLevelSelect.value);
+        aiLevel = aiLevelSelect.value;
+        minimax_depth = aiLevel-4;
+        if (minimax_depth < 0) {
+            minimax_depth = 0;
+        }
         updateAiLevelDisplay();
     });
     // 保存されたAIレベル解放状況を確認

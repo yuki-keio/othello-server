@@ -64,7 +64,10 @@ let lastMoveCell = null;
 
 let gameFinishedCount = parseInt(localStorage.getItem('gameFinishedCount') || 0);
 
-let minimax_depth = aiLevel - 2;
+let minimax_depth = aiLevel - 4;
+if (minimax_depth < 0) {
+    minimax_depth = 0;
+}
 
 let currentPlayerTimer;
 
@@ -642,6 +645,11 @@ function loadBoardFromURL() {
             };
             if (aiLevelFromURL) {
                 aiLevel = parseInt(aiLevelFromURL);
+                localStorage.setItem('aiLevel', aiLevel);
+                minimax_depth = aiLevel - 4;
+                if (minimax_depth < 0) {
+                    minimax_depth = 0;
+                }
             };
             if (showValidMovesFromURL) {
                 showValidMoves = showValidMovesFromURL === 'true';
@@ -1302,7 +1310,6 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
                 }).catch(err => {
                     console.error("Failed to load AI module.", err);
                 });
-
             }
         }
         //トップにスクロール

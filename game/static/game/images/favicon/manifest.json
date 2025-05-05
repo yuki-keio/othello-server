@@ -1,31 +1,34 @@
 {
 	"name": "リバーシWeb | yuki-lab",
 	"short_name": "リバーシ",
-	"description": "無料で遊べるオセロゲーム！",
+	"description": "誰もが楽しめるオセロゲーム。アプリ版は動作が軽く、オフラインにも対応。強力なAIと対戦したり、オンラインで友達や家族と遊んだりできます。",
 	"icons": [
 	  {
-		"src": "https://reversi.yuki-lab.com/static/game/images/favicon/android-chrome-192x192.png",
+		"src": "https://reversi.yuki-lab.com/static/game/images/icons/reversi_icon-min.png",
 		"sizes": "192x192",
-		"type": "image/png",
-		"purpose": "any maskable"
+		"type": "image/png"
 	  },
 	  {
-		"src": "https://reversi.yuki-lab.com/static/game/images/favicon/android-chrome-512x512.png",
+		"src": "https://reversi.yuki-lab.com/static/game/images/icons/reversi_icon-large.png",
 		"sizes": "512x512",
-		"type": "image/png",
-		"purpose": "any maskable"
+		"type": "image/png"
 	  }
 	],
 	"screenshots": [
 		{
-			"src": "https://reversi.yuki-lab.com/static/game/images/share-image.webp",
-			"sizes": "960x488",
-			"type": "image/png"
+			"src": "https://reversi.yuki-lab.com/static/game/images/install_ai.webp",
+			"sizes": "700×1478",
+			"type": "image/webp"
+		},
+		{
+			"src": "https://reversi.yuki-lab.com/static/game/images/install_friend.webp",
+			"sizes": "700×1478",
+			"type": "image/webp"
 		}
 	],
 	"theme_color": "#007508",
 	"background_color": "#007508",
 	"display": "standalone",
 	"scope": "https://reversi.yuki-lab.com/",
-	"start_url": "https://reversi.yuki-lab.com/"
+	"start_url": "https://reversi.yuki-lab.com/ai/"
 }

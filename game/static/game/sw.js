@@ -1,4 +1,4 @@
-const CACHE_NAME = "reversi-web-v35";
+const CACHE_NAME = "reversi-web-v36";
 const urlsToCache = [
     "/",
     "/ai/",
@@ -23,15 +23,22 @@ const urlsToCache = [
     "/static/game/images/draw.png",
     "/static/game/images/win.png",
     "/static/game/images/lose.png",
+    "/static/game/images/iOSinstall.webp",
     "/static/game/images/info.svg",
     "/static/game/images/laurel.webp",
     "/static/game/sounds/defeat.mp3",
     "/static/game/sounds/victory.mp3",
     "/static/game/sounds/place-stone.mp3",
+    "/static/game/sounds/playerJoin.mp3",
     "/static/game/sounds/warning.mp3",
     "/static/game/style.min.css",
     "/static/game/strategy.css",
     "/static/game/script.min.js",
+    "/static/game/online.min.js",
+    "/static/game/ai.min.js",
+    "/static/game/signup.css",
+    "/static/game/login.css",
+    "/static/game/payment_success.css",
     "/static/game/confetti.browser.min.js",
 ];
 
