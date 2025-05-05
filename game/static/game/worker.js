@@ -319,25 +319,29 @@ let mobilityWeight = 0.1; //仮の値
 
 onmessage = (e) => {
     let message = [];
-    const [_bitboard, _minimax_depth, _aiLevel] = e.data;
-    aiLevel = _aiLevel;
-    mobilityWeight = aiLevel > 5 ? 0.3 : 0.1;
-    minimax_depth = _minimax_depth;
-    const validMoves = getValidMovesBitboard(_bitboard.black, _bitboard.white, false);
-    const startTime = performance.now();
-    let bestScore = -Infinity;
-    for (let i = 0; i < validMoves.length; i++) {
-        const move = validMoves[i];
-        const newBitboard = applyMoveBitboard(_bitboard.black, _bitboard.white, move, move.flipped, false);
-        const score = minimaxBitboard(newBitboard.black, newBitboard.white, minimax_depth, false, -Infinity, Infinity);
-        if (score > bestScore) {
-            bestScore = score;
-            message = [move.row, move.col];
+    try {
+        const [_bitboard, _minimax_depth, _aiLevel] = e.data;
+        aiLevel = _aiLevel;
+        mobilityWeight = aiLevel > 5 ? 0.3 : 0.1;
+        minimax_depth = _minimax_depth;
+        const validMoves = getValidMovesBitboard(_bitboard.black, _bitboard.white, false);
+        const startTime = performance.now();
+        let bestScore = -Infinity;
+        for (let i = 0; i < validMoves.length; i++) {
+            const move = validMoves[i];
+            const newBitboard = applyMoveBitboard(_bitboard.black, _bitboard.white, move, move.flipped, false);
+            const score = minimaxBitboard(newBitboard.black, newBitboard.white, minimax_depth, false, -Infinity, Infinity);
+            if (score > bestScore) {
+                bestScore = score;
+                message = [move.row, move.col];
+            }
+            if (i === Math.floor(validMoves.length / 2)) {
+                const midTime = performance.now();
+                adjustSearchDepth((midTime - startTime) * 2, aiLevel);
+            }
         }
-        if (i === Math.floor(validMoves.length / 2)) {
-            const midTime = performance.now();
-            adjustSearchDepth((midTime - startTime) * 2, aiLevel);
-        }
+    } catch (error) {
+        message = [error, e.data];
     }
     postMessage(message);
 };

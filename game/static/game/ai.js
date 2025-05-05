@@ -148,6 +148,7 @@ function aiMakeMove() {
         ]);
         aiworker.onmessage = function (workerBestMove) {
             [bestMove.row, bestMove.col] = workerBestMove.data;
+            console.log("AI Move:", bestMove);
             if (aiLevel <= 3) {
                 setTimeout(() => endMove(bestMove, timeLimit, gameEnded, aimove), 600);
             } else {
@@ -184,7 +185,7 @@ function aiMakeMove() {
 }
 
 function endMove(bestMove, timeLimit, gameEnded, fromAI) {
-    if (bestMove.row) {
+    if (bestMove.row !== null) {
         makeMove(bestMove.row, bestMove.col, 2);
     }
     if (timeLimit > 0 && !gameEnded) {
@@ -482,10 +483,10 @@ export function initAIMode() {
     // AIレベル表示の更新関数
     function updateAiLevelDisplay() {
         const displayEl = document.getElementById('ai-level-display');
-        try{
-        displayEl.textContent = `${aiLevelSelect.options[aiLevelSelect.selectedIndex].text} AI`;
+        try {
+            displayEl.textContent = `${aiLevelSelect.options[aiLevelSelect.selectedIndex].text} AI`;
         }
-        catch(e){
+        catch (e) {
             displayEl.textContent = `😎 Level ${aiLevel} AI`;
         }
 
