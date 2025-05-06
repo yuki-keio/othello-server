@@ -25,13 +25,11 @@
     {% else %}
         <link rel="stylesheet" href="{% static 'game/style.min.css' %}?v={{ TIMESTAMP }}" media="print" id="dynamic-css">
     {% endif %}
-
     <link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic&family=BIZ+UDPMincho:wght@400&display=swap" rel="stylesheet" media="print" id="dynamic-fonts" crossorigin="anonymous">
     <script nonce="{{ request.csp_nonce }}">
         const PLACE_STONE_SOUND="{% static 'game/sounds/place-stone.mp3' %}";
-        const csrf_token="{{ csrf_token }}"
+        const csrf_token="{{ csrf_token }}";
         const DEBUG_MODE = {{ DEBUG|yesno:"true,false" }};
-
     </script>
     {% if DEBUG %}
         <script defer src="{% static 'game/script.js' %}?v={{ TIMESTAMP }}"></script>
@@ -39,18 +37,15 @@
         <script defer src="{% static 'game/online.js' %}?v={{ TIMESTAMP }}"></script>
         {% endif %}
         {% if mode == 'ai' %}
-        {% if DEBUG %}
-        <link rel="modulepreload" href="/static/game/ai.js" as="script" crossorigin>
-        <link rel="modulepreload" href="/static/game/worker.js" as="script" crossorigin>
-        {% else %}
-        <link rel="modulepreload" href="/static/game/ai.min.js" as="script" crossorigin>
-        <link rel="modulepreload" href="/static/game/worker.min.js" as="script" crossorigin>
-        {% endif %}
+            <link rel="modulepreload" href="{% static 'game/ai.js' %}" as="script" crossorigin>
         {% endif %}
     {% else %}
         <script defer src="{% static 'game/script.min.js' %}?v={{ TIMESTAMP }}"></script>
         {% if mode == 'online' %}
         <script defer src="{% static 'game/online.min.js' %}?v={{ TIMESTAMP }}"></script>
+        {% endif %}
+        {% if mode == 'ai' %}
+            <link rel="modulepreload" href="{% static 'game/ai.min.js' %}" as="script" crossorigin>
         {% endif %}
     {% endif %}
     <!-- 翻訳後の文字列をmain.jsへ受け渡し-->
@@ -245,13 +240,10 @@
                 "url": "https://reversi.yuki-lab.com/online/"
               }]
     }</script>{% endif %}
-    <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/favicon.ico' %}">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/apple-touch-icon.png' %}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/icons/apple-touch-icon.png' %}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/favicon-16x16.png' %}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/favicon-32x32.png' %}">
-    <link rel="icon" type="image/png" sizes="48x48" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/favicon-48x48.png' %}">
-    <link rel="icon" type="image/png" sizes="96x96" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/favicon-96x96.png' %}">
-    <link rel="icon" type="image/png" sizes="192x192" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/favicon-192x192.png' %}">
+    <link rel="shortcut icon" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/favicon.ico' %}">
     <link rel="manifest" href="{% url 'manifest' %}">
     {% if request.LANGUAGE_CODE == "ja" %}
     <link rel="canonical" href="{% if mode == 'online' %}https://reversi.yuki-lab.com/online/{% elif mode == 'ai' %}https://reversi.yuki-lab.com/ai/{% elif mode == 'player' %}https://reversi.yuki-lab.com/{% else %}https://reversi.yuki-lab.com/{% endif %}">

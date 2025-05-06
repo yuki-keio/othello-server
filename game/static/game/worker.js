@@ -199,7 +199,7 @@ function adjustSearchDepth(estimatedTime, aiLevel) {
         }
     }
     if (minimax_depth > aiLevel) {
-        minimax_depth = aiLevel;
+        minimax_depth = aiLevel - 1;
     }
     if (minimax_depth < 0) {
         minimax_depth = 0;
@@ -261,7 +261,6 @@ function evaluateBitboard(blackBitboard, whiteBitboard) {
     // XCセルのペナルティはゲームの初期〜中盤で特に重要
     const xcPenaltyMultiplier = Math.max(0, 1 - gamePhase * 1.1); // ゲーム終盤に向けて減少
 
-    // 各角に対するXCセルとその角の状態を評価
     const corners = [
         { corner: 0x0000000000000001n, xc: 0x0000000000000302n },
         { corner: 0x0000000000000080n, xc: 0x000000000000C040n },
@@ -270,7 +269,6 @@ function evaluateBitboard(blackBitboard, whiteBitboard) {
     ];
 
     for (const { corner, xc } of corners) {
-        // 角が空いている場合
         if ((blackBitboard & corner) === 0n && (whiteBitboard & corner) === 0n) {
             blackScore -= countBits(blackBitboard & xc) * xcCellPenalty * xcPenaltyMultiplier;
             whiteScore -= countBits(whiteBitboard & xc) * xcCellPenalty * xcPenaltyMultiplier;

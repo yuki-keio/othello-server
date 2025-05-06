@@ -170,20 +170,25 @@ window.add4x4Markers = function () {
         const cell = board.children[row].children[col];
         const marker = document.createElement('div');
         marker.className = 'marker';
-        cell.classList.add('44');
+        cell.classList.add('markerPosition');
         cell.appendChild(marker);
     });
     document.getElementById('b_loader').style.display = 'none';
 }
 
 function setDisc(row, col, color) {
-
     gameBoard[row][col] = color;
     const cell = board.children[row].children[col];
-    if (cell.classList.contains('44')) {
-        cell.innerHTML = `<div class="disc 44 ${color}"></div><div class="marker"></div>`;
+    while (cell.firstChild) cell.removeChild(cell.firstChild);
+    const disc = document.createElement('div');
+    if (cell.classList.contains('markerPosition')) {
+        disc.classList.add('disc', 'markerPosition', color);
+        const marker = document.createElement('div');
+        marker.classList.add('marker');
+        cell.append(disc, marker);
     } else {
-        cell.innerHTML = `<div class="disc ${color}"></div>`;
+        disc.classList.add('disc', color);
+        cell.append(disc);
     }
     cell.setAttribute('aria-label', "abcdefgh"[col] + `${row + 1}：${color === 'black' ? lang.black : lang.white}`);
 }
