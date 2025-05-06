@@ -30,6 +30,7 @@
         const PLACE_STONE_SOUND="{% static 'game/sounds/place-stone.mp3' %}";
         const csrf_token="{{ csrf_token }}";
         const DEBUG_MODE = {{ DEBUG|yesno:"true,false" }};
+        const aiPath = DEBUG_MODE ? "{% static 'game/ai.js' %}" : "{% static 'game/ai.min.js' %}";
     </script>
     {% if DEBUG %}
         <script defer src="{% static 'game/script.js' %}?v={{ TIMESTAMP }}"></script>

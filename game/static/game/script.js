@@ -7,7 +7,6 @@ const moveListElement = document.getElementById('move-list');
 const copyUrlBtn = document.getElementById("copy-url-btn");
 let aiModulePromise = null;
 let aiModule = null;
-const aiPath = DEBUG_MODE ? './ai.js' : './ai.min.js';
 const workerPath = DEBUG_MODE ? '/static/game/worker.js' : '/static/game/worker.min.js';
 //音関係----
 window.playerJoin = document.getElementById('playerJoin');
