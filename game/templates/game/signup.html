@@ -21,6 +21,12 @@
 <body>
     <div class="signup-wrapper">
         <h1>{% trans 'アカウントを作成する' %}</h1>
+        <ul class="merit">
+            <li>✅️ {% trans "1クリックで簡単作成！" %}</li>
+            <li>🚀 {% trans "高度な機能が解放されます" %}</li>
+            <li>🛡️ {% trans "一部データの引き継ぎが可能に" %}</li>
+        </ul>
+        <br>
         <form method="post" novalidate>
             {% csrf_token %}
             {% if form.non_field_errors %}

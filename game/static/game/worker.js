@@ -190,11 +190,11 @@ function moveWeightBitboard(move) {
 
 // 探索深度を動的に調整する関数
 function adjustSearchDepth(estimatedTime, aiLevel) {
-    if (estimatedTime < (aiLevel * 200)) {
+    if (estimatedTime < (aiLevel * 300)) {
         minimax_depth++;
-    } else if (estimatedTime > aiLevel * 400) {
+    } else if (estimatedTime > aiLevel * 600) {
         minimax_depth--;
-        if (estimatedTime > aiLevel * 700) {
+        if (estimatedTime > aiLevel * 800) {
             minimax_depth--;
         }
     }
@@ -263,10 +263,10 @@ function evaluateBitboard(blackBitboard, whiteBitboard) {
 
     // 各角に対するXCセルとその角の状態を評価
     const corners = [
-        { corner: 0x0000000000000001n, xc: 0x0000000000000202n },
-        { corner: 0x0000000000000080n, xc: 0x0000000000004000n },
-        { corner: 0x0100000000000000n, xc: 0x0200000000000000n },
-        { corner: 0x8000000000000000n, xc: 0x4040000000000000n }
+        { corner: 0x0000000000000001n, xc: 0x0000000000000302n },
+        { corner: 0x0000000000000080n, xc: 0x000000000000C040n },
+        { corner: 0x0100000000000000n, xc: 0x0203000000000000n },
+        { corner: 0x8000000000000000n, xc: 0x40C0000000000000n }
     ];
 
     for (const { corner, xc } of corners) {
@@ -274,17 +274,12 @@ function evaluateBitboard(blackBitboard, whiteBitboard) {
         if ((blackBitboard & corner) === 0n && (whiteBitboard & corner) === 0n) {
             blackScore -= countBits(blackBitboard & xc) * xcCellPenalty * xcPenaltyMultiplier;
             whiteScore -= countBits(whiteBitboard & xc) * xcCellPenalty * xcPenaltyMultiplier;
-        } else if (blackBitboard & corner) {
-            whiteScore -= countBits(whiteBitboard & xc) * xcCellPenalty * 0.8 * xcPenaltyMultiplier;
-        } else if (whiteBitboard & corner) {
-            blackScore -= countBits(blackBitboard & xc) * xcCellPenalty * 0.8 * xcPenaltyMultiplier;
         }
     }
 
     // 機動力（有効手の数）の評価（序盤〜中盤で重要）
     if (gamePhase < 0.7) {
         const mobilityMultiplier = (1 - gamePhase) * mobilityWeight;
-
         const blackMobility = getValidMovesBitboard(blackBitboard, whiteBitboard, true).length;
         const whiteMobility = getValidMovesBitboard(blackBitboard, whiteBitboard, false).length;
         blackScore += blackMobility * mobilityMultiplier;
@@ -308,21 +303,25 @@ const CORNER_MASK = 0x8100000000000081n;
 // 辺のビットマスク
 const EDGE_MASK = 0x7E8181818181817En;
 
-// 角・辺・XCセル用の重み定数
-const cornerWeight = 30;
-const edgeWeight = 5;
-const xcCellPenalty = 7;
+// 角・辺・XCセル用の重み
 
 let aiLevel = 5; //仮の値
 let minimax_depth = 3; //仮の値
 let mobilityWeight = 0.1; //仮の値
+let cornerWeight = 30;
+let xcCellPenalty = 7;
+let edgeWeight = 5;
+
 
 onmessage = (e) => {
     let message = [];
     try {
         const [_bitboard, _minimax_depth, _aiLevel] = e.data;
         aiLevel = _aiLevel;
-        mobilityWeight = aiLevel > 5 ? 0.3 : 0.1;
+        edgeWeight = aiLevel > 3 ? 5 : 0;
+        cornerWeight = aiLevel > 5 ? 30 : 10;
+        mobilityWeight = aiLevel > 7 ? 0.3 : 0;
+        xcCellPenalty = aiLevel > 8 ? 7 : 0;
         minimax_depth = _minimax_depth;
         const validMoves = getValidMovesBitboard(_bitboard.black, _bitboard.white, false);
         const startTime = performance.now();
@@ -343,6 +342,6 @@ onmessage = (e) => {
     } catch (error) {
         message = [error, e.data];
     }
-    message[2]=minimax_depth;
+    message[2] = minimax_depth;
     postMessage(message);
 };

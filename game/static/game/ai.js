@@ -9,7 +9,7 @@ export function startAIMove() {
     timerDisplay_.classList.remove('warning1', 'warning2');
 
     timerDisplay_.style.display = 'inline-block'; // 表示
-    const timerPrefix = aiLevel === 6 ? "🐤 " : aiLevel === 9 ? "👺 " : aiLevel === 7 ? "🔆 " : "🤔 ";
+    const timerPrefix = aiLevel === 6 ? "🐤 " : aiLevel === 9 ? "👺 " : aiLevel === 7 ? "🔆 " : aiLevel > 9 ? "🌈 " : "🤔 ";
     timerDisplay_.textContent = timerPrefix + lang.thinking;
     board.classList.add('thinking');
     setTimeout(() => {
@@ -17,7 +17,7 @@ export function startAIMove() {
         aiMakeMove();
         updateURL();
     }, 10);
-    const aiThinkingTimer =setInterval(() => {
+    const aiThinkingTimer = setInterval(() => {
         if (!aimove) {
             clearInterval(aiThinkingTimer);
             return;
@@ -164,9 +164,11 @@ function aiMakeMove() {
             let updatedDepth;
             [bestMove.row, bestMove.col, updatedDepth] = workerBestMove.data;
             minimax_depth = updatedDepth;
-            console.log("AI Move:", bestMove);
-            if (aiLevel <= 3) {
+            console.log(`AI Move:${bestMove}, Depth:${minimax_depth}`);
+            if (aiLevel < 4) {
                 setTimeout(() => endMove(bestMove, timeLimit, gameEnded, aimove), 600);
+            } else if (aiLevel < 7) {
+                setTimeout(() => endMove(bestMove, timeLimit, gameEnded, aimove), 300);
             } else {
                 endMove(bestMove, timeLimit, gameEnded, aimove);
             }
@@ -437,8 +439,15 @@ function evaluateBitboard(blackBitboard, whiteBitboard) {
 }
 
 export function initAIMode() {
+    if (aiLevel > 9 && !authenticated) {
+        const url = new URL(window.location);
+        url.searchParams.set('next', url);
+        url.pathname = (langCode === "ja" ? "" : "/" + langCode) + '/signup/';
+        history.pushState(null, "", location.href);
+        location.href = url.toString();
+        return;
+    }
     const aiLevelSelect = document.getElementById('aiLevelSelect');
-
     document.getElementById("ai-level-display").addEventListener("click", function () {
         const popup = document.getElementById('ai-level-popup');
         popup.style.display = popup.style.display !== 'block' ? 'block' : 'none';
@@ -453,6 +462,39 @@ export function initAIMode() {
     // 保存されたAIレベル解放状況を確認
     const unlockedLevels = JSON.parse(localStorage.getItem('unlockedAiLevels') || '{"0":true,"1":true,"2":true,"6":true}');
     console.log(`[aiLevelSelect] Unlocked levels: ${JSON.stringify(unlockedLevels)}`);
+    const maxKey = Math.max(...Object.keys(unlockedLevels).map(Number));
+    if (maxKey >= 9) {
+        const aiLevelList = document.getElementById('ai-level-list');
+        // 9以上のレベルはhtmlにoptionがないので、追加していく
+        for (let i = 11; i <= maxKey + 2; i += 2) {
+            const newOption = document.createElement('option');
+            const newDiv = document.createElement('div');
+
+            newOption.value = i;
+            newOption.setAttribute('data-unlock-level', i - 2);
+            newOption.className = 'locked-level';
+
+            if (i === 11) {
+                newOption.textContent = `🌈 ${lang.legend}`;
+                newDiv.textContent = `🌈 ${lang.legend}`;
+            } else {
+                newOption.textContent = `🌈 ${lang.legend} ${(i - 9) / 2}`;
+                newDiv.textContent = `🌈 ${lang.legend} ${(i - 9) / 2}`;
+            }
+
+            newDiv.className = 'ai-level-item locked-level';
+            newDiv.setAttribute('data-level', i);
+            newDiv.setAttribute('data-unlock-level', i - 2);
+
+            aiLevelSelect.insertBefore(newOption, aiLevelSelect.lastChild);
+            aiLevelList.insertBefore(newDiv, aiLevelList.lastChild);
+        }
+        if (Object.keys(unlockedLevels).length === 8) {
+            langNextAIName = `🌈 ${lang.legend}`;
+        } else {
+            langNextAIName = `🌈 ${lang.legend} ${(maxKey - 7) / 2}`;
+        }
+    }
     // ロックされたレベルを処理
     const lockedOptions = document.querySelectorAll('.locked-level');
     lockedOptions.forEach(option => {
@@ -468,10 +510,18 @@ export function initAIMode() {
             }
             switch (langCode) {
                 case "en":
-                    option.textContent = `Next Level: Defeat ${level_before.textContent} to unlock`;
+                    if (unlockLevel >= 9 && !authenticated) {
+                        option.textContent = `Sign up to unlock the next level`;
+                    } else {
+                        option.textContent = `Next Level: Defeat ${level_before.textContent} to unlock`;
+                    }
                     break;
                 default:
-                    option.textContent = `次のレベル : ${level_before.textContent}AIに勝利で解放`;
+                    if (unlockLevel >= 9 && !authenticated) {
+                        option.textContent = `次のレベル : アカウントを登録して解放`;
+                    } else {
+                        option.textContent = `次のレベル : ${level_before.textContent}AIに勝利で解放`;
+                    }
                     break;
             }
             option.disabled = true;
@@ -484,26 +534,41 @@ export function initAIMode() {
         const nextLevelOption = Array.from(aiLevelSelect.querySelectorAll('.locked-level')).find(
             option => option.getAttribute('data-unlock-level') == currentLevel
         );
-
+        const currentNumber = Number(currentLevel);
         if (nextLevelOption) {
             const nextLevel = nextLevelOption.value;
             unlockedLevels[nextLevel] = true;
             localStorage.setItem('unlockedAiLevels', JSON.stringify(unlockedLevels));
-            // 解放メッセージを表示
-            alert(lang.congrats_aiLevel_unlocked_b + langNextAIName + lang.congrats_aiLevel_unlocked_a);
+            document.getElementById('restart-match').textContent = lang.nextLevel;
+            localStorage.setItem('aiLevel', nextLevel);
+        } else if (currentNumber >= 9) {
+            const nextLevel = currentNumber + 2;
+            unlockedLevels[nextLevel] = true;
+            localStorage.setItem('unlockedAiLevels', JSON.stringify(unlockedLevels));
             document.getElementById('restart-match').textContent = lang.nextLevel;
             localStorage.setItem('aiLevel', nextLevel);
         }
     };
+    window.congratsNextAiLevel = function (currentLevel) {
+        const nextLevelOption = Array.from(aiLevelSelect.querySelectorAll('.locked-level')).find(
+            option => option.getAttribute('data-unlock-level') == currentLevel
+        );
+        // 解放メッセージを表示
+        if (nextLevelOption || currentLevel >= 9) {
+            alert(lang.congrats_aiLevel_unlocked_b + langNextAIName + lang.congrats_aiLevel_unlocked_a);
+        }
+    }
 
     // AIレベル表示の更新関数
     function updateAiLevelDisplay() {
         const displayEl = document.getElementById('ai-level-display');
+        aiLevelSelect.value = aiLevel;
         try {
-            displayEl.textContent = `${aiLevelSelect.options[aiLevelSelect.selectedIndex].text} AI`;
+            displayEl.textContent = aiLevelSelect.options[aiLevelSelect.selectedIndex].text + (aiLevel > 9 ? "" : " AI");
         }
         catch (e) {
-            displayEl.textContent = `😎 Level ${aiLevel} AI`;
+            displayEl.textContent = `🌙 Level ${aiLevel}`;
+            console.warn("隠しレベル | error:", e);
         }
 
         // ポップアップ内の選択状態も更新

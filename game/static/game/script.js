@@ -56,7 +56,7 @@ window.playerJoinSoundEnabled = !(localStorage.getItem('playerJoinSoundEnabled')
 window.showValidMoves = !(localStorage.getItem('showValidMoves') === "false");
 window.timeLimit = parseInt(localStorage.getItem('timeLimit') || 0);
 let aiLevel = parseInt(localStorage.getItem('aiLevel') || 1);
-
+console.log(`AI Level:${aiLevel}, aiLevelSelect:${document.getElementById('aiLevelSelect').value}, localStorage:${localStorage.getItem('aiLevel')}`); 
 window.currentPlayer = 'black';
 let gameBoard = Array.from({ length: 8 }, () => Array(8).fill(''));
 window.moveHistory = [];
@@ -886,9 +886,8 @@ window.endGame = function (online_data, winner = null, y = -1) {
 
     if (gameMode === 'ai') {
         try {
-            opponentName = aiLevelSelect.options[aiLevelSelect.selectedIndex].text + "AI";
-        }
-        catch (e) {
+            opponentName = aiLevelSelect.options[aiLevelSelect.selectedIndex].text + (aiLevel > 9 ? "" : " AI");
+        } catch (e) {
             opponentName = `😎 Level ${aiLevel} AI`;
         }
     }
@@ -1065,6 +1064,12 @@ window.endGame = function (online_data, winner = null, y = -1) {
         showResultPopup(ifVictory, blackCount, whiteCount, winner_final);
     }
     if (winner !== "won") {
+        const currentAiLevel = document.getElementById('aiLevelSelect').value;
+        if (gameMode === "ai" && ifVictory) {
+            if (window.unlockNextAiLevel) {
+                window.unlockNextAiLevel(currentAiLevel);
+            }
+        }
         setTimeout(() => {
             gameFinishedCount++;
             localStorage.setItem('gameFinishedCount', gameFinishedCount);
@@ -1079,9 +1084,8 @@ window.endGame = function (online_data, winner = null, y = -1) {
                 iOSinstallGuide();
             } else {
                 if (gameMode === "ai" && ifVictory) {
-                    const currentAiLevel = document.getElementById('aiLevelSelect').value;
                     if (window.unlockNextAiLevel) {
-                        window.unlockNextAiLevel(currentAiLevel);
+                        window.congratsNextAiLevel(currentAiLevel);
                     }
                 }
             }
@@ -1358,7 +1362,7 @@ function _DOMContenLoaded() {
             aiModulePromise.then(module => {
                 module.initAIMode();
             }).catch(err => {
-                console.log("Failed to load AI module.", err);
+                console.warn("Failed to load AI module.", err);
             });
         }
     }
@@ -1614,7 +1618,7 @@ document.getElementById("close-install-guide").addEventListener("click", () => {
     if (gameMode === "ai" && ifVictory) {
         const currentAiLevel = document.getElementById('aiLevelSelect').value;
         if (window.unlockNextAiLevel) {
-            window.unlockNextAiLevel(currentAiLevel);
+            window.congratsNextAiLevel(currentAiLevel);
         }
     }
 });
@@ -1642,6 +1646,9 @@ document.getElementById('aiLevelSelect').value = aiLevel;
 document.getElementById('aiLevelSelect').addEventListener('change', () => {
     aiLevel = parseInt(document.getElementById('aiLevelSelect').value);
     localStorage.setItem('aiLevel', aiLevel);
+    const s_url = new URL(window.location);
+    s_url.searchParams.set('aiLevel', aiLevel);
+    history.replaceState(null, "", s_url);
 });
 
 // 音声設定の変更を Local Storage に保存

@@ -1,4 +1,4 @@
-const CACHE_NAME = "reversi-web-v36";
+const CACHE_NAME = "reversi-web-v37";
 const urlsToCache = [
     "/",
     "/ai/",

@@ -108,12 +108,17 @@ h1 {
     margin-bottom: 13px;
 }
 .login{
-    color:#404040;
+    color: #007508;
     text-decoration: none;
     font-size: 0.8rem;
 }
 .login:hover {
     text-decoration: underline;
+}
+.merit li{
+    text-decoration: none;
+    font-size: 0.7rem;
+    list-style-type: none;
 }
 
 /* ---------- レスポンシブ対応（スマホ） ---------- */
