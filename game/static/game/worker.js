@@ -319,7 +319,7 @@ onmessage = (e) => {
         edgeWeight = aiLevel > 3 ? 5 : 0;
         cornerWeight = aiLevel > 5 ? 30 : 10;
         mobilityWeight = aiLevel > 7 ? 0.3 : 0;
-        xcCellPenalty = aiLevel > 8 ? 7 : 0;
+        xcCellPenalty = aiLevel > 9 ? 7 : 0;
         minimax_depth = _minimax_depth;
         const validMoves = getValidMovesBitboard(_bitboard.black, _bitboard.white, false);
         const startTime = performance.now();

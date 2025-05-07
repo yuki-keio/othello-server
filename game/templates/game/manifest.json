@@ -17,24 +17,24 @@
 	"screenshots": [
 		{
 			"src": "https://reversi.yuki-lab.com/static/game/images/install_ai.webp",
-			"sizes": "700×1478",
+			"sizes": "700x1478",
 			"type": "image/webp"
 		},
 		{
 			"src": "https://reversi.yuki-lab.com/static/game/images/install_friend.webp",
-			"sizes": "700×1478",
+			"sizes": "700x1478",
 			"type": "image/webp"
 		}
 	],{% else %}
 	"screenshots": [
 		{
 			"src": "https://reversi.yuki-lab.com/static/game/images/en_ai.webp",
-			"sizes": "588×1300",
+			"sizes": "588x1300",
 			"type": "image/webp"
 		},
 		{
 			"src": "https://reversi.yuki-lab.com/static/game/images/en_friend.webp",
-			"sizes": "588×1298",
+			"sizes": "588x1298",
 			"type": "image/webp"
 		}
 	],{% endif %}

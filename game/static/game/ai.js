@@ -439,21 +439,13 @@ function evaluateBitboard(blackBitboard, whiteBitboard) {
 }
 
 export function initAIMode() {
-    if (aiLevel > 9 && !authenticated) {
-        const url = new URL(window.location);
-        url.searchParams.set('next', url);
-        url.pathname = (langCode === "ja" ? "" : "/" + langCode) + '/signup/';
-        history.pushState(null, "", location.href);
-        location.href = url.toString();
-        return;
-    }
     const aiLevelSelect = document.getElementById('aiLevelSelect');
     document.getElementById("ai-level-display").addEventListener("click", function () {
         const popup = document.getElementById('ai-level-popup');
         popup.style.display = popup.style.display !== 'block' ? 'block' : 'none';
         localStorage.setItem('aiLevel', aiLevelSelect.value);
         aiLevel = aiLevelSelect.value;
-        minimax_depth = aiLevel - 4;
+        minimax_depth = Math.min(aiLevel - 4, 8);
         if (minimax_depth < 0) {
             minimax_depth = 0;
         }
@@ -542,6 +534,10 @@ export function initAIMode() {
             document.getElementById('restart-match').textContent = lang.nextLevel;
             localStorage.setItem('aiLevel', nextLevel);
         } else if (currentNumber >= 9) {
+            const maxUnlockedLevel = Math.max(...Object.keys(unlockedLevels).map(Number));
+            if (maxUnlockedLevel !== currentNumber) {
+                return;
+            }
             const nextLevel = currentNumber + 2;
             unlockedLevels[nextLevel] = true;
             localStorage.setItem('unlockedAiLevels', JSON.stringify(unlockedLevels));
@@ -553,9 +549,18 @@ export function initAIMode() {
         const nextLevelOption = Array.from(aiLevelSelect.querySelectorAll('.locked-level')).find(
             option => option.getAttribute('data-unlock-level') == currentLevel
         );
+        const largestUnlockedLevel = Math.max(...Object.keys(unlockedLevels).map(Number));
         // 解放メッセージを表示
-        if (nextLevelOption || currentLevel >= 9) {
-            alert(lang.congrats_aiLevel_unlocked_b + langNextAIName + lang.congrats_aiLevel_unlocked_a);
+        if (nextLevelOption || ((currentLevel > 9)) && largestUnlockedLevel === currentLevel) {
+            if (Number(currentLevel) === 9) {
+                if (largestUnlockedLevel === 11) {
+                    alert(lang.signupToUnlockLegend);
+                    document.getElementById('menu-toggle').checked = true;
+                }
+            } else {
+                alert(lang.congrats_aiLevel_unlocked_b + langNextAIName + lang.congrats_aiLevel_unlocked_a);
+            }
+
         }
     }
 

@@ -55,7 +55,7 @@ window.playerJoinSoundEnabled = !(localStorage.getItem('playerJoinSoundEnabled')
 window.showValidMoves = !(localStorage.getItem('showValidMoves') === "false");
 window.timeLimit = parseInt(localStorage.getItem('timeLimit') || 0);
 let aiLevel = parseInt(localStorage.getItem('aiLevel') || 1);
-console.log(`AI Level:${aiLevel}, aiLevelSelect:${document.getElementById('aiLevelSelect').value}, localStorage:${localStorage.getItem('aiLevel')}`); 
+console.log(`AI Level:${aiLevel}, aiLevelSelect:${document.getElementById('aiLevelSelect').value}, localStorage:${localStorage.getItem('aiLevel')}`);
 window.currentPlayer = 'black';
 let gameBoard = Array.from({ length: 8 }, () => Array(8).fill(''));
 window.moveHistory = [];
@@ -64,7 +64,7 @@ let lastMoveCell = null;
 
 let gameFinishedCount = parseInt(localStorage.getItem('gameFinishedCount') || 0);
 
-let minimax_depth = aiLevel - 4;
+let minimax_depth = Math.min(aiLevel - 4, 8);
 if (minimax_depth < 0) {
     minimax_depth = 0;
 }
@@ -649,7 +649,7 @@ function loadBoardFromURL() {
             if (aiLevelFromURL) {
                 aiLevel = parseInt(aiLevelFromURL);
                 localStorage.setItem('aiLevel', aiLevel);
-                minimax_depth = aiLevel - 4;
+                minimax_depth = Math.min(aiLevel - 4, 8);
                 if (minimax_depth < 0) {
                     minimax_depth = 0;
                 }
@@ -1446,6 +1446,18 @@ function _DOMContenLoaded() {
                 // 未ログイン時の要素を表示
                 unauthenticatedElements.forEach(el => el.style.display = 'block');
                 authenticated = false;
+                if (gameMode === 'ai') {
+                    if (aiLevel > 9) {
+                        const backupURL = new URL(window.location);
+                        const url = new URL(window.location);
+                        backupURL.searchParams.set('aiLevel', 9);
+                        url.searchParams.set('next', url.toString());
+                        url.pathname = (langCode === "ja" ? "" : "/" + langCode) + '/signup/';
+                        history.pushState(null, '', backupURL);
+                        location.href = url.toString();
+                        return;
+                    }
+                }
             }
         });
     fetch('/api/premium-status/')
