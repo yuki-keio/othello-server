@@ -51,7 +51,7 @@ msgstr "You cannot place a stone here: "
 
 #: game/forms.py:12 game/forms.py:16 game/models.py:46
 msgid "メールアドレス"
-msgstr "email"
+msgstr "Email"
 
 #: game/models.py:32
 msgid "月単位"
@@ -243,7 +243,7 @@ msgstr "Are you sure you want to forfeit?"
 
 #: game/templates/game/index.html:95
 msgid "考え中"
-msgstr "Hmm..."
+msgstr "Hmm"
 
 #: game/templates/game/index.html:96
 msgid ""

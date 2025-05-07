@@ -503,14 +503,14 @@ export function initAIMode() {
             switch (langCode) {
                 case "en":
                     if (unlockLevel >= 9 && !authenticated) {
-                        option.textContent = `Sign up to unlock the next level`;
+                        option.innerHTML = `<a href="/en/signup/">Sign up</a> to unlock the next level`;
                     } else {
                         option.textContent = `Next Level: Defeat ${level_before.textContent} to unlock`;
                     }
                     break;
                 default:
                     if (unlockLevel >= 9 && !authenticated) {
-                        option.textContent = `次のレベル : アカウントを登録して解放`;
+                        option.innerHTML = `次のレベル : <a href="/signup/">アカウントを登録</a>して解放`;
                     } else {
                         option.textContent = `次のレベル : ${level_before.textContent}AIに勝利で解放`;
                     }

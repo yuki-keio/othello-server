@@ -467,6 +467,10 @@ width: 120px
 #restart-match:hover{
   background-image: linear-gradient(to bottom, #00980a, #006e07);background-color: #00aa0b
 }
+#restart-btn:active {
+  -webkit-transform: translateY(2px);
+  transform: translateY(2px);
+}
 #close-result{
   padding:5px 10px;
   margin-top:10px ;

@@ -1,4 +1,4 @@
-const CACHE_NAME = "reversi-web-v37";
+const CACHE_NAME = `reversi-web-${__TS__}`; // __TS__はビルド時に置き換えられます
 const urlsToCache = [
     "/",
     "/ai/",
