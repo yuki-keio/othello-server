@@ -79,6 +79,9 @@ let gameEnded = false;
 let share_winner = "";
 let ifVictory = false;
 
+const menuToggle = document.getElementById('menu-toggle');
+const hamburgerMenu = document.getElementById('hamburger-menu');
+
 //言語設定
 window.langCode = "ja";
 let gameMode = window.location.pathname.split('/').filter(Boolean)[0] || 'player';
@@ -794,7 +797,6 @@ function restart(reload = true) {
                 newUrl = `${window.location.origin}/en/`;
             }
         }
-
         localStorage.setItem('deleted_urls', JSON.stringify([]));
         window.location.href = newUrl;
     }
@@ -1640,7 +1642,7 @@ document.getElementById('showValidMovesCheckbox').addEventListener('change', () 
 
 document.getElementById("toSetting").addEventListener('click', () => {
     document.getElementById('settings').scrollIntoView({ behavior: 'smooth' });
-    document.getElementById('menu-toggle').checked = false;
+    menuToggle.checked = false;
 });
 document.getElementById("close-install-guide").addEventListener("click", () => {
     document.getElementById("ios-install-guide").style.display = "none";
@@ -1652,8 +1654,8 @@ document.getElementById("close-install-guide").addEventListener("click", () => {
     }
 });
 document.addEventListener('click', function (e) {
-    if (document.getElementById('menu-toggle').checked && !document.getElementById('hamburger-menu').contains(e.target)) {
-        document.getElementById('menu-toggle').checked = false;
+    if (menuToggle.checked && !hamburgerMenu.contains(e.target)) {
+        menuToggle.checked = false;
     }
 });
 document.getElementById('timeLimitSelect').value = timeLimit;

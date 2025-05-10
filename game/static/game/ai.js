@@ -79,8 +79,8 @@ function endMove(bestMove, timeLimit, gameEnded, fromAI) {
 
 export function initAIMode() {
     const aiLevelSelect = document.getElementById('aiLevelSelect');
+    const popup = document.getElementById('ai-level-popup');
     document.getElementById("ai-level-display").addEventListener("click", function () {
-        const popup = document.getElementById('ai-level-popup');
         popup.style.display = popup.style.display !== 'block' ? 'block' : 'none';
         localStorage.setItem('aiLevel', aiLevelSelect.value);
         aiLevel = aiLevelSelect.value;
@@ -240,7 +240,7 @@ export function initAIMode() {
             const event = new Event('change');
             aiLevelSelect.dispatchEvent(event);
             updateAiLevelDisplay();
-            document.getElementById('ai-level-popup').style.display = 'none';
+            popup.style.display = 'none';
             const __url = new URL(window.location);
             __url.searchParams.delete("moves");
             __url.searchParams.delete("won");
@@ -249,11 +249,10 @@ export function initAIMode() {
             location.reload();
         });
     });
-
     // ポップアップ外クリックで閉じる
     document.addEventListener('click', function (e) {
-        const popup = document.getElementById('ai-level-popup');
-        if (popup.style.display === 'block' && !popup.contains(e.target) && e.target !== document.getElementById('ai-level-display')) {
+        const displayEl_ = document.getElementById('ai-level-display');
+        if (popup.style.display === 'block' && !popup.contains(e.target) && e.target !== displayEl_) {
             popup.style.display = 'none';
         }
     });

@@ -265,7 +265,6 @@ if (playerName_el) {
                 document.getElementById("player-list").children[0].innerHTML = '<span id="current_circle"></span> ' + lang.you + "(" + escapeHTML(playerName) + ")";
                 playerName_el.value = playerName;
                 localStorage.setItem("playerName", playerName);
-                //sendSettings();
                 warning.textContent = "";
 
             } else {
