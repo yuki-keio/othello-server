@@ -11,6 +11,7 @@ const urlsToCache = [
     "/static/game/images/favicon/favicon.ico",
     "/static/game/images/favicon/favicon-16x16.png",
     "/static/game/images/favicon/favicon-32x32.png",
+    "/static/game/images/favicon/favicon-48x48.png",
     "/static/game/images/icons/apple-touch-icon.png",
     "/static/game/images/icons/reversi_icon-large.png",
     "/static/game/images/icons/reversi_icon-min.png",

@@ -194,7 +194,17 @@
         "url": "https://reversi.yuki-lab.com/en/online/"
       }
     ]
-    }</script>
+    }
+    </script>
+    <script type="application/ld+json">
+        {
+          "@context" : "https://schema.org",
+          "@type" : "WebSite",
+          "name" : "Reversi Web - Free Othello Game",
+          "alternateName" : "Smart Othello",
+          "url" : "https://reversi.yuki-lab.com/"
+        }
+    </script>
     {% else %}<script type="application/ld+json">
     {
             "@context": "https://schema.org",
@@ -244,10 +254,22 @@
                 "name": "オンライン対戦",
                 "url": "https://reversi.yuki-lab.com/online/"
               }]
-    }</script>{% endif %}
+    }
+    </script>
+    <script type="application/ld+json">
+        {
+          "@context" : "https://schema.org",
+          "@type" : "WebSite",
+          "name" : "リバーシWeb - 無料オセロゲーム",
+          "alternateName" : "スマートオセロ",
+          "url" : "https://reversi.yuki-lab.com/"
+        }
+      </script>
+    {% endif %}
     <link rel="apple-touch-icon" sizes="180x180" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/icons/apple-touch-icon.png' %}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/favicon-16x16.png' %}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="48x48" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/favicon-48x48.png' %}">
     <link rel="shortcut icon" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/favicon.ico' %}">
     <link rel="manifest" href="{% url 'manifest' %}">
     {% if request.LANGUAGE_CODE == "ja" %}
