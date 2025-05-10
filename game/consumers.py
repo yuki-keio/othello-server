@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 # アプリケーション全体でこのインスタンスを再利用する
 try:
     # 環境変数からRedis URLを取得、なければデフォルトを使用
-    redis_url = os.environ.get("CUSTOM_REDIS_URL", "redis://127.0.0.1:6379")
+    redis_url = os.environ.get("REDIS_URL", "redis://127.0.0.1:6379") + "?ssl_cert_reqs=none"
     redis_instance = aioredis.from_url(
         redis_url,
         decode_responses=True,
