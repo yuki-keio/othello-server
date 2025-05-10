@@ -224,13 +224,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # ASGI 設定
 ASGI_APPLICATION = "config.asgi.application"
 
+SSL_ARGUMENT = "" if DEBUG else "?ssl_cert_reqs=none"
+
 # Django Channels のチャンネルレイヤー
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
             "hosts": [
-                os.environ.get("REDIS_URL", "redis://127.0.0.1:6379") + "?ssl_cert_reqs=none"
+                os.environ.get("REDIS_URL", "redis://127.0.0.1:6379") + SSL_ARGUMENT
                 ],
         },
     },

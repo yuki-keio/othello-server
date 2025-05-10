@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-10 18:38+0900\n"
+"POT-Creation-Date: 2025-05-10 18:55+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -516,8 +516,9 @@ msgid "AI対戦モードのとき表示"
 msgstr "Display in AI Match Mode"
 
 #: game/templates/game/index.html:459
-msgid "⏱ 持ち時間："
-msgstr "⏱ Time Limit:"
+
+msgid "⏰ 持ち時間："
+msgstr "⏰ Time Limit:"
 
 #: game/templates/game/index.html:475
 msgid "当サイト「リバーシWeb」の機能"

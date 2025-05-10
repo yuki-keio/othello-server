@@ -9,14 +9,16 @@ from django.utils.translation import gettext as _
 from django.utils.translation import activate
 import redis.asyncio as aioredis
 import os
+from django.conf import settings
 
 logger = logging.getLogger(__name__)
+SSL_ARGUMENT = "" if settings.DEBUG else "?ssl_cert_reqs=none"
 
 # Redis接続プールを管理する共有インスタンスを作成
 # アプリケーション全体でこのインスタンスを再利用する
 try:
     # 環境変数からRedis URLを取得、なければデフォルトを使用
-    redis_url = os.environ.get("REDIS_URL", "redis://127.0.0.1:6379") + "?ssl_cert_reqs=none"
+    redis_url = os.environ.get("REDIS_URL", "redis://127.0.0.1:6379") + SSL_ARGUMENT
     redis_instance = aioredis.from_url(
         redis_url,
         decode_responses=True,
