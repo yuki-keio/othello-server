@@ -41,17 +41,14 @@ const urlsToCache = [
 
 // インストール時にキャッシュする
 self.addEventListener("install", event => {
-    self.skipWaiting();
     event.waitUntil(
         caches.open(CACHE_NAME)
-            .then(cache => {
-                console.log(`Service Worker: Caching all assets (${CACHE_NAME})`);
-                return cache.addAll(urlsToCache);
-            })
+            .then(cache => cache.addAll(urlsToCache))
+            .then(() => self.skipWaiting())
     );
 });
 
-// キャッシュ優先の戦略 (Cache First)
+// キャッシュを使ってリクエストを処理
 self.addEventListener("fetch", event => {
     const url = new URL(event.request.url);
     const excludedPaths = ["/login/", "/signup/", "/logout/", "/premium-intent/"];
@@ -65,19 +62,25 @@ self.addEventListener("fetch", event => {
         return;
     }
 
+    // Stale-While-Revalidate 戦略
     event.respondWith(
-        caches.match(event.request).then(cachedResponse => {
-            return cachedResponse || fetch(event.request).then(networkResponse => {
-                if (networkResponse.status === 200) {
-                    caches.open(CACHE_NAME).then(cache => {
-                        cache.put(event.request, networkResponse.clone());
-                    });
-                }
-                return networkResponse;
-            }).catch(() => {
-                return cachedResponse;
-            });
-        })
+        caches.match(event.request)
+            .then((response) => {
+                const fetchRequest = event.request.clone();
+                const networkFetch = fetch(fetchRequest).then(networkResponse => {
+                    if (networkResponse && networkResponse.status === 200) {
+                        caches.open(CACHE_NAME).then(cache => {
+                            cache.put(event.request, networkResponse.clone());
+                        });
+                    }
+                    return networkResponse;
+                }).catch(() => {
+                    return response; // ネットワークエラー時はキャッシュを返す
+                });
+
+                // キャッシュがあれば即時返し、ネットワークで更新
+                return response || networkFetch;
+            })
     );
 });
 
@@ -85,14 +88,12 @@ self.addEventListener("fetch", event => {
 self.addEventListener("activate", event => {
     event.waitUntil(
         caches.keys().then(cacheNames => {
+            console.log('Service Worker activated')
             return Promise.all(
                 cacheNames
-                    .filter(cacheName => cacheName.startsWith("reversi-web-") && cacheName !== CACHE_NAME)
-                    .map(cacheName => {
-                        console.log(`Service Worker: Deleting old cache (${cacheName})`);
-                        return caches.delete(cacheName);
-                    })
-            );
-        }).then(() => self.clients.claim())
+                .filter(cacheName => cacheName.startsWith("reversi-web-") && cacheName !== CACHE_NAME)
+                .map(cacheName => caches.delete(cacheName))
+            ).then(() => self.clients.claim());
+        })
     );
 });
