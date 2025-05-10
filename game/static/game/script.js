@@ -2,12 +2,14 @@ window.board = document.getElementById('board');
 const statusB = document.getElementById('status');
 const scoreB = document.getElementById('score_black');
 const scoreW = document.getElementById('score_white');
-const turnDisplay = document.getElementById('turn_display');
+const evaluationScore = document.getElementById('evaluation_score');
 const moveListElement = document.getElementById('move-list');
 const copyUrlBtn = document.getElementById("copy-url-btn");
 let aiModulePromise = null;
 let aiModule = null;
 const workerPath = DEBUG_MODE ? '/static/game/worker.js' : '/static/game/worker.min.js';
+const evaluatorPath = DEBUG_MODE ? '/static/game/evaluate.js' : '/static/game/evaluate.min.js';
+const evaluator = new Worker(evaluatorPath);
 //音関係----
 window.playerJoin = document.getElementById('playerJoin');
 const warningSound = document.getElementById('warningSound');
@@ -50,6 +52,8 @@ window.socket = null;
 let soundEffects = !(localStorage.getItem('soundEffects') === "false");
 let timeLimitSoundEnabled = !(localStorage.getItem('timeLimitSoundEnabled') === "false");
 let gameEndSoundEnabled = localStorage.getItem('gameEndSoundEnabled') !== "false";
+let evalPlayerModeEnabled = localStorage.getItem('evalPlayerModeEnabled') === "true";
+let evalAIModeEnabled = localStorage.getItem('evalAIModeEnabled') !== "false";
 window.playerJoinSoundEnabled = !(localStorage.getItem('playerJoinSoundEnabled') === "false");
 
 window.showValidMoves = !(localStorage.getItem('showValidMoves') === "false");
@@ -427,17 +431,26 @@ function removeHighlight() {
     board.classList.remove('opponent-turn');
 }
 function updateStatus() {
+    if (window.Worker) {
+        evaluator.postMessage([
+            gameBoard, currentPlayer
+        ]);
+    }
     const blackCount = gameBoard.flat().filter(cell => cell === 'black').length;
     const whiteCount = gameBoard.flat().filter(cell => cell === 'white').length;
-    scoreB.textContent = blackCount;
-    scoreW.textContent = whiteCount;
 
     if (currentPlayer === 'black') {
         statusB.style.backgroundColor = '#000';
-        turnDisplay.textContent = lang.black_turn;
+        scoreB.textContent = blackCount;
+        document.getElementById('current_circle').classList.remove('update_white_circle')
+        scoreW.textContent = whiteCount;
+        document.getElementById('next_circle').classList.remove('update_black_circle')
     } else {
         statusB.style.backgroundColor = '#fff';
-        turnDisplay.textContent = lang.white_turn;
+        scoreB.textContent = whiteCount;
+        document.getElementById('current_circle').classList.add('update_white_circle')
+        scoreW.textContent = blackCount;
+        document.getElementById('next_circle').classList.add('update_black_circle')
     }
 
     if (showValidMoves || showValidMoves === "true") {
@@ -458,7 +471,13 @@ function updateStatus() {
         }
     }
 }
-
+function updateEvaluationDisplay() {
+    if (gameMode === "ai") {
+        evaluationScore.style.display = evalAIModeEnabled ? 'inline-block' : 'none';
+    } else if (gameMode === "player") {
+        evaluationScore.style.display = evalPlayerModeEnabled ? 'inline-block' : 'none';
+    }
+}
 function startTimer() {
     let remainingTime = timeLimit;
     const timerDisplay = document.getElementById('timer-display');
@@ -614,59 +633,59 @@ function loadBoardFromURL() {
         timeLimit = 0;
         stopTimer();
     }
-    if (modeFromPath) {
-        gameMode = modeFromPath;
-        localStorage.setItem('gameMode', gameMode);
-        document.querySelectorAll('.mode-btn').forEach(el => {
-            el.classList.remove('active');
-            if (el.dataset.mode === gameMode) {
-                el.classList.add('active');
-            }
-        });
+    gameMode = modeFromPath;
+    localStorage.setItem('gameMode', gameMode);
+    document.querySelectorAll('.mode-btn').forEach(el => {
+        el.classList.remove('active');
+        if (el.dataset.mode === gameMode) {
+            el.classList.add('active');
+        }
+    });
 
-        if (gameMode === "ai") {
-            document.getElementById('level_ai').style.display = 'block';
-        } else {
-            document.getElementById('level_ai').style.display = 'none';
-            const tp_url = new URL(window.location);
-            tp_url.searchParams.delete('aiLevel');
-            history.replaceState(null, "", tp_url);
-        }
-        if (gameMode === "online") {
-            console.log(`timelimit: ${timeLimit}`);
-            online = true;
-            onlineUI();
-            document.getElementById("playerJoinSoundBox").style.display = "block";
-        } else {
-            if (timeLimitFromURL) {
-                timeLimit = parseInt(timeLimitFromURL);
-                if (timeLimit === 0) {
-                    document.getElementById("timeLimitBox_").style.display = "none";
-                } else {
-                    document.getElementById("timeLimitBox_").style.display = "block";
-                }
-            };
-            if (aiLevelFromURL) {
-                aiLevel = parseInt(aiLevelFromURL);
-                localStorage.setItem('aiLevel', aiLevel);
-                minimax_depth = Math.min(aiLevel - 4, 8);
-                if (minimax_depth < 0) {
-                    minimax_depth = 0;
-                }
-            };
-            if (showValidMovesFromURL) {
-                showValidMoves = showValidMovesFromURL === 'true';
-            };
-            const url = new URL(window.location);
-            url.searchParams.delete("room");
-            history.replaceState(null, "", url);
-            online = false;
-            if (socket) {
-                socket.close();
-                socket = null;
+    if (gameMode === "ai") {
+        document.getElementById('level_ai').style.display = 'block';
+        updateEvaluationDisplay();
+    } else {
+        document.getElementById('level_ai').style.display = 'none';
+        const tp_url = new URL(window.location);
+        tp_url.searchParams.delete('aiLevel');
+        history.replaceState(null, "", tp_url);
+        updateEvaluationDisplay();
+    }
+    if (gameMode === "online") {
+        console.log(`timelimit: ${timeLimit}`);
+        online = true;
+        onlineUI();
+        document.getElementById("playerJoinSoundBox").style.display = "block";
+    } else {
+        if (timeLimitFromURL) {
+            timeLimit = parseInt(timeLimitFromURL);
+            if (timeLimit === 0) {
+                document.getElementById("timeLimitBox_").style.display = "none";
+            } else {
+                document.getElementById("timeLimitBox_").style.display = "block";
             }
-            document.getElementById("playerJoinSoundBox").style.display = "none";
+        };
+        if (aiLevelFromURL) {
+            aiLevel = parseInt(aiLevelFromURL);
+            localStorage.setItem('aiLevel', aiLevel);
+            minimax_depth = Math.min(aiLevel - 4, 8);
+            if (minimax_depth < 0) {
+                minimax_depth = 0;
+            }
+        };
+        if (showValidMovesFromURL) {
+            showValidMoves = showValidMovesFromURL === 'true';
+        };
+        const url = new URL(window.location);
+        url.searchParams.delete("room");
+        history.replaceState(null, "", url);
+        online = false;
+        if (socket) {
+            socket.close();
+            socket = null;
         }
+        document.getElementById("playerJoinSoundBox").style.display = "none";
     }
 
     document.getElementById('timeLimitSelect').value = timeLimit;
@@ -1039,19 +1058,12 @@ window.endGame = function (online_data, winner = null, y = -1) {
             }
         }
     }
-    document.getElementById('score_display').innerHTML = `${result} | <span id="black_circle"></span> ${blackCount} : ${whiteCount} <span id="white_circle"></span>`;
+    document.getElementById('score_display').innerHTML = `${result} | <span id="current_circle"></span> ${blackCount} : ${whiteCount} <span id="next_circle"></span>`;
     if (typeof gtag !== 'undefined') {
         gtag('event', 'game_result', {
             'result': ifVictory,
-            'gameMode': gameMode,
-            'player_id': playerId,
-            'timeLimit': timeLimit,
-            'showValidMoves': showValidMoves,
             'aiLevel': aiLevel,
-            'gameEndSoundEnabled': gameEndSoundEnabled,
-            'placeStoneSoundEnabled': soundEffects,
-            'playerJoinSoundEnabled': playerJoinSoundEnabled,
-            'timeLimitSoundEnabled': timeLimitSoundEnabled,
+            "evaluation": (evaluationScore.style.display === "none" ? "off_" : "on_") + gameMode
         });
     }
     url = new URL(window.location);
@@ -1684,6 +1696,16 @@ document.getElementById('gameEndSoundCheckbox').addEventListener('change', () =>
     gameEndSoundEnabled = document.getElementById('gameEndSoundCheckbox').checked;
     localStorage.setItem('gameEndSoundEnabled', gameEndSoundEnabled);
 });
+document.getElementById('evalPlayerMode').addEventListener('change', () => {
+    evalPlayerModeEnabled = document.getElementById('evalPlayerMode').checked;
+    localStorage.setItem('evalPlayerModeEnabled', evalPlayerModeEnabled);
+    updateEvaluationDisplay();
+});
+document.getElementById('evalAIMode').addEventListener('change', () => {
+    evalAIModeEnabled = document.getElementById('evalAIMode').checked;
+    localStorage.setItem('evalAIModeEnabled', evalAIModeEnabled);
+    updateEvaluationDisplay();
+});
 window.addEventListener('popstate', function (event) {
     location.reload();
 });
@@ -1692,6 +1714,8 @@ document.getElementById('soundEffectsCheckbox').checked = soundEffects;
 document.getElementById('timeLimitSoundCheckbox').checked = timeLimitSoundEnabled;
 document.getElementById('gameEndSoundCheckbox').checked = gameEndSoundEnabled;
 document.getElementById('playerJoinSoundCheckbox').checked = playerJoinSoundEnabled;
+document.getElementById('evalPlayerMode').checked = evalPlayerModeEnabled;
+document.getElementById('evalAIMode').checked = evalAIModeEnabled;
 
 // ポップアップを右側に少しだけ残した「折りたたみ状態」にする関数
 function collapseResultPopup() {
@@ -1747,5 +1771,17 @@ document.getElementById('restart-match').addEventListener('click', () => {
     });
     restart();
 });
+evaluator.onmessage = function (score) {
+    if (score.data[1] === 0) {
+        evaluationScore.textContent = "| ⚖️ ？";
+    } else if (score.data[0] === "0") {
+        evaluationScore.textContent = lang.even;
+    } else {
+        evaluationScore.textContent = lang.evaluation + score.data[0];
+    }
+};
+evaluator.onerror = function (error) {
+    console.error('Error in evaluation:', error.message);
+}
 
 initializeBoard();

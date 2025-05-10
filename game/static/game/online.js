@@ -88,12 +88,12 @@ function updatePlayerList(players) {
                 opponentName = name;
             }
         }
-        span.innerHTML = ((role !== lang.black) ? "　" : "") + `${(role === lang.black) ? '<span id="black_circle"></span>' : (role === lang.white) ? '<span id="white_circle"></span>' : role + ":"} ${escapeHTML(display_player_name)}`;
+        span.innerHTML = ((role !== lang.black) ? "　" : "") + `${(role === lang.black) ? '<span id="current_circle"></span>' : (role === lang.white) ? '<span id="next_circle"></span>' : role + ":"} ${escapeHTML(display_player_name)}`;
         playerListElement.appendChild(span);
     });
     if (Object.keys(players).length === 1) {
         const span = document.createElement('span');
-        span.innerHTML = '　<span id="white_circle"></span> ' + lang.opponent;
+        span.innerHTML = '　<span id="next_circle"></span> ' + lang.opponent;
         playerListElement.appendChild(span);
     }
 }
@@ -262,7 +262,7 @@ if (playerName_el) {
             playerName_el.value = nameInput;
             if (/^[a-zA-Z0-9]+$/.test(nameInput)) {
                 playerName = profanityCleaner.clean(nameInput);
-                document.getElementById("player-list").children[0].innerHTML = '<span id="black_circle"></span> ' + lang.you + "(" + escapeHTML(playerName) + ")";
+                document.getElementById("player-list").children[0].innerHTML = '<span id="current_circle"></span> ' + lang.you + "(" + escapeHTML(playerName) + ")";
                 playerName_el.value = playerName;
                 localStorage.setItem("playerName", playerName);
                 //sendSettings();

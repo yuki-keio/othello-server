@@ -68,6 +68,7 @@ CSP_IMG_SRC = (
     "https://ep1.adtrafficquality.google",
     "https://*.clarity.ms",
     "https://c.bing.com",
+    "https://www.googletagmanager.com",
 )
 CSP_FRAME_SRC = (
     "'self'",

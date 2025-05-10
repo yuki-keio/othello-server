@@ -12,6 +12,21 @@ const DIRECTION_VECTORS = [
 function positionToBit(row, col) {
     return 1n << BigInt(row * 8 + col);
 }
+function boardToBitboard(board) {
+    let blackBitboard = 0n;
+    let whiteBitboard = 0n;
+    for (let row = 0; row < 8; row++) {
+        for (let col = 0; col < 8; col++) {
+            const bit = positionToBit(row, col);
+            if (board[row][col] === 'black') {
+                blackBitboard |= bit;
+            } else if (board[row][col] === 'white') {
+                whiteBitboard |= bit;
+            }
+        }
+    }
+    return { black: blackBitboard, white: whiteBitboard };
+}
 function getFlippedDisks(blackBitboard, whiteBitboard, pos, isBlack) {
     const myBoard = isBlack ? blackBitboard : whiteBitboard;
     const opponentBoard = isBlack ? whiteBitboard : blackBitboard;
@@ -188,24 +203,6 @@ function moveWeightBitboard(move) {
     return 0;
 }
 
-// 探索深度を動的に調整する関数
-function adjustSearchDepth(estimatedTime, aiLevel) {
-    if (estimatedTime < (aiLevel * 300)) {
-        minimax_depth++;
-    } else if (estimatedTime > aiLevel * 600) {
-        minimax_depth--;
-        if (estimatedTime > aiLevel * 800) {
-            minimax_depth--;
-        }
-    }
-    if (minimax_depth > aiLevel) {
-        minimax_depth = aiLevel - 1;
-    }
-    if (minimax_depth < 0) {
-        minimax_depth = 0;
-    }
-}
-
 // 石の数をカウント
 function countBits(bits) {
     let count = 0n;
@@ -283,17 +280,7 @@ function evaluateBitboard(blackBitboard, whiteBitboard) {
         blackScore += blackMobility * mobilityMultiplier;
         whiteScore += whiteMobility * mobilityMultiplier;
     }
-
-    // AIレベルに応じた評価戦略
-    if (aiLevel > 1) {
-        if (aiLevel === 6) {
-            // 「最弱級」指定のAI。評価関数は敢えて反転させる
-            return blackScore - whiteScore;
-        }
-        return whiteScore - blackScore;
-    } else {
-        return whiteCount - blackCount;
-    }
+    return whiteScore - blackScore;
 }
 
 // 角のビットマスク
@@ -303,43 +290,44 @@ const EDGE_MASK = 0x7E8181818181817En;
 
 // 角・辺・XCセル用の重み
 
-let aiLevel = 5; //仮の値
-let minimax_depth = 3; //仮の値
-let mobilityWeight = 0.1; //仮の値
-let cornerWeight = 30;
-let xcCellPenalty = 7;
-let edgeWeight = 5;
-
+const aiLevel = 3;
+const minimax_depth = 4;
+const mobilityWeight = 0.3;
+const cornerWeight = 30;
+const xcCellPenalty = 7;
+const edgeWeight = 5;
 
 onmessage = (e) => {
-    let message = [];
+    let score;
+    let gameStage;
+    const [_gameBoard, _currentPlayer] = e.data;
     try {
-        const [_bitboard, _minimax_depth, _aiLevel] = e.data;
-        aiLevel = _aiLevel;
-        edgeWeight = aiLevel > 3 ? 5 : 0;
-        cornerWeight = aiLevel > 5 ? 30 : 10;
-        xcCellPenalty = aiLevel > 7 ? 7 : 0;
-        mobilityWeight = aiLevel > 9 ? 0.3 : 0;
-        minimax_depth = _minimax_depth;
-        const validMoves = getValidMovesBitboard(_bitboard.black, _bitboard.white, false);
-        const startTime = performance.now();
-        let bestScore = -Infinity;
-        for (let i = 0; i < validMoves.length; i++) {
-            const move = validMoves[i];
-            const newBitboard = applyMoveBitboard(_bitboard.black, _bitboard.white, move, move.flipped, false);
-            const score = minimaxBitboard(newBitboard.black, newBitboard.white, minimax_depth, false, -Infinity, Infinity);
-            if (i === Math.floor(validMoves.length / 2)) {
-                const midTime = performance.now();
-                adjustSearchDepth((midTime - startTime) * validMoves.length, aiLevel);
-            }
-            if (score > bestScore) {
-                bestScore = score;
-                message = [move.row, move.col];
-            }
+        const initialBoard = _gameBoard.map(row => [...row]);
+        const _bitboard = boardToBitboard(initialBoard);
+        const _isWhiteTurn = _currentPlayer === 'white';
+        const blackCount = countBits(_bitboard.black);
+        const whiteCount = countBits(_bitboard.white);
+        const totalStones = blackCount + whiteCount;
+        score = (Math.round(minimaxBitboard(_bitboard.black, _bitboard.white, minimax_depth, _isWhiteTurn, -Infinity, Infinity) * -0.05 * (totalStones ** 2))) / 10;
+        if (totalStones > 55) {
+            gameStage = 0;
+        } else {
+            gameStage = 1;
+        }
+        if (Math.abs(score) > 999999){
+            score = Math.round(score / 1000000) + "M";
+        }else if (Math.abs(score) > 999){
+            score = Math.round(score / 1000) + "K";
+        }else if (Math.abs(score) > 99){
+            score = Math.round(score);
+        }
+        if (score > 0) {
+            score = "+" + score;
+        }else{
+            score = score.toString();
         }
     } catch (error) {
-        message = [error, e.data];
+        score = error;
     }
-    message[2] = minimax_depth;
-    postMessage(message);
+    postMessage([score, gameStage]);
 };

@@ -207,7 +207,23 @@ width: 120px
   margin-left: 20px;
   margin-top:5px
 }
+.update_white_circle{
+  background-color:#fff !important;
+  border:.2px solid black !important;
+}
+.update_black_circle{
+  background-color:#000 !important;
+  border:.2px solid white !important;
+}
+#showEvaluation{
+  margin-left: 20px;
+  margin-top:5px
+}
 .SE{
+  padding-top: 5px;
+  display: inline-block;
+}
+.evalSettings{
   padding-top: 5px;
   display: inline-block;
 }
@@ -597,9 +613,6 @@ width: 120px
   to {opacity: 1; transform: translate(-50%, 0);}
 }
 @media (max-width: 600px) {
-  .mode-btn {
-      text-align: center;
-  }
   .notes {
       padding: 15px;
   }
