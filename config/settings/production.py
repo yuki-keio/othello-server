@@ -54,6 +54,7 @@ CSP_SCRIPT_SRC = (
     "https://googleads.g.doubleclick.net",
     "https://cdnjs.cloudflare.com",
     "https://cdn.jsdelivr.net",
+    "https://*.clarity.ms",
     "blob:",
     "https://www.clarity.ms",
     "https://js.stripe.com/",

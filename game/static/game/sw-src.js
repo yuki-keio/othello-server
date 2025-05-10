@@ -64,24 +64,25 @@ self.addEventListener("fetch", event => {
 
     // Stale-While-Revalidate 戦略
     event.respondWith(
-        caches.match(event.request)
-            .then((response) => {
-                const fetchRequest = event.request.clone();
-                const networkFetch = fetch(fetchRequest).then(networkResponse => {
-                    if (networkResponse && networkResponse.status === 200) {
-                        const clonedResponse = networkResponse.clone(); 
-                        caches.open(CACHE_NAME).then(cache => {
-                            cache.put(event.request, clonedResponse);
-                        });
+        caches.match(event.request).then((response) => {
+            const fetchRequest = event.request.clone();
+            const networkFetch = fetch(fetchRequest).then(async (networkResponse) => {
+                if (networkResponse && networkResponse.status === 200) {
+                    const clonedResponse = networkResponse.clone();
+                    try {
+                        const cache = await caches.open(CACHE_NAME);
+                        await cache.put(event.request, clonedResponse);
+                    } catch (error) {
+                        console.error("キャッシュの更新に失敗:", error);
                     }
-                    return networkResponse;
-                }).catch(() => {
-                    return response; // ネットワークエラー時はキャッシュを返す
-                });
-
-                // キャッシュがあれば即時返し、ネットワークで更新
-                return response || networkFetch;
-            })
+                }
+                return networkResponse;
+            }).catch(() => {
+                return response; // ネットワークエラー時はキャッシュを返す
+            });
+            // キャッシュがあれば即時返し、ネットワークで更新
+            return response || networkFetch;
+        })
     );
 });
 
@@ -92,8 +93,8 @@ self.addEventListener("activate", event => {
             console.log('Service Worker activated')
             return Promise.all(
                 cacheNames
-                .filter(cacheName => cacheName.startsWith("reversi-web-") && cacheName !== CACHE_NAME)
-                .map(cacheName => caches.delete(cacheName))
+                    .filter(cacheName => cacheName.startsWith("reversi-web-") && cacheName !== CACHE_NAME)
+                    .map(cacheName => caches.delete(cacheName))
             ).then(() => self.clients.claim());
         })
     );
