@@ -1310,6 +1310,7 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
         changeTitle();  // タイトルなどの更新
         updateURL();    // URLパラメータの更新など必要なら行う
         changeHead();
+        updateEvaluationDisplay();
         const mode_url = new URL(window.location);
         if (selectedMode !== 'ai') {
             mode_url.searchParams.delete('aiLevel');
