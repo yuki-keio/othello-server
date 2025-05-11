@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-10 22:10+0900\n"
+"POT-Creation-Date: 2025-05-11 09:39+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -75,8 +75,8 @@ msgid ""
 "応。ブラウザで手軽に遊ぶ！"
 msgstr ""
 "Play reversi (othello) against distant friends in online match mode! A "
-"powerful othello AI is also available. [PC, Smartphone, and Tablet compatible] "
-"Play now!"
+"powerful othello AI is also available. [PC, Smartphone, and Tablet "
+"compatible] Play now!"
 
 #: game/templates/game/index.html:57
 msgid ""
@@ -235,7 +235,7 @@ msgstr "Failed to copy the URL."
 msgid "✅️ 対戦結果をコピーしました！"
 msgstr "✅️ Copied the match result!"
 
-#: game/templates/game/index.html:95 game/templates/game/index.html:385
+#: game/templates/game/index.html:95 game/templates/game/index.html:407
 msgid "| ⚖️ 互角"
 msgstr "| ⚖️ Even"
 
@@ -281,7 +281,7 @@ msgstr "Reversi (Othello) - Free Web Game"
 msgid "オンラインで楽しめる無料オセロゲーム！"
 msgstr "Enjoy Reversi Online!"
 
-#: game/templates/game/index.html:128 game/templates/game/index.html:270
+#: game/templates/game/index.html:128 game/templates/game/index.html:292
 msgid "リバーシWeb"
 msgstr "Reversi Web"
 
@@ -289,251 +289,251 @@ msgstr "Reversi Web"
 msgid "ダウンロード不要！友達対戦やAIとの対戦が可能なブラウザゲームです"
 msgstr "No Download Needed! Play Against Friends or AI in Your Browser."
 
-#: game/templates/game/index.html:266 game/templates/game/index.html:270
+#: game/templates/game/index.html:288 game/templates/game/index.html:292
 msgid "オセロ盤"
 msgstr "Board"
 
-#: game/templates/game/index.html:267
+#: game/templates/game/index.html:289
 msgid "AI対戦"
 msgstr "AI Battle"
 
-#: game/templates/game/index.html:268
+#: game/templates/game/index.html:290
 msgid "通信対戦"
 msgstr "Online"
 
-#: game/templates/game/index.html:270 game/templates/game/index.html:340
+#: game/templates/game/index.html:292 game/templates/game/index.html:362
 msgid "オンライン対戦"
 msgstr "Online Match"
 
-#: game/templates/game/index.html:293
+#: game/templates/game/index.html:315
 msgid "AIレベルを選択"
 msgstr "Select difficulty"
 
-#: game/templates/game/index.html:295
+#: game/templates/game/index.html:317
 msgid "初級AI"
 msgstr "Beginner"
 
-#: game/templates/game/index.html:296
+#: game/templates/game/index.html:318
 msgid "中級AI"
 msgstr "Intermediate"
 
-#: game/templates/game/index.html:297
+#: game/templates/game/index.html:319
 msgid "上級AI"
 msgstr "Advanced"
 
-#: game/templates/game/index.html:298
+#: game/templates/game/index.html:320
 msgid "達人級AI"
 msgstr "Master"
 
-#: game/templates/game/index.html:299
+#: game/templates/game/index.html:321
 msgid "名人級AI"
 msgstr "Grandmaster"
 
-#: game/templates/game/index.html:300
+#: game/templates/game/index.html:322
 msgid "🔆 偉人級AI"
 msgstr "🔆 Legendary"
 
-#: game/templates/game/index.html:301
+#: game/templates/game/index.html:323
 msgid "👺 超越級AI"
 msgstr "👺 Transcendent"
 
-#: game/templates/game/index.html:302
+#: game/templates/game/index.html:324
 msgid "🐤 最弱AI"
 msgstr "🐤 Weakest"
 
-#: game/templates/game/index.html:314 game/templates/game/index.html:406
+#: game/templates/game/index.html:336 game/templates/game/index.html:428
 msgid "設定"
 msgstr "Settings"
 
-#: game/templates/game/index.html:316
+#: game/templates/game/index.html:338
 msgid "課金情報を管理する"
 msgstr "Manage Payment"
 
-#: game/templates/game/index.html:319
+#: game/templates/game/index.html:341
 msgid "広告を削除"
 msgstr "Remove Ads"
 
-#: game/templates/game/index.html:322
+#: game/templates/game/index.html:344
 msgid "ログアウト"
 msgstr "Logout"
 
-#: game/templates/game/index.html:323
+#: game/templates/game/index.html:345
 msgid "パスワード変更"
 msgstr "Change Password"
 
-#: game/templates/game/index.html:326
+#: game/templates/game/index.html:348
 msgid "アカウント登録"
 msgstr "Create an Account"
 
-#: game/templates/game/index.html:327 game/templates/registration/login.html:31
+#: game/templates/game/index.html:349 game/templates/registration/login.html:32
 msgid "ログイン"
 msgstr "Login"
 
-#: game/templates/game/index.html:339
+#: game/templates/game/index.html:361
 msgid "オンライン対戦の遊び方"
 msgstr "How to Play Online Match"
 
-#: game/templates/game/index.html:343
+#: game/templates/game/index.html:365
 msgid "表示名："
 msgstr "Name:"
 
-#: game/templates/game/index.html:344
+#: game/templates/game/index.html:366
 msgid "英数字のみ入力可能"
 msgstr "Only alphanumeric characters allowed"
 
-#: game/templates/game/index.html:347
+#: game/templates/game/index.html:369
 msgid "持ち時間："
 msgstr "Time Limit:"
 
-#: game/templates/game/index.html:349 game/templates/game/index.html:460
+#: game/templates/game/index.html:371 game/templates/game/index.html:482
 msgid "制限なし"
 msgstr "No Limit"
 
-#: game/templates/game/index.html:350 game/templates/game/index.html:466
+#: game/templates/game/index.html:372 game/templates/game/index.html:488
 msgid "1手あたり10秒"
 msgstr "10 seconds per move"
 
-#: game/templates/game/index.html:351 game/templates/game/index.html:465
+#: game/templates/game/index.html:373 game/templates/game/index.html:487
 msgid "1手あたり30秒"
 msgstr "30 seconds per move"
 
-#: game/templates/game/index.html:352 game/templates/game/index.html:464
+#: game/templates/game/index.html:374 game/templates/game/index.html:486
 msgid "1手あたり1分"
 msgstr "1 minute per move"
 
-#: game/templates/game/index.html:353 game/templates/game/index.html:463
+#: game/templates/game/index.html:375 game/templates/game/index.html:485
 msgid "1手あたり1分半"
 msgstr "90 seconds per move"
 
-#: game/templates/game/index.html:354 game/templates/game/index.html:462
+#: game/templates/game/index.html:376 game/templates/game/index.html:484
 msgid "1手あたり2分"
 msgstr "2 minute per move"
 
-#: game/templates/game/index.html:355 game/templates/game/index.html:461
+#: game/templates/game/index.html:377 game/templates/game/index.html:483
 msgid "1手あたり3分"
 msgstr "3 minutes per move"
 
-#: game/templates/game/index.html:360
+#: game/templates/game/index.html:382
 msgid "有効な手をハイライト表示"
 msgstr "Highlight Valid Moves"
 
-#: game/templates/game/index.html:364
+#: game/templates/game/index.html:386
 msgid "対戦相手を招待"
 msgstr "Invite Opponent"
 
-#: game/templates/game/index.html:366
+#: game/templates/game/index.html:388
 msgid "オセロ対戦への招待用QRコード"
 msgstr "QR Code for Reversi Match Invitation"
 
-#: game/templates/game/index.html:374
+#: game/templates/game/index.html:396
 msgid "招待用QRコード"
 msgstr "Invitation QR Code"
 
-#: game/templates/game/index.html:389 game/templates/game/index.html:599
+#: game/templates/game/index.html:411 game/templates/game/index.html:621
 msgid "オセロ盤の盤面を共有するURLをコピー"
 msgstr "Copy URL to Share Reversi Board Layout"
 
-#: game/templates/game/index.html:393
+#: game/templates/game/index.html:415
 msgid "投了"
 msgstr "Forfeit"
 
-#: game/templates/game/index.html:394 game/templates/game/index.html:398
+#: game/templates/game/index.html:416 game/templates/game/index.html:420
 msgid "新しい対局を開始"
 msgstr "Start a New Match"
 
-#: game/templates/game/index.html:394 game/templates/game/index.html:398
+#: game/templates/game/index.html:416 game/templates/game/index.html:420
 msgid "🚩 新規対局"
 msgstr "🚩 New Game"
 
-#: game/templates/game/index.html:402
+#: game/templates/game/index.html:424
 msgid "棋譜"
 msgstr "Game Record"
 
-#: game/templates/game/index.html:403
+#: game/templates/game/index.html:425
 msgid "　棋譜はまだありません"
 msgstr "No game record available yet."
 
-#: game/templates/game/index.html:409
+#: game/templates/game/index.html:431
 msgid "🤖 AIの強さ："
 msgstr "🤖 AI Level:"
 
-#: game/templates/game/index.html:411
+#: game/templates/game/index.html:433
 msgid "初級"
 msgstr "Beginner"
 
-#: game/templates/game/index.html:412
+#: game/templates/game/index.html:434
 msgid "中級"
 msgstr "Intermediate"
 
-#: game/templates/game/index.html:413
+#: game/templates/game/index.html:435
 msgid "上級"
 msgstr "Advanced"
 
-#: game/templates/game/index.html:414
+#: game/templates/game/index.html:436
 msgid "達人級"
 msgstr "Master"
 
-#: game/templates/game/index.html:415
+#: game/templates/game/index.html:437
 msgid "名人級"
 msgstr "Grandmaster"
 
-#: game/templates/game/index.html:416
+#: game/templates/game/index.html:438
 msgid "🔆 偉人級"
 msgstr "🔆 Legendary"
 
-#: game/templates/game/index.html:417
+#: game/templates/game/index.html:439
 msgid "👺 超越級"
 msgstr "👺 Transcendent"
 
-#: game/templates/game/index.html:418
+#: game/templates/game/index.html:440
 msgid "🐤 最弱"
 msgstr "🐤 Weakest"
 
-#: game/templates/game/index.html:423
+#: game/templates/game/index.html:445
 msgid "有効な手をハイライト"
 msgstr "Highlight Valid Moves"
 
-#: game/templates/game/index.html:427
+#: game/templates/game/index.html:449
 msgid "🔈 効果音："
 msgstr "🔈 Sound Effects:"
 
-#: game/templates/game/index.html:430
+#: game/templates/game/index.html:452
 msgid "勝利 / 敗北 BGM"
 msgstr "Victory / Defeat BGM"
 
-#: game/templates/game/index.html:433
+#: game/templates/game/index.html:455
 msgid "石を置く音"
 msgstr "Stone Placement Sound"
 
-#: game/templates/game/index.html:437
+#: game/templates/game/index.html:459
 msgid "残り時間あと少し"
 msgstr "Time Running Out"
 
-#: game/templates/game/index.html:442
+#: game/templates/game/index.html:464
 msgid "プレイヤー参加"
 msgstr "Player Participation"
 
-#: game/templates/game/index.html:446
+#: game/templates/game/index.html:468
 msgid "⚖️ 情勢の評価："
 msgstr "⚖️ Game Evaluation:"
 
-#: game/templates/game/index.html:449
+#: game/templates/game/index.html:471
 msgid "オセロ盤モードのとき表示"
 msgstr "Display in Reversi Board Mode"
 
-#: game/templates/game/index.html:452
+#: game/templates/game/index.html:474
 msgid "AI対戦モードのとき表示"
 msgstr "Display in AI Match Mode"
 
-#: game/templates/game/index.html:458
+#: game/templates/game/index.html:480
 msgid "⏰ 持ち時間："
 msgstr "⏰ Time Limit:"
 
-#: game/templates/game/index.html:474
+#: game/templates/game/index.html:496
 msgid "当サイト「リバーシWeb」の機能"
 msgstr "Features of Reversi Web"
 
-#: game/templates/game/index.html:475
+#: game/templates/game/index.html:497
 msgid ""
 "オセロを無料で遊べるWebサイトです。<a href=\"/ai/\">AI対戦</a>、<a href=\"/"
 "online/\">オンライン対戦</a>、<a href=\"/\">電子オセロ盤</a>など、様々な機能"
@@ -546,23 +546,23 @@ msgstr ""
 "features is the <strong>unique URL sharing function</strong>, which allows "
 "easy sharing of matches, spectating, and game records with friends."
 
-#: game/templates/game/index.html:481
+#: game/templates/game/index.html:503
 msgid "現在選択されているモード：通信対戦"
 msgstr "Current mode: Online Match"
 
-#: game/templates/game/index.html:483
+#: game/templates/game/index.html:505
 msgid "現在選択されているモード：AI対戦"
 msgstr "Current mode: AI Match"
 
-#: game/templates/game/index.html:485
+#: game/templates/game/index.html:507
 msgid "現在選択されているモード：電子オセロ盤"
 msgstr "Current mode: Digital Reversi Board"
 
-#: game/templates/game/index.html:487
+#: game/templates/game/index.html:509
 msgid "現在選択されているモード：なし"
 msgstr "Current mode: None"
 
-#: game/templates/game/index.html:492
+#: game/templates/game/index.html:514
 msgid ""
 "オンライン対戦モード（通信対戦モード）では、別々のデバイスからゲームに参加で"
 "きます。遠く離れた場所にいる人ともWeb上でオセロを遊ぶことができます。招待URL"
@@ -572,7 +572,7 @@ msgstr ""
 "Reversi with people far away. Share the invitation URL or scan a QR code to "
 "join or spectate a match."
 
-#: game/templates/game/index.html:494
+#: game/templates/game/index.html:516
 msgid ""
 "初級から上級まで、自分に合った強さのオセロAIとWeb上で対戦できます。素早くプレ"
 "イしたい場合は、最も高速な初級AIがおすすめです。"
@@ -581,7 +581,7 @@ msgstr ""
 "to advanced. If you prefer quick gameplay, the fastest beginner AI is "
 "recommended."
 
-#: game/templates/game/index.html:496
+#: game/templates/game/index.html:518
 msgid ""
 "電子オセロ盤モードでは、デバイス1台でオセロを遊ぶことができます。現地で家族や"
 "友達とオセロを遊びたいけれど、現物のオセロ盤を持っていない時に便利です。"
@@ -590,11 +590,11 @@ msgstr ""
 "Perfect for playing with family or friends on-site when you don't have a "
 "physical board."
 
-#: game/templates/game/index.html:500
+#: game/templates/game/index.html:522
 msgid "機能のオン・オフ"
 msgstr "Toggle Features"
 
-#: game/templates/game/index.html:503
+#: game/templates/game/index.html:525
 msgid ""
 "一部の機能は、<a href=\"#settings\">「設定」</a>からオン・オフを切り替えられ"
 "ます。次回以降に同じブラウザで遊ぶ場合もその設定を引き継げます。"
@@ -603,7 +603,7 @@ msgstr ""
 "href=\"#settings\">Settings</a>. Your preferences will be saved for future "
 "games in the same browser."
 
-#: game/templates/game/index.html:507
+#: game/templates/game/index.html:529
 msgid ""
 "※ ただし通信対戦モードが選択された場合は、通信対戦における設定に合わせて設定"
 "が変更されます。"
@@ -611,11 +611,11 @@ msgstr ""
 "※ If Online Match mode is selected, highlighting settings will adjust "
 "according to the online match settings."
 
-#: game/templates/game/index.html:508
+#: game/templates/game/index.html:530
 msgid "アプリ版で遊ぶ"
 msgstr "Play in App Mode"
 
-#: game/templates/game/index.html:509
+#: game/templates/game/index.html:531
 msgid ""
 "本サイトはブラウザゲームですが、Webアプリとしてホーム画面に追加することもでき"
 "ます。アプリ設置の所要時間は数秒で、デバイスの容量もほぼ消費しません。一方で"
@@ -627,19 +627,19 @@ msgstr ""
 "storage and launches faster. The app version allows offline play for key "
 "features. Installation takes just a few seconds—give it a try!"
 
-#: game/templates/game/index.html:510
+#: game/templates/game/index.html:532
 msgid "ホーム画面に追加"
 msgstr "Add to Home Screen"
 
-#: game/templates/game/index.html:513
+#: game/templates/game/index.html:535
 msgid "オセロのルール"
 msgstr "Reversi Rules"
 
-#: game/templates/game/index.html:514
+#: game/templates/game/index.html:536
 msgid "基本ルール"
 msgstr "Basic Rules"
 
-#: game/templates/game/index.html:515
+#: game/templates/game/index.html:537
 msgid ""
 "リバーシは 8×8 の盤面で行うボードゲームです。「オセロ」という名前でも親しまれ"
 "ています。本ゲームの対戦は、以下のルールで進行します。"
@@ -647,7 +647,7 @@ msgstr ""
 "Reversi is a board game played on an 8×8 grid, also known as 'Othello'. The "
 "game proceeds with the following rules."
 
-#: game/templates/game/index.html:517
+#: game/templates/game/index.html:539
 msgid ""
 "<li>ゲーム開始時は中央に黒と白の石が 2 個ずつ配置されます。</li> <li>黒が先"
 "手、白が後手で交互に手を打ちます。</li> <li>相手の石を挟むと、自分の石に変わ"
@@ -668,11 +668,11 @@ msgstr ""
 "automatically passed to the opponent. If both players have no moves, the "
 "game ends.</li>"
 
-#: game/templates/game/index.html:525
+#: game/templates/game/index.html:547
 msgid "【合法手】について"
 msgstr "About Valid Moves"
 
-#: game/templates/game/index.html:526
+#: game/templates/game/index.html:548
 msgid ""
 "本ゲームでは、プレイヤーが打てる <strong><a href='#LegalMove'>【合法手】</"
 "a></strong> を自動で判定し、視認しやすいようにハイライト表示する機能がありま"
@@ -682,11 +682,11 @@ msgstr ""
 "automatically detected and highlighted for better visibility. This feature "
 "can be turned off in the settings."
 
-#: game/templates/game/index.html:527
+#: game/templates/game/index.html:549
 msgid "時間制限"
 msgstr "Time Limit"
 
-#: game/templates/game/index.html:528
+#: game/templates/game/index.html:550
 msgid ""
 "<p>ゲームのスピード感を高めるために <strong>制限時間</strong> を設定できま"
 "す。最短では <strong>10秒ルール</strong> の超高速対局も可能です！</p>"
@@ -695,11 +695,11 @@ msgstr ""
 "The shortest option is the <strong>10-second rule</strong>, allowing for "
 "ultra-fast matches!</p>"
 
-#: game/templates/game/index.html:531
+#: game/templates/game/index.html:553
 msgid "勝利条件"
 msgstr "Winning Conditions"
 
-#: game/templates/game/index.html:533
+#: game/templates/game/index.html:555
 msgid ""
 "<li>ゲーム終了時に、自分の石の数が相手より多ければ勝利となります。同数の場合"
 "は引き分けです。</li> <li><strong>制限時間</strong> のある対局では、相手が時"
@@ -713,37 +713,37 @@ msgstr ""
 "loses.</li> <li>In <a href=\"/en/online/\">online matches</a>, you can use "
 "the <strong>forfeit</strong> button. If your opponent forfeits, you win.</li>"
 
-#: game/templates/game/index.html:541
+#: game/templates/game/index.html:563
 msgid "オセロで勝つための秘訣"
 msgstr "Tips for Winning in Reversi"
 
-#: game/templates/game/index.html:551
+#: game/templates/game/index.html:573
 msgid "提供ゲーム一覧"
 msgstr "Games by Yuki-Lab"
 
-#: game/templates/game/index.html:552
+#: game/templates/game/index.html:574
 msgid ""
 "オセロ以外にも、当サイト（Yuki-Lab）では様々なミニゲームを個人開発していま"
 "す。"
 msgstr "Besides Reversi, Yuki-Lab offers various mini-games"
 
-#: game/templates/game/index.html:554
+#: game/templates/game/index.html:576
 msgid "将棋"
 msgstr "Shogi (Japanese Chess)"
 
-#: game/templates/game/index.html:555
+#: game/templates/game/index.html:577
 msgid "柴犬が主人公の2Dアクション"
 msgstr "2D Action Game Featuring Shiba Inu"
 
-#: game/templates/game/index.html:556
+#: game/templates/game/index.html:578
 msgid "シンプルなパズルゲーム"
 msgstr "Simple Puzzle Game"
 
-#: game/templates/game/index.html:561
+#: game/templates/game/index.html:583
 msgid "開発者へフィードバックを送る"
 msgstr "Send Feedback to the Developer"
 
-#: game/templates/game/index.html:565
+#: game/templates/game/index.html:587
 msgid ""
 "本ゲームでは、多くの人にとって読みやすいユニバーサルデザインフォントを使用し"
 "ています"
@@ -751,15 +751,15 @@ msgstr ""
 "This game uses a universal design font, which is easy to read for many "
 "people."
 
-#: game/templates/game/index.html:573
+#: game/templates/game/index.html:595
 msgid "今後このダイアログを表示しない"
 msgstr "Do not show this dialog again"
 
-#: game/templates/game/index.html:580
+#: game/templates/game/index.html:602
 msgid "このサイトを「ホーム画面に追加」すると、更に快適に遊べます!"
 msgstr "Install this site for an even better experience!"
 
-#: game/templates/game/index.html:581
+#: game/templates/game/index.html:603
 msgid ""
 "<li>✅️ Webアプリだからアプリ容量はほぼ0！</li> <li>⏳️ 高速に起動して時短！</"
 "li> <li>✈️ オフラインで遊べる</li>"
@@ -767,25 +767,25 @@ msgstr ""
 "<li>✅️ Almost zero storage usage!</li> <li>⏳️ Fast startup for quick play!</"
 "li> <li>✈️ Some features available offline</li>"
 
-#: game/templates/game/index.html:587
+#: game/templates/game/index.html:609
 msgid "10秒で追加 👇"
 msgstr "Install in 10 seconds 👇"
 
-#: game/templates/game/index.html:589
+#: game/templates/game/index.html:611
 msgid ""
 "iOSでのインストール方法：まず共有ボタンを押し、次に「ホーム画面に追加」を選択"
 msgstr ""
 "How to install on iOS: Press the share button, then select Add to Home Screen"
 
-#: game/templates/game/index.html:590 game/templates/game/index.html:603
+#: game/templates/game/index.html:612 game/templates/game/index.html:625
 msgid "❌️ 閉じる"
 msgstr "❌️ Close"
 
-#: game/templates/game/index.html:600
+#: game/templates/game/index.html:622
 msgid "𝕏 に投稿"
 msgstr "Post to 𝕏"
 
-#: game/templates/game/index.html:601
+#: game/templates/game/index.html:623
 msgid "もう一度プレイ！"
 msgstr "Play Again!"
 
@@ -850,27 +850,27 @@ msgstr "Your premium membership is now active!"
 msgid "アカウント作成 | リバーシWeb"
 msgstr "Create Account | Reversi Web"
 
-#: game/templates/game/signup.html:20
+#: game/templates/game/signup.html:21
 msgid "アカウントを作成する"
 msgstr "Create an Account"
 
-#: game/templates/game/signup.html:22
+#: game/templates/game/signup.html:23
 msgid "1クリックで簡単作成！"
 msgstr "Easy to create with one click!"
 
-#: game/templates/game/signup.html:23
+#: game/templates/game/signup.html:24
 msgid "高度な機能が解放されます"
 msgstr "Advanced features will be unlocked!"
 
-#: game/templates/game/signup.html:24
+#: game/templates/game/signup.html:25
 msgid "一部データの引き継ぎが可能に"
 msgstr "Some data can be carried over."
 
-#: game/templates/game/signup.html:49
+#: game/templates/game/signup.html:50
 msgid "作成"
 msgstr "Create"
 
-#: game/templates/game/signup.html:53
+#: game/templates/game/signup.html:54
 msgid "ログインはこちら"
 msgstr "If you already have an account, log in here"
 
@@ -881,13 +881,9 @@ msgid ""
 msgstr ""
 "Advanced Reversi Strategy Guide: Improve Your Win Rate with Tactical Play."
 
-#: game/templates/game/strategy-reversi-othello.html:11
-msgid "リバーシ, オセロ, ゲーム, 攻略, 無料, Web, ボードゲーム"
-msgstr "Reversi, strategy, game, free, online, board game"
-
-#: game/templates/game/strategy-reversi-othello.html:13
-msgid "オセロ攻略法 | リバーシWeb"
-msgstr "Reversi Strategy Guide | Reversi Web"
+#: game/templates/game/strategy-reversi-othello.html:12
+msgid "オセロ攻略法（中級編） | リバーシWeb"
+msgstr "Othello Strategy Guide | Reversi Web"
 
 #: game/templates/game/strategy-reversi-othello.html:21
 #: game/templates/game/strategy-reversi-othello.html:27
@@ -915,7 +911,7 @@ msgstr "Early Game Strategy"
 msgid ""
 "序盤は、自分の石を増やすことよりも、相手に有利な手を打たせないことが重要で"
 "す。角の確保を見据えて、盤面のコントロールを行いましょう。相手が辺や角に石を"
-"起きづらいように、相手の動きを戦略的に制限していきます"
+"置きづらいように、相手の動きを戦略的に制限していきます"
 msgstr ""
 "In the early game, rather than focusing on increasing your discs, it’s "
 "crucial to prevent your opponent from making advantageous moves. Control the "
@@ -969,10 +965,10 @@ msgstr "Key Considerations for C Moves"
 
 #: game/templates/game/strategy-reversi-othello.html:87
 msgid ""
-"打ち手の制限: C打ちをすると、相手に角を取られるリスクは高まってしまいます。そ"
-"のため、相手の次の手を考慮しながら行う必要があります。"
+"C打ちをすると、相手に角を取られるリスクは高まってしまいます。そのため、相手の"
+"次の手を考慮しながら行う必要があります。"
 msgstr ""
-"Move limitations: Using a C move increases the risk of your opponent "
+"Using a C move increases the risk of your opponent "
 "capturing the corner. Always consider your opponent’s next move before "
 "making this play."
 
@@ -1023,15 +1019,15 @@ msgstr "🎮️ Play Reversi"
 msgid "ログイン | リバーシWeb"
 msgstr "Login | Reversi Web"
 
-#: game/templates/registration/login.html:22
+#: game/templates/registration/login.html:23
 msgid "ログインする"
 msgstr "Login"
 
-#: game/templates/registration/login.html:25
+#: game/templates/registration/login.html:26
 msgid "エラーを修正してください"
 msgstr "Please correct the error below."
 
-#: game/templates/registration/login.html:36
+#: game/templates/registration/login.html:37
 msgid "まだアカウントを作成していない場合はこちら"
 msgstr "If you don't have an account, register here"
 
