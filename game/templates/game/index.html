@@ -56,7 +56,7 @@
         {% endif %}
     {% endif %}
     <!-- 翻訳後の文字列をmain.jsへ受け渡し-->
-    {% with online_description=_("オンライン対戦モードで遠くの相手とオセロ対戦！強力なAIも完備。スマホ・PC対応。ブラウザで手軽に遊ぶ！") ai_description=_("強力なオセロAIとWeb上で対戦。初心者から上級者まで一人で楽しめる、スマホ・PC両対応のサイトです。オンライン対戦も楽しめます。遊びやすいスマートなグラフィックが特徴。ブラウザで手軽にプレイ！") player_description=_("Webサイト上で遊べる無料オセロゲーム（リバーシ）。一人で遊べるAI対戦、友達などと2人で楽しむオンライン対戦、そして電子オセロ盤の機能を搭載。スマホ・PC両対応。ブラウザで手軽にプレイ！") else_description=_("Webサイト上で遊べる無料オセロゲーム（リバーシ）！一人で遊べるAI対戦、友達や家族とのオンライン対戦、そして電子オセロ盤の機能を搭載。スマホ・PC対応。ブラウザで手軽にプレイ！") %}
+    {% with online_description=_("オンライン対戦モードで遠くの相手とオセロ対戦！強力なAIも完備。スマホ・PC対応。ブラウザで手軽に遊ぶ！") ai_description=_("強力なオセロAIとWeb上で対戦。初心者から上級者まで一人で楽しめる、スマホ・PC両対応のサイトです。オンライン対戦も楽しめます。遊びやすいスマートなグラフィックが特徴。ブラウザで手軽にプレイ！") player_description=_("オセロの対人戦やAI対戦が遊べる無料Webサイト。一人で遊べるAI対戦、友達などと2人で楽しむオンライン対戦、そして電子オセロ盤の機能を搭載。スマホ・PC両対応。ブラウザで手軽にプレイ！") else_description=_("オセロの対人戦やAI対戦が遊べる無料Webサイト。一人で遊べるAI対戦、友達などと2人で楽しむオンライン対戦、そして電子オセロ盤の機能を搭載。スマホ・PC両対応。ブラウザで手軽にプレイ！") %}
     <meta name="description" content="{% if mode == 'online' %}{{online_description}}{% elif mode == 'ai' %}{{ai_description}}{% elif mode == 'player' %}{{player_description}}{% else %}{{else_description}}{% endif %}">
     <script nonce="{{ request.csp_nonce }}">
         const lang = {
@@ -126,12 +126,12 @@
     <meta property="og:title" content="{% if mode == 'online' %}{{online_title}}{% elif mode == 'ai' %}{{ai_title}}{% elif mode == 'player' %}{{player_title}}{% else %}{{else_title}}{% endif %}">
     <meta property="og:description" content="{% trans 'オンラインで楽しめる無料オセロゲーム！' %}">
     <meta property="og:url" content="https://reversi.yuki-lab.com">
-    <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/share-image.webp' %}">
+    <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/share-image.png' %}">
     <meta property="og:site_name" content="{% trans 'リバーシWeb' %}">
     <meta name="twitter:title" content="{% if mode == 'online' %}{{online_title}}{% elif mode == 'ai' %}{{ai_title}}{% elif mode == 'player' %}{{player_title}}{% else %}{{else_title}}{% endif %}">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:description" content="{% trans 'ダウンロード不要！友達対戦やAIとの対戦が可能なブラウザゲームです' %}">
-    <meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/share-image.webp' %}">
+    <meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/share-image.png' %}">
     {% endwith %}
     {% if mode == "online" %}
     <script async src="https://cdn.jsdelivr.net/npm/profanity-cleaner@latest"></script>
@@ -170,7 +170,7 @@
     "applicationCategory": "GameApplication",
     "alternateName": "Smart Othello | Free Web Game",
     "description": "A free Othello game you can play right in your browser. Features AI vs. mode, online mode to battle with friends, and a convenient electronic Othello board. Quick to start on any device!",
-    "image": "https://reversi.yuki-lab.com/static/game/images/share-image.webp",
+    "image": "https://reversi.yuki-lab.com/static/game/images/share-image.png",
     "url": "https://reversi.yuki-lab.com/en/",
     "operatingSystem": "Web",
     "genre": "Board game",
@@ -198,21 +198,25 @@
     ]
     }
     </script>
+    {% if mode == 'player' %}
     <script type="application/ld+json">
         {
           "@context" : "https://schema.org",
           "@type" : "WebSite",
           "name" : "Reversi Web - Free Othello Game",
           "alternateName" : "Smart Othello",
+          "image": "https://reversi.yuki-lab.com/static/game/images/share-image.png",
           "url" : "https://reversi.yuki-lab.com/"
         }
     </script>
+    {% endif %}
     {% else %}<script type="application/ld+json">
     {
             "@context": "https://schema.org",
             "@type": "SoftwareApplication",
             "@additionalType": ["https://schema.org/VideoGame", "https://schema.org/WebApplication"],
             "name": "オセロ - 無料で遊べるWebゲーム",
+            "image": "https://reversi.yuki-lab.com/static/game/images/share-image.png",
             "review": {
               "@type": "Review",
               "author": {
@@ -231,7 +235,6 @@
             "applicationCategory": "GameApplication",
             "alternateName": "無料オセロゲームのスマートオセロ",
             "description": "無料で遊べるオセロゲーム。一人で遊べるAI対戦モードや、友達とのオンライン対戦モードなどがあります。ブラウザで今すぐプレイ！",
-            "image": "https://reversi.yuki-lab.com/static/game/images/share-image.webp",
             "url": "https://reversi.yuki-lab.com/",
             "operatingSystem": "Web",
             "genre": "Board game",
@@ -258,15 +261,18 @@
               }]
     }
     </script>
+     {% if mode == 'player' %}
     <script type="application/ld+json">
         {
           "@context" : "https://schema.org",
           "@type" : "WebSite",
           "name" : "リバーシWeb - 無料オセロゲーム",
           "alternateName" : "スマートオセロ",
+          "image": "https://reversi.yuki-lab.com/static/game/images/share-image.png",
           "url" : "https://reversi.yuki-lab.com/"
         }
       </script>
+    {% endif %}
     {% endif %}
     <link rel="apple-touch-icon" sizes="180x180" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/icons/apple-touch-icon.png' %}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/favicon-16x16.png' %}">
@@ -360,7 +366,7 @@
             {% if mode == 'online' %}
             <div id="game-settings-overlay">
                 <div id="game-settings">
-                    <img src="{% static 'game/images/info.svg' %}" alt="{% trans 'オンライン対戦の遊び方' %}" id="info-button">
+                    <img src="{% static 'game/images/info.svg' %}" alt="{% trans 'オセロのオンライン対戦機能の遊び方' %}" id="info-button">
                     <h3>{% trans "オンライン対戦" %}</h3>
                     <div id="contents-overlay-setting">
                         <div id="player-name-container">
@@ -610,7 +616,7 @@
         </ul>
         <h5 id="how2install">{% trans "10秒で追加 👇" %}</h5>
     </div>
-    <img src="{% static 'game/images/iOSinstall.webp' %}" alt="{% trans 'iOSでのインストール方法：まず共有ボタンを押し、次に「ホーム画面に追加」を選択' %}" id="ios-install-guide-img" loading="lazy">
+    <img src="{% static 'game/images/iOSinstall.webp' %}" alt="{% trans 'リバーシWebをiOSにインストールする方法：まず共有ボタンを押し、次に「ホーム画面に追加」を選択' %}" id="ios-install-guide-img" loading="lazy">
     <button id="close-install-guide">{% trans "❌️ 閉じる" %}</button>
 </div>
 <div id="r-background-overlay"></div>
@@ -618,7 +624,7 @@
 <div id="result-popup">
     <div class="slideTab"></div>
     <div id="r-overlay"></div>
-    <img id="result-image" src="" alt="result image"><div id="r-message"></div><p id="r-score-container"><span id="score-difference">⚫️ 34 : 30 ⚪️</span></p>
+    <img id="result-image" src="" alt="{% trans "オセロの対局結果" %}"><div id="r-message"></div><p id="r-score-container"><span id="score-difference">⚫️ 34 : 30 ⚪️</span></p>
     <div id="result-container">
         <button id="r-share-btn" class="shine-button" aria-label="{% trans 'オセロ盤の盤面を共有するURLをコピー' %}"></button>
         <button id="tweet-result" class="shine-button">{% trans "𝕏 に投稿" %}</button>

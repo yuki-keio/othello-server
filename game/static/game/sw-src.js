@@ -72,7 +72,7 @@ self.addEventListener("fetch", event => {
             if (response) {
                 console.log(`cache hit: ${event.request.url}, response: ${response}`);
             } else {
-                console.log(`miss: ${event.request.url}`);
+                console.log(`cache not exist: ${event.request.url}`);
             }
             const fetchRequest = event.request.clone();
             const networkFetch = fetch(fetchRequest).then(async (networkResponse) => {

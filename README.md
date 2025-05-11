@@ -1,6 +1,6 @@
 # インクルーシブデザインのリバーシゲーム
 
-![ゲーム画面](https://reversi.yuki-lab.com/static/game/images/share-image.webp)
+![ゲーム画面](https://reversi.yuki-lab.com/static/game/images/share-image.png)
 
 ## 公開サーバー
 ● **こちらから遊べます:** [https://reversi.yuki-lab.com](https://reversi.yuki-lab.com)
