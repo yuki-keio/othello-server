@@ -44,7 +44,9 @@ const urlsToCache = [
 self.addEventListener("install", event => {
     event.waitUntil(
         caches.open(CACHE_NAME)
-            .then(cache => cache.addAll(urlsToCache))
+            .then(cache => cache.addAll(urlsToCache).catch(error => {
+                console.error("cache failed:", error);
+            }))
             .then(() => self.skipWaiting())
     );
 });
@@ -52,6 +54,7 @@ self.addEventListener("install", event => {
 // キャッシュを使ってリクエストを処理
 self.addEventListener("fetch", event => {
     const url = new URL(event.request.url);
+    console.log("initial fetch:", event.request.url);
     const excludedPaths = ["/login/", "/signup/", "/logout/", "/premium-intent/"];
     const isApiPath = /^\/([a-z]{2}\/)?api\//.test(url.pathname);
     if (
@@ -67,22 +70,22 @@ self.addEventListener("fetch", event => {
     event.respondWith(
         caches.match(event.request).then((response) => {
             if (response) {
-                console.log(`キャッシュhit: ${event.request.url}, response: ${response}`);
+                console.log(`cache hit: ${event.request.url}, response: ${response}`);
             } else {
-                console.log(`キャッシュmiss: ${event.request.url}`);
+                console.log(`miss: ${event.request.url}`);
             }
             const fetchRequest = event.request.clone();
             const networkFetch = fetch(fetchRequest).then(async (networkResponse) => {
-                console.log(`ネットワークフェッチ: ${event.request.url}, response: ${networkResponse}`);
+                console.log(`networkFetch: ${event.request.url}, response: ${networkResponse}`);
                 if (networkResponse && networkResponse.status === 200) {
                     const clonedResponse = networkResponse.clone();
                     try {
                         const cache = await caches.open(CACHE_NAME);
-                        console.log(`キャッシュ保存: ${event.request.url}, cache: ${cache}`);
+                        console.log(`cache saved: ${event.request.url}, cache: ${cache}`);
                         await cache.put(event.request, clonedResponse);
-                        console.log(`キャッシュ更新に成功: ${event.request.url}`);
+                        console.log(`Cache updated successfully: ${event.request.url}`);
                     } catch (error) {
-                        console.error("キャッシュの更新に失敗:", error);
+                        console.error("failed to update cache:", error);
                     }
                 }
                 return networkResponse;
@@ -103,7 +106,7 @@ self.addEventListener("activate", event => {
             return Promise.all(
                 cacheNames
                     .filter(cacheName => {
-                        console.log(`got Cache name: ${cacheName}, new cache: ${CACHE_NAME}`);
+                        console.log(`Cache name: ${cacheName}, new cache: ${CACHE_NAME}`);
                         return cacheName.startsWith("reversi-web-") && cacheName !== CACHE_NAME
                     }).map(cacheName => caches.delete(cacheName))
             ).then(() => self.clients.claim());

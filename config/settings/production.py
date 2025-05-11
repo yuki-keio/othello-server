@@ -73,15 +73,21 @@ CSP_IMG_SRC = (
 )
 CSP_FRAME_SRC = (
     "'self'",
+    "https://*.google.com",
     "https://www.google.com",
     "https://*.doubleclick.net",
     "https://www.youtube.com",
-    "https://ep2.adtrafficquality.google",  
+    "https://ep2.adtrafficquality.google",
     "https://*.googlesyndication.com",
     "https://js.stripe.com",
+    "https://*.clarity.ms",
 )
 CSP_FENCED_FRAME_SRC = (
     "'self'",
+    "https://*.google.com",
+    "https://*.doubleclick.net",
+    "https://*.googlesyndication.com",
+    "https://*.clarity.ms",
 )
 CSP_STYLE_SRC = (
     "'self'",

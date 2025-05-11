@@ -7,8 +7,6 @@ const moveListElement = document.getElementById('move-list');
 const copyUrlBtn = document.getElementById("copy-url-btn");
 let aiModulePromise = null;
 let aiModule = null;
-const workerPath = DEBUG_MODE ? '/static/game/worker.js' : '/static/game/worker.min.js';
-const evaluatorPath = DEBUG_MODE ? '/static/game/evaluate.js' : '/static/game/evaluate.min.js';
 const evaluator = new Worker(evaluatorPath);
 //音関係----
 window.playerJoin = document.getElementById('playerJoin');
@@ -546,7 +544,6 @@ function recordMove(row, col, status) {
         moveHistory.push({ row, col, player: currentPlayer, moveNotation, token: "recordMove" });
         localStorage.setItem("deleted_urls", JSON.stringify([]));
         document.getElementById('prev-move-btn').style.display = 'inline-block';
-        console.log("[recordMove] prev-display", document.getElementById('prev-move-btn').style.display);
         document.getElementById('next-move-btn').style.display = 'none';
     }
     currentMoveIndex = moveHistory.length - 1;

@@ -35,6 +35,8 @@
         const csrf_token="{{ csrf_token }}";
         const DEBUG_MODE = {{ DEBUG|yesno:"true,false" }};
         const aiPath = DEBUG_MODE ? "{% static 'game/ai.js' %}" : "{% static 'game/ai.min.js' %}";
+        const workerPath = DEBUG_MODE ? "{% static 'game/worker.js' %}" : "{% static 'game/worker.min.js' %}";
+        const evaluatorPath = DEBUG_MODE ? "{% static 'game/evaluate.js' %}" : "{% static 'game/evaluate.min.js' %}";
     </script>
     {% if DEBUG %}
         <script defer src="{% static 'game/script.js' %}?v={{ TIMESTAMP }}"></script>
@@ -631,7 +633,7 @@
 </body>
 <script nonce="{{ request.csp_nonce }}" >
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register("/sw.js?v=6", { scope: "/"})
+        navigator.serviceWorker.register("/sw.js?v=7", { scope: "/"})
         .then(registration => console.log("Service Worker registered:", registration))
         .catch(error => console.log("Service Worker registration failed:", error));
     }
