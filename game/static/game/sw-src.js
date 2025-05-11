@@ -62,17 +62,25 @@ self.addEventListener("fetch", event => {
     ) {
         return;
     }
-
+    console.log("Service Worker fetch:", event.request.url);
     // Stale-While-Revalidate 戦略
     event.respondWith(
         caches.match(event.request).then((response) => {
+            if (response) {
+                console.log(`キャッシュhit: ${event.request.url}, response: ${response}`);
+            } else {
+                console.log(`キャッシュmiss: ${event.request.url}`);
+            }
             const fetchRequest = event.request.clone();
             const networkFetch = fetch(fetchRequest).then(async (networkResponse) => {
+                console.log(`ネットワークフェッチ: ${event.request.url}, response: ${networkResponse}`);
                 if (networkResponse && networkResponse.status === 200) {
                     const clonedResponse = networkResponse.clone();
                     try {
                         const cache = await caches.open(CACHE_NAME);
+                        console.log(`キャッシュ保存: ${event.request.url}, cache: ${cache}`);
                         await cache.put(event.request, clonedResponse);
+                        console.log(`キャッシュ更新に成功: ${event.request.url}`);
                     } catch (error) {
                         console.error("キャッシュの更新に失敗:", error);
                     }
@@ -94,8 +102,10 @@ self.addEventListener("activate", event => {
             console.log('Service Worker activated')
             return Promise.all(
                 cacheNames
-                    .filter(cacheName => cacheName.startsWith("reversi-web-") && cacheName !== CACHE_NAME)
-                    .map(cacheName => caches.delete(cacheName))
+                    .filter(cacheName => {
+                        console.log(`got Cache name: ${cacheName}, new cache: ${CACHE_NAME}`);
+                        return cacheName.startsWith("reversi-web-") && cacheName !== CACHE_NAME
+                    }).map(cacheName => caches.delete(cacheName))
             ).then(() => self.clients.claim());
         })
     );
