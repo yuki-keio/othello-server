@@ -34,6 +34,7 @@ const urlsToCache = [
     "/static/game/online.min.js",
     "/static/game/ai.min.js",
     "/static/game/worker.min.js",
+    "/static/game/evaluate.min.js",
     "/static/game/signup.css",
     "/static/game/login.css",
     "/static/game/payment_success.css",

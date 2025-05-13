@@ -219,6 +219,11 @@ width: 120px
   margin-left: 20px;
   margin-top:5px
 }
+.rewinding{
+    background-color: #ff8080;
+    animation: pulse 0.2s infinite;
+}
+
 .SE{
   padding-top: 5px;
   display: inline-block;
@@ -584,6 +589,35 @@ width: 120px
 }
 .authenticated,.guest,.free,.premium{display:none}
 
+.tooltip {
+  position: relative; 
+  cursor: pointer;
+  display: inline-block
+}
+.tooltip-text {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: -36px;
+  padding: 5px;
+  white-space: nowrap;
+  font-size: 0.8rem;
+  line-height: 1.3;
+  background: #333;
+  color: #fff;
+  border-radius: 3px;
+  transition: 0.3s ease-in
+}
+.tooltip-text:before {
+	content: '';
+	position: absolute;
+	bottom: -13px;
+	left: 50%;
+	margin-left: -7px;
+	border: 7px solid transparent;
+	border-top: 7px solid #333
+}
+
 @keyframes shine {
   0%   { transform: scale(0) rotate(45deg); opacity: 0; }
   40%  { transform: scale(0) rotate(45deg); opacity: 0.3; }
@@ -608,6 +642,11 @@ width: 120px
     transform: rotateY(360deg) scaleX(1);
   }
 }
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
 @keyframes fadeIn {
   from {opacity: 0; transform: translate(-50%, -10px);}
   to {opacity: 1; transform: translate(-50%, 0);}
@@ -627,5 +666,15 @@ width: 120px
   }
   #result-popup.collapsed {
     transform: translateY(-50%) translateX(calc(50vw - 21px));
+  }
+  .tooltip-text.active {
+    display: inline-block;
+    z-index: 999
+  }
+}
+@media not (max-width: 600px) {
+  .tooltip:hover .tooltip-text{
+    display: inline-block;
+    z-index: 999
   }
 }

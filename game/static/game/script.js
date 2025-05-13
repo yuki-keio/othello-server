@@ -5,9 +5,13 @@ const scoreW = document.getElementById('score_white');
 const evaluationScore = document.getElementById('evaluation_score');
 const moveListElement = document.getElementById('move-list');
 const copyUrlBtn = document.getElementById("copy-url-btn");
+const prevMoveBtn = document.getElementById('prev-move-btn');
+const nextMoveBtn = document.getElementById('next-move-btn');
 let aiModulePromise = null;
 let aiModule = null;
 const evaluator = new Worker(evaluatorPath);
+let longPressTimer = null;
+let multiMoveTimer = null;
 //音関係----
 window.playerJoin = document.getElementById('playerJoin');
 const warningSound = document.getElementById('warningSound');
@@ -41,10 +45,11 @@ if (!playerId) {
     localStorage.setItem("playerId", playerId);
 }
 
-const gUrlParams = new URLSearchParams(window.location.search);
-window.gameRoom = gUrlParams.get('room');
+window.gameRoom = new URLSearchParams(window.location.search).get('room');
 
 window.socket = null;
+
+let g_url;
 
 // 設定関係
 let soundEffects = !(localStorage.getItem('soundEffects') === "false");
@@ -543,8 +548,8 @@ function recordMove(row, col, status) {
     if (status !== 1) {
         moveHistory.push({ row, col, player: currentPlayer, moveNotation, token: "recordMove" });
         localStorage.setItem("deleted_urls", JSON.stringify([]));
-        document.getElementById('prev-move-btn').style.display = 'inline-block';
-        document.getElementById('next-move-btn').style.display = 'none';
+        prevMoveBtn.style.display = 'inline-block';
+        nextMoveBtn.style.display = 'none';
     }
     currentMoveIndex = moveHistory.length - 1;
     updateMoveList();
@@ -619,10 +624,10 @@ function loadBoardFromURL() {
         return;
     }
     if (urlParams.get('moves') === null) {
-        document.getElementById('prev-move-btn').style.display = 'none';
+        prevMoveBtn.style.display = 'none';
     }
     if (localStorage.getItem('deleted_urls') === null || JSON.parse(localStorage.getItem('deleted_urls')).length === 0) {
-        document.getElementById('next-move-btn').style.display = 'none';
+        nextMoveBtn.style.display = 'none';
     } else {
         document.getElementById('next-move-btn').style.display = 'inline-block';
     }
@@ -800,12 +805,13 @@ function restart(reload = true) {
 }
 
 function goToPreviousMove() {
-    const url = new URL(window.location);
-    const move_now = url.searchParams.get('moves');
+    const move_now = g_url.searchParams.get('moves');
     if (move_now.length > 3) {
-        url.searchParams.set('moves', move_now.slice(0, move_now.lastIndexOf('-')));
+        g_url.searchParams.set('moves', move_now.slice(0, move_now.lastIndexOf('-')));
     } else {
-        url.searchParams.delete('moves');
+        g_url.searchParams.delete('moves');
+        stopLongPress();
+        prevMoveBtn.style.display = 'none';
     }
     if (localStorage.getItem('deleted_urls') === null) {
         localStorage.setItem('deleted_urls', JSON.stringify([move_now.slice(move_now.lastIndexOf('-') + 1)]));
@@ -814,36 +820,42 @@ function goToPreviousMove() {
         deleted_urls.push(move_now.slice(move_now.lastIndexOf('-') + 1));
         localStorage.setItem('deleted_urls', JSON.stringify(deleted_urls));
     }
-    sessionStorage.setItem("scrollY", window.scrollY);
-    if (window.gtag) {
-        gtag('event', 'go_to_previous_move', {
-            'event_category': 'navigation',
-            'event_label': move_now.slice(move_now.lastIndexOf('-') + 1),
-        });
-    } else {
-        console.log("[goToPreviousMove] gtag not found");
-    }
-    url.searchParams.delete('w');
-    window.location = url;
 }
-
-function goToNextMove() {
-    const url = new URL(window.location);
-    const move_now = url.searchParams.get('moves') ? url.searchParams.get('moves') + '-' : '';
-    const deleted_urls = JSON.parse(localStorage.getItem('deleted_urls'));
-    if (deleted_urls.length > 0) {
-        url.searchParams.set('moves', move_now + deleted_urls.pop());
-        localStorage.setItem('deleted_urls', JSON.stringify(deleted_urls));
-        sessionStorage.setItem("scrollY", window.scrollY);
+function renderMove(prev) {
+    sessionStorage.setItem("scrollY", window.scrollY);
+    if (prev) {
+        prevMoveBtn.classList.remove('rewinding');
+        if (window.gtag) {
+            gtag('event', 'go_to_previous_move', {
+                'event_category': 'navigation'
+            });
+        } else {
+            console.log("[goToPreviousMove] gtag not found");
+        }
+    } else {
+        nextMoveBtn.classList.remove('rewinding');
         if (window.gtag) {
             gtag('event', 'go_to_next_move', {
-                'event_category': 'navigation',
-                'event_label': deleted_urls.pop(),
+                'event_category': 'navigation'
             });
         } else {
             console.log("[goToNextMove] gtag not found");
         }
-        window.location = url;
+    }
+    g_url.searchParams.delete('w');
+    window.location = g_url;
+}
+
+function goToNextMove() {
+    const move_now = g_url.searchParams.get('moves') ? g_url.searchParams.get('moves') + '-' : '';
+    const deleted_urls = JSON.parse(localStorage.getItem('deleted_urls'));
+    if (deleted_urls.length > 0) {
+        g_url.searchParams.set('moves', move_now + deleted_urls.pop());
+        localStorage.setItem('deleted_urls', JSON.stringify(deleted_urls));
+        if (deleted_urls.length === 0) {
+            stopLongPress(false);
+            nextMoveBtn.style.display = 'none';
+        }
     }
 }
 
@@ -1578,6 +1590,13 @@ function buyPremium(event) {
         }
     }
 }
+function stopLongPress(prev = true) {
+    if (longPressTimer) {
+        clearTimeout(longPressTimer);
+        clearInterval(multiMoveTimer);
+        renderMove(prev);
+    }
+}
 
 // ページ離脱時に AudioContext を解放
 window.addEventListener("beforeunload", async () => {
@@ -1594,13 +1613,61 @@ if (window.location.hostname !== "127.0.0.1") {
         }
     });
 }
-
+evaluationScore.addEventListener("click", function (event) {
+    event.preventDefault();
+    document.getElementById("eval-tip")?.classList.toggle("active");
+});
+document.getElementById("n-disc").addEventListener("click", function (event) {
+    event.preventDefault();
+    document.getElementById("number-tip")?.classList.toggle("active");
+});
 // イベントリスナーを追加
 copyUrlBtn.addEventListener('click', copyURLToClipboard);
 document.getElementById('r-share-btn').addEventListener('click', () => { copyURLToClipboard(false, true) });
 document.getElementById('restart-btn').addEventListener('click', restart);
-document.getElementById('prev-move-btn').addEventListener('click', goToPreviousMove);
-document.getElementById('next-move-btn').addEventListener('click', goToNextMove);
+
+prevMoveBtn.addEventListener('pointerdown', function (event) {
+    event.preventDefault();
+    g_url = new URL(window.location);
+    document.getElementById('prev-tip')?.classList.add('active');
+    clearTimeout(longPressTimer);
+    clearInterval(multiMoveTimer);
+    goToPreviousMove();
+    longPressTimer = setTimeout(() => {
+        prevMoveBtn.textContent = "<<";
+        prevMoveBtn.style.lineHeight = "1.5";
+        prevMoveBtn.classList.add('rewinding');
+        multiMoveTimer = setInterval(() => {
+            goToPreviousMove();
+        }, 200);
+    }, 300);
+});
+
+prevMoveBtn.addEventListener('pointerup', stopLongPress);
+prevMoveBtn.addEventListener('pointerleave', stopLongPress);
+prevMoveBtn.addEventListener('pointercancel', stopLongPress);
+
+nextMoveBtn.addEventListener('click', goToNextMove);
+nextMoveBtn.addEventListener('pointerdown', function (event) {
+    event.preventDefault();
+    g_url = new URL(window.location);
+    document.getElementById('next-tip')?.classList.add('active');
+    clearTimeout(longPressTimer);
+    clearInterval(multiMoveTimer);
+    goToNextMove();
+    longPressTimer = setTimeout(() => {
+        nextMoveBtn.textContent = ">>";
+        nextMoveBtn.style.lineHeight = "1.5";
+        nextMoveBtn.classList.add('rewinding');
+        multiMoveTimer = setInterval(() => {
+            goToNextMove();
+        }, 200);
+    }, 300);
+});
+
+nextMoveBtn.addEventListener('pointerup', () => stopLongPress(false));
+nextMoveBtn.addEventListener('pointerleave', () => stopLongPress(false));
+nextMoveBtn.addEventListener('pointercancel', () => stopLongPress(false));
 window.addEventListener("beforeinstallprompt", (event) => {
     event.preventDefault();
     deferredPrompt = event; // イベントを保存

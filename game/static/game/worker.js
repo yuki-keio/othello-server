@@ -259,7 +259,7 @@ function evaluateBitboard(blackBitboard, whiteBitboard) {
 
     // 危険な位置（XCセル）のペナルティ
     // XCセルのペナルティはゲームの初期〜中盤で特に重要
-    const xcPenaltyMultiplier = Math.max(0, 1 - gamePhase * 1.1); // ゲーム終盤に向けて減少
+    const xcPenaltyMultiplier = Math.max(0, 1 - gamePhase); // ゲーム終盤に向けて減少
 
     const corners = [
         { corner: 0x0000000000000001n, xc: 0x0000000000000302n },
@@ -275,14 +275,12 @@ function evaluateBitboard(blackBitboard, whiteBitboard) {
         }
     }
 
-    // 機動力（有効手の数）の評価（序盤〜中盤で重要）
-    if (gamePhase < 0.7) {
-        const mobilityMultiplier = (1 - gamePhase) * mobilityWeight;
-        const blackMobility = getValidMovesBitboard(blackBitboard, whiteBitboard, true).length;
-        const whiteMobility = getValidMovesBitboard(blackBitboard, whiteBitboard, false).length;
-        blackScore += blackMobility * mobilityMultiplier;
-        whiteScore += whiteMobility * mobilityMultiplier;
-    }
+
+    const mobilityMultiplier = (1 - gamePhase) * mobilityWeight;
+    const blackMobility = getValidMovesBitboard(blackBitboard, whiteBitboard, true).length;
+    const whiteMobility = getValidMovesBitboard(blackBitboard, whiteBitboard, false).length;
+    blackScore += blackMobility * mobilityMultiplier;
+    whiteScore += whiteMobility * mobilityMultiplier;
 
     // AIレベルに応じた評価戦略
     if (aiLevel > 1) {
