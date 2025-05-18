@@ -448,15 +448,23 @@ function updateStatus() {
     if (currentPlayer === 'black') {
         statusB.style.backgroundColor = '#000';
         scoreB.textContent = blackCount;
-        document.getElementById('current_circle').classList.remove('update_white_circle')
+        Array.from(document.getElementsByClassName('current_circle')).forEach(el => {
+            el.classList.remove('update_white_circle');
+        });
         scoreW.textContent = whiteCount;
-        document.getElementById('next_circle').classList.remove('update_black_circle')
+        Array.from(document.getElementsByClassName('next_circle')).forEach(el => {
+            el.classList.remove('update_black_circle');
+        });
     } else {
         statusB.style.backgroundColor = '#fff';
         scoreB.textContent = whiteCount;
-        document.getElementById('current_circle').classList.add('update_white_circle')
+        Array.from(document.getElementsByClassName('current_circle')).forEach(el => {
+            el.classList.add('update_white_circle');
+        });
         scoreW.textContent = blackCount;
-        document.getElementById('next_circle').classList.add('update_black_circle')
+        Array.from(document.getElementsByClassName('next_circle')).forEach(el => {
+            el.classList.add('update_black_circle');
+        });
     }
 
     if (showValidMoves || showValidMoves === "true") {
@@ -660,7 +668,6 @@ function loadBoardFromURL() {
     if (gameMode === "online") {
         console.log(`timelimit: ${timeLimit}`);
         online = true;
-        onlineUI();
         document.getElementById("playerJoinSoundBox").style.display = "block";
     } else {
         if (timeLimitFromURL) {
@@ -725,8 +732,8 @@ function loadBoardFromURL() {
 }
 function onlineUI() {
     //設定から時間やハイライトを変更できないように消す
-    document.getElementById('timeLimitContainer').style.display = 'none';
-    document.getElementById('validContainer').style.display = 'none';
+    document.getElementById('timeLimitContainer').disabled = true;
+    document.getElementById('validContainer').disabled = true;
 }
 function copyURLToClipboard(matchRoom = false, fromResult = false) {
     let url = new URL(window.location);
@@ -774,8 +781,7 @@ function restart(reload = true) {
     if (online) {
         timeLimit = 0;
         localStorage.setItem('timeLimit', timeLimit);
-        // 新しい部屋IDをランダムに生成（UUID の代わりに短いランダム文字列）
-        const newRoomId = Math.random().toString(36).substring(2, 8);
+        const newRoomId = crypto.randomUUID();
         let newUrl = `${window.location.origin}/online/?room=${newRoomId}`;
         if (window.location.pathname.split('/').filter(Boolean)[0] === "en") {
             newUrl = `${window.location.origin}/en/online/?room=${newRoomId}`;
@@ -1069,7 +1075,7 @@ window.endGame = function (online_data, winner = null, y = -1) {
             }
         }
     }
-    document.getElementById('score_display').innerHTML = `${result} | <span id="current_circle"></span> ${blackCount} : ${whiteCount} <span id="next_circle"></span>`;
+    document.getElementById('score_display').innerHTML = `${result} | <span id="s_current_circle" class="current_circle"></span> ${blackCount} : ${whiteCount} <span id="s_next_circle" class="next_circle"></span>`;
     if (typeof gtag !== 'undefined') {
         gtag('event', 'game_result', {
             'result': ifVictory,
@@ -1328,6 +1334,7 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
             history.replaceState(null, "", mode_url);
         }
         if (selectedMode === 'online') {
+            sessionStorage.setItem("fromMode", true);
             online = true;  // オンラインモードのフラグを立てる
             showLoading();
             restart();
@@ -1431,7 +1438,6 @@ function _DOMContenLoaded() {
         startMatchBtn.addEventListener("click", function () {
             copyURLToClipboard(true);
         });
-        onlineUI();
         online = true;
         document.getElementById("playerJoinSoundBox").style.display = "block";
         if (gameRoom === null) {
@@ -1707,6 +1713,9 @@ document.getElementById('showValidMovesCheckbox').addEventListener('change', () 
 document.getElementById("toSetting").addEventListener('click', () => {
     document.getElementById('settings').scrollIntoView({ behavior: 'smooth' });
     menuToggle.checked = false;
+});
+document.getElementById("toOnlineSetting")?.addEventListener('click', () => {
+    document.getElementById('settings').scrollIntoView({ behavior: 'smooth' });
 });
 document.getElementById("close-install-guide").addEventListener("click", () => {
     document.getElementById("ios-install-guide").style.display = "none";

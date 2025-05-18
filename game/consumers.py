@@ -7,27 +7,9 @@ import time
 import traceback
 from django.utils.translation import gettext as _
 from django.utils.translation import activate
-import redis.asyncio as aioredis
-import os
-from django.conf import settings
+from .redis_singleton import redis_instance
 
 logger = logging.getLogger(__name__)
-SSL_ARGUMENT = "" if settings.DEBUG else "?ssl_cert_reqs=none"
-
-# Redis接続プールを管理する共有インスタンスを作成
-# アプリケーション全体でこのインスタンスを再利用する
-try:
-    # 環境変数からRedis URLを取得、なければデフォルトを使用
-    redis_url = os.environ.get("REDIS_URL", "redis://127.0.0.1:6379") + SSL_ARGUMENT
-    redis_instance = aioredis.from_url(
-        redis_url,
-        decode_responses=True,
-    )
-    logger.info(f"Successfully created shared Redis connection pool for {redis_url}.")
-except Exception as e:
-    logger.error(f"Failed to create shared Redis connection pool for {redis_url}: {e}")
-    # Redisが利用不可の場合、Noneを設定
-    redis_instance = None
 
 class OthelloConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -41,6 +23,7 @@ class OthelloConsumer(AsyncWebsocketConsumer):
             query_params = parse_qs(self.scope.get("query_string", b"").decode())
             player_id = query_params.get("playerId", [None])[0]
             player_name = query_params.get("playerName", [None])[0]
+            player_role = query_params.get("role", ["default"])[0]
             language = query_params.get("lang", ["ja"])[0]
             activate(language)
 
@@ -112,9 +95,9 @@ class OthelloConsumer(AsyncWebsocketConsumer):
             else:
                 is_reconnect = False
                 logger.info(f"[CONNECT] {player_id} が {self.group_name} に接続. players: {players}")
-                if len(players) == 0:
+                if (len(players) == 0 and player_role == "default") or player_role == "black":
                     role = "black"
-                elif len(players) == 1:
+                elif (len(players) == 1 and player_role == "default") or player_role == "white":
                     role = "white"
                 else:
                     role = "spectator"
@@ -371,7 +354,8 @@ class OthelloConsumer(AsyncWebsocketConsumer):
                     "type": "game_message",
                     "message": {
                         "action": "place_stone",
-                        "history": game_state["history"]
+                        "history": game_state["history"],
+                        "players": game_state["players"],
                     }
                 }
             )

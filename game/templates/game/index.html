@@ -6,11 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!--Critical CSS-->
     <style nonce="{{ request.csp_nonce }}">
-        body{font-family:"BIZ UDPMincho",serif;font-weight:400;display:flex;margin:0;background-color:#f0f0f0;box-sizing:border-box;line-height:1}h1{font-family:"BIZ UDPGothic",Arial,sans-serif;cursor:pointer;font-size: 1.4em;height:22.4px;}.tooltip-text{display:none}#hamburger-menu{position:absolute;right:3px;top:86px;width:25px;height:25px;cursor:pointer}.menu-icon{display:inline-block;cursor:pointer;width:100%;height:100%;position:relative;z-index:2}.menu-icon span{display:block;height:3px;width:100%;background:#333;margin:5px 0;transition:all 0.3s ease}#menu-toggle,.menu{display:none}#prev-move-btn,#next-move-btn{padding:8px 13px;font-size:15px;color:#fff;border:none;border-radius:5px;cursor:pointer}#prev-move-btn{background-color:#a34d4d;display:inline-block}#next-move-btn{background-color:#55b149;display:none}#current_circle{width:16px;height:16px;transform:translate(0,1px);border-radius:50%;background-color:#000;display:inline-block;margin-left:3px}#next_circle{width:12px;height:12px;transform:translate(0,1px);border-radius:50%;background-color:#fff;display:inline-block;border:.2px solid black}#score_black{width:100px;text-align:right;font-weight:bold}#score_white{width:100px;text-align:left;font-weight:lighter;font-size:14px}#score_display{display:inline-block;padding:6px 23px;background-color:#f0f0f0;border-left:1px solid black;border-right:1px solid black;white-space:nowrap}.marker{width:10%;height:10%;border-radius:50%;background-color:#000;position:relative;top:52.3%;left:51.9%;z-index:10}#game-container{text-align:center;width:min(calc(90vh - 90px),90vw);height:auto;max-width:600px;box-sizing:border-box;position:relative;left:50%;transform:translateX(-50%);padding-bottom:60px}#settings{margin-top:18px;margin-bottom:40px;background-color:#fff;border:#ccc solid 1.3px;border-radius:5px;padding:0 15px}.container{text-align:left;margin:10px 10px 10px 10px}#board{display:grid;grid-template-columns:repeat(8,1fr);gap:2px;background-color:green;padding:2%;margin:0;border-radius:5px 5px 0 0;width:96%;aspect-ratio:1 / 1}.row{display:contents}.cell{width:100%;aspect-ratio:1 / 1;background-color:#00a000;border-radius:8%;display:flex;justify-content:center;align-items:center;cursor:pointer;position:relative}.valid-move{background-color:#00c000}.opponent-turn .valid-move{background-color:#00c000c0}.valid-move:hover{background-color:#00e000}.opponent-turn .valid-move:hover{background-color:#00c000c0}.opponent-turn .cell{cursor:default}.disc{width:80%;height:80%;border-radius:50%;position:absolute;box-shadow:0 4px 8px rgba(0,0,0,.3),inset 0 -2px 4px rgba(0,0,0,.2)}.last-move{box-shadow:0 0 10px 2px rgba(255,242,0,.7);border:2px solid rgb(255,64,0)}.faint-disc{opacity:.5;width:10%;height:10%;border-radius:50%;position:absolute}.black{background:radial-gradient(circle at 30% 30%,#333,#000)}.white{background:radial-gradient(circle at 30% 30%,#fff,#ccc)}.faint-black{background-color:#000}.faint-white{background-color:#fff;opacity:.7}#status{margin-top:0px;font-size:18px;background-color:#000;border-radius:0 0 5px 5px;font-weight:700;color:#000;border:.5px solid #000}#kihu{text-align:center}#move-history{margin-top:20px;text-align:left;max-height:200px;overflow-y:auto;background-color:#fff;padding:10px;border-radius:5px;border:1px solid #ccc;box-sizing:border-box;position:relative;padding:0 20px}#move-list{height:45px}.buttons_container{display:flex;align-items:center;justify-content:center;gap:13px;margin-top:19px}#copy-url-btn,#r-share-btn{position:relative;padding:10px 20px;margin-right:5px;width:40px;height:40px;background-color:#bedeff;background-image:url("{% static 'game/images/share.svg' %}");background-size:95%;background-position:center;background-repeat:no-repeat;color:#fff;border:none;border-radius:5px;display:inline-block;cursor:copy}#restart-btn{padding:8px 16px;font-size:15px;background-color:#007508;color:#fff;border:none;border-radius:5px;cursor:pointer;display:inline-block;transition:background-color .2s ease-in-out;height:40px}#restart-btn:hover{background-color:#2e7d32}#board-container{min-width:96%;position:relative}#mode-selection-banner{position:relative;top:10px;left:50%;transform:translateX(-50%);background:rgba(25,25,25,.7);padding:7px;margin-bottom:30px;border-radius:5px;display:flex;justify-content:center;align-items:center;z-index:1000;width:auto}.mode-btn{background:rgb(250,250,250);color:#000;padding:9px 15px;font-size:16px;cursor:pointer;transition:all .1s ease;flex:1;border:#000 solid 1.3px;width:96%;text-align:center}.mode-btn:not(.active):hover{transform:translate(0px,-2px)}.mode-btn.active{background:#007508;color:#fff;font-weight:700;box-shadow:0 0 10px rgba(0,117,8,.5)}#ai-level-display{position:relative;top:-8px;display:inline-flex;align-items:center;cursor:pointer;background:linear-gradient(to bottom,transparent 0%,transparent 70%,#cfcfcf);border:1px solid #828282;color:#000;padding:9px 15px;border-radius:5px;transition:all .2s ease;margin:0;font-size:.7em;font-weight:400;width:108px;justify-content:center;white-space:nowrap}#ai-level-display:after{content:" ▼";font-size:.5em;margin-left:6px;transition:transform .3s ease}#result-popup,#r-background-overlay,#ai-level-popup,#buy-btn,.install-guide{display:none}#r-overlay{background-image:url("{% static 'game/images/laurel.webp' %}")}.loader{border:4px solid #eee;border-top:4px solid #111;border-right:4px solid #111;border-radius:50%;width:30px;height: 30px;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);animation:spin .8s linear infinite}#evaluation_score{font-size:16px}@keyframes spin{0%{transform:translate(-50%,-50%) rotate(0deg)}100%{transform:translate(-50%,-50%) rotate(360deg)}}
+        body{font-family:"BIZ UDPMincho",serif;font-weight:400;display:flex;margin:0;background-color:#f0f0f0;box-sizing:border-box;line-height:1}h1{font-family:"BIZ UDPGothic",Arial,sans-serif;cursor:pointer;font-size: 1.4em;height:22.4px;}.tooltip-text{display:none}#hamburger-menu{position:absolute;right:3px;top:86px;width:25px;height:25px;cursor:pointer}.menu-icon{display:inline-block;cursor:pointer;width:100%;height:100%;position:relative;z-index:2}.menu-icon span{display:block;height:3px;width:100%;background:#333;margin:5px 0;transition:all 0.3s ease}#menu-toggle,.menu{display:none}#prev-move-btn,#next-move-btn{padding:8px 13px;font-size:15px;color:#fff;border:none;border-radius:5px;cursor:pointer}#prev-move-btn{background-color:#a34d4d;display:inline-block}#next-move-btn{background-color:#55b149;display:none}.current_circle{width:16px;height:16px;transform:translate(0,1px);border-radius:50%;background-color:#000;display:inline-block;margin-left:3px}.next_circle{width:12px;height:12px;transform:translate(0,1px);border-radius:50%;background-color:#fff;display:inline-block;border:.2px solid black}#score_black{width:100px;text-align:right;font-weight:bold}#score_white{width:100px;text-align:left;font-weight:lighter;font-size:14px}#score_display{display:inline-block;padding:6px 23px;background-color:#f0f0f0;border-left:1px solid black;border-right:1px solid black;white-space:nowrap}.marker{width:10%;height:10%;border-radius:50%;background-color:#000;position:relative;top:52.3%;left:51.9%;z-index:10}#game-container{text-align:center;width:min(calc(90vh - 90px),90vw);height:auto;max-width:600px;box-sizing:border-box;position:relative;left:50%;transform:translateX(-50%);padding-bottom:60px}#settings{margin-top:18px;margin-bottom:40px;background-color:#fff;border:#ccc solid 1.3px;border-radius:5px;padding:0 15px}.container{text-align:left;margin:10px 10px 10px 10px}#board{display:grid;grid-template-columns:repeat(8,1fr);gap:2px;background-color:green;padding:2%;margin:0;border-radius:5px 5px 0 0;width:96%;aspect-ratio:1 / 1}.row{display:contents}.cell{width:100%;aspect-ratio:1 / 1;background-color:#00a000;border-radius:8%;display:flex;justify-content:center;align-items:center;cursor:pointer;position:relative}.valid-move{background-color:#00c000}.opponent-turn .valid-move{background-color:#00c000c0}.valid-move:hover{background-color:#00e000}.opponent-turn .valid-move:hover{background-color:#00c000c0}.opponent-turn .cell{cursor:default}.disc{width:80%;height:80%;border-radius:50%;position:absolute;box-shadow:0 4px 8px rgba(0,0,0,.3),inset 0 -2px 4px rgba(0,0,0,.2)}.last-move{box-shadow:0 0 10px 2px rgba(255,242,0,.7);border:2px solid rgb(255,64,0)}.faint-disc{opacity:.5;width:10%;height:10%;border-radius:50%;position:absolute}.black{background:radial-gradient(circle at 30% 30%,#333,#000)}.white{background:radial-gradient(circle at 30% 30%,#fff,#ccc)}.faint-black{background-color:#000}.faint-white{background-color:#fff;opacity:.7}#status{margin-top:0px;font-size:18px;background-color:#000;border-radius:0 0 5px 5px;font-weight:700;color:#000;border:.5px solid #000}#kihu{text-align:center}#move-history{margin-top:20px;text-align:left;max-height:200px;overflow-y:auto;background-color:#fff;padding:10px;border-radius:5px;border:1px solid #ccc;box-sizing:border-box;position:relative;padding:0 20px}#move-list{height:45px}.buttons_container{display:flex;align-items:center;justify-content:center;gap:13px;margin-top:19px}#copy-url-btn,#r-share-btn{position:relative;padding:10px 20px;margin-right:5px;width:40px;height:40px;background-color:#bedeff;background-image:url("{% static 'game/images/share.svg' %}");background-size:95%;background-position:center;background-repeat:no-repeat;color:#fff;border:none;border-radius:5px;display:inline-block;cursor:copy}#restart-btn{padding:8px 16px;font-size:15px;background-color:#007508;color:#fff;border:none;border-radius:5px;cursor:pointer;display:inline-block;transition:background-color .2s ease-in-out;height:40px}#restart-btn:hover{background-color:#2e7d32}#board-container{min-width:96%;position:relative}#mode-selection-banner{position:relative;top:10px;left:50%;transform:translateX(-50%);background:rgba(25,25,25,.7);padding:7px;margin-bottom:30px;border-radius:5px;display:flex;justify-content:center;align-items:center;z-index:1000;width:auto}.mode-btn{background:rgb(250,250,250);color:#000;padding:9px 15px;font-size:16px;cursor:pointer;transition:all .1s ease;flex:1;border:#000 solid 1.3px;width:96%;text-align:center}.mode-btn:not(.active):hover{transform:translate(0px,-2px)}.mode-btn.active{background:#007508;color:#fff;font-weight:700;box-shadow:0 0 10px rgba(0,117,8,.5)}#ai-level-display{position:relative;top:-8px;display:inline-flex;align-items:center;cursor:pointer;background:linear-gradient(to bottom,transparent 0%,transparent 70%,#cfcfcf);border:1px solid #828282;color:#000;padding:9px 15px;border-radius:5px;transition:all .2s ease;margin:0;font-size:.7em;font-weight:400;width:108px;justify-content:center;white-space:nowrap}#ai-level-display:after{content:" ▼";font-size:.5em;margin-left:6px;transition:transform .3s ease}#result-popup,#r-background-overlay,#ai-level-popup,#buy-btn,.install-guide{display:none}#r-overlay{background-image:url("{% static 'game/images/laurel.webp' %}")}.loader{border:4px solid #eee;border-top:4px solid #111;border-right:4px solid #111;border-radius:50%;width:30px;height: 30px;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);animation:spin .8s linear infinite}#evaluation_score{font-size:16px}@keyframes spin{0%{transform:translate(-50%,-50%) rotate(0deg)}100%{transform:translate(-50%,-50%) rotate(360deg)}}
     </style>
     {% if mode == 'online' %}
     <style nonce="{{ request.csp_nonce }}">
-        h1{position:absolute;width:1px;height: 1px;padding:0;margin: -1px;overflow: hidden;clip:rect(0, 0, 0, 0);border:0;}#player-info{margin-bottom:20px}#player-list{padding-inline-start:0;position:relative;top:7px;height:1em}#role-dialog,#prev-move-btn{display:none}#surrender-btn{padding:10px 20px;height:40px;font-size:16px;background-color:#d32f2f;color:#fff;border:none;border-radius:5px;cursor:pointer;display:inline-block;transition:background-color .2s ease-in-out}#surrender-btn:hover{background-color:#b71c1c}#surrender-btn[disabled],#restart-btn[disabled],#prev-move-btn[disabled]{background-color:#d7d7d7;color:#666;cursor:not-allowed;opacity:.6;}#game-settings-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);display:none;justify-content:center;align-items:center;z-index:10}#game-settings{background:#fff;padding-bottom:19px;padding-left:10px;padding-right:10px;border-radius:8px;text-align:center;box-shadow:0 4px 10px rgba(0,0,0,.3);width:80%;max-width:260px;position:relative}#contents-overlay-setting{text-align:left;padding:13px}#time_overlay-label{font-size:14px;display:block}#time-limit{padding:6px;font-size:14px;border-radius:5px;border:1px solid #ccc}#highlight-moves{margin-right:5px}#start-match{padding:10px 20px;font-size:16px;background-color:#008d09;color:#fff;border:none;border-radius:5px;cursor:copy;display:flex;align-items:center;justify-content:center;width:auto;height:40px;white-space:nowrap}#start-match:hover{transform:scale(1.02);#00aa0b}.qr-popup{display:none;position:absolute;z-index:1000;left:50%;top:50%;transform:translate(-50%,-50%);width:85%;aspect-ratio:1/1;max-width:285px;background:#fff;padding-bottom:15px;border-radius:8px;box-shadow:0 0 10px rgba(0,0,0,.5);align-items:center;justify-content:center}.qr-popup-content{position:relative}#qr{margin-left:8px;width:40px;height:40px;background:transparent;border:none;cursor:pointer;transition:background .2s;display:flex}#qr:hover{transform: scale(1.05)}#qr-icon{width:100%;height:100%}.invite-container{margin-top:10px;display:flex;align-items:center;justify-content:center}#qrcode{display:flex;justify-content:center;align-items:center;width:100%;aspect-ratio:1/1;margin:0 auto}#info-button{position:absolute;top:19px;right:18px;width:18px;height:18px;cursor:pointer}#evaluation_score{display:none;font-size:16px}</style>
+        h1{position:absolute;width:1px;height: 1px;padding:0;margin: -1px;overflow: hidden;clip:rect(0, 0, 0, 0);border:0;}#player-info{margin-bottom:20px}#player-list{padding-inline-start:0;position:relative;top:7px;height:1em}#role-dialog,#prev-move-btn{display:none}#surrender-btn{padding:10px 20px;height:40px;font-size:16px;background-color:#d32f2f;color:#fff;border:none;border-radius:5px;cursor:pointer;display:inline-block;transition:background-color .2s ease-in-out}#surrender-btn:hover{background-color:#b71c1c}#surrender-btn[disabled],#restart-btn[disabled],#prev-move-btn[disabled]{background-color:#d7d7d7;color:#666;cursor:not-allowed;opacity:.6;}#online-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);display:none;justify-content:center;align-items:center;z-index:10}#online-display{background:#fff;padding-bottom:19px;padding-left:10px;padding-right:10px;border-radius:8px;text-align:center;box-shadow:0 4px 10px rgba(0,0,0,.3);width:80%;max-width:260px;position:relative}#start-match{padding:10px 20px;font-size:16px;background-color:#008d09;background-image:linear-gradient(90deg,rgba(0,117,8,1),rgba(0,198,14,1));color:#fff;border:none;border-radius:5px;cursor:pointer;display:flex;justify-content:center;width:auto;height:40px;white-space:nowrap;border-bottom:solid 2px rgb(0,68,5)}#start-match:hover{transform:scale(1.02);#00aa0b}#web-match{padding:10px 20px;font-size:16px;background-color:#008d09;background-image:linear-gradient(90deg,rgb(0,112,213),rgb(0,205,149));color:#fff;border:none;border-bottom:solid 2px rgb(0,68,5);border-radius:5px;cursor:pointer;width:224px;height:40px;white-space:nowrap;margin:5px 0 17px 0}#web-match:hover{transform:scale(1.02);#00aa0b}#web-match:active{-webkit-transform:translateY(2px);transform: translateY(2px)}.qr-popup{display:none;position:absolute;z-index:1000;left:50%;top:50%;transform:translate(-50%,-50%);width:85%;aspect-ratio:1/1;max-width:285px;background:#fff;padding-bottom:15px;border-radius:8px;box-shadow:0 0 10px rgba(0,0,0,.5);align-items:center;justify-content:center}.qr-popup-content{position:relative}#qr{margin-left:6px;width:40px;height:40px;background:transparent;border:none;cursor:pointer;transition:background .2s;display:flex}#qr:hover{transform: scale(1.05)}#qr-icon{width:100%;height:100%}.invite-container{display:flex;align-items:center;justify-content:center}#qrcode{display:flex;justify-content:center;align-items:center;width:100%;aspect-ratio:1/1;margin:0 auto}#info-button{width:18px;height:18px;cursor:pointer;margin-left:8px}#evaluation_score{display:none;font-size:16px}#toOnlineSetting{position:absolute;top:16px;right:15px;width:24px;height:24p;cursor:pointer}#friend-title{margin-bottom:9px}
+    </style>
     {% endif %}
     {% if mode == 'player' %}
     <style nonce="{{ request.csp_nonce }}">
@@ -19,7 +20,7 @@
     {% endif %}
     {% if request.LANGUAGE_CODE == "en" %}
         <style nonce="{{ request.csp_nonce }}">
-            #ai-level-display{top:-1px;font-size:.5em;width:130px}#ai-level-display:after{content:" ▼";font-size:.4em;margin-left:6px;transition:transform .3s ease}#time-limit{font-size:12px}
+            #ai-level-display{top:-1px;font-size:.5em;width:130px}#ai-level-display:after{content:" ▼";font-size:.4em;margin-left:6px;transition:transform .3s ease}
         </style>
     {% endif %}
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
@@ -67,7 +68,9 @@
             "congrats_aiLevel_unlocked_b":"{% trans '🎉 条件達成により、' %}",
             "congrats_aiLevel_unlocked_a":"{% trans 'が解放されました！' %}",
             "signupToUnlockLegend": "{% trans '🎉 「伝説」の解放条件①を満たしました！アカウントを作成して伝説にアクセス↗'|escapejs %}",
+            "estimatedTime": "{% trans '推定待ち時間：30秒'|escapejs %}",
             "legend": "{% trans '伝説'|escapejs %}",
+            "matchmaking": "{% trans '対戦相手を探しています...'|escapejs %}",
             "black": "{% trans '黒'|escapejs %}",
             "white": "{% trans '白'|escapejs %}",
             "opponent":"{% trans '対戦相手'|escapejs %}",
@@ -99,7 +102,7 @@
             "thanks_install": "{% trans '🎮️ インストールありがとうございます！（開発者より）'|escapejs %}",
             "surrender_right": "{% trans '本当に投了しますか？'|escapejs %}",
             "thinking": "{% trans '考え中'|escapejs %}",
-            "how2play_with_friend":"{% trans '🎮️ 遊び方\n\n 1. 招待ボタンまたはQRコードボタンを押す\n\n 2. 表示される案内に従い、相手を対戦へ招待\n\n 3. 相手が招待に応じたら自動で対戦がスタート！' %}",
+            "how2play_with_friend":"{% trans '🎮️ フレンド対戦の遊び方\n\n 1. 招待ボタンまたはQRコードボタンを押す\n\n 2. 表示される案内に従い、相手を対戦へ招待\n\n 3. 相手が招待に応じたら自動で対戦がスタート！' %}",
         };
     </script>
     {% endwith %}
@@ -295,7 +298,7 @@
         <div id="mode-selection-banner">
             <button class="mode-btn" data-mode="player">{% trans "オセロ盤" %}</button>
             <button class="mode-btn" data-mode="ai">{% trans "AI対戦" %}</button>
-            <button class="mode-btn" data-mode="online">{% trans "通信対戦" %}</button>
+            <button class="mode-btn" data-mode="online">{% trans "対人戦" %}</button>
         </div>
         {% with online_h1=_("オンライン対戦") player_h1=_("オセロ盤") else_h1=_("リバーシWeb") %}
         <h1 id="title">
@@ -364,37 +367,18 @@
             <div id="board" role="grid" ></div>
             <div class="loader" id="b_loader"></div>
             {% if mode == 'online' %}
-            <div id="game-settings-overlay">
-                <div id="game-settings">
-                    <img src="{% static 'game/images/info.svg' %}" alt="{% trans 'オセロのオンライン対戦機能の遊び方' %}" id="info-button">
+            <div id="online-overlay">
+                <div id="online-display">
+                    <img src="{% static "game/images/setting.svg" %}" alt="{% trans '設定' %}" id="toOnlineSetting">
                     <h3>{% trans "オンライン対戦" %}</h3>
-                    <div id="contents-overlay-setting">
-                        <div id="player-name-container">
-                            <label for="player-name" id="label4name">{% trans "表示名：" %}</label>
-                            <input type="text" id="player-name" placeholder="{% trans '英数字のみ入力可能' %}" maxlength="10">
-                            <div id="warning"></div>
-                        </div>
-                        <label id="time_overlay-label">{% trans "持ち時間：" %}
-                            <select id="time-limit">
-                                <option value="0">{% trans "制限なし" %}</option>
-                                <option value="10">{% trans "1手あたり10秒" %}</option>
-                                <option value="30">{% trans "1手あたり30秒" %}</option>
-                                <option value="60">{% trans "1手あたり1分" %}</option>
-                                <option value="90">{% trans "1手あたり1分半" %}</option>
-                                <option value="120">{% trans "1手あたり2分" %}</option>
-                                <option value="180">{% trans "1手あたり3分" %}</option>
-                            </select>
-                        </label>
-                        <br>
-                        <label>
-                            <input type="checkbox" id="highlight-moves" checked> {% trans "有効な手をハイライト表示" %}
-                        </label>
-                    </div>
+                    <button id="web-match" class="btn-primary">{% trans "🌐 世界中と対戦" %}</button>
+                    <div id="friend-title">{% trans "フレンド対戦" %}</div>
                     <div class="invite-container">
                     <button id="start-match" class="btn-primary">{% trans "対戦相手を招待" %}</button>
                     <button id="qr">
                         <img src="{% static 'game/images/qr.svg' %}" alt="{% trans 'オセロ対戦への招待用QRコード' %}" id="qr-icon">
                     </button>
+                    <img src="{% static 'game/images/info.svg' %}" alt="{% trans 'オセロのオンライン対戦機能の遊び方' %}" id="info-button">
                     </div>
                 </div>
             </div>
@@ -413,9 +397,9 @@
                     {% if not request.user.is_authenticated %}
                     <span class="tooltip-text" id="number-tip">{% trans "盤面にある石の数" %}</span>
                     {% endif %}
-                    <span id="current_circle"></span>
+                    <span id="s_current_circle" class="current_circle"></span>
                     <span id="score_black">2</span>：<span id="score_white">2</span>
-                    <span id="next_circle"></span>
+                    <span id="s_next_circle" class="next_circle"></span>
                 </span>
                 <span class="tooltip">{% if not request.user.is_authenticated %}<span class="tooltip-text" id="eval-tip">{% trans "盤面の情勢評価（数字が大きいほど黒が有利）" %}</span>{% endif %}<span id="evaluation_score">{% trans "| ⚖️ 互角" %}</span></span>
             </div>
@@ -440,6 +424,13 @@
         <div id="settings">
             <h3>{% trans "設定" %}</h3>
             <div class="container">
+                {% if mode == "online" %}
+                <div id="player-name-container">
+                    <label for="player-name" id="label4name">{% trans "表示名：" %}</label>
+                    <input type="text" id="player-name" placeholder="{% trans '英数字のみ入力可能' %}" maxlength="10">
+                    <div id="warning"></div>
+                </div>
+                {% endif %}
                 <label id="level_ai">
                     {% trans "🤖 AIの強さ：" %}
                     <select id="aiLevelSelect">

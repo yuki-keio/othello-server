@@ -17,6 +17,7 @@ const urlsToCache = [
     "/static/game/images/icons/reversi_icon-min.png",
     "/static/game/images/qr.svg",
     "/static/game/images/share.svg",
+    "/static/game/images/setting.svg",
     "/static/game/images/draw.png",
     "/static/game/images/win.png",
     "/static/game/images/lose.png",

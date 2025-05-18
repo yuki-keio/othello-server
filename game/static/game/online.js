@@ -1,8 +1,6 @@
 const ws_scheme = window.location.protocol === "https:" ? "wss" : "ws";
-const timelimit_el = document.getElementById('time-limit');
 const surrenderBtn = document.getElementById('surrender-btn');
-const overlay = document.getElementById("game-settings-overlay");
-const highlightMoves_el = document.getElementById('highlight-moves');
+const overlay = document.getElementById("online-overlay");
 const closeRoleDialog_el = document.getElementById("closeRoleDialog");
 
 window.showDialog = function (type, value = null) {
@@ -42,8 +40,16 @@ window.closeDialog = function (type) {
 }
 function __DOMContentLoaded() {
     makeSocket();
+    if (sessionStorage.getItem("fromMode")) {
+        document.getElementById("online-overlay").style.display = "flex";
+        sessionStorage.removeItem("fromMode");
+    }
     localStorage.setItem("deleted_urls", JSON.stringify([]));
     document.getElementById('next-move-btn').style.display = 'none';
+    document.getElementById("web-match").addEventListener("click", () => {
+        matchSocket();
+        console.log("Web match button clicked");
+    });
 }
 // サーバーから受信したパスメッセージに基づいて、ターン更新と表示を行う
 function processPassMessage(data) {
@@ -88,20 +94,25 @@ function updatePlayerList(players) {
                 opponentName = name;
             }
         }
-        span.innerHTML = ((role !== lang.black) ? "　" : "") + `${(role === lang.black) ? '<span id="current_circle"></span>' : (role === lang.white) ? '<span id="next_circle"></span>' : role + ":"} ${escapeHTML(display_player_name)}`;
-        playerListElement.appendChild(span);
+        span.innerHTML = ((ws_role !== currentPlayer) ? "　" : "") + `${(ws_role === currentPlayer) ? '<span id="p_current_circle" class="current_circle"></span>' : (ws_role === (currentPlayer === "black" ? "white" : "black")) ? '<span id="p_next_circle" class="next_circle"></span>' : role + ":"} ${escapeHTML(display_player_name)}`;
+        if (ws_role === currentPlayer) {
+            playerListElement.insertBefore(span, playerListElement.firstChild);
+        } else {
+            playerListElement.appendChild(span);
+        }
     });
+    updateStatus();
     if (Object.keys(players).length === 1) {
         const span = document.createElement('span');
-        span.innerHTML = '　<span id="next_circle"></span> ' + lang.opponent;
+        span.innerHTML = '　<span id="p_next_circle" class="next_circle"></span> ' + lang.opponent;
         playerListElement.appendChild(span);
     }
 }
 function sendSettings() {
-    let overlayTimeLimit = timelimit_el.value;
-    let overlayHighlightMoves = highlightMoves_el.checked;
-    timeLimit = overlayTimeLimit;
-    showValidMoves = overlayHighlightMoves ? "true" : "false";
+    let onlineTimeLimit = document.getElementById('timeLimitSelect').value
+    let onlineHighlightMoves = document.getElementById('showValidMovesCheckbox').checked;
+    timeLimit = onlineTimeLimit;
+    showValidMoves = onlineHighlightMoves ? "true" : "false";
 
     localStorage.setItem('timeLimit', timeLimit);
     localStorage.setItem('showValidMoves', showValidMoves);
@@ -121,8 +132,68 @@ function escapeHTML(str) {
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
 }
-window.makeSocket = function () {
-    socket = new WebSocket(`${ws_scheme}://${window.location.host}/ws/othello/${gameRoom}/?playerId=${playerId}&timeLimit=${timeLimit}&showValidMoves=${showValidMoves}&playerName=${encodeURIComponent(playerName)}&lang=${langCode}`);
+function matchSocket() {
+    console.log("Match socket function called");
+    if (window.socket) {
+        socket.close();
+        socket = null;
+    }
+    const mSocket = new WebSocket(`${ws_scheme}://${location.host}/ws/match/`);
+    mSocket.onopen = () => {
+        console.log("Match socket connection established.");
+        mSocket.send(JSON.stringify({ type: "join", player_id: playerId }));
+        if (window.gtag) {
+            gtag('event', 'matchmaking_start', {
+                'event_category': 'engagement',
+                'event_label': 'matchmaking',
+            });
+        } else {
+            console.log("gtag not found");
+        }
+    };
+    mSocket.onmessage = (e) => {
+        const data = JSON.parse(e.data);
+        console.log("Match socket message received:", data);
+        if (data.type === "waiting") {
+            const loadingOverlay = document.createElement('div');
+            loadingOverlay.id = 'loading-overlay';
+            // オセロディスクのローディングアニメーション
+            loadingOverlay.innerHTML = `
+                    <div class="loading-container">
+                        <div class="loading-disc">
+                            <div class="disc-inner"></div>
+                        </div>
+                        <div class="loading-text">${lang.matchmaking}</div>
+                        <br>
+                        <div>${lang.estimatedTime}</div>
+                    </div>
+                `;
+            document.body.appendChild(loadingOverlay);
+        }
+        if (data.type === "matched") {
+            gameRoom = data.room_id;
+            match_role = data.color;
+            mSocket.close();
+            document.getElementById('loading-overlay')?.remove();
+            const murl = new URL(window.location);
+            murl.searchParams.set('room', gameRoom);
+            window.history.replaceState({}, '', murl);
+
+            makeSocket(match_role);
+            if (window.gtag) {
+                gtag('event', 'match_made', {
+                    'event_category': 'engagement',
+                    'event_label': 'matchmade',
+                });
+            } else {
+                console.log("gtag not found");
+            }
+        }
+    };
+
+}
+function makeSocket(role = "default") {
+    socket = new WebSocket(`${ws_scheme}://${window.location.host}/ws/othello/${gameRoom}/?playerId=${playerId}&timeLimit=${timeLimit}&showValidMoves=${showValidMoves}&playerName=${encodeURIComponent(playerName)}&lang=${langCode}&role=${role}`);
 
     // 接続成功時
     window.socket.onopen = function (e) {
@@ -145,7 +216,7 @@ window.makeSocket = function () {
             deserializeMoveHistory(data.history);
             console.log("moveHistory", moveHistory);
             replayMovesUpToIndex(moveHistory.length - 1, 1);
-
+            updatePlayerList(data.players);
         } else if (data.action === "assign_role") {
             role_online = data.role; // サーバーから受け取った役割
             console.log(`あなたの役割: ${role_online}, データ${data}, (ID: ${playerId}), 再接続${data.reconnect}, ロール${role_online}`);
@@ -197,6 +268,7 @@ window.makeSocket = function () {
                 overlay.style.display = 'none';
                 const qrPopup = document.getElementById("qr-popup");
                 qrPopup.style.display = "none";
+                onlineUI();
                 highlightValidMoves();
                 document.getElementById("restart-btn").disabled = false;
                 surrenderBtn.disabled = false;
@@ -262,7 +334,7 @@ if (playerName_el) {
             playerName_el.value = nameInput;
             if (/^[a-zA-Z0-9]+$/.test(nameInput)) {
                 playerName = profanityCleaner.clean(nameInput);
-                document.getElementById("player-list").children[0].innerHTML = '<span id="current_circle"></span> ' + lang.you + "(" + escapeHTML(playerName) + ")";
+                document.getElementById("player-list").children[0].innerHTML = '<span id="p_current_circle" class="current_circle"></span> ' + lang.you + "(" + escapeHTML(playerName) + ")";
                 playerName_el.value = playerName;
                 localStorage.setItem("playerName", playerName);
                 warning.textContent = "";
