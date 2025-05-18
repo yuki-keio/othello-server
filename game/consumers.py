@@ -95,9 +95,9 @@ class OthelloConsumer(AsyncWebsocketConsumer):
             else:
                 is_reconnect = False
                 logger.info(f"[CONNECT] {player_id} が {self.group_name} に接続. players: {players}")
-                if (len(players) == 0 and player_role == "default") or player_role == "black":
+                if ((len(players) == 0) and player_role == "default") or player_role == "black":
                     role = "black"
-                elif (len(players) == 1 and player_role == "default") or player_role == "white":
+                elif ((len(players) == 1) and player_role == "default") or player_role == "white":
                     role = "white"
                 else:
                     role = "spectator"

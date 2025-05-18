@@ -39,6 +39,7 @@ window.closeDialog = function (type) {
     localStorage.setItem("hide" + type + "Dialog", document.getElementById(type + "-not-checkbox").checked);
 }
 function __DOMContentLoaded() {
+    sessionStorage.setItem("matchmaking", "not_set");
     makeSocket();
     if (sessionStorage.getItem("fromMode")) {
         document.getElementById("online-overlay").style.display = "flex";
@@ -111,6 +112,11 @@ function updatePlayerList(players) {
 function sendSettings() {
     let onlineTimeLimit = document.getElementById('timeLimitSelect').value
     let onlineHighlightMoves = document.getElementById('showValidMovesCheckbox').checked;
+    if (sessionStorage.getItem("matchmaking") === "true") {
+        onlineTimeLimit = 20;
+        onlineHighlightMoves = true;
+    }
+
     timeLimit = onlineTimeLimit;
     showValidMoves = onlineHighlightMoves ? "true" : "false";
 
@@ -173,12 +179,13 @@ function matchSocket() {
         if (data.type === "matched") {
             gameRoom = data.room_id;
             match_role = data.color;
+            console.log(`Matched with room ID: ${gameRoom}, role: ${match_role}`);
             mSocket.close();
             document.getElementById('loading-overlay')?.remove();
             const murl = new URL(window.location);
             murl.searchParams.set('room', gameRoom);
             window.history.replaceState({}, '', murl);
-
+            sessionStorage.setItem("matchmaking", "true");
             makeSocket(match_role);
             if (window.gtag) {
                 gtag('event', 'match_made', {
