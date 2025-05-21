@@ -57,7 +57,7 @@
         {% endif %}
     {% endif %}
     <!-- 翻訳後の文字列をmain.jsへ受け渡し-->
-    {% with online_description=_("世界中のプレイヤーとオンライン対戦！2人で遊べるフレンド対戦モードや、一人でも楽しめる強力なオセロAIも完備しています。スマホ・PC両対応。ブラウザで手軽に遊ぶ！") ai_description=_("強力なオセロAIとWeb上で対戦。初心者から上級者まで一人で楽しめる、スマホ・PC両対応のサイトです。オンライン対戦も楽しめます。遊びやすいスマートなグラフィックが特徴。ブラウザで手軽にプレイ！") player_description=_("オセロのAI対戦や対人戦を遊べる無料Webサイト。一人で楽しめるオセロAIは、最弱から最強まで幅広い難易度を完備。友達や家族と2人で楽しめるフレンド対戦も。そしてオンライン対戦で世界中のプレイヤーと切磋琢磨！「電子オセロ盤」機能も搭載。✅️スマホ・PC両対応。ブラウザで手軽にプレイ") else_description=_("オセロのAI対戦や対人戦を遊べる無料Webサイト。一人で楽しめるオセロAIは、最弱から最強まで幅広い難易度を完備。友達や家族と2人で楽しめるフレンド対戦も。そしてオンライン対戦で世界中のプレイヤーと切磋琢磨！「電子オセロ盤」機能も搭載。✅️スマホ・PC両対応。ブラウザで手軽にプレイ") %}
+    {% with online_description=_("世界中のプレイヤーとオンライン対戦！2人で遊べるフレンド対戦モードや、一人でも楽しめる強力なオセロAIも完備しています。スマホ・PC両対応。ブラウザで手軽に遊ぶ！") ai_description=_("強力なオセロAIとWeb上で対戦。初心者から上級者まで一人で楽しめる、スマホ・PC両対応のサイトです。オンライン対戦も楽しめます。遊びやすいスマートなグラフィックが特徴。ブラウザで手軽にプレイ！") player_description=_("オセロのAI対戦・オンライン対戦・友達対戦などが遊べる無料Webサイト。一人で楽しめるオセロAIは最弱から最強まで幅広く完備。2人で一緒に楽しめるフレンド対戦も。世界中のプレイヤーと戦えるオンライン対戦や、スマホ一台で楽しめる「電子オセロ盤」も搭載 ✅️ ブラウザで手軽にプレイ") else_description=_("オセロのAI対戦・オンライン対戦・友達対戦などが遊べる無料Webサイト。一人で楽しめるオセロAIは最弱から最強まで幅広く完備。2人で一緒に楽しめるフレンド対戦も。世界中のプレイヤーと戦えるオンライン対戦や、スマホ一台で楽しめる「電子オセロ盤」も搭載 ✅️ ブラウザで手軽にプレイ") %}
     <meta name="description" content="{% if mode == 'online' %}{{online_description}}{% elif mode == 'ai' %}{{ai_description}}{% elif mode == 'player' %}{{player_description}}{% else %}{{else_description}}{% endif %}">
     <script nonce="{{ request.csp_nonce }}">
         const lang = {
@@ -69,7 +69,6 @@
             "congrats_aiLevel_unlocked_a":"{% trans 'が解放されました！' %}",
             "signupToUnlockLegend": "{% trans '🎉 「伝説」の解放条件①を満たしました！アカウントを作成して伝説にアクセス↗'|escapejs %}",
             "estimatedTime": "{% trans '推定待ち時間：'|escapejs %}",
-            "cancel": "{% trans 'キャンセル'|escapejs %}",
             "seconds": "{% trans '秒'|escapejs %}",
             "legend": "{% trans '伝説'|escapejs %}",
             "matchmaking": "{% trans '対戦相手を探しています...'|escapejs %}",

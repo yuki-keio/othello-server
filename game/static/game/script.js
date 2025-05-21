@@ -1639,7 +1639,24 @@ document.getElementById("n-disc").addEventListener("click", function (event) {
 // イベントリスナーを追加
 copyUrlBtn.addEventListener('click', copyURLToClipboard);
 document.getElementById('r-share-btn').addEventListener('click', () => { copyURLToClipboard(false, true) });
-document.getElementById('restart-btn').addEventListener('click', restart);
+document.getElementById('restart-btn').addEventListener('click', () => {
+    if ((sessionStorage.getItem("matchmaking") === "true") || (sessionStorage.getItem("bot_match") === "true")) {
+        updateStatus();
+        document.getElementById('restart-btn').classList.remove('shine-button');
+        board.innerHTML = '';
+        gameBoard = Array.from({ length: 8 }, () => Array(8).fill(''));
+
+        refreshBoard();
+        add4x4Markers();
+        setInitialStones();
+        currentPlayer = 'black';
+        gameEnded = false;
+        share_winner = "";
+        ifVictory = false;
+        highlightValidMoves();
+        webMatchBtn.click();
+    } else { restart() }
+});
 
 prevMoveBtn.addEventListener('pointerdown', function (event) {
     event.preventDefault();
@@ -1858,7 +1875,26 @@ document.getElementById('restart-match').addEventListener('click', () => {
         'event_label': ifVictory ? 'NextMatch_afterVictory' : 'NextMatch_afterDefeated',
         'gameEndSoundEnabled': gameEndSoundEnabled,
     });
-    restart();
+    if ((sessionStorage.getItem("matchmaking") === "true") || (sessionStorage.getItem("bot_match") === "true")) {
+        rPopup.classList.remove('collapsed');
+        rPopup.style.display = 'none';
+        rOverlay.style.display = 'none';
+        rBoverlay.style.display = 'none';
+        document.getElementById('restart-btn').classList.remove('shine-button');
+        updateStatus();
+        board.innerHTML = '';
+        gameBoard = Array.from({ length: 8 }, () => Array(8).fill(''));
+
+        refreshBoard();
+        add4x4Markers();
+        setInitialStones();
+        currentPlayer = 'black';
+        gameEnded = false;
+        share_winner = "";
+        ifVictory = false;
+        highlightValidMoves();
+        webMatchBtn.click();
+    } else { restart() }
 });
 evaluator.onmessage = function (score) {
     if (score.data[1] === 0) {

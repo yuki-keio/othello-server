@@ -300,7 +300,7 @@ class MatchConsumer(AsyncWebsocketConsumer):
             meta = player_info["meta"]
             color = player_info["color"]
             opponent_id = player_info["opponent_id"]
-            
+
             logger.info(f"Pairing player {meta['player_id']} (channel: {meta['channel']}) as {color} with opponent {opponent_id}. Room: {room_id}")
             try:
                 await self.channel_layer.send(

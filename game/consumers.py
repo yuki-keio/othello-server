@@ -164,24 +164,31 @@ class OthelloConsumer(AsyncWebsocketConsumer):
                 self.ping_task.cancel()
             logger.info(f"[DISCONNECT] {getattr(self, 'player_id', None)} left {self.group_name}")
 
-            # グループから削除
-            try:
-                await self.channel_layer.group_discard(self.group_name, self.channel_name)
-            except Exception as e:
-                logger.warning(f"[ERROR] group_discard failed: {e} （ルーム名：{self.group_name}）")
-
             # ★★★ Redisからゲーム状態を取得 & 更新
             raw_data = await self.redis.get(f"game_rooms:{self.group_name}")
             if raw_data:
                 game_state = json.loads(raw_data)
                 game_state["last_active"] = time.time()
                 game_state["players"][self.player_id][2] = False
+                await self.channel_layer.group_send(
+                    self.group_name,
+                    {
+                        "type": "update_players",
+                        "players": game_state["players"],
+                        "player_id": self.player_id,
+                        "by_reconnect": True,
+                    }
+                )
                 await self.redis.set(f"game_rooms:{self.group_name}", json.dumps(game_state))
                 active_players = sum(1 for p in game_state["players"].values() if p[2] and p[0] != "spectator")
                 if active_players == 0:
                     logger.info(f"[NO ACTIVE PLAYERS] {self.group_name} has no active players. Deleting room.")
                     asyncio.create_task(self.schedule_room_deletion(self.group_name))
-
+            # グループから削除
+            try:
+                await self.channel_layer.group_discard(self.group_name, self.channel_name)
+            except Exception as e:
+                logger.warning(f"[ERROR] group_discard failed: {e} （ルーム名：{self.group_name}）")
         except Exception as e:
             logger.error(f"[ERROR in disconnect] {str(e)} （ルーム名：{self.group_name}）")
             logger.error(traceback.format_exc())

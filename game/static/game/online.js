@@ -181,7 +181,7 @@ function matchSocket() {
                         <div class="loading-text">${lang.matchmaking}</div>
                         <br>
                         <div id="match_display">${lang.estimatedTime}<span id="waitTime"></span>${lang.seconds}</div>
-                        <button id="cancel-matchmaking-btn" class="cancel-button">${lang.cancel}</button>
+                        <button id="cancel-matchmaking-btn" class="cancel-button">✕</button>
                     </div>
                 `;
             document.body.appendChild(loadingOverlay);
