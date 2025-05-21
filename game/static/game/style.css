@@ -232,21 +232,22 @@ width: 120px
   padding-top: 5px;
   display: inline-block;
 }
-#showValidMovesCheckbox{
+#showValidMovesCheckbox,#accept-bot-checkbox{
   margin-right: 7px;
   margin-left: 1px;
 }
-#player-name-container {
-  margin-bottom: 15px
+#player-name-container{
+  margin-bottom: 11px;
 }
 #player-name {
   min-width: 120px;
-  width: 67%;
+  width: 50%;
   max-width: 160px;
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  font-size: 14px
+  font-size: 14px;
+  margin-left: 5px
 }
 #label4name{
   font-size: 14px;
@@ -283,6 +284,9 @@ width: 120px
   height: 60px;
   margin: 0 auto;
   perspective: 600px
+}
+#match_display{
+  font-size: 0.8em;
 }
 .disc-inner {
   width: 100%;
@@ -491,6 +495,23 @@ width: 120px
 #restart-btn:active {
   -webkit-transform: translateY(2px);
   transform: translateY(2px);
+}
+#cancel-matchmaking-btn {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    padding: 5px 10px;
+    font-size: 0.8em;
+    background-color: #f0f0f0;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+#cancel-matchmaking-btn:hover {
+    background-color: #e0e0e0;
 }
 #close-result{
   padding:5px 10px;

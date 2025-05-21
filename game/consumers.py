@@ -392,7 +392,6 @@ class OthelloConsumer(AsyncWebsocketConsumer):
             "action": "game_over",
             "winner": event["winner"],
             "reason": event["reason"],
-            "history": event.get("history", "")
         }))
 
     def isValidPosition(self, row, col):

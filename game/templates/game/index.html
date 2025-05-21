@@ -10,7 +10,7 @@
     </style>
     {% if mode == 'online' %}
     <style nonce="{{ request.csp_nonce }}">
-        h1{position:absolute;width:1px;height: 1px;padding:0;margin: -1px;overflow: hidden;clip:rect(0, 0, 0, 0);border:0;}#player-info{margin-bottom:20px}#player-list{padding-inline-start:0;position:relative;top:7px;height:1em}#role-dialog,#prev-move-btn{display:none}#surrender-btn{padding:10px 20px;height:40px;font-size:16px;background-color:#d32f2f;color:#fff;border:none;border-radius:5px;cursor:pointer;display:inline-block;transition:background-color .2s ease-in-out}#surrender-btn:hover{background-color:#b71c1c}#surrender-btn[disabled],#restart-btn[disabled],#prev-move-btn[disabled]{background-color:#d7d7d7;color:#666;cursor:not-allowed;opacity:.6;}#online-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);display:none;justify-content:center;align-items:center;z-index:10}#online-display{background:#fff;padding-bottom:19px;padding-left:10px;padding-right:10px;border-radius:8px;text-align:center;box-shadow:0 4px 10px rgba(0,0,0,.3);width:80%;max-width:260px;position:relative}#start-match{padding:10px 20px;font-size:16px;background-color:#008d09;background-image:linear-gradient(90deg,rgba(0,117,8,1),rgba(0,198,14,1));color:#fff;border:none;border-radius:5px;cursor:pointer;display:flex;justify-content:center;width:auto;height:40px;white-space:nowrap;border-bottom:solid 2px rgb(0,68,5)}#start-match:hover{transform:scale(1.02);#00aa0b}#web-match{padding:10px 20px;font-size:16px;background-color:#008d09;background-image:linear-gradient(90deg,rgb(0,112,213),rgb(0,205,149));color:#fff;border:none;border-bottom:solid 2px rgb(0,68,5);border-radius:5px;cursor:pointer;width:224px;height:40px;white-space:nowrap;margin:5px 0 17px 0}#web-match:hover{transform:scale(1.02);#00aa0b}#web-match:active{-webkit-transform:translateY(2px);transform: translateY(2px)}.qr-popup{display:none;position:absolute;z-index:1000;left:50%;top:50%;transform:translate(-50%,-50%);width:85%;aspect-ratio:1/1;max-width:285px;background:#fff;padding-bottom:15px;border-radius:8px;box-shadow:0 0 10px rgba(0,0,0,.5);align-items:center;justify-content:center}.qr-popup-content{position:relative}#qr{margin-left:6px;width:40px;height:40px;background:transparent;border:none;cursor:pointer;transition:background .2s;display:flex}#qr:hover{transform: scale(1.05)}#qr-icon{width:100%;height:100%}.invite-container{display:flex;align-items:center;justify-content:center}#qrcode{display:flex;justify-content:center;align-items:center;width:100%;aspect-ratio:1/1;margin:0 auto}#info-button{width:18px;height:18px;cursor:pointer;margin-left:8px}#evaluation_score{display:none;font-size:16px}#toOnlineSetting{position:absolute;top:16px;right:15px;width:24px;height:24p;cursor:pointer}#friend-title{margin-bottom:9px}
+        h1{position:absolute;width:1px;height: 1px;padding:0;margin: -1px;overflow: hidden;clip:rect(0, 0, 0, 0);border:0;}#player-info{margin-bottom:20px}#player-list{padding-inline-start:0;position:relative;top:7px;height:1em}#role-dialog,#prev-move-btn{display:none}#surrender-btn{padding:10px 20px;height:40px;font-size:16px;background-color:#d32f2f;color:#fff;border:none;border-radius:5px;cursor:pointer;display:inline-block;transition:background-color .2s ease-in-out}#surrender-btn:hover{background-color:#b71c1c}#surrender-btn[disabled],#restart-btn[disabled],#prev-move-btn[disabled]{background-color:#d7d7d7;color:#666;cursor:not-allowed;opacity:.6;}#online-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);display:none;justify-content:center;align-items:center;z-index:10}#online-display{background:#fff;padding-bottom:19px;padding-left:10px;padding-right:10px;border-radius:8px;text-align:center;box-shadow:0 4px 10px rgba(0,0,0,.3);width:80%;max-width:260px;position:relative}#start-match{padding:10px 20px;font-size:16px;background-color:#008d09;background-image:linear-gradient(90deg, #00980a, #006e07);color:#fff;border:none;border-radius:5px;cursor:pointer;display:flex;justify-content:center;width:auto;height:40px;white-space:nowrap;border-bottom:solid 2px rgb(0,68,5)}#start-match:hover{transform:scale(1.02);#00aa0b}#web-match{padding:10px 20px;font-size:16px;background-color:#008d09;background-image:linear-gradient(90deg,rgb(0,112,213),rgb(0,205,149));color:#fff;border:none;border-bottom:solid 2px rgb(0,68,5);border-radius:5px;cursor:pointer;width:224px;height:40px;white-space:nowrap;margin:5px 0 17px 0}#web-match:hover{transform:scale(1.02);#00aa0b}#web-match:active{-webkit-transform:translateY(2px);transform: translateY(2px)}.qr-popup{display:none;position:absolute;z-index:1000;left:50%;top:50%;transform:translate(-50%,-50%);width:85%;aspect-ratio:1/1;max-width:285px;background:#fff;padding-bottom:15px;border-radius:8px;box-shadow:0 0 10px rgba(0,0,0,.5);align-items:center;justify-content:center}.qr-popup-content{position:relative}#qr{margin-left:6px;width:40px;height:40px;background:transparent;border:none;cursor:pointer;transition:background .2s;display:flex}#qr:hover{transform: scale(1.05)}#qr-icon{width:100%;height:100%}.invite-container{display:flex;align-items:center;justify-content:center}#qrcode{display:flex;justify-content:center;align-items:center;width:100%;aspect-ratio:1/1;margin:0 auto}#info-button{width:18px;height:18px;cursor:pointer;margin-left:8px}#evaluation_score{display:none;font-size:16px}#toOnlineSetting{position:absolute;top:16px;right:15px;width:24px;height:24p;cursor:pointer}#friend-title{margin-bottom:9px}
     </style>
     {% endif %}
     {% if mode == 'player' %}
@@ -57,7 +57,7 @@
         {% endif %}
     {% endif %}
     <!-- 翻訳後の文字列をmain.jsへ受け渡し-->
-    {% with online_description=_("オンライン対戦モードで遠くの相手とオセロ対戦！強力なAIも完備。スマホ・PC対応。ブラウザで手軽に遊ぶ！") ai_description=_("強力なオセロAIとWeb上で対戦。初心者から上級者まで一人で楽しめる、スマホ・PC両対応のサイトです。オンライン対戦も楽しめます。遊びやすいスマートなグラフィックが特徴。ブラウザで手軽にプレイ！") player_description=_("オセロの対人戦やAI対戦が遊べる無料Webサイト。一人で遊べるAI対戦、友達などと2人で楽しむオンライン対戦、そして電子オセロ盤の機能を搭載。スマホ・PC両対応。ブラウザで手軽にプレイ！") else_description=_("オセロの対人戦やAI対戦が遊べる無料Webサイト。一人で遊べるAI対戦、友達などと2人で楽しむオンライン対戦、そして電子オセロ盤の機能を搭載。スマホ・PC両対応。ブラウザで手軽にプレイ！") %}
+    {% with online_description=_("世界中のプレイヤーとオンライン対戦！2人で遊べるフレンド対戦モードや、一人でも楽しめる強力なオセロAIも完備しています。スマホ・PC両対応。ブラウザで手軽に遊ぶ！") ai_description=_("強力なオセロAIとWeb上で対戦。初心者から上級者まで一人で楽しめる、スマホ・PC両対応のサイトです。オンライン対戦も楽しめます。遊びやすいスマートなグラフィックが特徴。ブラウザで手軽にプレイ！") player_description=_("オセロのAI対戦や対人戦を遊べる無料Webサイト。一人で楽しめるオセロAIは、最弱から最強まで幅広い難易度を完備。友達や家族と2人で楽しめるフレンド対戦も。そしてオンライン対戦で世界中のプレイヤーと切磋琢磨！「電子オセロ盤」機能も搭載。✅️スマホ・PC両対応。ブラウザで手軽にプレイ") else_description=_("オセロのAI対戦や対人戦を遊べる無料Webサイト。一人で楽しめるオセロAIは、最弱から最強まで幅広い難易度を完備。友達や家族と2人で楽しめるフレンド対戦も。そしてオンライン対戦で世界中のプレイヤーと切磋琢磨！「電子オセロ盤」機能も搭載。✅️スマホ・PC両対応。ブラウザで手軽にプレイ") %}
     <meta name="description" content="{% if mode == 'online' %}{{online_description}}{% elif mode == 'ai' %}{{ai_description}}{% elif mode == 'player' %}{{player_description}}{% else %}{{else_description}}{% endif %}">
     <script nonce="{{ request.csp_nonce }}">
         const lang = {
@@ -68,7 +68,9 @@
             "congrats_aiLevel_unlocked_b":"{% trans '🎉 条件達成により、' %}",
             "congrats_aiLevel_unlocked_a":"{% trans 'が解放されました！' %}",
             "signupToUnlockLegend": "{% trans '🎉 「伝説」の解放条件①を満たしました！アカウントを作成して伝説にアクセス↗'|escapejs %}",
-            "estimatedTime": "{% trans '推定待ち時間：30秒'|escapejs %}",
+            "estimatedTime": "{% trans '推定待ち時間：'|escapejs %}",
+            "cancel": "{% trans 'キャンセル'|escapejs %}",
+            "seconds": "{% trans '秒'|escapejs %}",
             "legend": "{% trans '伝説'|escapejs %}",
             "matchmaking": "{% trans '対戦相手を探しています...'|escapejs %}",
             "black": "{% trans '黒'|escapejs %}",
@@ -371,6 +373,11 @@
                 <div id="online-display">
                     <img src="{% static "game/images/setting.svg" %}" alt="{% trans '設定' %}" id="toOnlineSetting">
                     <h3>{% trans "オンライン対戦" %}</h3>
+                    <div id="player-name-container">
+                        <label for="player-name" id="label4name">{% trans "表示名：" %}</label>
+                        <input type="text" id="player-name" placeholder="{% trans '英数字のみ入力可能' %}" maxlength="10">
+                        <div id="warning"></div>
+                    </div>
                     <button id="web-match" class="btn-primary">{% trans "🌐 世界中と対戦" %}</button>
                     <div id="friend-title">{% trans "フレンド対戦" %}</div>
                     <div class="invite-container">
@@ -425,11 +432,13 @@
             <h3>{% trans "設定" %}</h3>
             <div class="container">
                 {% if mode == "online" %}
-                <div id="player-name-container">
-                    <label for="player-name" id="label4name">{% trans "表示名：" %}</label>
-                    <input type="text" id="player-name" placeholder="{% trans '英数字のみ入力可能' %}" maxlength="10">
-                    <div id="warning"></div>
+                <div id="accept-bot">
+                    <label for="accept-bot-checkbox">
+                        <input type="checkbox" id="accept-bot-checkbox" checked>
+                        {% trans "「🌐 世界中と対戦」でBotを許可" %}
+                    </label>
                 </div>
+                <br>
                 {% endif %}
                 <label id="level_ai">
                     {% trans "🤖 AIの強さ：" %}

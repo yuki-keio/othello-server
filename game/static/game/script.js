@@ -12,6 +12,7 @@ let aiModule = null;
 const evaluator = new Worker(evaluatorPath);
 let longPressTimer = null;
 let multiMoveTimer = null;
+window.acceptBot = localStorage.getItem('acceptBot') !== "false";
 //音関係----
 window.playerJoin = document.getElementById('playerJoin');
 const warningSound = document.getElementById('warningSound');
@@ -229,7 +230,7 @@ async function applyServerMove(row, col, player, status, final = false) {
     // statusが1の場合は、リプレイ時の手
     // statusが2の場合は、これはAIendMoveによる手であり、serverからの手ではないです
     if (gameBoard[row][col] !== '' || !isValidMove(row, col, player)) {
-        console.warn(`[applyServerMove] Invalid move: (${row},${col}), gameBoard[${row}][${col}]: ${gameBoard[row][col]}, isValidMove: ${isValidMove(row, col, player)}`);
+        console.warn(`[applyServerMove] Invalid move: (${row},${col}), gameBoard[${row}][${col}]: ${gameBoard[row][col]}, player: ${player}, isValidMove: ${isValidMove(row, col, player)}`);
         return;
     }
     // 以前のハイライトを削除
@@ -252,7 +253,7 @@ async function applyServerMove(row, col, player, status, final = false) {
     lastMoveCell = currentCell.firstChild;
     flipDiscs(row, col, player);
     recordMove(row, col, status);
-    if (!online && isBoardFull()) {
+    if ((!online || sessionStorage.getItem("bot_match") === "true") && isBoardFull()) {
         if (status !== 1) {
             endGame("offline");
         }
@@ -284,7 +285,7 @@ async function applyServerMove(row, col, player, status, final = false) {
             console.log(`[applyServerMove] No valid moves. SO currentP became: ${currentPlayer}`);
 
             if (!hasValidMove(currentPlayer)) {
-                if (!online) {
+                if (!online || sessionStorage.getItem("bot_match") === "true") {
                     endGame("offline");
                 }
             } else {
@@ -292,7 +293,7 @@ async function applyServerMove(row, col, player, status, final = false) {
             }
         }//↑終了：有効手がなかった場合
     }
-    if (gameMode === 'ai' && currentPlayer === 'white' && !gameEnded && status !== 1 && aimove === false) {
+    if ((gameMode === 'ai' || sessionStorage.getItem("bot_match") === "true") && currentPlayer === 'white' && !gameEnded && status !== 1 && aimove === false) {
         aiModulePromise.then(module => {
             aiModule = module;
             aiModule.startAIMove();
@@ -304,7 +305,7 @@ async function applyServerMove(row, col, player, status, final = false) {
             updateURL();
         }
     }
-    if ((final !== false || !online)) {
+    if ((final !== false || !online || sessionStorage.getItem("bot_match") === "true")) {
         updateStatus();
     }
 }
@@ -318,24 +319,32 @@ function makeMove(row, col, status = 0) {
         applyServerMove(row, col, currentPlayer, status);
         return;
     }
-    if (online) {
+    const botMatch = sessionStorage.getItem("bot_match") === "true";
+    if (online && !botMatch) {
         if (role_online === "unknown") {
             alert(lang.connecting);
-            return;
         } else if (role_online === "spectator") {
             alert(lang.spec_cant_play);
-            return;
         } else if (role_online === currentPlayer) {
             window.sendMove(row, col);
         } else {
             const roleDisplay = role_online === "black" ? lang.black : role_online === "white" ? lang.white : lang.spec;
             alert(`${lang.not_your_turn}${currentPlayer === 'black' ? lang.black : lang.white}, ${lang.you}：${roleDisplay}`);
-
-            return;
         }
-    } else {
-        applyServerMove(row, col, currentPlayer, status);
-    };
+        return;
+    }
+    applyServerMove(row, col, currentPlayer, status);
+    if (botMatch) {
+        if (online) {
+            const tempList = {
+                playerId: ["black", playerName, true],
+                "bot": ["white", "αβγδεζηθικλμνξοπρστυφχψω"[aiLevel] + "Bot", true],
+            }
+            updatePlayerList(tempList);
+        } else {
+            console.warn("bot_match is true but online is false");
+        }
+    }
 }
 
 function isValidMove(row, col, playerColor = currentPlayer) {
@@ -524,7 +533,7 @@ function startTimer() {
 
         if (remainingTime <= 0) {
             clearInterval(currentPlayerTimer);
-            if (!online) {
+            if (!online || sessionStorage.getItem("bot_match") === "true") {
                 alert(lang.timeout_winner + (currentPlayer === 'black' ? lang.white : lang.black));
                 endGame("offline", currentPlayer === 'black' ? 'white' : 'black'); // 時間切れになったプレイヤーの負けとしてゲームを終了
             }
@@ -1005,7 +1014,7 @@ window.endGame = function (online_data, winner = null, y = -1) {
 
         share_winner = winner; // 時間切れ勝ちなら、石の数で負けていても大丈夫なように明確に共有時に伝える必要があるので、winnerを明示する
 
-        if (winner === "white" && gameMode === "ai") {
+        if (winner === "white" && ((gameMode === "ai") || sessionStorage.getItem("bot_match") === "true")) {
             if (gameEndSoundEnabled) {
                 defeatSound.currentTime = 0;
                 defeatSound.play().catch(error => {
@@ -1036,7 +1045,7 @@ window.endGame = function (online_data, winner = null, y = -1) {
             launchConfetti();
         } else if (whiteCount > blackCount) {
             result = lang.winner + lang.white;
-            if (gameMode === "ai") {
+            if ((gameMode === "ai") || sessionStorage.getItem("bot_match") === "true") {
                 if (gameEndSoundEnabled) {
                     defeatSound.currentTime = 0;
                     defeatSound.play().catch(error => {
@@ -1056,7 +1065,7 @@ window.endGame = function (online_data, winner = null, y = -1) {
 
         } else {
             result = lang.draw;
-            if (gameMode === "ai") {
+            if ((gameMode === "ai") || sessionStorage.getItem("bot_match") === "true") {
                 if (gameEndSoundEnabled) {
                     defeatSound.currentTime = 0;
                     defeatSound.play().catch(error => {
@@ -1286,7 +1295,7 @@ function loadLater() {
         t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i; t.nonce = cspNonce;
         y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
     })(window, document, "clarity", "script", "qy90xxylfc");
-    if (gameMode === "player") {
+    if (gameMode !== "ai") {
         aiModulePromise = import(aiPath);
     }
     //処理があらかた終わったら画像読み込み
@@ -1708,6 +1717,10 @@ document.getElementById('showValidMovesCheckbox').addEventListener('change', () 
 
     updateStatus(); // 設定変更を反映
     updateURL(); // URL を更新
+});
+document.getElementById('accept-bot-checkbox')?.addEventListener('change', () => {
+    acceptBot = document.getElementById('accept-bot-checkbox').checked;
+    localStorage.setItem('acceptBot', acceptBot);
 });
 
 document.getElementById("toSetting").addEventListener('click', () => {

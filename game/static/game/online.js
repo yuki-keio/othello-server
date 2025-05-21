@@ -1,7 +1,11 @@
 const ws_scheme = window.location.protocol === "https:" ? "wss" : "ws";
 const surrenderBtn = document.getElementById('surrender-btn');
 const overlay = document.getElementById("online-overlay");
-const closeRoleDialog_el = document.getElementById("closeRoleDialog");
+const closeRoleDialogElement = document.getElementById("closeRoleDialog");
+const webMatchBtn = document.getElementById("web-match");
+let aiworker = null;
+const s_timerDisplay = document.getElementById('timer-display');
+let waitInterval = null;
 
 window.showDialog = function (type, value = null) {
     const shouldHide = localStorage.getItem("hide" + type + "Dialog") === "true";
@@ -40,6 +44,7 @@ window.closeDialog = function (type) {
 }
 function __DOMContentLoaded() {
     sessionStorage.setItem("matchmaking", "not_set");
+    sessionStorage.setItem("bot_match", "false");
     makeSocket();
     if (sessionStorage.getItem("fromMode")) {
         document.getElementById("online-overlay").style.display = "flex";
@@ -47,7 +52,8 @@ function __DOMContentLoaded() {
     }
     localStorage.setItem("deleted_urls", JSON.stringify([]));
     document.getElementById('next-move-btn').style.display = 'none';
-    document.getElementById("web-match").addEventListener("click", () => {
+    webMatchBtn.addEventListener("click", () => {
+        webMatchBtn.disabled = true;
         matchSocket();
         console.log("Web match button clicked");
     });
@@ -77,12 +83,12 @@ window.sendMove = function (row, col) {
     console.log("Sending WebSocket move:", message);
     socket.send(JSON.stringify(message));
 }
-function updatePlayerList(players) {
+window.updatePlayerList = function (players) {
     console.log(`[updatePlayerList] Updating player list: ${JSON.stringify(players)}`);
     const playerListElement = document.getElementById('player-list');
     playerListElement.innerHTML = ''; // クリア
 
-    Object.entries(players).forEach(([id, [ws_role, name]]) => {
+    Object.entries(players).forEach(([id, [ws_role, name, connected]]) => {
         const role = (ws_role === "black") ? lang.black : (ws_role === "white") ? lang.white : lang.spec;
         const span = document.createElement('span');
         let display_player_name;
@@ -95,7 +101,7 @@ function updatePlayerList(players) {
                 opponentName = name;
             }
         }
-        span.innerHTML = ((ws_role !== currentPlayer) ? "　" : "") + `${(ws_role === currentPlayer) ? '<span id="p_current_circle" class="current_circle"></span>' : (ws_role === (currentPlayer === "black" ? "white" : "black")) ? '<span id="p_next_circle" class="next_circle"></span>' : role + ":"} ${escapeHTML(display_player_name)}`;
+        span.innerHTML = ((ws_role !== currentPlayer) ? "　" : "") + `${(ws_role === currentPlayer) ? '<span id="p_current_circle" class="current_circle"></span>' : (ws_role === (currentPlayer === "black" ? "white" : "black")) ? '<span id="p_next_circle" class="next_circle"></span>' : role + ":"} ${connected ? escapeHTML(display_player_name) : "Connecting..."}`;
         if (ws_role === currentPlayer) {
             playerListElement.insertBefore(span, playerListElement.firstChild);
         } else {
@@ -118,12 +124,14 @@ function sendSettings() {
     }
 
     timeLimit = onlineTimeLimit;
-    showValidMoves = onlineHighlightMoves ? "true" : "false";
+    showValidMoves = onlineHighlightMoves ? "true" : "false"; //バックエンドとの整合性のために文字列に変換
 
     localStorage.setItem('timeLimit', timeLimit);
     localStorage.setItem('showValidMoves', showValidMoves);
 
-    window.socket.send(JSON.stringify({ action: "game_setting", time_limit: timeLimit, show_valid_moves: showValidMoves, player_name: playerName }));
+    if (sessionStorage.getItem("bot_match") !== "true") {
+        window.socket.send(JSON.stringify({ action: "game_setting", time_limit: timeLimit, show_valid_moves: showValidMoves, player_name: playerName }));
+    }
 }
 function toHalfWidth(str) {
     return str.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function (s) {
@@ -147,7 +155,7 @@ function matchSocket() {
     const mSocket = new WebSocket(`${ws_scheme}://${location.host}/ws/match/`);
     mSocket.onopen = () => {
         console.log("Match socket connection established.");
-        mSocket.send(JSON.stringify({ type: "join", player_id: playerId }));
+        mSocket.send(JSON.stringify({ type: "join", player_id: playerId, allow_bot: window.acceptBot }));
         if (window.gtag) {
             gtag('event', 'matchmaking_start', {
                 'event_category': 'engagement',
@@ -161,6 +169,7 @@ function matchSocket() {
         const data = JSON.parse(e.data);
         console.log("Match socket message received:", data);
         if (data.type === "waiting") {
+            webMatchBtn.disabled = false;
             const loadingOverlay = document.createElement('div');
             loadingOverlay.id = 'loading-overlay';
             // オセロディスクのローディングアニメーション
@@ -171,12 +180,33 @@ function matchSocket() {
                         </div>
                         <div class="loading-text">${lang.matchmaking}</div>
                         <br>
-                        <div>${lang.estimatedTime}</div>
+                        <div id="match_display">${lang.estimatedTime}<span id="waitTime"></span>${lang.seconds}</div>
+                        <button id="cancel-matchmaking-btn" class="cancel-button">${lang.cancel}</button>
                     </div>
                 `;
             document.body.appendChild(loadingOverlay);
+
+            document.getElementById("cancel-matchmaking-btn").addEventListener("click", () => {
+                if (mSocket && mSocket.readyState === WebSocket.OPEN) {
+                    mSocket.send(JSON.stringify({ type: "cancel_join", player_id: playerId }));
+                }
+                mSocket.close(); // WebSocketをクローズ
+                document.getElementById('loading-overlay')?.remove();
+                clearInterval(waitInterval);
+                webMatchBtn.disabled = false;
+                console.log("Matchmaking cancelled by user.");
+            });
+
+            const waitTimeElement = document.getElementById("waitTime");
+            let waitTime = 30;
+            waitInterval = setInterval(() => {
+                waitTime -= waitTime / 70;
+                waitTimeElement.textContent = waitTime.toFixed(1);
+            }, 100);
         }
         if (data.type === "matched") {
+            clearInterval(waitInterval);
+            webMatchBtn.disabled = false;
             gameRoom = data.room_id;
             match_role = data.color;
             console.log(`Matched with room ID: ${gameRoom}, role: ${match_role}`);
@@ -185,15 +215,54 @@ function matchSocket() {
             const murl = new URL(window.location);
             murl.searchParams.set('room', gameRoom);
             window.history.replaceState({}, '', murl);
-            sessionStorage.setItem("matchmaking", "true");
-            makeSocket(match_role);
-            if (window.gtag) {
-                gtag('event', 'match_made', {
-                    'event_category': 'engagement',
-                    'event_label': 'matchmade',
-                });
+            if (data.opponent_player_id === "bot") {
+                opponentName = "αβγδεζηθικλμνξοπρστυφχψω"[aiLevel] + "Bot";
+                sessionStorage.setItem("bot_match", "true");
+                aiworker = new Worker(workerPath);
+                role_online = data.color;
+                timeLimit = 20;
+                showValidMoves = true;
+                localStorage.setItem('timeLimit', timeLimit);
+                localStorage.setItem('showValidMoves', showValidMoves);
+                document.getElementById("timeLimitBox_").style.display = "block";
+                s_timerDisplay.style.display = "block";
+                s_timerDisplay.textContent = formatTime(timeLimit);
+                if (playerJoinSoundEnabled) {
+                    if (data.player_id !== playerId) {
+                        playerJoin.currentTime = 0;
+                        playerJoin.play().catch(error => {
+                            console.warn("audio was blocked:", error);
+                        });
+                    }
+                }
+                showDialog("role", role_online);
+                overlay.style.display = 'none';
+                const qrPopup = document.getElementById("qr-popup");
+                qrPopup.style.display = "none";
+                onlineUI();
+                highlightValidMoves();
+                document.getElementById("restart-btn").disabled = false;
+                surrenderBtn.disabled = false;
+                if (window.gtag) {
+                    gtag('event', 'bot_match', {
+                        'event_category': 'engagement',
+                        'event_label': 'bot_matchmade',
+                    });
+                } else {
+                    console.log("gtag not found");
+                }
             } else {
-                console.log("gtag not found");
+                sessionStorage.setItem("matchmaking", "true");
+
+                makeSocket(match_role);
+                if (window.gtag) {
+                    gtag('event', 'match_made', {
+                        'event_category': 'engagement',
+                        'event_label': 'matchmade',
+                    });
+                } else {
+                    console.log("gtag not found");
+                }
             }
         }
     };
@@ -296,7 +365,6 @@ function makeSocket(role = "default") {
                 showValidMoves = data.show_valid_moves === "true";
                 localStorage.setItem('showValidMoves', showValidMoves);
                 document.getElementById('showValidMovesCheckbox').checked = showValidMoves;
-                const s_timerDisplay = document.getElementById('timer-display');
                 if (timeLimit === 0) {
                     document.getElementById("timeLimitBox_").style.display = "none";
                     s_timerDisplay.style.display = "none";
@@ -323,7 +391,18 @@ function makeSocket(role = "default") {
 if (surrenderBtn) {
     surrenderBtn.addEventListener('click', () => {
         if (confirm(lang.surrender_right)) {
-            socket.send(JSON.stringify({ action: "surrender" }));
+            surrenderBtn.disabled = true;
+            if (sessionStorage.getItem("bot_match") === "true") {
+                const tempSurrender = {
+                    "action": "game_over",
+                    "winner": "white",
+                    "reason": "surrender",
+                }
+                stopTimer();
+                endGame(tempSurrender, "white");
+            } else {
+                socket.send(JSON.stringify({ action: "surrender" }));
+            }
         }
     });
     document.getElementById("info-button").addEventListener("click", function () {
@@ -360,8 +439,8 @@ if (document.readyState !== "loading") {
 } else {
     window.addEventListener('DOMContentLoaded', __DOMContentLoaded);
 }
-if (closeRoleDialog_el) {
-    closeRoleDialog_el.addEventListener("click", () => {
+if (closeRoleDialogElement) {
+    closeRoleDialogElement.addEventListener("click", () => {
         closeDialog("role");
     });
     document.getElementById("role-dialog-overlay").addEventListener("click", () => {
