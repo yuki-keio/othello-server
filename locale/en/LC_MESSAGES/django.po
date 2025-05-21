@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-21 13:11+0900\n"
+"POT-Creation-Date: 2025-05-21 17:45+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,19 +33,19 @@ msgstr "Player ID has not been provided."
 msgid "プレイヤー名が提供されていません"
 msgstr "Player name has not been provided."
 
-#: game/consumers.py:245
+#: game/consumers.py:252
 msgid "対戦相手がまだ接続していません"
 msgstr "The opponent has not connected yet."
 
-#: game/consumers.py:268
+#: game/consumers.py:275
 msgid "観戦者は降参できません"
 msgstr "Spectators cannot forfeit."
 
-#: game/consumers.py:294
+#: game/consumers.py:301
 msgid "有効な手が存在するため、パスはできません"
 msgstr "A valid move exists, so you cannot pass."
 
-#: game/consumers.py:331
+#: game/consumers.py:338
 msgid "このマスには石を置けません："
 msgstr "You cannot place a stone here: "
 
@@ -90,17 +90,11 @@ msgstr ""
 "can also enjoy online match mode with friends. Play now!"
 
 #: game/templates/game/index.html:60
-#, fuzzy
-#| msgid ""
-#| "オセロのAI対戦や対人戦を遊べる無料Webサイト。一人で楽しめるオセロAIは、最"
-#| "弱から最強まで幅広い難易度を完備。友達や家族と2人で楽しめるフレンド対戦"
-#| "も。そしてオンライン対戦で世界中のプレイヤーと切磋琢磨！「電子オセロ盤」機"
-#| "能も搭載。✅️スマホ・PC両対応。ブラウザで手軽にプレイ"
 msgid ""
-"オセロのAI対戦・オンライン対戦・フレンド対戦などが遊べる無料Webサイト。一人で"
-"楽しめるオセロAIは、最弱から最強まで幅広い難易度を完備。家族や友達と2人で楽し"
-"めるフレンド対戦も。オンライン対戦で世界中のプレイヤーと切磋琢磨しよう！「電"
-"子オセロ盤」機能も搭載。✅️スマホ・PC両対応。ブラウザで手軽にプレイ"
+"オセロのAI対戦・オンライン対戦・友達対戦などが遊べる無料Webサイト。一人で楽し"
+"めるオセロAIは最弱から最強まで幅広く完備。2人で一緒に楽しめるフレンド対戦も。"
+"世界中のプレイヤーと戦えるオンライン対戦や、スマホ一台で楽しめる「電子オセロ"
+"盤」も搭載 ✅️ ブラウザで手軽にプレイ"
 msgstr ""
 "Free Reversi (Othello) game site for online matches and AI battles. The AI "
 "is available in a wide range of difficulties, from the weakest to the "
