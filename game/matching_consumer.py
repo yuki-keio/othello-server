@@ -329,7 +329,7 @@ class MatchConsumer(AsyncWebsocketConsumer):
         }))
         logger.info(f"Player {self.player_id} matched with bot (bot_player) as {color} in room {room_id}.")
     async def bot_match_timeout(self):
-        await asyncio.sleep(27 + random.randint(0, 6))
+        await asyncio.sleep(29 + random.randint(0, 6))
         if await redis_instance.llen(QUEUE_KEY) < 2:
             logger.info(f"Player {self.player_id} is matched with a bot due to timeout.")
             await self.match_with_bot()

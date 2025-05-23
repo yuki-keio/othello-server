@@ -7,21 +7,25 @@ const moveListElement = document.getElementById('move-list');
 const copyUrlBtn = document.getElementById("copy-url-btn");
 const prevMoveBtn = document.getElementById('prev-move-btn');
 const nextMoveBtn = document.getElementById('next-move-btn');
+const underAD = document.getElementById("under-ad");
+
 let aiModulePromise = null;
 let aiModule = null;
 const evaluator = new Worker(evaluatorPath);
 let longPressTimer = null;
 let multiMoveTimer = null;
 window.acceptBot = localStorage.getItem('acceptBot') !== "false";
+window.adElement = "";
 //音関係----
 window.playerJoin = document.getElementById('playerJoin');
+const bgm = document.getElementById("bgm");
 const warningSound = document.getElementById('warningSound');
 const victorySound = document.getElementById('victorySound');
 const defeatSound = document.getElementById('defeatSound');
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+let bgmPlaying = false;
 let placeStoneBuffer = null;
 let placeStoneBufferPromise = null;
-
 let lastPlayTime = 0;
 let gainNode = audioContext.createGain(); // 音量調整用ノード
 gainNode.connect(audioContext.destination); // 出力先に接続
@@ -56,6 +60,7 @@ let g_url;
 let soundEffects = !(localStorage.getItem('soundEffects') === "false");
 let timeLimitSoundEnabled = !(localStorage.getItem('timeLimitSoundEnabled') === "false");
 let gameEndSoundEnabled = localStorage.getItem('gameEndSoundEnabled') !== "false";
+let bgmEnabled = localStorage.getItem('bgmEnabled') === "true";
 let evalPlayerModeEnabled = localStorage.getItem('evalPlayerModeEnabled') === "true";
 let evalAIModeEnabled = localStorage.getItem('evalAIModeEnabled') !== "false";
 window.playerJoinSoundEnabled = !(localStorage.getItem('playerJoinSoundEnabled') === "false");
@@ -277,7 +282,6 @@ async function applyServerMove(row, col, player, status, final = false) {
                     }
                 }
                 aimove = false;
-
             }
 
             currentPlayer = currentPlayer === 'black' ? 'white' : 'black';
@@ -308,6 +312,7 @@ async function applyServerMove(row, col, player, status, final = false) {
     if ((final !== false || !online || sessionStorage.getItem("bot_match") === "true")) {
         updateStatus();
     }
+    playBGMWithFadeIn();
 }
 
 
@@ -577,7 +582,9 @@ function updateMoveList() {
         return `${index + 1}. ${move.player === 'black' ? '●' : '○'}${move.moveNotation}`;
     });
     moveListElement.textContent = moveNotations.join('\n');
-    moveListElement.scrollTop = moveListElement.scrollHeight;
+    requestAnimationFrame(() => {
+        moveListElement.scrollTop = moveListElement.scrollHeight;
+    });
 }
 
 function serializeMoveHistory() {
@@ -835,6 +842,29 @@ function goToPreviousMove() {
         deleted_urls.push(move_now.slice(move_now.lastIndexOf('-') + 1));
         localStorage.setItem('deleted_urls', JSON.stringify(deleted_urls));
     }
+}
+function playBGMWithFadeIn(duration = 2000, targetVolume = 0.02) {
+    if (bgmPlaying || !bgmEnabled) return;
+
+    bgm.volume = 0;
+    bgm.currentTime = 0;
+    bgm.loop = true;
+    bgm.play().then(() => {
+        bgmPlaying = true;
+        // フェードイン処理
+        const step = 50;
+        const steps = duration / step;
+        const volumeIncrement = targetVolume / steps;
+
+        let currentStep = 0;
+        const fadeInInterval = setInterval(() => {
+            currentStep++;
+            bgm.volume = Math.min(targetVolume, bgm.volume + volumeIncrement);
+            if (currentStep >= steps) clearInterval(fadeInInterval);
+        }, step);
+    }).catch(err => {
+        console.warn("BGM再生失敗:", err);
+    });
 }
 function renderMove(prev) {
     sessionStorage.setItem("scrollY", window.scrollY);
@@ -1280,6 +1310,13 @@ function loadGoogleAnalytics() {
     script.onload = function () {
         gtag('js', new Date());
         gtag('config', 'G-4JKZC3VNE7', { 'cookie_domain': 'auto' });
+        gtag('config', 'AW-716757643');
+        if (!sessionStorage.getItem("conversionSent")) {
+            gtag('event', 'conversion', {
+                'send_to': 'AW-716757643/0eRkCO2glcwaEIu149UC',
+            });
+            sessionStorage.setItem("conversionSent", true);
+        }
     };
     if ('requestIdleCallback' in window) {
         requestIdleCallback(loadLater);
@@ -1400,6 +1437,8 @@ function _DOMContenLoaded() {
     placeStoneBufferPromise = getAudioBuffer(PLACE_STONE_SOUND).then(buffer => {
         console.log("Audio preloaded");
     }).catch(e => console.error("Failed to preload audio:", e));
+    sessionStorage.setItem("matchmaking", "not_set");
+    sessionStorage.setItem("bot_match", "false");
     if (gameMode === 'ai') {
         if (!aiModulePromise) {
             aiModulePromise = import(aiPath);
@@ -1537,6 +1576,25 @@ function _DOMContenLoaded() {
                     script.defer = true;
                     script.nonce = cspNonce;
                     document.head.appendChild(script);
+                    underAD.textContent = "";
+                    underAD.classList.remove("adLoading")
+                    const ins = document.createElement("ins");
+                    ins.className = "adsbygoogle";
+                    ins.style.display = "block";
+                    ins.setAttribute("data-ad-client", "ca-pub-1918692579240633");
+                    ins.setAttribute("data-ad-slot", "5475359355");
+                    ins.setAttribute("data-ad-format", "auto");
+                    ins.setAttribute("data-full-width-responsive", "true");
+                    underAD.appendChild(ins);
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                    adElement = `
+                    <ins class="adsbygoogle"
+                        style="display:block"
+                        data-ad-client="ca-pub-1918692579240633"
+                        data-ad-slot="3220747014"
+                        data-ad-format="auto"
+                        data-full-width-responsive="true"></ins>
+                    `
                 }
                 // プレミアムでないユーザーの要素を表示
                 nonPremiumElements.forEach(el => el.style.display = 'block');
@@ -1645,7 +1703,7 @@ document.getElementById('restart-btn').addEventListener('click', () => {
         document.getElementById('restart-btn').classList.remove('shine-button');
         board.innerHTML = '';
         gameBoard = Array.from({ length: 8 }, () => Array(8).fill(''));
-
+        stopTimer();
         refreshBoard();
         add4x4Markers();
         setInitialStones();
@@ -1654,7 +1712,7 @@ document.getElementById('restart-btn').addEventListener('click', () => {
         share_winner = "";
         ifVictory = false;
         highlightValidMoves();
-        webMatchBtn.click();
+        webMatchBtn?.click();
     } else { restart() }
 });
 
@@ -1802,6 +1860,15 @@ document.getElementById('gameEndSoundCheckbox').addEventListener('change', () =>
     gameEndSoundEnabled = document.getElementById('gameEndSoundCheckbox').checked;
     localStorage.setItem('gameEndSoundEnabled', gameEndSoundEnabled);
 });
+document.getElementById('bgmCheckbox').addEventListener('change', () => {
+    bgmEnabled = document.getElementById('bgmCheckbox').checked;
+    localStorage.setItem('bgmEnabled', bgmEnabled);
+    if (bgmEnabled) {
+        playBGMWithFadeIn();
+    } else {
+        bgm.pause();
+    }
+});
 document.getElementById('evalPlayerMode').addEventListener('change', () => {
     evalPlayerModeEnabled = document.getElementById('evalPlayerMode').checked;
     localStorage.setItem('evalPlayerModeEnabled', evalPlayerModeEnabled);
@@ -1818,7 +1885,8 @@ window.addEventListener('popstate', function (event) {
 // 初期チェック状態を設定
 document.getElementById('soundEffectsCheckbox').checked = soundEffects;
 document.getElementById('timeLimitSoundCheckbox').checked = timeLimitSoundEnabled;
-document.getElementById('gameEndSoundCheckbox').checked = gameEndSoundEnabled;
+document.getElementById('gameEndSoundCheckbox').checked = bgmCheckbox;
+document.getElementById('bgmCheckbox').checked = bgmEnabled;
 document.getElementById('playerJoinSoundCheckbox').checked = playerJoinSoundEnabled;
 document.getElementById('evalPlayerMode').checked = evalPlayerModeEnabled;
 document.getElementById('evalAIMode').checked = evalAIModeEnabled;
@@ -1893,7 +1961,7 @@ document.getElementById('restart-match').addEventListener('click', () => {
         share_winner = "";
         ifVictory = false;
         highlightValidMoves();
-        webMatchBtn.click();
+        webMatchBtn?.click();
     } else { restart() }
 });
 evaluator.onmessage = function (score) {

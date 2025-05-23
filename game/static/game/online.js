@@ -43,8 +43,6 @@ window.closeDialog = function (type) {
     localStorage.setItem("hide" + type + "Dialog", document.getElementById(type + "-not-checkbox").checked);
 }
 function __DOMContentLoaded() {
-    sessionStorage.setItem("matchmaking", "not_set");
-    sessionStorage.setItem("bot_match", "false");
     makeSocket();
     if (sessionStorage.getItem("fromMode")) {
         document.getElementById("online-overlay").style.display = "flex";
@@ -181,11 +179,21 @@ function matchSocket() {
                         <div class="loading-text">${lang.matchmaking}</div>
                         <br>
                         <div id="match_display">${lang.estimatedTime}<span id="waitTime"></span>${lang.seconds}</div>
+                        <div id="matching-ad">${adElement}</div>
                         <button id="cancel-matchmaking-btn" class="cancel-button">✕</button>
                     </div>
                 `;
             document.body.appendChild(loadingOverlay);
-
+            if (adElement.length > 0) {
+                document.getElementById("matching-ad").style.height = "375px";
+                setTimeout(() => {
+                    try {
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    } catch (e) {
+                        console.warn("adsbygoogle error:", e);
+                    }
+                }, 100);
+            }
             document.getElementById("cancel-matchmaking-btn").addEventListener("click", () => {
                 if (mSocket && mSocket.readyState === WebSocket.OPEN) {
                     mSocket.send(JSON.stringify({ type: "cancel_join", player_id: playerId }));
@@ -198,10 +206,10 @@ function matchSocket() {
             });
 
             const waitTimeElement = document.getElementById("waitTime");
-            let waitTime = 30;
+            let waitTime = 32;
             waitInterval = setInterval(() => {
                 waitTime -= waitTime / 70;
-                waitTimeElement.textContent = waitTime.toFixed(1);
+                waitTimeElement.textContent = Number(waitTime).toPrecision(3);
             }, 100);
         }
         if (data.type === "matched") {

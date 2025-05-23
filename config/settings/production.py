@@ -74,6 +74,7 @@ CSP_IMG_SRC = (
 CSP_FRAME_SRC = (
     "'self'",
     "https://*.google.com",
+    "https://www.googletagmanager.com/",
     "https://www.google.com",
     "https://*.doubleclick.net",
     "https://www.youtube.com",
