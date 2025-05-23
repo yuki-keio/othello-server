@@ -42,6 +42,7 @@ CSP_CONNECT_SRC = (
     "https://cdnjs.cloudflare.com/",
     "https://*.clarity.ms",
     "https://www.clarity.ms",
+    "https://www.google.co.jp/"
 )
 
 CSP_SCRIPT_SRC = (
@@ -70,6 +71,8 @@ CSP_IMG_SRC = (
     "https://*.clarity.ms",
     "https://c.bing.com",
     "https://www.googletagmanager.com",
+    "https://www.google.co.jp/",
+    "https://googleads.g.doubleclick.net/"
 )
 CSP_FRAME_SRC = (
     "'self'",
