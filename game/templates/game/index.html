@@ -20,7 +20,7 @@
     {% endif %}
     {% if request.user.subscription_type == "none" or not request.user.subscription_type %}
     <style nonce="{{ request.csp_nonce }}">
-        #under-ad{margin-top:12px;height:310px}.adLoading{background-color:#ccc;padding-top:13px}#banner-ad{height:90px;width:100%;position:absolute;top:0;text-align:center}#game-container{margin-top:90px}
+        #under-ad{margin-top:12px;height:310px}.adLoading{background-color:#ccc;padding-top:13px}#banner-ad{height:90px;width:100%;position:absolute;top:0;text-align:center}#game-container{margin-top:90px}#banner-ad-ins{height:90px}
     </style>
     {% endif %}
     {% if request.LANGUAGE_CODE == "en" %}
@@ -302,10 +302,10 @@
 <div id="banner-ad" class="adLoading">
     <span id="loadingText">Loading...</span>
     <ins class="adsbygoogle"
+        id="banner-ad-ins"
         data-ad-client="ca-pub-1918692579240633"
         data-ad-slot="5707594963"
-        data-ad-format="horizontal"
-        data-full-width-responsive="false"></ins>
+        data-full-width-responsive="true"></ins>
     <script nonce="{{ request.csp_nonce }}">
         (adsbygoogle = window.adsbygoogle || []).push({});
     </script>
