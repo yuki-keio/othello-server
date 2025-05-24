@@ -1548,6 +1548,9 @@ function _DOMContenLoaded() {
             const nonPremiumElements = document.querySelectorAll('.free');
             console.log(`[Premium] ${data}, ${data.is_premium}`);
             if (data.is_premium) {
+                if (document.getElementById("banner-ad")) {
+                    location.reload();
+                }
                 // プレミアムユーザーの要素を表示
                 premiumElements.forEach(el => el.style.display = 'block');
                 const portalEl = document.getElementById('open-portal');
@@ -1579,10 +1582,6 @@ function _DOMContenLoaded() {
                     script.defer = true;
                     script.nonce = cspNonce;
                     document.head.appendChild(script);
-                    document.getElementById("banner-ad").classList.remove("adLoading");
-                    document.getElementById("loadingText").textContent = "";
-                    underAD.textContent = "";
-                    underAD.classList.remove("adLoading")
                     const ins = document.createElement("ins");
                     ins.className = "adsbygoogle";
                     ins.style.display = "block";
@@ -1600,6 +1599,10 @@ function _DOMContenLoaded() {
                         data-ad-format="auto"
                         data-full-width-responsive="true"></ins>
                     `
+                    document.getElementById("banner-ad").classList.remove("adLoading");
+                    document.getElementById("loadingText").textContent = "";
+                    underAD.classList.remove("adLoading");
+                    underAD.textContent = "";
                 }
                 // プレミアムでないユーザーの要素を表示
                 nonPremiumElements.forEach(el => el.style.display = 'block');
