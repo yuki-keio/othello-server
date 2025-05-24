@@ -845,7 +845,6 @@ function goToPreviousMove() {
 }
 function playBGMWithFadeIn(duration = 2000, targetVolume = 0.02) {
     if (bgmPlaying || !bgmEnabled) return;
-
     bgm.volume = 0;
     bgm.currentTime = 0;
     bgm.loop = true;
@@ -862,6 +861,10 @@ function playBGMWithFadeIn(duration = 2000, targetVolume = 0.02) {
             bgm.volume = Math.min(targetVolume, bgm.volume + volumeIncrement);
             if (currentStep >= steps) clearInterval(fadeInInterval);
         }, step);
+        gtag('event', 'bgm_play', {
+            'event_category': 'audio',
+            'event_label': 'bgm_played'
+        });
     }).catch(err => {
         console.warn("BGM再生失敗:", err);
     });
@@ -1576,6 +1579,8 @@ function _DOMContenLoaded() {
                     script.defer = true;
                     script.nonce = cspNonce;
                     document.head.appendChild(script);
+                    document.getElementById("banner-ad").classList.remove("adLoading");
+                    document.getElementById("loadingText").textContent = "";
                     underAD.textContent = "";
                     underAD.classList.remove("adLoading")
                     const ins = document.createElement("ins");

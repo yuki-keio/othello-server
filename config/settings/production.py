@@ -28,6 +28,7 @@ CSP_DEFAULT_SRC = ("'self'",)
 CSP_CONNECT_SRC = (
     "'self'",
     "https://www.google.com",
+    "https://google.com",
     "https://www.gstatic.com",
     "https://www.googletagmanager.com",
     "https://www.google-analytics.com",
@@ -62,7 +63,7 @@ CSP_SCRIPT_SRC = (
 )
 CSP_IMG_SRC = (
     "'self'",
-    "https://img.moppy.jp",
+    "https://google.com",
     "https://www.google.com",
     "https://www.gstatic.com",
     "https://pagead2.googlesyndication.com",
@@ -97,11 +98,11 @@ CSP_STYLE_SRC = (
     "'self'",
     "https://fonts.googleapis.com",
     "https://pagead2.googlesyndication.com",
-    "https://reversi.yuki-lab.com/static/",  
-    "http://127.0.0.1:8000/static/",  
+    "https://reversi.yuki-lab.com/static/",
+    "http://127.0.0.1:8000/static/",
     "https://cdnjs.cloudflare.com",
 )
-CSP_STYLE_SRC_ATTR = ("'unsafe-inline'",) 
+CSP_STYLE_SRC_ATTR = ("'unsafe-inline'",)
 CSP_FONT_SRC = ("'self'", "https://fonts.gstatic.com")
 
 CSP_INCLUDE_NONCE_IN = ("script-src","style-src")# Heroku用の設定を適用
