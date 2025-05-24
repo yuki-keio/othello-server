@@ -20,7 +20,7 @@
     {% endif %}
     {% if request.user.subscription_type == "none" or not request.user.subscription_type %}
     <style nonce="{{ request.csp_nonce }}">
-        #under-ad{margin-top:12px;height:310px}.adLoading{background-color:#ccc;padding-top:13px}#banner-ad{height:90px;width:100%;position:absolute;top:0;text-align:center}#game-container{margin-top:90px}#banner-ad-ins{height:90px}
+        #under-ad{margin-top:12px;height:310px}.adLoading{background-color:#ccc;padding-top:13px}#banner-ad{height:90px;width:100%;position:absolute;top:0;text-align:center}#game-container{margin-top:90px}#banner-ad-ins{height:90px;width:100%}
     </style>
     {% endif %}
     {% if request.LANGUAGE_CODE == "en" %}
