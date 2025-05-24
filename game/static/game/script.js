@@ -1548,7 +1548,7 @@ function _DOMContenLoaded() {
             const nonPremiumElements = document.querySelectorAll('.free');
             console.log(`[Premium] ${data}, ${data.is_premium}`);
             if (data.is_premium) {
-                if (document.getElementById("banner-ad")) {
+                if (document.getElementById("under-ad")) {
                     location.reload();
                 }
                 // プレミアムユーザーの要素を表示
@@ -1589,8 +1589,6 @@ function _DOMContenLoaded() {
                     ins.setAttribute("data-ad-slot", "5475359355");
                     ins.setAttribute("data-ad-format", "auto");
                     ins.setAttribute("data-full-width-responsive", "true");
-                    document.getElementById("banner-ad").classList.remove("adLoading");
-                    document.getElementById("loadingText").textContent = "";
                     underAD.classList.remove("adLoading");
                     underAD.textContent = "";
                     underAD.appendChild(ins);
