@@ -1589,6 +1589,10 @@ function _DOMContenLoaded() {
                     ins.setAttribute("data-ad-slot", "5475359355");
                     ins.setAttribute("data-ad-format", "auto");
                     ins.setAttribute("data-full-width-responsive", "true");
+                    document.getElementById("banner-ad").classList.remove("adLoading");
+                    document.getElementById("loadingText").textContent = "";
+                    underAD.classList.remove("adLoading");
+                    underAD.textContent = "";
                     underAD.appendChild(ins);
                     (adsbygoogle = window.adsbygoogle || []).push({});
                     adElement = `
@@ -1599,10 +1603,6 @@ function _DOMContenLoaded() {
                         data-ad-format="auto"
                         data-full-width-responsive="true"></ins>
                     `
-                    document.getElementById("banner-ad").classList.remove("adLoading");
-                    document.getElementById("loadingText").textContent = "";
-                    underAD.classList.remove("adLoading");
-                    underAD.textContent = "";
                 }
                 // プレミアムでないユーザーの要素を表示
                 nonPremiumElements.forEach(el => el.style.display = 'block');
