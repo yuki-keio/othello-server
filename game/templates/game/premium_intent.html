@@ -96,7 +96,7 @@
     window.addEventListener('load', async () => {
         const stripe = await stripePromise;
         let l_code = '{{ request.LANGUAGE_CODE }}';
-        l_code = l_code === 'ja' ? '' : l_code;
+        l_code = l_code === 'ja' ? '' : ("/"+l_code);
         const response = await fetch(`${l_code}/api/create-checkout-session/`, {
             method: 'POST',
             headers: {
