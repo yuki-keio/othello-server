@@ -8,6 +8,7 @@ const copyUrlBtn = document.getElementById("copy-url-btn");
 const prevMoveBtn = document.getElementById('prev-move-btn');
 const nextMoveBtn = document.getElementById('next-move-btn');
 const underAD = document.getElementById("under-ad");
+const premiumPrompt = document.getElementById("premiumPrompt");
 
 let aiModulePromise = null;
 let aiModule = null;
@@ -1157,6 +1158,8 @@ window.endGame = function (online_data, winner = null, y = -1) {
                 iOSinstallGuide();
             } else if (isIOS() && !window.navigator.standalone && gameFinishedCount === 3) {
                 iOSinstallGuide();
+            } else if (gameFinishedCount % 4 === 0) {
+                premiumPrompt && (premiumPrompt.style.display = "block");
             } else {
                 if (gameMode === "ai" && ifVictory) {
                     if (window.unlockNextAiLevel) {
@@ -1164,7 +1167,7 @@ window.endGame = function (online_data, winner = null, y = -1) {
                     }
                 }
             }
-        }, 2000);
+        }, 100);
     }
 }
 
@@ -1604,7 +1607,21 @@ function _DOMContenLoaded() {
                 }
                 // プレミアムでないユーザーの要素を表示
                 nonPremiumElements.forEach(el => el.style.display = 'block');
-                document.getElementById('buy-premium-btn').addEventListener('click', buyPremium);
+                document.getElementById('buy-premium-btn').addEventListener('click', (event) => {
+                    gtag('event', 'buy_premium_click', {
+                        'event_category': 'engagement',
+                        'event_label': 'Buy Premium Clicked',
+                    });
+                    buyPremium(event);
+                }
+                );
+                document.getElementById('offer-button').addEventListener('click', (event) => {
+                    gtag('event', 'offer_button_click', {
+                        'event_category': 'engagement',
+                        'event_label': 'Offer Button Clicked',
+                    });
+                    buyPremium(event);
+                });
             }
         });
     loadGoogleAnalytics();
@@ -1813,6 +1830,15 @@ document.getElementById("toOnlineSetting")?.addEventListener('click', () => {
 });
 document.getElementById("close-install-guide").addEventListener("click", () => {
     document.getElementById("ios-install-guide").style.display = "none";
+    if (gameMode === "ai" && ifVictory) {
+        const currentAiLevel = document.getElementById('aiLevelSelect').value;
+        if (window.unlockNextAiLevel) {
+            window.congratsNextAiLevel(currentAiLevel);
+        }
+    }
+});
+document.getElementById("close-offer")?.addEventListener("click", () => {
+    premiumPrompt && (premiumPrompt.style.display = "none");
     if (gameMode === "ai" && ifVictory) {
         const currentAiLevel = document.getElementById('aiLevelSelect').value;
         if (window.unlockNextAiLevel) {

@@ -426,16 +426,27 @@ if (playerName_el) {
         const nameInput = toHalfWidth(playerName_el.value.trim());
         if (nameInput.length > 0) {
             playerName_el.value = nameInput;
-            if (/^[a-zA-Z0-9]+$/.test(nameInput)) {
-                playerName = profanityCleaner.clean(nameInput);
-                document.getElementById("player-list").children[0].innerHTML = '<span id="p_current_circle" class="current_circle"></span> ' + lang.you + "(" + escapeHTML(playerName) + ")";
-                playerName_el.value = playerName;
-                localStorage.setItem("playerName", playerName);
-                warning.textContent = "";
-
-            } else {
-                warning.textContent = lang.warn_EnOnly;
+            if (document.getElementById("under-ad")) {
+                if (!/^[a-zA-Z0-9]+$/.test(nameInput)) {
+                    warning.textContent = lang.warn_EnOnly;
+                    const premium2unicode = document.getElementById("premium2unicode");
+                    premium2unicode.style.display = "inline-block";
+                    document.getElementById("name-premium").addEventListener("click", (event) => {
+                        gtag('event', 'premium_click', {
+                            'event_category': 'engagement',
+                            'event_label': 'premium2unicode',
+                        });
+                        premium2unicode.style.display = "none";
+                        buyPremium(event);
+                    });
+                    return;
+                }
             }
+            playerName = profanityCleaner.clean(nameInput);
+            document.getElementById("player-list").children[0].innerHTML = '<span id="p_current_circle" class="current_circle"></span> ' + lang.you + "(" + escapeHTML(playerName) + ")";
+            playerName_el.value = playerName;
+            localStorage.setItem("playerName", playerName);
+            warning.textContent = "";
         } else {
             warning.textContent = lang.warn_charLimit;
         }
