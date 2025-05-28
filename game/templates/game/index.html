@@ -349,13 +349,13 @@
               <span></span>
             </label>
             <div class="menu" id="TMenu">
-                <a id="toSetting">{% trans "設定" %}</a>
                 <div class="premium">
                     <a id="open-portal">{% trans "課金情報を管理する" %}</a>
                 </div>
                 <div class="free">
-                    <a id="buy-premium-btn">{% trans "👑 プレミアム版" %}</a>
+                    <a id="buy-premium-btn">{% trans "新機能を解放" %}</a>
                 </div>
+                <a id="toSetting">{% trans "設定" %}</a>
                 <div class="authenticated">
                     <a href="{% url 'user_logout' %}">{% trans "ログアウト" %}</a>
                     <a href="{% url 'password_change' %}">{% trans "パスワード変更" %}</a>
@@ -653,13 +653,13 @@
 </div>
 {% else %}
 <div id="signupPrompt">
-    <h5>{% trans "アカウント登録で新機能解放" %}</h5>
+    <h5>{% trans "無料アカウント登録で新機能" %}</h5>
     <ul class="signup-merit">
         <li>✅️ {% trans "わずか10秒で簡単作成！" %}</li>
-        <li>🚀 {% trans "高度な機能が解放されます" %}</li>
+        <li>🚀 {% trans "高度なAIが解放されます" %}</li>
         <li>🛡️ {% trans "一部データの引き継ぎも可能に" %}</li>
     </ul>
-    <a id="signup-button" href="{% url 'user_signup' %}">{% trans "登録する" %}</a>
+    <a id="signup-button" href="{% url 'user_signup' %}">{% trans "無料で登録" %}</a>
     <button id="close-signup">{% trans "❌️ 閉じる" %}</button>
 </div>
 {% endif %}

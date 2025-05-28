@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-28 10:38+0900\n"
+"POT-Creation-Date: 2025-05-29 00:54+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -347,18 +347,18 @@ msgstr "👺 Transcendent"
 msgid "🐤 最弱AI"
 msgstr "🐤 Weakest"
 
-#: game/templates/game/index.html:352 game/templates/game/index.html:377
-#: game/templates/game/index.html:441
-msgid "設定"
-msgstr "Settings"
-
-#: game/templates/game/index.html:354
+#: game/templates/game/index.html:353
 msgid "課金情報を管理する"
 msgstr "Manage Payment"
 
-#: game/templates/game/index.html:357
-msgid "👑 プレミアム版"
-msgstr "👑 Go Premium"
+#: game/templates/game/index.html:356
+msgid "新機能を解放"
+msgstr "Upgrade"
+
+#: game/templates/game/index.html:358 game/templates/game/index.html:377
+#: game/templates/game/index.html:441
+msgid "設定"
+msgstr "Settings"
 
 #: game/templates/game/index.html:360
 msgid "ログアウト"
@@ -851,23 +851,23 @@ msgstr ""
 "subscribe at a discounted rate as long as you keep your subscription."
 
 #: game/templates/game/index.html:656
-msgid "アカウント登録で新機能解放"
+msgid "無料アカウント登録で新機能"
 msgstr "Unlock new features"
 
 #: game/templates/game/index.html:658
 msgid "わずか10秒で簡単作成！"
 msgstr "Create in just 10 seconds!"
 
-#: game/templates/game/index.html:659 game/templates/game/signup.html:25
-msgid "高度な機能が解放されます"
-msgstr "Advanced features will be unlocked!"
+#: game/templates/game/index.html:659
+msgid "高度なAIが解放されます"
+msgstr "Powerful AI will be unlocked."
 
 #: game/templates/game/index.html:660
 msgid "一部データの引き継ぎも可能に"
 msgstr "Some data can be carried over."
 
 #: game/templates/game/index.html:662
-msgid "登録する"
+msgid "無料で登録"
 msgstr "Sign Up"
 
 #: game/templates/game/index.html:673
@@ -944,22 +944,14 @@ msgid "アカウント作成 | リバーシWeb"
 msgstr "Create Account | Reversi Web"
 
 #: game/templates/game/signup.html:22
-msgid "アカウントを作成する"
-msgstr "Create an Account"
+msgid "無料アカウントを作成"
+msgstr "Create a Free Account"
 
-#: game/templates/game/signup.html:24
-msgid "1クリックで簡単作成！"
-msgstr "Easy to create with one click!"
+#: game/templates/game/signup.html:40
+msgid "🚀 作成"
+msgstr "🚀 Create"
 
-#: game/templates/game/signup.html:26
-msgid "一部データの引き継ぎが可能に"
-msgstr "Some data can be carried over."
-
-#: game/templates/game/signup.html:51
-msgid "作成"
-msgstr "Create"
-
-#: game/templates/game/signup.html:55
+#: game/templates/game/signup.html:44
 msgid "ログインはこちら"
 msgstr "If you already have an account, log in here"
 
@@ -1122,9 +1114,3 @@ msgstr "If you don't have an account, register here"
 #: game/views.py:92
 msgid "ご契約済みのサブスクリプションが適用されました"
 msgstr "Your active subscription has been applied."
-
-#~ msgid "広告を削除"
-#~ msgstr "Remove Ads"
-
-#~ msgid "英数字のみ入力可能"
-#~ msgstr "Only alphanumeric characters allowed"

@@ -19,13 +19,7 @@
 </head>
 <body>
     <div class="signup-wrapper">
-        <h1>{% trans 'アカウントを作成する' %}</h1>
-        <ul class="merit">
-            <li>✅️ {% trans "1クリックで簡単作成！" %}</li>
-            <li>🚀 {% trans "高度な機能が解放されます" %}</li>
-            <li>🛡️ {% trans "一部データの引き継ぎが可能に" %}</li>
-        </ul>
-        <br>
+        <h1>{% trans '無料アカウントを作成' %}</h1>
         <form method="post" novalidate>
             {% csrf_token %}
             {% if form.non_field_errors %}
@@ -37,18 +31,13 @@
                 <div class="form-group {% if field.name == 'password1' %}with-gap{% endif %}">
                     <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                     {{ field }}
-
-                    {% if field.name == 'password1' %}
-                        <div class="helptext">{{ field.help_text }}</div>
-                    {% endif %}
-
                     {% for error in field.errors %}
                         <p class="errorlist">{{ error }}</p>
                     {% endfor %}
                 </div>
             {% endfor %}
 
-            <button id="signup-btn" type="submit">{% trans "作成" %}</button>
+            <button id="signup-btn" type="submit">{% trans "🚀 作成" %}</button>
         </form>
         <br>
         <div >

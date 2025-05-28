@@ -1158,7 +1158,6 @@ window.endGame = function (online_data, winner = null, y = -1) {
             } else if (gameFinishedCount % 4 === 0) {
                 if (authenticated) {
                     premiumPrompt && (premiumPrompt.style.display = "block");
-                    console.log("premiumPrompt shown");
                 } else {
                     const currentAiLevel = document.getElementById('aiLevelSelect').value;
                     if (gameMode === "ai" && ifVictory && currentAiLevel === "9" && Math.max(...Object.keys(JSON.parse(localStorage.getItem('unlockedAiLevels') || '{"0":true,"1":true,"2":true,"6":true}')).map(Number)) === 11 && window.unlockNextAiLevel) {
@@ -1619,9 +1618,14 @@ function _DOMContenLoaded() {
                         'event_category': 'engagement',
                         'event_label': 'Buy Premium Clicked',
                     });
-                    buyPremium(event);
-                }
-                );
+                    if (premiumPrompt) {
+                        premiumPrompt.style.display = "block";
+                    } else if (signupPrompt) {
+                        signupPrompt.style.display = "block";
+                    } else{
+                        buyPremium(event);
+                    }
+                });
                 document.getElementById('offer-button')?.addEventListener('click', (event) => {
                     gtag('event', 'offer_button_click', {
                         'event_category': 'engagement',

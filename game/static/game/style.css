@@ -609,6 +609,10 @@ width: 120px
   text-decoration:none;
   color:#000;
 }
+.menu #buy-premium-btn{
+  background: linear-gradient(135deg, #15b200, #007508 100%);
+  color: white;
+}
 .menu a:hover{
   background:#eee
 }

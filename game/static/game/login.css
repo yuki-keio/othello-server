@@ -1,7 +1,8 @@
 body {
     font-family:"BIZ UDPMincho", serif;
     font-weight:400;
-    background-color:#f0f0f0;
+    background:linear-gradient(to bottom, #e9e9e9, #d9d9d9);
+    height: 100vh;
     line-height: 1;
 }
 h1 {
@@ -50,22 +51,25 @@ form p label{
 /* 送信ボタン */
 button[type="submit"] {
     margin: 1.5rem auto 0 auto;
-    padding: .6rem 1.4rem;
+    padding: .4rem 1.4rem;
     font-size: 0.8rem;
     font-weight: bold;
     border: none;
+    border-bottom: solid 2px rgb(0, 68, 5);
     border-radius: 4px;
     cursor: pointer;
-    background: #007508;
+    background: linear-gradient(to bottom, #00aa0b, #00980a);
     color: #fff;
     transition: background .2s ease, transform .1s ease;
     display: block;
 }
 button:hover {
-    background: #006306;
+    background-image: linear-gradient(to bottom, #00980a, #006e07);background-color: #00aa0b
 }
 button:active {
-    transform: translateY(1px);
+    transform: translateY(2px);
+    -webkit-transform: translateY(2px);
+    border-bottom: none;
 }
 .signup{
     color:#007508;
