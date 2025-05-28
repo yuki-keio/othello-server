@@ -11,7 +11,31 @@ from .redis_singleton import redis_instance
 
 logger = logging.getLogger(__name__)
 
+LOCK_TTL   = 3     # 秒
+BLOCK_TTL  = 1     # 待ち合わせ上限
+
 class OthelloConsumer(AsyncWebsocketConsumer):
+    def _new_room_state(self, time_limit=0, show_valid_moves=False):
+        board = [["" for _ in range(8)] for _ in range(8)]
+        board[3][3] = "white"
+        board[3][4] = "black"
+        board[4][3] = "black"
+        board[4][4] = "white"
+
+        return {
+            "board": board,
+            "turn": "black",
+            "players": {},
+            "game_over": False,
+            "pass_count": 0,
+            "time_limit": time_limit,
+            "turn_start_time": asyncio.get_event_loop().time(),
+            "game_started": False,
+            "last_active": time.time(),
+            "show_valid_moves": show_valid_moves,
+            "history": ""
+        }
+
     async def connect(self):
         try:
             self.redis = redis_instance
@@ -37,40 +61,50 @@ class OthelloConsumer(AsyncWebsocketConsumer):
                 await self.close()
                 return
 
-            # ★★★ Redisから部屋データを取得
-            raw_data = await self.redis.get(f"game_rooms:{self.group_name}")
-            if raw_data:
-                game_state = json.loads(raw_data)
-            else:
-                # 新規部屋を作成
-                time_limit = int(query_params.get("timeLimit", [0])[0])
-                show_valid_moves = query_params.get("showValidMoves", [False])[0]
+            time_limit = int(query_params.get("timeLimit", [0])[0])
+            show_valid_moves = query_params.get("showValidMoves", [False])[0]
 
-                logger.info(f"[NEW ROOM] {self.group_name} を作成")
-                game_state = {
-                    "board": [["" for _ in range(8)] for _ in range(8)],
-                    "turn": "black",
-                    "players": {},
-                    "game_over": False,
-                    "pass_count": 0,
-                    "time_limit": time_limit,
-                    "turn_start_time": asyncio.get_event_loop().time(),
-                    "game_started": False,
-                    "last_active": time.time(),
-                    "show_valid_moves": show_valid_moves,
-                    "history": ""
-                }
-                board = game_state["board"]
-                board[3][3] = "white"
-                board[3][4] = "black"
-                board[4][3] = "black"
-                board[4][4] = "white"
+            self.room_key = f"game_rooms:{self.group_name}"
+            self.lock_key = f"lock:{self.group_name}"
+
+            #--- 排他制御開始 ---
+            async with self.redis.lock(self.lock_key, timeout=LOCK_TTL, blocking_timeout=BLOCK_TTL):
+                raw_data = await self.redis.get(self.room_key)
+                if raw_data:
+                    game_state = json.loads(raw_data)
+                else:
+                    logger.info(f"[NEW ROOM] {self.group_name} を作成")
+                    game_state = self._new_room_state(time_limit, show_valid_moves)
+                    await self.redis.set(self.room_key, json.dumps(game_state))
+                # プレイヤー情報の更新
+                players = game_state["players"]
+                game_state["last_active"] = time.time()
+
+                if player_id in players:
+                    role = players[player_id][0]
+                    player_name = players[player_id][1]
+                    is_reconnect = True
+                    players[player_id][2] = True
+                    logger.info(f"[RECONNECT] {player_id} が {self.group_name} に再接続")
+                else:
+                    is_reconnect = False
+                    logger.info(f"[CONNECT] {player_id} が {self.group_name} に接続. players: {players}")
+                    if ((len(players) == 0 and player_role == "default") or player_role == "black"):
+                        role = "black"
+                    elif ((len(players) == 1 and player_role == "default") or player_role == "white"):
+                        role = "white"
+                    else:
+                        role = "spectator"
+                    players[player_id] = [role, player_name, True]
+
+                self.role = role
+                self.player_id = player_id
+                self.player_name = player_name
+                self.connected = True
 
                 # Redisへ保存
-                await self.redis.set(
-                    f"game_rooms:{self.group_name}",
-                    json.dumps(game_state)
-                )
+                await self.redis.set(self.room_key, json.dumps(game_state))
+            # --- 排他制御終了 ---
 
             # グループに参加 & accept
             await self.channel_layer.group_add(self.group_name, self.channel_name)
@@ -78,43 +112,6 @@ class OthelloConsumer(AsyncWebsocketConsumer):
 
             # Pingタスク開始
             self.ping_task = asyncio.create_task(self.send_ping())
-
-            # 最新のゲーム状態を再取得（上で初期化した場合を含む）
-            raw_data = await self.redis.get(f"game_rooms:{self.group_name}")
-            game_state = json.loads(raw_data)
-            players = game_state["players"]
-            game_state["last_active"] = time.time()
-
-            # 既存プレイヤーか新規か
-            if player_id in players:
-                role = players[player_id][0]
-                player_name = players[player_id][1]
-                is_reconnect = True
-                players[player_id][2] = True
-                logger.info(f"[RECONNECT] {player_id} が {self.group_name} に再接続 （{self.group_name}")
-            else:
-                is_reconnect = False
-                logger.info(f"[CONNECT] {player_id} が {self.group_name} に接続. players: {players}")
-                if ((len(players) == 0) and player_role == "default") or player_role == "black":
-                    role = "black"
-                elif ((len(players) == 1) and player_role == "default") or player_role == "white":
-                    role = "white"
-                else:
-                    role = "spectator"
-                players[player_id] = [role, player_name,True]
-
-            self.role = role
-            self.player_id = player_id
-            self.player_name = player_name
-            self.connected = True
-
-            logger.info(f"[ASSIGN ROLE] player:{player_id} -> role:{role} （ルーム名：{self.group_name}")
-
-            # 更新をRedisへ書き戻す
-            await self.redis.set(
-                f"game_rooms:{self.group_name}",
-                json.dumps(game_state)
-            )
 
             # ロールをクライアントへ送信
             await self.send(text_data=json.dumps({
@@ -274,24 +271,38 @@ class OthelloConsumer(AsyncWebsocketConsumer):
                 if self.role not in ["black", "white"]:
                     await self.send(text_data=json.dumps({"error": _("観戦者は降参できません")}))
                     return
-                opponent = "white" if self.role == "black" else "black"
-                game_state["game_over"] = True
-                game_state["winner"] = opponent
-                game_state["reason"] = "surrender"
+                async with self.redis.lock(self.lock_key, timeout=LOCK_TTL, blocking_timeout=BLOCK_TTL):
 
-                await self.channel_layer.group_send(
-                    self.group_name,
-                    {
-                        "type": "game_over_message",
-                        "winner": opponent,
-                        "reason": "surrender",
-                        "history": game_state["history"]
-                    }
-                )
+                    # 最新の状態を再取得
+                    raw_data = await self.redis.get(f"game_rooms:{self.group_name}")
+                    if not raw_data:
+                        return
+                    game_state = json.loads(raw_data)
+                    # 既にゲーム終了していないかチェック
+                    if game_state.get("game_over", False):
+                        logger.info(f"[SURRENDER] Game already over in {self.group_name}")
+                        return
 
-                # ★★★ Redis保存
-                await self.redis.set(f"game_rooms:{self.group_name}", json.dumps(game_state))
-                return
+                    opponent = "white" if self.role == "black" else "black"
+                    game_state["game_over"] = True
+                    game_state["winner"] = opponent
+                    game_state["reason"] = "surrender"
+                    game_state["last_active"] = time.time()
+
+                    # ★★★ Redis保存（排他制御内）
+                    await self.redis.set(f"game_rooms:{self.group_name}", json.dumps(game_state))
+
+                    # ★★★ メッセージ送信（排他制御外）
+                    await self.channel_layer.group_send(
+                        self.group_name,
+                        {
+                            "type": "game_over_message",
+                            "winner": opponent,
+                            "reason": "surrender",
+                            "history": game_state["history"]
+                        }
+                    )
+                    return
 
             # パス
             if data.get("action") == "pass":
@@ -303,7 +314,7 @@ class OthelloConsumer(AsyncWebsocketConsumer):
                     return
                 game_state["pass_count"] += 1
                 if game_state["pass_count"] >= 2:
-                    await self.end_natural_game()  # 中でRedis更新する想定
+                    await self.end_natural_game()
                     return
                 else:
                     game_state["turn"] = "white" if game_state["turn"] == "black" else "black"

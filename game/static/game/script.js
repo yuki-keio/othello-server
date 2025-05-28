@@ -9,6 +9,8 @@ const prevMoveBtn = document.getElementById('prev-move-btn');
 const nextMoveBtn = document.getElementById('next-move-btn');
 const underAD = document.getElementById("under-ad");
 const premiumPrompt = document.getElementById("premiumPrompt");
+window.signupPrompt = document.getElementById("signupPrompt");
+const acceptBotCheckbox = document.getElementById('accept-bot-checkbox');
 
 let aiModulePromise = null;
 let aiModule = null;
@@ -683,7 +685,6 @@ function loadBoardFromURL() {
         updateEvaluationDisplay();
     }
     if (gameMode === "online") {
-        console.log(`timelimit: ${timeLimit}`);
         online = true;
         document.getElementById("playerJoinSoundBox").style.display = "block";
     } else {
@@ -720,13 +721,11 @@ function loadBoardFromURL() {
     document.getElementById('timeLimitSelect').value = timeLimit;
     document.getElementById('aiLevelSelect').value = aiLevel;
     document.getElementById('showValidMovesCheckbox').checked = showValidMoves ? true : false;
-
+    acceptBotCheckbox && (acceptBotCheckbox.checked = window.acceptBot ? true : false);
     updateStatus();
-
     if (serializedMoves) {
         if (gameMode !== "online") {
             deserializeMoveHistory(serializedMoves);
-
             replayMovesUpToIndex(moveHistory.length - 1);
             if (won) {
                 switch (urlParams.get('w')) {
@@ -742,9 +741,7 @@ function loadBoardFromURL() {
         }
         return true;
     } else {
-
         return false;
-
     }
 }
 function onlineUI() {
@@ -1159,7 +1156,17 @@ window.endGame = function (online_data, winner = null, y = -1) {
             } else if (isIOS() && !window.navigator.standalone && gameFinishedCount === 3) {
                 iOSinstallGuide();
             } else if (gameFinishedCount % 4 === 0) {
-                premiumPrompt && (premiumPrompt.style.display = "block");
+                if (authenticated) {
+                    premiumPrompt && (premiumPrompt.style.display = "block");
+                    console.log("premiumPrompt shown");
+                } else {
+                    const currentAiLevel = document.getElementById('aiLevelSelect').value;
+                    if (gameMode === "ai" && ifVictory && currentAiLevel === "9" && Math.max(...Object.keys(JSON.parse(localStorage.getItem('unlockedAiLevels') || '{"0":true,"1":true,"2":true,"6":true}')).map(Number)) === 11 && window.unlockNextAiLevel) {
+                        window.congratsNextAiLevel(currentAiLevel);
+                    } else {
+                        signupPrompt && (signupPrompt.style.display = "block");
+                    }
+                }
             } else {
                 if (gameMode === "ai" && ifVictory) {
                     if (window.unlockNextAiLevel) {
@@ -1615,7 +1622,7 @@ function _DOMContenLoaded() {
                     buyPremium(event);
                 }
                 );
-                document.getElementById('offer-button').addEventListener('click', (event) => {
+                document.getElementById('offer-button')?.addEventListener('click', (event) => {
                     gtag('event', 'offer_button_click', {
                         'event_category': 'engagement',
                         'event_label': 'Offer Button Clicked',
@@ -1722,21 +1729,9 @@ copyUrlBtn.addEventListener('click', copyURLToClipboard);
 document.getElementById('r-share-btn').addEventListener('click', () => { copyURLToClipboard(false, true) });
 document.getElementById('restart-btn').addEventListener('click', () => {
     if ((sessionStorage.getItem("matchmaking") === "true") || (sessionStorage.getItem("bot_match") === "true")) {
-        updateStatus();
-        document.getElementById('restart-btn').classList.remove('shine-button');
-        board.innerHTML = '';
-        gameBoard = Array.from({ length: 8 }, () => Array(8).fill(''));
-        stopTimer();
-        refreshBoard();
-        add4x4Markers();
-        setInitialStones();
-        currentPlayer = 'black';
-        gameEnded = false;
-        share_winner = "";
-        ifVictory = false;
-        highlightValidMoves();
-        webMatchBtn?.click();
-    } else { restart() }
+        sessionStorage.setItem("matchAgain", "true");
+    }
+    restart();
 });
 
 prevMoveBtn.addEventListener('pointerdown', function (event) {
@@ -1816,8 +1811,8 @@ document.getElementById('showValidMovesCheckbox').addEventListener('change', () 
     updateStatus(); // 設定変更を反映
     updateURL(); // URL を更新
 });
-document.getElementById('accept-bot-checkbox')?.addEventListener('change', () => {
-    acceptBot = document.getElementById('accept-bot-checkbox').checked;
+acceptBotCheckbox?.addEventListener('change', () => {
+    acceptBot = acceptBotCheckbox.checked;
     localStorage.setItem('acceptBot', acceptBot);
 });
 
@@ -1841,6 +1836,16 @@ document.getElementById("close-offer")?.addEventListener("click", () => {
     premiumPrompt && (premiumPrompt.style.display = "none");
     if (gameMode === "ai" && ifVictory) {
         const currentAiLevel = document.getElementById('aiLevelSelect').value;
+        if (window.unlockNextAiLevel) {
+            window.congratsNextAiLevel(currentAiLevel);
+        }
+    }
+});
+document.getElementById("close-signup")?.addEventListener("click", () => {
+    signupPrompt && (signupPrompt.style.display = "none");
+    if (gameMode === "ai" && ifVictory) {
+        const currentAiLevel = document.getElementById('aiLevelSelect').value;
+        if (currentAiLevel === "9" && Math.max(...Object.keys(JSON.parse(localStorage.getItem('unlockedAiLevels') || '{"0":true,"1":true,"2":true,"6":true}')).map(Number)) === 11) return;
         if (window.unlockNextAiLevel) {
             window.congratsNextAiLevel(currentAiLevel);
         }
@@ -1976,25 +1981,9 @@ document.getElementById('restart-match').addEventListener('click', () => {
         'gameEndSoundEnabled': gameEndSoundEnabled,
     });
     if ((sessionStorage.getItem("matchmaking") === "true") || (sessionStorage.getItem("bot_match") === "true")) {
-        rPopup.classList.remove('collapsed');
-        rPopup.style.display = 'none';
-        rOverlay.style.display = 'none';
-        rBoverlay.style.display = 'none';
-        document.getElementById('restart-btn').classList.remove('shine-button');
-        updateStatus();
-        board.innerHTML = '';
-        gameBoard = Array.from({ length: 8 }, () => Array(8).fill(''));
-
-        refreshBoard();
-        add4x4Markers();
-        setInitialStones();
-        currentPlayer = 'black';
-        gameEnded = false;
-        share_winner = "";
-        ifVictory = false;
-        highlightValidMoves();
-        webMatchBtn?.click();
-    } else { restart() }
+        sessionStorage.setItem("matchAgain", "true");
+    }
+    restart();
 });
 evaluator.onmessage = function (score) {
     if (score.data[1] === 0) {

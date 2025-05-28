@@ -46,7 +46,7 @@ class MatchConsumer(AsyncWebsocketConsumer):
 
                 if lrem_count > 0:
                     logger.info(f"Player {self.player_id} (meta: {player_meta_json_to_remove}) removed from queue. Count: {lrem_count}")
-                
+
                 if srem_result > 0:
                     logger.info(f"Player {self.player_id} removed from active players set (via Lua).")
                 else:
@@ -330,9 +330,48 @@ class MatchConsumer(AsyncWebsocketConsumer):
         logger.info(f"Player {self.player_id} matched with bot (bot_player) as {color} in room {room_id}.")
     async def bot_match_timeout(self):
         await asyncio.sleep(29 + random.randint(0, 6))
+        # プレイヤーがまだアクティブセットにいるかどうかを確認
+        is_still_waiting = await redis_instance.sismember(ACTIVE_PLAYERS_SET_KEY, self.player_id)
+        
+        if not is_still_waiting:
+            logger.info(f"Player {self.player_id} is no longer waiting (already matched). Bot match cancelled.")
+            return
+        
         if await redis_instance.llen(QUEUE_KEY) < 2:
-            logger.info(f"Player {self.player_id} is matched with a bot due to timeout.")
-            await self.match_with_bot()
+            # プレイヤーをキューとアクティブセットから削除してからボットマッチ
+            player_meta_to_remove = {
+                "channel": self.channel_name,
+                "player_id": self.player_id,
+            }
+            player_meta_json_to_remove = json.dumps(player_meta_to_remove)
+            
+            lua_script_bot_match = """
+            local queue_key = KEYS[1]
+            local active_players_set_key = KEYS[2]
+            local player_meta_json = ARGV[1]
+            local player_id = ARGV[2]
+
+            local lrem_count = redis.call('LREM', queue_key, 0, player_meta_json)
+            local srem_count = redis.call('SREM', active_players_set_key, player_id)
+
+            return {lrem_count, srem_count}
+            """
+            
+            try:
+                lrem_count, srem_count = await redis_instance.eval(
+                    lua_script_bot_match,
+                    2,
+                    QUEUE_KEY, ACTIVE_PLAYERS_SET_KEY,
+                    player_meta_json_to_remove, self.player_id
+                )
+                
+                if lrem_count > 0 and srem_count > 0:
+                    logger.info(f"Player {self.player_id} is matched with a bot due to timeout.")
+                    await self.match_with_bot()
+                else:
+                    logger.info(f"Player {self.player_id} was already matched or removed before bot timeout.")
+            except Exception as e:
+                logger.error(f"Error during bot match for player {self.player_id}: {e}")
 
     async def matchDone(self, event):
         logger.info(f"Sending 'matched' event to player {self.player_id} (channel: {self.channel_name}). Event: {event}")

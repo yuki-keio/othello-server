@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-25 14:57+0900\n"
+"POT-Creation-Date: 2025-05-28 10:38+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,27 +25,27 @@ msgstr ""
 "Your account has been locked for 10 minutes due to 7 consecutive incorrect "
 "login attempts. Please try again later."
 
-#: game/consumers.py:31
+#: game/consumers.py:55
 msgid "プレイヤーIDが提供されていません"
 msgstr "Player ID has not been provided."
 
-#: game/consumers.py:36
+#: game/consumers.py:60
 msgid "プレイヤー名が提供されていません"
 msgstr "Player name has not been provided."
 
-#: game/consumers.py:252
+#: game/consumers.py:249
 msgid "対戦相手がまだ接続していません"
 msgstr "The opponent has not connected yet."
 
-#: game/consumers.py:275
+#: game/consumers.py:272
 msgid "観戦者は降参できません"
 msgstr "Spectators cannot forfeit."
 
-#: game/consumers.py:301
+#: game/consumers.py:312
 msgid "有効な手が存在するため、パスはできません"
 msgstr "A valid move exists, so you cannot pass."
 
-#: game/consumers.py:338
+#: game/consumers.py:349
 msgid "このマスには石を置けません："
 msgstr "You cannot place a stone here: "
 
@@ -111,10 +111,10 @@ msgstr " AI has been unlocked!"
 
 #: game/templates/game/index.html:75
 msgid ""
-"🎉 「伝説」の解放条件①を満たしました！アカウントを作成して伝説にアクセス↗"
+"🎉 「伝説」の解放条件①を満たしました！アカウントを作成して伝説にアクセス"
 msgstr ""
 "🎉 You have met the conditions to unlock the Legendary AI! Create an account "
-"to access it↗"
+"to access it."
 
 #: game/templates/game/index.html:76
 msgid "推定待ち時間："
@@ -419,7 +419,7 @@ msgstr "Number of Stones on the Board"
 msgid "盤面の情勢評価（数字が大きいほど黒が有利）"
 msgstr "Board Evaluation (Higher is Better for Black)"
 
-#: game/templates/game/index.html:424 game/templates/game/index.html:660
+#: game/templates/game/index.html:424 game/templates/game/index.html:675
 msgid "オセロ盤の盤面を共有するURLをコピー"
 msgstr "Copy URL to Share Reversi Board Layout"
 
@@ -807,53 +807,78 @@ msgstr ""
 "How to install Reversi Web on iOS: Press the share button, then select Add "
 "to Home Screen"
 
-#: game/templates/game/index.html:637 game/templates/game/index.html:650
-#: game/templates/game/index.html:664
+#: game/templates/game/index.html:637 game/templates/game/index.html:652
+#: game/templates/game/index.html:663 game/templates/game/index.html:679
 msgid "❌️ 閉じる"
 msgstr "❌️ Close"
 
-#: game/templates/game/index.html:641
+#: game/templates/game/index.html:642
 msgid "🎫 特別オファー：95円で最高のゲーム体験"
 msgstr "🎫 Special Offer"
 
-#: game/templates/game/index.html:642
+#: game/templates/game/index.html:643
 #, python-format
 msgid "今なら90%%OFF！月額95円でプレミアム版を購入！"
 msgstr "Now 90%% OFF! Get the Premium version for just 95 yen/month!"
 
-#: game/templates/game/index.html:644
+#: game/templates/game/index.html:645
 msgid "✅️ 広告が完全に非表示"
 msgstr "✅️ Ads are completely removed"
 
-#: game/templates/game/index.html:645
+#: game/templates/game/index.html:646
 msgid "✅️ ユーザー名に英数字以外（日本語や絵文字など）を使用"
 msgstr "✅️ Use non-alphanumeric characters in your username"
 
-#: game/templates/game/index.html:646
+#: game/templates/game/index.html:647
+msgid "✅️ ログインすれば別端末や別ブラウザでも購入内容を復元できます"
+msgstr ""
+"✅️ Restore your purchase on different devices or browsers by logging in"
+
+#: game/templates/game/index.html:648
 msgid "✅️ 個人開発で運営している本サイトを応援"
 msgstr "✅️ Support this site, which is operated by an individual developer."
 
-#: game/templates/game/index.html:648
+#: game/templates/game/index.html:650
 msgid "👑 アップグレード"
 msgstr "👑 Upgrade"
 
-#: game/templates/game/index.html:649
+#: game/templates/game/index.html:651
 msgid ""
 "⚠️ プレミアム機能の提供開始に伴う特別なオファーです。今ご購入いただくとお得な"
 "料金で使い続けられます"
 msgstr ""
-"⚠️ This is a special offer for the launch of premium features. "
-"Buy now to subscribe at a discounted rate as long as you keep your subscription."
+"⚠️ This is a special offer for the launch of premium features. Buy now to "
+"subscribe at a discounted rate as long as you keep your subscription."
+
+#: game/templates/game/index.html:656
+msgid "アカウント登録で新機能解放"
+msgstr "Unlock new features"
 
 #: game/templates/game/index.html:658
+msgid "わずか10秒で簡単作成！"
+msgstr "Create in just 10 seconds!"
+
+#: game/templates/game/index.html:659 game/templates/game/signup.html:25
+msgid "高度な機能が解放されます"
+msgstr "Advanced features will be unlocked!"
+
+#: game/templates/game/index.html:660
+msgid "一部データの引き継ぎも可能に"
+msgstr "Some data can be carried over."
+
+#: game/templates/game/index.html:662
+msgid "登録する"
+msgstr "Sign Up"
+
+#: game/templates/game/index.html:673
 msgid "オセロの対局結果"
 msgstr "Reversi Match Result"
 
-#: game/templates/game/index.html:661
+#: game/templates/game/index.html:676
 msgid "𝕏 に投稿"
 msgstr "Post to 𝕏"
 
-#: game/templates/game/index.html:662
+#: game/templates/game/index.html:677
 msgid "もう一度プレイ！"
 msgstr "Play Again!"
 
@@ -925,10 +950,6 @@ msgstr "Create an Account"
 #: game/templates/game/signup.html:24
 msgid "1クリックで簡単作成！"
 msgstr "Easy to create with one click!"
-
-#: game/templates/game/signup.html:25
-msgid "高度な機能が解放されます"
-msgstr "Advanced features will be unlocked!"
 
 #: game/templates/game/signup.html:26
 msgid "一部データの引き継ぎが可能に"
@@ -1098,7 +1119,7 @@ msgstr "Please correct the error below."
 msgid "まだアカウントを作成していない場合はこちら"
 msgstr "If you don't have an account, register here"
 
-#: game/views.py:118
+#: game/views.py:92
 msgid "ご契約済みのサブスクリプションが適用されました"
 msgstr "Your active subscription has been applied."
 

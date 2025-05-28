@@ -56,10 +56,10 @@ function aiMakeMove() {
     const initialBoard = gameBoard.map(row => [...row]);
     const bitboard = boardToBitboard(initialBoard);
     aiworker.postMessage([
-            bitboard,
-            minimax_depth,
-            aiLevel
-        ]);
+        bitboard,
+        minimax_depth,
+        aiLevel
+    ]);
 }
 
 function endMove(bestMove, timeLimit, gameEnded, fromAI) {
@@ -194,7 +194,7 @@ export function initAIMode() {
             if (Number(currentLevel) === 9) {
                 if (largestUnlockedLevel === 11) {
                     alert(lang.signupToUnlockLegend);
-                    document.getElementById('menu-toggle').checked = true;
+                    signupPrompt && (signupPrompt.style.display = "block");
                 }
             } else {
                 alert(lang.congrats_aiLevel_unlocked_b + langNextAIName + lang.congrats_aiLevel_unlocked_a);

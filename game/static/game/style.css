@@ -704,7 +704,7 @@ width: 120px
   }
 }
 
-#premiumPrompt {
+#premiumPrompt, #signupPrompt {
   background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
   text-align: center;
   border-radius: 20px;
@@ -749,8 +749,8 @@ width: 120px
   50% { transform: translateX(100%); }
 }
 
-#premiumPrompt h5 {
-  font-size: 24px;
+#premiumPrompt h5, #signupPrompt h5 {
+  font-size: 23px;
   font-weight: 700;
   text-align: center;
   margin-bottom: 20px;
@@ -770,13 +770,13 @@ width: 120px
   border-left: 4px solid #007508;
 }
 
-#premiumPrompt ul {
+#premiumPrompt ul, #signupPrompt ul {
   list-style: none;
   margin-bottom: 20px;
   padding: 0;
 }
 
-#premiumPrompt ul li {
+#premiumPrompt ul li, #signupPrompt ul li {
   background: linear-gradient(135deg, #f7fcf7 0%, #ffffff 100%);
   margin: 7px;
   padding: 15px 20px;
@@ -789,13 +789,13 @@ width: 120px
   box-shadow: 0 2px 4px rgba(74, 159, 107, 0.1);
 }
 
-#premiumPrompt ul li:hover {
+#premiumPrompt ul li:hover , #signupPrompt ul li:hover {
   transform: translateX(5px);
   box-shadow: 0 4px 8px rgba(74, 159, 107, 0.2);
   border-color: #18d100;
 }
 
-#offer-button {
+#offer-button, #signup-button {
   width: 80%;
   background: linear-gradient(135deg, #18d100, #007508 100%);
   background-size: 200% 200%;
@@ -816,7 +816,7 @@ width: 120px
   animation: pulse 2s infinite;
 }
 
-#offer-button:hover {
+#offer-button:hover, #signup-button:hover {
   background-position: 100% 0;
   transform: translateY(-2px);
   box-shadow: 
@@ -824,14 +824,14 @@ width: 120px
       0 4px 8px rgba(74, 159, 107, 0.3);
 }
 
-#offer-button:active {
+#offer-button:active, #signup-button:active {
   transform: translateY(0);
   box-shadow: 
       0 4px 8px rgba(74, 159, 107, 0.3),
       0 2px 4px rgba(74, 159, 107, 0.2);
 }
 
-#offer-button::before {
+#offer-button::before, #signup-button::before {
   content: '';
   position: absolute;
   top: 50%;
@@ -844,11 +844,17 @@ width: 120px
   transition: width 0.6s, height 0.6s;
 }
 
-#offer-button:active::before {
+#offer-button:active::before, #signup-button:active::before {
   width: 300px;
   height: 300px;
 }
-#close-offer {
+#signup-button{
+  text-decoration: none;
+  animation:none;
+  width:70%;
+  display: inline-block;
+}
+#close-offer, #close-signup {
   color: #444;
   border: none;
   padding: 8px;

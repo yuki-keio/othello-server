@@ -306,6 +306,11 @@ function makeSocket(role = "default") {
             console.log(`あなたの役割: ${role_online}, データ${data}, (ID: ${playerId}), 再接続${data.reconnect}, ロール${role_online}`);
             if (data.n_players === 1) {
                 overlay.style.display = 'flex';
+                if (sessionStorage.getItem("matchAgain") === "true") {
+                    document.getElementById("online-overlay").style.display = "flex";
+                    webMatchBtn.click();
+                    sessionStorage.removeItem("matchAgain");
+                }
             }
             if (data.reconnect === true) {
                 board.innerHTML = '';
