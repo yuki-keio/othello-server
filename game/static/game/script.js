@@ -1120,6 +1120,8 @@ window.endGame = function (online_data, winner = null, y = -1) {
         gtag('event', 'game_result', {
             'result': ifVictory,
             'aiLevel': aiLevel,
+            'gameMode': gameMode,
+            "timeLimit": timeLimit,
             "evaluation": (evaluationScore.style.display === "none" ? "off_" : "on_") + gameMode
         });
     }
@@ -1622,7 +1624,7 @@ function _DOMContenLoaded() {
                         premiumPrompt.style.display = "block";
                     } else if (signupPrompt) {
                         signupPrompt.style.display = "block";
-                    } else{
+                    } else {
                         buyPremium(event);
                     }
                 });
@@ -1790,11 +1792,23 @@ window.addEventListener("beforeinstallprompt", (event) => {
 });
 window.addEventListener("appinstalled", () => {
     alert(lang.thanks_install);
-    // ユーザーのブラウザ情報を取得
-    const browser = navigator.userAgent.includes('Chrome') ? 'Chrome' :
-        navigator.userAgent.includes('Safari') ? 'Safari' :
-            navigator.userAgent.includes('Firefox') ? 'Firefox' :
-                'Other';
+    const ua = window.navigator.userAgent;
+    let browser = '';
+    if (/Edg\/\d+/.test(ua)) {
+        browser = 'Edge';
+    } else if (/OPR\/\d+/.test(ua) || /Opera/.test(ua)) {
+        browser = 'Opera';
+    } else if (/Chrome\/\d+/.test(ua)) {
+        browser = 'Chrome';
+    } else if (/Safari\/\d+/.test(ua)) {
+        browser = 'Safari';
+    } else if (/Firefox\/\d+/.test(ua)) {
+        browser = 'Firefox';
+    } else if (/MSIE \d+/.test(ua) || /Trident\/\d+/.test(ua)) {
+        browser = 'Internet Explorer';
+    } else {
+        browser = 'Unknown';
+    }
     // Google Analytics にイベント送信
     gtag('event', 'pwa_installed', {
         'event_category': 'engagement',

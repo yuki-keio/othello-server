@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-29 00:54+0900\n"
+"POT-Creation-Date: 2025-05-30 10:01+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -419,7 +419,7 @@ msgstr "Number of Stones on the Board"
 msgid "盤面の情勢評価（数字が大きいほど黒が有利）"
 msgstr "Board Evaluation (Higher is Better for Black)"
 
-#: game/templates/game/index.html:424 game/templates/game/index.html:675
+#: game/templates/game/index.html:424 game/templates/game/index.html:674
 msgid "オセロ盤の盤面を共有するURLをコピー"
 msgstr "Copy URL to Share Reversi Board Layout"
 
@@ -807,8 +807,8 @@ msgstr ""
 "How to install Reversi Web on iOS: Press the share button, then select Add "
 "to Home Screen"
 
-#: game/templates/game/index.html:637 game/templates/game/index.html:652
-#: game/templates/game/index.html:663 game/templates/game/index.html:679
+#: game/templates/game/index.html:637 game/templates/game/index.html:651
+#: game/templates/game/index.html:662 game/templates/game/index.html:678
 msgid "❌️ 閉じる"
 msgstr "❌️ Close"
 
@@ -826,59 +826,50 @@ msgid "✅️ 広告が完全に非表示"
 msgstr "✅️ Ads are completely removed"
 
 #: game/templates/game/index.html:646
-msgid "✅️ ユーザー名に英数字以外（日本語や絵文字など）を使用"
-msgstr "✅️ Use non-alphanumeric characters in your username"
+msgid "❤️ ユーザー名に英数字以外（日本語や絵文字など）を使用"
+msgstr "❤️ Use non-alphanumeric characters in your username"
 
 #: game/templates/game/index.html:647
-msgid "✅️ ログインすれば別端末や別ブラウザでも購入内容を復元できます"
-msgstr ""
-"✅️ Restore your purchase on different devices or browsers by logging in"
+msgid "🔄 別の端末や別ブラウザでもログインだけで購入を復元"
+msgstr "🔄 Restore purchases by logging in on another device or browser."
 
 #: game/templates/game/index.html:648
-msgid "✅️ 個人開発で運営している本サイトを応援"
-msgstr "✅️ Support this site, which is operated by an individual developer."
+msgid "🤝 個人開発で運営している本ゲームを応援"
+msgstr "🤝 Support this game, which is operated by an individual developer."
 
 #: game/templates/game/index.html:650
 msgid "👑 アップグレード"
 msgstr "👑 Upgrade"
 
-#: game/templates/game/index.html:651
-msgid ""
-"⚠️ プレミアム機能の提供開始に伴う特別なオファーです。今ご購入いただくとお得な"
-"料金で使い続けられます"
-msgstr ""
-"⚠️ This is a special offer for the launch of premium features. Buy now to "
-"subscribe at a discounted rate as long as you keep your subscription."
-
-#: game/templates/game/index.html:656
+#: game/templates/game/index.html:655
 msgid "無料アカウント登録で新機能"
 msgstr "Unlock new features"
 
-#: game/templates/game/index.html:658
+#: game/templates/game/index.html:657
 msgid "わずか10秒で簡単作成！"
 msgstr "Create in just 10 seconds!"
 
-#: game/templates/game/index.html:659
+#: game/templates/game/index.html:658
 msgid "高度なAIが解放されます"
 msgstr "Powerful AI will be unlocked."
 
-#: game/templates/game/index.html:660
+#: game/templates/game/index.html:659
 msgid "一部データの引き継ぎも可能に"
 msgstr "Some data can be carried over."
 
-#: game/templates/game/index.html:662
+#: game/templates/game/index.html:661
 msgid "無料で登録"
 msgstr "Sign Up"
 
-#: game/templates/game/index.html:673
+#: game/templates/game/index.html:672
 msgid "オセロの対局結果"
 msgstr "Reversi Match Result"
 
-#: game/templates/game/index.html:676
+#: game/templates/game/index.html:675
 msgid "𝕏 に投稿"
 msgstr "Post to 𝕏"
 
-#: game/templates/game/index.html:677
+#: game/templates/game/index.html:676
 msgid "もう一度プレイ！"
 msgstr "Play Again!"
 
@@ -1108,8 +1099,8 @@ msgid "エラーを修正してください"
 msgstr "Please correct the error below."
 
 #: game/templates/registration/login.html:38
-msgid "まだアカウントを作成していない場合はこちら"
-msgstr "If you don't have an account, register here"
+msgid "アカウント作成はこちら"
+msgstr "Create an account here"
 
 #: game/views.py:92
 msgid "ご契約済みのサブスクリプションが適用されました"

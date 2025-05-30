@@ -613,6 +613,10 @@ width: 120px
   background: linear-gradient(135deg, #15b200, #007508 100%);
   color: white;
 }
+.menu #buy-premium-btn:hover{
+  background: linear-gradient(135deg, #14ab00, rgb(0, 88, 6) 100%);
+  color: white;
+}
 .menu a:hover{
   background:#eee
 }
@@ -768,16 +772,16 @@ width: 120px
   color: #4a5568;
   text-align: center;
   margin-bottom: 15px;
-  background: linear-gradient(135deg, #e8f5e8 0%, #f0f9f0 100%);
+  background-image: linear-gradient(90deg, rgba(202, 207, 234, .5), rgba(220, 209, 235, .5));
   padding: 15px;
   border-radius: 12px;
-  border-left: 4px solid #007508;
 }
 
 #premiumPrompt ul, #signupPrompt ul {
   list-style: none;
   margin-bottom: 20px;
   padding: 0;
+  text-align: left;
 }
 
 #premiumPrompt ul li, #signupPrompt ul li {
@@ -800,8 +804,8 @@ width: 120px
 }
 
 #offer-button, #signup-button {
-  width: 80%;
-  background: linear-gradient(135deg, #18d100, #007508 100%);
+  width: 70%;
+  background-image: linear-gradient(90deg, rgb(103, 126, 250), rgb(142, 84, 219));
   background-size: 200% 200%;
   color: white;
   border: none;
@@ -855,8 +859,10 @@ width: 120px
 #signup-button{
   text-decoration: none;
   animation:none;
-  width:70%;
   display: inline-block;
+}
+#signupPrompt{
+    margin: 140px 0;
 }
 #close-offer, #close-signup {
   color: #444;
@@ -864,15 +870,4 @@ width: 120px
   padding: 8px;
   background-color: transparent;
   cursor: pointer;
-}
-#offer-warning {
-  font-size: 13px;
-  color: #d69e2e;
-  text-align: center;
-  background: linear-gradient(135deg, #fff5e6 0%, #fef5e7 100%);
-  padding: 12px 16px;
-  border-radius: 8px;
-  border: 1px solid #f6d55c;
-  border-left: 4px solid #d69e2e;
-  line-height: 1.5;
 }
