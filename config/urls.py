@@ -9,7 +9,7 @@ from django.contrib.sitemaps.views import sitemap
 from game.sitemaps import StaticViewSitemap
 from django.views.generic.base import RedirectView
 from django.conf.urls.i18n import i18n_patterns
-from game.views import service_worker, signup,auth_status,premium_status,CreateCheckoutSessionView, premium_intent,payment_success,payment_cancel,stripe_webhook,CreateCustomerPortalSessionView
+from game.views import service_worker, signup,premium_status,CreateCheckoutSessionView, premium_intent,payment_success,payment_cancel,stripe_webhook,CreateCustomerPortalSessionView
 import os
 from game.views import CustomTwoFactorLoginView
 from game.views import UserLoginView
@@ -22,7 +22,6 @@ urlpatterns = [
     path('admin/account/login/', axes_dispatch(CustomTwoFactorLoginView.as_view()), name='login'),
     path('admin/account/', include(tf_urls, namespace='two_factor')),
     path('admin/', admin.site.urls),
-    path('api/auth-status/', auth_status, name='auth_status'),
     path('api/premium-status/', premium_status, name='premium_status'),
     path('stripe/webhook/', stripe_webhook, name='stripe_webhook'),
     path("sw.js", service_worker, name="service_worker"),

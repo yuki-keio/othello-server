@@ -117,7 +117,6 @@ const scoreDiff = document.getElementById('score-difference');
 const rMessage = document.getElementById('r-message');
 const rOverlay = document.getElementById('r-overlay');
 
-let authenticated = false;
 let loggedInBefore = localStorage.getItem('loggedInBefore') === "true";
 
 // 方向ベクトルを再利用するための定数定義
@@ -1158,7 +1157,7 @@ window.endGame = function (online_data, winner = null, y = -1) {
             } else if (isIOS() && !window.navigator.standalone && gameFinishedCount === 3) {
                 iOSinstallGuide();
             } else if (gameFinishedCount % 4 === 0) {
-                if (authenticated) {
+                if (isAuthenticated) {
                     premiumPrompt && (premiumPrompt.style.display = "block");
                 } else {
                     const currentAiLevel = document.getElementById('aiLevelSelect').value;
@@ -1522,36 +1521,29 @@ function _DOMContenLoaded() {
             document.getElementById('level_ai').style.display = 'none';
         }
     }
-    fetch('/api/auth-status/')
-        .then(response => response.json())
-        .then(data => {
-            const authenticatedElements = document.querySelectorAll('.authenticated');
-            const unauthenticatedElements = document.querySelectorAll('.guest');
-            console.log(`[Auth] ${data}, ${data.is_authenticated}`);
-            if (data.is_authenticated) {
-                // ログイン中の要素を表示
-                authenticatedElements.forEach(el => el.style.display = 'block');
-                authenticated = true;
-                localStorage.setItem('loggedInBefore', true);
-                loggedInBefore = true;
-            } else {
-                // 未ログイン時の要素を表示
-                unauthenticatedElements.forEach(el => el.style.display = 'block');
-                authenticated = false;
-                if (gameMode === 'ai') {
-                    if (aiLevel > 9) {
-                        const backupURL = new URL(window.location);
-                        const url = new URL(window.location);
-                        backupURL.searchParams.set('aiLevel', 9);
-                        url.searchParams.set('next', url.toString());
-                        url.pathname = (langCode === "ja" ? "" : "/" + langCode) + '/signup/';
-                        history.pushState(null, '', backupURL);
-                        location.href = url.toString();
-                        return;
-                    }
-                }
+    const authenticatedElements = document.querySelectorAll('.authenticated');
+    const unauthenticatedElements = document.querySelectorAll('.guest');
+    if (isAuthenticated) {
+        // ログイン中の要素を表示
+        authenticatedElements.forEach(el => el.style.display = 'block');
+        localStorage.setItem('loggedInBefore', true);
+        loggedInBefore = true;
+    } else {
+        // 未ログイン時の要素を表示
+        unauthenticatedElements.forEach(el => el.style.display = 'block');
+        if (gameMode === 'ai') {
+            if (aiLevel > 9) {
+                const backupURL = new URL(window.location);
+                const url = new URL(window.location);
+                backupURL.searchParams.set('aiLevel', 9);
+                url.searchParams.set('next', url.toString());
+                url.pathname = (langCode === "ja" ? "" : "/" + langCode) + '/signup/';
+                history.pushState(null, '', backupURL);
+                location.href = url.toString();
+                return;
             }
-        });
+        }
+    }
     fetch('/api/premium-status/')
         .then(response => response.json())
         .then(data => {
@@ -1685,7 +1677,7 @@ async function playStoneSound() {
 
 function buyPremium(event) {
     event.preventDefault();
-    if (authenticated) {
+    if (isAuthenticated) {
         gtag('event', 'premium_intent', {
             'event_category': 'engagement',
             'event_label': 'Premium Clicked',

@@ -53,8 +53,6 @@ def payment_success(request):
     return render(request, 'game/payment_success.html')
 def payment_cancel(request):
     return render(request, 'game/payment_cancel.html')
-def auth_status(request):
-    return JsonResponse({'is_authenticated': request.user.is_authenticated})
 def premium_status(request):
     if request.user.is_authenticated:
         return JsonResponse({'is_premium': request.user.subscription_type != 'none'})

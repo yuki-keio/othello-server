@@ -96,6 +96,8 @@ export function initAIMode() {
     const maxKey = Math.max(...Object.keys(unlockedLevels).map(Number));
     if (maxKey >= 9 && !document.querySelector('#aiLevelSelect option[value="11"]')) {
         const aiLevelList = document.getElementById('ai-level-list');
+        const aiFragmentOption = document.createDocumentFragment();
+        const aiFragmentDiv = document.createDocumentFragment();
         // 9以上のレベルはhtmlにoptionがないので、追加していく
         for (let i = 11; i <= maxKey + 2; i += 2) {
             const newOption = document.createElement('option');
@@ -117,9 +119,11 @@ export function initAIMode() {
             newDiv.setAttribute('data-level', i);
             newDiv.setAttribute('data-unlock-level', i - 2);
 
-            aiLevelSelect.insertBefore(newOption, aiLevelSelect.lastChild);
-            aiLevelList.insertBefore(newDiv, aiLevelList.lastChild);
+            aiFragmentOption.appendChild(newOption);
+            aiFragmentDiv.appendChild(newDiv);
         }
+        aiLevelSelect.insertBefore(aiFragmentOption, aiLevelSelect.lastChild);
+        aiLevelList.insertBefore(aiFragmentDiv, aiLevelList.lastChild);
         if (Object.keys(unlockedLevels).length === 8) {
             langNextAIName = `🌈 ${lang.legend}`;
         } else {
@@ -139,27 +143,22 @@ export function initAIMode() {
             if (option.getAttribute("data-level")) {
                 langNextAIName = option.textContent;
             }
-            fetch('/api/auth-status/')
-                .then(response => response.json())
-                .then(data => {
-                    switch (langCode) {
-                        case "en":
-                            if (unlockLevel >= 9 && !data.is_authenticated) {
-                                option.innerHTML = `<a href="/en/signup/">Sign up</a> to unlock the next level`;
-                            } else {
-                                option.textContent = `Next Level: Defeat ${level_before.textContent} to unlock`;
-                            }
-                            break;
-                        default:
-                            if (unlockLevel >= 9 && !data.is_authenticated) {
-                                option.innerHTML = `次のレベル : <a href="/signup/">アカウントを登録</a>して解放`;
-                            } else {
-                                option.textContent = `次のレベル : ${level_before.textContent}AIに勝利で解放`;
-                            }
-                            break;
+            switch (langCode) {
+                case "en":
+                    if (unlockLevel >= 9 && !isAuthenticated) {
+                        option.innerHTML = `<a href="/en/signup/">Sign up</a> to unlock the next level`;
+                    } else {
+                        option.textContent = `Next Level: Defeat ${level_before.textContent} to unlock`;
                     }
-                })
-
+                    break;
+                default:
+                    if (unlockLevel >= 9 && !isAuthenticated) {
+                        option.innerHTML = `次のレベル : <a href="/signup/">アカウントを登録</a>して解放`;
+                    } else {
+                        option.textContent = `次のレベル : ${level_before.textContent}AIに勝利で解放`;
+                    }
+                    break;
+            }
             option.disabled = true;
         } else {
             option.style.display = 'none';
