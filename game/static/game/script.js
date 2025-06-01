@@ -927,7 +927,7 @@ function changeTitle() {
         }
         document.getElementById('level_ai').style.display = 'block';
     } else if (gameMode === 'player') {
-        document.getElementById('title').textContent = player_h1;
+        document.getElementById('title').textContent = langCode === "en" ? "Reversi Board" : "オセロ盤";
         document.getElementById('level_ai').style.display = 'none';
     } else if (gameMode === 'online') {
         document.getElementById('title').textContent = "Loading...";

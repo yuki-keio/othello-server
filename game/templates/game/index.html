@@ -306,7 +306,7 @@
             <button class="mode-btn" data-mode="ai">{% trans "AI対戦" %}</button>
             <button class="mode-btn" data-mode="online">{% trans "対人戦" %}</button>
         </div>
-        {% with online_h1=_("オンライン対戦") player_h1=_("オセロ盤") else_h1=_("リバーシWeb") %}
+        {% with online_h1=_("オンライン対戦") else_h1=_("リバーシWeb") %}
         <h1 id="title">
             {% if mode == 'online' %}
                 {{online_h1}}
@@ -315,14 +315,13 @@
             {% elif mode == 'player' and request.LANGUAGE_CODE == 'en' %}
                 Reversi Board
             {% elif mode == 'player' and not request.LANGUAGE_CODE == 'en' %}
-                {{player_h1}}
+                オセロ盤
             {% else %}
                 {{else_h1}}
             {% endif %}
         </h1>
         <script nonce="{{ request.csp_nonce }}">
             const online_h1 = "{{online_h1|escapejs}}";
-            const player_h1 = "{{player_h1|escapejs}}";
             const else_h1 = "{{else_h1|escapejs}}";
         </script>
         {% endwith %}

@@ -297,11 +297,11 @@ msgstr "No Download Needed! Play Against Friends or AI in Your Browser."
 
 #: game/templates/game/index.html:305 game/templates/game/index.html:309
 msgid "オセロ盤"
-msgstr "Board"
+msgstr "Local"
 
 #: game/templates/game/index.html:306
 msgid "AI対戦"
-msgstr "Vs AI"
+msgstr "vs AI"
 
 #: game/templates/game/index.html:307
 msgid "対人戦"
