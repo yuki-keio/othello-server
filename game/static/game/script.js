@@ -706,9 +706,11 @@ function loadBoardFromURL() {
         if (showValidMovesFromURL) {
             showValidMoves = showValidMovesFromURL === 'true';
         };
-        const url = new URL(window.location);
-        url.searchParams.delete("room");
-        history.replaceState(null, "", url);
+        if (urlParams.get('room') !== null) {
+            const url = new URL(window.location);
+            url.searchParams.delete("room");
+            history.replaceState(null, "", url);
+        }
         online = false;
         if (socket) {
             socket.close();
@@ -913,7 +915,6 @@ window.replayMovesUpToIndex = function (index, fromServer = false) {
     });
     if (index >= 0) {
         applyServerMove(moveHistory[index].row, moveHistory[index].col, moveHistory[index].player, 1, fromServer);
-
     }
     updateStatus();
 }
@@ -1115,15 +1116,6 @@ window.endGame = function (online_data, winner = null, y = -1) {
         }
     }
     document.getElementById('score_display').innerHTML = `${result} | <span id="s_current_circle" class="current_circle"></span> ${blackCount} : ${whiteCount} <span id="s_next_circle" class="next_circle"></span>`;
-    if (typeof gtag !== 'undefined') {
-        gtag('event', 'game_result', {
-            'result': ifVictory,
-            'aiLevel': aiLevel,
-            'gameMode': gameMode,
-            "timeLimit": timeLimit,
-            "evaluation": (evaluationScore.style.display === "none" ? "off_" : "on_") + gameMode
-        });
-    }
     url = new URL(window.location);
     url.searchParams.set('won', share_winner);
     if (ifVictory) {
@@ -1175,6 +1167,17 @@ window.endGame = function (online_data, winner = null, y = -1) {
                 }
             }
         }, 100);
+    }
+    if (typeof gtag !== 'undefined') {
+        setTimeout(() => {
+            gtag('event', 'game_result', {
+                'result': ifVictory,
+                'aiLevel': aiLevel,
+                'gameMode': gameMode,
+                "timeLimit": timeLimit,
+                "evaluation": (evaluationScore.style.display === "none" ? "off_" : "on_") + gameMode
+            });
+        }, 500);
     }
 }
 
@@ -1255,8 +1258,10 @@ function showResultPopup(victory, scoreBlack, scoreWhite, f_winner) {
     }
     scoreDiff.textContent = `⚫️ ${scoreBlack} : ${scoreWhite} ⚪️`;
     resultImg.src = imagePath;
-    rPopup.style.display = 'block';
-    rBoverlay.style.display = 'block';
+    setTimeout(() => {
+        rPopup.style.display = 'block';
+        rBoverlay.style.display = 'block';
+    }, 200);
 }
 
 // インストールガイドを表示
@@ -1927,6 +1932,11 @@ document.getElementById('evalAIMode').addEventListener('change', () => {
     updateEvaluationDisplay();
 });
 window.addEventListener('popstate', function (event) {
+    g_url = new URL(window.location);
+    if (g_url.searchParams.has('w')) {
+        g_url.searchParams.delete('w');
+        history.replaceState(null, "", g_url);
+    }
     location.reload();
 });
 // 初期チェック状態を設定

@@ -294,7 +294,7 @@ function makeSocket(role = "default") {
         }
         if (data.action === "place_stone") {
             board.innerHTML = '';
-            refreshBoard()
+            refreshBoard();
             add4x4Markers();
 
             deserializeMoveHistory(data.history);
