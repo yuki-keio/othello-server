@@ -1327,20 +1327,24 @@ function loadGoogleAnalytics() {
     window.gtag = function () { dataLayer.push(arguments); };
     script.onload = function () {
         gtag('js', new Date());
-        gtag('config', 'G-4JKZC3VNE7', { 'cookie_domain': 'auto' });
-        gtag('config', 'AW-716757643');
-        if (!sessionStorage.getItem("conversionSent")) {
-            gtag('event', 'conversion', {
-                'send_to': 'AW-716757643/0eRkCO2glcwaEIu149UC',
-            });
-            sessionStorage.setItem("conversionSent", true);
-        }
+        setTimeout(() => {
+            gtag('config', 'G-4JKZC3VNE7', { 'cookie_domain': 'auto' });
+            gtag('config', 'AW-716757643');
+            setTimeout(() => {
+                if (!sessionStorage.getItem("conversionSent")) {
+                    gtag('event', 'conversion', {
+                        'send_to': 'AW-716757643/0eRkCO2glcwaEIu149UC',
+                    });
+                    sessionStorage.setItem("conversionSent", true);
+                }
+                if ('requestIdleCallback' in window) {
+                    requestIdleCallback(loadLater);
+                } else {
+                    setTimeout(loadLater, 1000);
+                }
+            }, 200);
+        }, 200);
     };
-    if ('requestIdleCallback' in window) {
-        requestIdleCallback(loadLater);
-    } else {
-        setTimeout(loadLater, 1000);
-    }
 }
 function loadLater() {
     // まずMicrosoft Clarityを読み込み
@@ -1613,10 +1617,6 @@ function _DOMContenLoaded() {
                 // プレミアムでないユーザーの要素を表示
                 nonPremiumElements.forEach(el => el.style.display = 'block');
                 document.getElementById('buy-premium-btn').addEventListener('click', (event) => {
-                    gtag('event', 'buy_premium_click', {
-                        'event_category': 'engagement',
-                        'event_label': 'Buy Premium Clicked',
-                    });
                     if (premiumPrompt) {
                         premiumPrompt.style.display = "block";
                     } else if (signupPrompt) {
@@ -1624,13 +1624,19 @@ function _DOMContenLoaded() {
                     } else {
                         buyPremium(event);
                     }
+                    setTimeout(() => {
+                        gtag('event', 'buy_premium_click', {
+                            'event_category': 'engagement',
+                            'event_label': 'Buy Premium Clicked',
+                        });
+                    }, 400);
                 });
                 document.getElementById('offer-button')?.addEventListener('click', (event) => {
+                    buyPremium(event);
                     gtag('event', 'offer_button_click', {
                         'event_category': 'engagement',
                         'event_label': 'Offer Button Clicked',
                     });
-                    buyPremium(event);
                 });
             }
         });
