@@ -289,6 +289,13 @@
     <link rel="icon" type="image/png" sizes="48x48" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/favicon-48x48.png' %}">
     <link rel="shortcut icon" href="{{ request.scheme }}://{{ request.get_host }}{% static 'game/images/favicon/favicon.ico' %}">
     <link rel="manifest" href="{% url 'manifest' %}">
+    <link rel="preconnect" href="https://www.googletagmanager.com">
+    <link rel="preconnect" href="https://www.google-analytics.com">
+    <link rel="preconnect" href="https://googleads.g.doubleclick.net">
+    <link rel="preconnect" href="https://tpc.googlesyndication.com">
+    <link rel="dns-prefetch" href="//c.clarity.ms">
+    <link rel="dns-prefetch" href="//pagead2.googlesyndication.com">
+    <link rel="dns-prefetch" href="//www.gstatic.com">
     {% if request.LANGUAGE_CODE == "ja" %}
     <link rel="canonical" href="{% if mode == 'online' %}https://reversi.yuki-lab.com/online/{% elif mode == 'ai' %}https://reversi.yuki-lab.com/ai/{% elif mode == 'player' %}https://reversi.yuki-lab.com/{% else %}https://reversi.yuki-lab.com/{% endif %}">
     {% else %}
