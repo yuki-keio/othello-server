@@ -155,6 +155,7 @@
     {% endif %}
     <meta name="author" content="リバーシWeb | 無料オセロゲーム">
     {% if request.LANGUAGE_CODE == "en" %}
+    <!--
     <script type="application/ld+json">
     {
     "@context": "https://schema.org",
@@ -206,7 +207,7 @@
       }
     ]
     }
-    </script>
+    </script> -->
     {% if mode == 'player' %}
     <script type="application/ld+json">
         {
@@ -219,7 +220,7 @@
         }
     </script>
     {% endif %}
-    {% else %}<script type="application/ld+json">
+    {% else %}<!--<script type="application/ld+json">
     {
             "@context": "https://schema.org",
             "@type": "SoftwareApplication",
@@ -269,7 +270,7 @@
                 "url": "https://reversi.yuki-lab.com/online/"
               }]
     }
-    </script>
+    </script> -->
      {% if mode == 'player' %}
     <script type="application/ld+json">
         {
