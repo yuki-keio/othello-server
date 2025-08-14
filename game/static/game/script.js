@@ -149,13 +149,12 @@ window.refreshBoard = function () {
 
 // `Event Delegation` を使って、`board` にイベントを一括設定
 board.addEventListener('click', (event) => {
-    if (!aimove) {
-        const cell = event.target.closest('.cell');
-        if (!cell) return;
-        const row = parseInt(cell.dataset.row, 10);
-        const col = parseInt(cell.dataset.col, 10);
-        makeMove(row, col);
-    }
+    if (aimove) return;
+    const cell = event.target.closest('.cell');
+    if (!cell) return;
+    const row = parseInt(cell.dataset.row, 10);
+    const col = parseInt(cell.dataset.col, 10);
+    makeMove(row, col);
 });
 
 function initializeBoard() {
@@ -196,16 +195,14 @@ window.add4x4Markers = function () {
 function setDisc(row, col, color) {
     gameBoard[row][col] = color;
     const cell = board.children[row].children[col];
-    while (cell.firstChild) cell.removeChild(cell.firstChild);
     const disc = document.createElement('div');
+    disc.className = `disc ${color}`;
     if (cell.classList.contains('markerPosition')) {
-        disc.classList.add('disc', 'markerPosition', color);
         const marker = document.createElement('div');
-        marker.classList.add('marker');
-        cell.append(disc, marker);
+        marker.className = 'marker';
+        cell.replaceChildren(disc, marker);
     } else {
-        disc.classList.add('disc', color);
-        cell.append(disc);
+        cell.replaceChildren(disc);
     }
     cell.setAttribute('aria-label', "abcdefgh"[col] + `${row + 1}：${color === 'black' ? lang.black : lang.white}`);
 }

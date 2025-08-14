@@ -36,14 +36,7 @@
         <link rel="stylesheet" href="{% static 'game/style.min.css' %}?v={{ TIMESTAMP }}" media="print" id="dynamic-css">
     {% endif %}
     <link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic&family=BIZ+UDPMincho:wght@400&display=swap" rel="stylesheet" media="print" id="dynamic-fonts" crossorigin="anonymous">
-    <script nonce="{{ request.csp_nonce }}">
-        const PLACE_STONE_SOUND="{% static 'game/sounds/place-stone.mp3' %}";
-        const csrf_token="{{ csrf_token }}";
-        const DEBUG_MODE = {{ DEBUG|yesno:"true,false" }};
-        const aiPath = DEBUG_MODE ? "{% static 'game/ai.js' %}" : "{% static 'game/ai.min.js' %}";
-        const workerPath = DEBUG_MODE ? "{% static 'game/worker.js' %}" : "{% static 'game/worker.min.js' %}";
-        const evaluatorPath = DEBUG_MODE ? "{% static 'game/evaluate.js' %}" : "{% static 'game/evaluate.min.js' %}";
-        const isAuthenticated = {{ request.user.is_authenticated|yesno:"true,false" }};
+    <script nonce="{{ request.csp_nonce }}">const PLACE_STONE_SOUND="{% static 'game/sounds/place-stone.mp3' %}";const csrf_token="{{ csrf_token }}";const DEBUG_MODE = {{ DEBUG|yesno:"true,false" }};const aiPath = DEBUG_MODE ? "{% static 'game/ai.js' %}" : "{% static 'game/ai.min.js' %}";const workerPath = DEBUG_MODE ? "{% static 'game/worker.js' %}" : "{% static 'game/worker.min.js' %}";const evaluatorPath = DEBUG_MODE ? "{% static 'game/evaluate.js' %}" : "{% static 'game/evaluate.min.js' %}";const isAuthenticated = {{ request.user.is_authenticated|yesno:"true,false" }};
     </script>
     {% if DEBUG %}
         <script defer src="{% static 'game/script.js' %}?v={{ TIMESTAMP }}"></script>
@@ -65,51 +58,7 @@
     <!-- 翻訳後の文字列をmain.jsへ受け渡し-->
     {% with online_description=_("世界中のプレイヤーとオンライン対戦！2人で遊べるフレンド対戦モードや、一人でも楽しめる強力なオセロAIも完備しています。スマホ・PC両対応。ブラウザで手軽に遊ぶ！") ai_description=_("強力なオセロAIとWeb上で対戦。初心者から上級者まで一人で楽しめる、スマホ・PC両対応のサイトです。オンライン対戦も楽しめます。遊びやすいスマートなグラフィックが特徴。ブラウザで手軽にプレイ！") player_description=_("オセロのAI対戦・オンライン対戦・友達対戦などが遊べる無料Webサイト。一人で楽しめるオセロAIは最弱から最強まで幅広く完備。2人で一緒に楽しめるフレンド対戦も。世界中のプレイヤーと戦えるオンライン対戦や、スマホ一台で楽しめる「電子オセロ盤」も搭載 ✅️ ブラウザで手軽にプレイ") else_description=_("オセロのAI対戦・オンライン対戦・友達対戦などが遊べる無料Webサイト。一人で楽しめるオセロAIは最弱から最強まで幅広く完備。2人で一緒に楽しめるフレンド対戦も。世界中のプレイヤーと戦えるオンライン対戦や、スマホ一台で楽しめる「電子オセロ盤」も搭載 ✅️ ブラウザで手軽にプレイ") %}
     <meta name="description" content="{% if mode == 'online' %}{{online_description}}{% elif mode == 'ai' %}{{ai_description}}{% elif mode == 'player' %}{{player_description}}{% else %}{{else_description}}{% endif %}">
-    <script nonce="{{ request.csp_nonce }}">
-        const lang = {
-            "online_description":"{{online_description|escapejs}}",
-            "ai_description": "{{ai_description|escapejs}}",
-            "player_description" : "{{player_description|escapejs}}",
-            "else_description" :"{{else_description|escapejs}}",
-            "congrats_aiLevel_unlocked_b":"{% trans '🎉 条件達成により、' %}",
-            "congrats_aiLevel_unlocked_a":"{% trans 'が解放されました！' %}",
-            "signupToUnlockLegend": "{% trans '🎉 「伝説」の解放条件①を満たしました！アカウントを作成して伝説にアクセス'|escapejs %}",
-            "estimatedTime": "{% trans '推定待ち時間：'|escapejs %}",
-            "seconds": "{% trans '秒'|escapejs %}",
-            "legend": "{% trans '伝説'|escapejs %}",
-            "matchmaking": "{% trans '対戦相手を探しています...'|escapejs %}",
-            "black": "{% trans '黒'|escapejs %}",
-            "white": "{% trans '白'|escapejs %}",
-            "opponent":"{% trans '対戦相手'|escapejs %}",
-            "spec": "{% trans '観客'|escapejs %}",
-            "roleDialogB": "{% trans 'あなたは先手（黒）です' %}",
-            "roleDialogW": "{% trans 'あなたは後手（白）です' %}",
-            "notify_b": "{% trans '黒には次に打てる場所がないので、もう一度白の番になります。'|escapejs %}",
-            "notify_w": "{% trans '白には次に打てる場所がないので、もう一度黒の番になります。'|escapejs %}",
-            "not_your_turn": "{% trans 'あなたの手番ではありません。手番：'|escapejs %}",
-            "you": "{% trans 'あなた'|escapejs %}",
-            "timeout_winner": "{% trans '【時間切れ】👑 勝者：'|escapejs %}",
-            "surrender_winner": "{% trans '【投了】👑 勝者：'|escapejs %}",
-            "draw": "{% trans '引き分け！'|escapejs %}",
-            "winner": "{% trans '👑 勝者：'|escapejs %}",
-            "you_pass": "{% trans 'あなたには次に打てる場所がなかったのでもう一度、相手の番になります'|escapejs %}",
-            "opponent_pass": "{% trans '相手には次に打てる場所がなかったのでもう一度、あなたの番になります'|escapejs %}",
-            "nextLevel":"{% trans '次のレベルへ'|escapejs %}",
-            "warn_EnOnly": "{% trans '⚠️ 無料版では英数字のみ入力可能です'|escapejs %}",
-            "warn_charLimit": "{% trans '⚠️ 文字数：1〜10文字'|escapejs %}",
-            "connecting": "{% trans 'ネットワーク接続がありません。'|escapejs %}",
-            "spec_cant_play": "{% trans '観戦中です。あなたは手を打つことができません。'|escapejs %}",
-            "copy_url": "{% trans '🔗 現在の石の配置を共有するURLをコピーしました！'|escapejs %}",
-            "copy_spec": "{% trans '👀 現在のゲームを観戦するためのURLをコピーしました！'|escapejs %}",
-            "copy_invite": "{% trans '🎮 現在のゲームへの招待URLをコピーしました！対戦相手にURLを送って対戦を始めましょう！'|escapejs %}",
-            "copy_failed": "{% trans 'URLのコピーに失敗しました。'|escapejs %}",
-            "copy_result": "{% trans '✅️ 対戦結果をコピーしました！'|escapejs %}",
-            "even":"{% trans '| ⚖️ 互角'|escapejs %}",
-            "evaluation": "{% trans '| ⚖️：黒'|escapejs %}",
-            "thanks_install": "{% trans '🎮️ インストールありがとうございます！（開発者より）'|escapejs %}",
-            "surrender_right": "{% trans '本当に投了しますか？'|escapejs %}",
-            "thinking": "{% trans '考え中'|escapejs %}",
-            "how2play_with_friend":"{% trans '🎮️ フレンド対戦の遊び方\n\n 1. 招待ボタンまたはQRコードボタンを押す\n\n 2. 表示される案内に従い、相手を対戦へ招待\n\n 3. 相手が招待に応じたら自動で対戦がスタート！' %}",
+    <script nonce="{{ request.csp_nonce }}">const lang = {"online_description":"{{online_description|escapejs}}","ai_description": "{{ai_description|escapejs}}","player_description" : "{{player_description|escapejs}}","else_description" :"{{else_description|escapejs}}","congrats_aiLevel_unlocked_b":"{% trans '🎉 条件達成により、' %}","congrats_aiLevel_unlocked_a":"{% trans 'が解放されました！' %}","signupToUnlockLegend": "{% trans '🎉 「伝説」の解放条件①を満たしました！アカウントを作成して伝説にアクセス'|escapejs %}","estimatedTime": "{% trans '推定待ち時間：'|escapejs %}","seconds": "{% trans '秒'|escapejs %}","legend": "{% trans '伝説'|escapejs %}","matchmaking": "{% trans '対戦相手を探しています...'|escapejs %}","black": "{% trans '黒'|escapejs %}","white": "{% trans '白'|escapejs %}","opponent":"{% trans '対戦相手'|escapejs %}","spec": "{% trans '観客'|escapejs %}","roleDialogB": "{% trans 'あなたは先手（黒）です' %}","roleDialogW": "{% trans 'あなたは後手（白）です' %}","notify_b": "{% trans '黒には次に打てる場所がないので、もう一度白の番になります。'|escapejs %}","notify_w": "{% trans '白には次に打てる場所がないので、もう一度黒の番になります。'|escapejs %}","not_your_turn": "{% trans 'あなたの手番ではありません。手番：'|escapejs %}","you": "{% trans 'あなた'|escapejs %}","timeout_winner": "{% trans '【時間切れ】👑 勝者：'|escapejs %}","surrender_winner": "{% trans '【投了】👑 勝者：'|escapejs %}","draw": "{% trans '引き分け！'|escapejs %}","winner": "{% trans '👑 勝者：'|escapejs %}","you_pass": "{% trans 'あなたには次に打てる場所がなかったのでもう一度、相手の番になります'|escapejs %}","opponent_pass": "{% trans '相手には次に打てる場所がなかったのでもう一度、あなたの番になります'|escapejs %}","nextLevel":"{% trans '次のレベルへ'|escapejs %}","warn_EnOnly": "{% trans '⚠️ 無料版では英数字のみ入力可能です'|escapejs %}","warn_charLimit": "{% trans '⚠️ 文字数：1〜10文字'|escapejs %}","connecting": "{% trans 'ネットワーク接続がありません。'|escapejs %}","spec_cant_play": "{% trans '観戦中です。あなたは手を打つことができません。'|escapejs %}","copy_url": "{% trans '🔗 現在の石の配置を共有するURLをコピーしました！'|escapejs %}","copy_spec": "{% trans '👀 現在のゲームを観戦するためのURLをコピーしました！'|escapejs %}","copy_invite": "{% trans '🎮 現在のゲームへの招待URLをコピーしました！対戦相手にURLを送って対戦を始めましょう！'|escapejs %}","copy_failed": "{% trans 'URLのコピーに失敗しました。'|escapejs %}","copy_result": "{% trans '✅️ 対戦結果をコピーしました！'|escapejs %}","even":"{% trans '| ⚖️ 互角'|escapejs %}","evaluation": "{% trans '| ⚖️：黒'|escapejs %}","thanks_install": "{% trans '🎮️ インストールありがとうございます！（開発者より）'|escapejs %}","surrender_right": "{% trans '本当に投了しますか？'|escapejs %}","thinking": "{% trans '考え中'|escapejs %}","how2play_with_friend":"{% trans '🎮️ フレンド対戦の遊び方\n\n 1. 招待ボタンまたはQRコードボタンを押す\n\n 2. 表示される案内に従い、相手を対戦へ招待\n\n 3. 相手が招待に応じたら自動で対戦がスタート！' %}",
         };
     </script>
     {% endwith %}
@@ -125,13 +74,7 @@
         {{else_title}}
         {% endif %}
     </title>
-    <script nonce="{{ request.csp_nonce }}">
-        const online_title = "{{online_title|escapejs}}";
-        const ai_title = "{{ai_title|escapejs}}";
-        const player_title = "{{player_title|escapejs}}";
-        const else_title = "{{else_title|escapejs}}";
-        const cspNonce = "{{ request.csp_nonce }}";
-    </script>
+    <script nonce="{{ request.csp_nonce }}">const online_title = "{{online_title|escapejs}}";const ai_title = "{{ai_title|escapejs}}";const player_title = "{{player_title|escapejs}}";const else_title = "{{else_title|escapejs}}";const cspNonce = "{{ request.csp_nonce }}";</script>
     <meta property="og:type" content="website">
     <meta property="og:title" content="{% if mode == 'online' %}{{online_title}}{% elif mode == 'ai' %}{{ai_title}}{% elif mode == 'player' %}{{player_title}}{% else %}{{else_title}}{% endif %}">
     <meta property="og:description" content="{% trans 'オンラインで楽しめる無料オセロゲーム！' %}">
