@@ -13,27 +13,21 @@ class StaticViewSitemap(Sitemap):
 
     def items(self):
         """各URLをリストとして返す"""
-        return ["index", "ai-mode", "online-mode", "blog-strategy", "legacy-keio-url"]
+        return ["index", "ai-mode", "online-mode", "blog-strategy"]
 
     def location(self, item):
-        if item == "legacy-keio-url":
-            return "https://web.sfc.keio.ac.jp/~t21055yi/othello/"
         return reverse(item)
 
     def priority(self, item):
-        """ホームページのみ優先度を0.8に、それ以外は0.5。legacy-keio-urlは0.3"""
+        """ホームページのみ優先度を0.8に、それ以外は0.5。"""
         if item == "index":
             return 0.8
-        elif item == "legacy-keio-url":
-            return 0.3
         else:
             return 0.5
 
     def lastmod(self, item):
-        """Gitの最新コミット日を `datetime.date` 型で返す。legacy-keio-urlはNone"""
-        if item == "legacy-keio-url":
-            return None
-        return self.get_git_lastmod().date()  
+        """Gitの最新コミット日を `datetime.date` 型で返す。"""
+        return self.get_git_lastmod().date()
 
     @staticmethod
     def get_git_lastmod():
